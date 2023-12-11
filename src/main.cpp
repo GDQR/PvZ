@@ -1,15 +1,16 @@
-#include "gameManager.hpp"
-#include "Fonts.hpp"
-#include "miscellaneous.hpp"
+#include "main.hpp"
+#include "manager.hpp"
 
 Tyra::Engine* engine;
+Tyra::Renderer* renderer;
+const Tyra::PadJoy* leftJoy;
 
 int main() {
   Tyra::Engine e;
   engine = &e;
-  Load_sprite_box_collider(engine);
-  Load_sprite_text_font(engine);
-  Game_Manager game(engine);
+  renderer = &e.renderer;
+  leftJoy = &e.pad.getLeftJoyPad();
+  Manager game(engine);
   e.run(&game);
   SleepThread();
   return 0;
