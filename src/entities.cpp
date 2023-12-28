@@ -8,7 +8,9 @@ unsigned int Entities::newID(){
     if(deadEntities.size() == 0){
         return counter++;
     }
-    return deadEntities.front();
+    unsigned int oldID = deadEntities.back();
+    deadEntities.pop_back();
+    return oldID;
     
 }
 
