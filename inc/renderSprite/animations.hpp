@@ -12,4 +12,5 @@
 // };
 // // void loadPeashooterAnim(Plant* t_plant);
 void loadPeaShooterAnimation();
+void loadZombieAnimation();
 // extern Animations animations;
