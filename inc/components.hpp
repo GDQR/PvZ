@@ -8,6 +8,10 @@
 #include "plants.hpp"
 #include "zombie.hpp"
 
+extern Tyra::Engine* engine;
+extern Tyra::Renderer* renderer;
+extern const Tyra::PadJoy* leftJoy;
+
 enum enumAnimation {peaShooterHead,peaShooterBody,zombieWalk,zombieNormalAttack};
 
 class MultipleID{

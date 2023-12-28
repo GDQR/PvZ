@@ -1,4 +1,3 @@
-#include "main.hpp"
 #include "components.hpp"
 #include <iostream>
 

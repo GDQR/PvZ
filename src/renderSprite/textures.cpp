@@ -1,4 +1,3 @@
-#include "main.hpp"
 #include "components.hpp"
 #include "renderSprite/textures.hpp"
 #include "plants.hpp"

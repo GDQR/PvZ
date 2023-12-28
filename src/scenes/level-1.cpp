@@ -6,7 +6,6 @@
 
 #include "components.hpp"
 #include "debug.hpp"
-#include "main.hpp"
 #include <stdlib.h>
 #include <time.h>
 

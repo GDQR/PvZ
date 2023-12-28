@@ -1,5 +1,4 @@
 // File for all plants data
-#include "main.hpp"
 #include "plants.hpp"
 #include "components.hpp"
 

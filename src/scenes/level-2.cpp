@@ -1,7 +1,7 @@
 #include "states.hpp"
 #include "scenes.hpp"
 #include "scenes/level-2.hpp"
-#include "main.hpp"
+#include "components.hpp"
 
 
 

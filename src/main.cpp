@@ -1,4 +1,4 @@
-#include "main.hpp"
+#include "font/font.hpp"
 #include "manager.hpp"
 
 Tyra::Engine* engine;
@@ -10,6 +10,7 @@ int main() {
   engine = &e;
   renderer = &e.renderer;
   leftJoy = &e.pad.getLeftJoyPad();
+  loadFonts();
   Manager game(engine);
   e.run(&game);
   SleepThread();
