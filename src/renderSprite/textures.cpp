@@ -1,8 +1,11 @@
 #include "main.hpp"
 #include "components.hpp"
 #include "renderSprite/textures.hpp"
+#include "plants.hpp"
 
 using Tyra::FileUtils;
+
+Tyra::Texture* projectilePea;
 
 void loadSprite(Sprite* sprite){
     sprite->mode = Tyra::MODE_STRETCH;
@@ -98,4 +101,8 @@ void copyTexture(Sprite* sprite1, Sprite* sprite2){
   texture->addLink(sprite2->id);
 
   TYRA_LOG("Texture loaded!");
+}
+
+void loadProjectile(){
+    projectilePea = loadTexture("particles/ProjectilePea.png");
 }

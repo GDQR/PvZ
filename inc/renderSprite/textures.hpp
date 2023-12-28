@@ -15,3 +15,5 @@ void loadTexture(int spriteID, std::string fileImage);
 Tyra::Texture* loadTexture(std::string fileImage);
 // for debug: copy sprite1 texture and paste in sprite2 
 void copyTexture(Sprite* sprite1, Sprite* sprite2); 
+
+void loadProjectile();
