@@ -60,7 +60,6 @@ extern std::unordered_map <int,AnimationData> animationDataArray;
 extern std::vector <MultipleID*> componentMultipleID;
 extern std::map<int,Tyra::Vec2> vec2Array;
 extern std::map <int,Tyra::Sprite> spriteArray; 
-extern std::vector <Tyra::Texture*> textureArray;  // tal vez es innecesario
 extern std::map <int,Tyra::Vec2> pointColliderArray;
 extern std::map <int,BoxCollider> boxColliderArray;
 extern std::map <int,int> damageArray;

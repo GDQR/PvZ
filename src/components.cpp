@@ -8,7 +8,6 @@ std::unordered_map<int, AnimationData> animationDataArray;
 std::vector<MultipleID*> componentMultipleID(100, nullptr);
 std::map<int, Tyra::Vec2> vec2Array;
 std::map<int, Tyra::Sprite> spriteArray;
-std::vector<Tyra::Texture*> textureArray(100, nullptr);
 std::map<int, Tyra::Vec2> pointColliderArray;
 std::map<int, BoxCollider> boxColliderArray;
 std::map<int, int> damageArray;
@@ -94,10 +93,6 @@ void AnimationManager::update() {
       animationArray[it->first].key = 0;
     }
 
-    // textureArray[it->first] =
-    // animationDataArray[animationArray[it->first].animID].keys[animationArray[it->first].key];
-
-    // textureArray[it->first]->addLink(spriteArray[it->first].id);
     animationDataArray[animationArray[it->first].animID]
         .keys[animationArray[it->first].key]
         ->addLink(spriteArray[it->first].id);
