@@ -2,17 +2,18 @@
 #include <tyra>
 #include <vector>
 #include <map>
-#include "debug.hpp"
-#include "entities.hpp"
+#include "debugPVZ/debug.hpp"
+#include "entities/entities.hpp"
 #include "renderSprite/textures.hpp"
-#include "plants.hpp"
-#include "zombie.hpp"
+#include "entities/plants.hpp"
+#include "entities/zombie.hpp"
+#include "entities/sun.hpp"
 
 extern Tyra::Engine* engine;
 extern Tyra::Renderer* renderer;
 extern const Tyra::PadJoy* leftJoy;
 
-enum enumAnimation {peaShooterHead,peaShooterBody,zombieWalk,zombieNormalAttack};
+enum enumAnimation {peaShooterHead,peaShooterBody,zombieWalk,zombieNormalAttack,sunAnim, sunAnim2};
 
 class MultipleID{
     public:
@@ -68,7 +69,7 @@ extern std::map <int,int> lifeArray;
 const int maxPlants = 5 * 9;
 extern Plant plant[maxPlants];
 extern std::vector<Zombie> zombie;
-
+extern std::vector<Sun> sun;
 extern std::vector<int> projectile;  
 
 extern bool zombieCreateRow[5];
@@ -108,7 +109,7 @@ class ProjectileManager {
 
 void newCursor(int* cursor, Tyra::Vec2 pos);
 void newProjectile(Vec2 position);
+void newDeckCursor(int* cursor, Tyra::Vec2 pos);
 void createSprite(int id, Tyra::SpriteMode mode, Tyra::Vec2 position, Tyra::Vec2 size);
 void deleteSprite(const int id);
-void createTexture(int id, std::string fileImage);
 bool boxCollision(BoxCollider* col1, BoxCollider* col2);
