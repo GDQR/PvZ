@@ -16,8 +16,9 @@ std::map<int, int> lifeArray;
 
 Plant plant[maxPlants];
 std::vector<Zombie> zombie;
+std::vector<Sun> sun;
 std::vector<int> projectile;
-int projectilesCreated = 0;  
+int projectilesCreated = 0;
 
 bool zombieCreateRow[5];
 bool plantCreatedInMap[5][9];
@@ -33,15 +34,11 @@ void createSprite(int id, Tyra::SpriteMode mode, Tyra::Vec2 position,
   loadSprite(&spriteArray[id], mode, position, size);
 }
 
-void createTexture(int id, std::string fileImage) {
-  textureArray[id] = loadTexture(fileImage);
-  TYRA_ASSERT(!(spriteArray.find(id) == spriteArray.end()), "Entitie id: ", id,
-              "Is NULL, use <<CreateSprite>> function");
-  textureArray[id]->addLink(spriteArray[id].id);
-}
-
 void deleteSprite(const int id) { spriteArray.erase(id); }
 
+/*
+ * @return True if collision exist
+ */
 bool boxCollision(BoxCollider* col1, BoxCollider* col2) {
   if (col1->x + col1->width >= col2->x && col2->x + col2->width >= col1->x &&
       col1->y + col1->height >= col2->y && col2->y + col2->height >= col1->y) {
@@ -126,7 +123,7 @@ void RendererDebugSpritesManager::update() {
 
 void RendererSprites::update() {
   std::map<int, Sprite>::iterator it;
-  // printf("size: %d\n",spriteArray.size());
+  // printf("size: %d\n", spriteArray.size());
   for (it = spriteArray.begin(); it != spriteArray.end(); it++) {
     // printf("key: %d. sprite ID: %d\n",it->first,it->second.id);
     renderer->renderer2D.render(it->second);
@@ -160,7 +157,7 @@ void ZombiesManager::update() {
 int ZombiesManager::collision() {
   std::vector<Zombie>::iterator it;
 
-  if(plantsCreated == 0){
+  if (plantsCreated == 0) {
     for (it = zombie.begin(); it < zombie.end(); it++) {
       it->attack = false;
       animationArray[*it->body[0]].animID = zombieWalk;
@@ -208,7 +205,7 @@ int ZombiesManager::collision() {
             lifeArray[*plant[i].body[0]] -= damageArray[*it->body[0]];
 
             if (lifeArray[*plant[i].body[0]] <= 0) {
-              printf("borre planta id: %d\n",*plant[i].body[0]);
+              printf("borre planta id: %d\n", *plant[i].body[0]);
               deletePeashotter(i);
               it->attack = false;
               animationArray[*it->body[0]].animID = zombieWalk;
@@ -232,13 +229,15 @@ void ProjectileManager::update() {
   for (it = projectile.begin(); it < projectile.end(); it++) {
     // printf("projectile id: %d\n", *it);
     spriteArray[*it].position.x++;
-    // printf("position: %f,%f\n", spriteArray[*it].position.x,spriteArray[*it].position.y);
+    // printf("position: %f,%f\n",
+    // spriteArray[*it].position.x,spriteArray[*it].position.y);
     boxColliderArray[*it].x = spriteArray[*it].position.x;
     debugSpriteBoxCollider[*it].position.x = boxColliderArray[*it].x;
-    if(spriteArray[*it].position.x >= 580){
+    if (spriteArray[*it].position.x >= 580) {
       // delete projectile
       printf("borrando proyectil\n");
-      textureRepository.getBySpriteId(spriteArray[*it].id)->removeLinkById(spriteArray[*it].id);
+      textureRepository.getBySpriteId(spriteArray[*it].id)
+          ->removeLinkById(spriteArray[*it].id);
       spriteArray.erase(*it);
       boxColliderArray.erase(*it);
       deleteDebugBoxCollider(*it);
@@ -250,25 +249,25 @@ void ProjectileManager::update() {
 }
 
 void ProjectileManager::zombieCollision() {
-
   std::vector<int>::iterator it;
   std::vector<Zombie>::iterator it2;
   auto& textureRepository = renderer->getTextureRepository();
   for (it = projectile.begin(); it < projectile.end(); it++) {
     for (it2 = zombie.begin(); it2 < zombie.end(); it2++) {
       if (boxCollision(&boxColliderArray[*it],
-                    &boxColliderArray[*(it2)->body[0]])) {
+                       &boxColliderArray[*(it2)->body[0]])) {
         // printf("choque con zombie\n");
         // printf("sprite ID: %d\n", spriteArray[*it].id);
         // printf("borre ID: %d\n", *it);
 
         // damage zombie
         lifeArray[*it2->body[0]] -= damageArray[*it];
-        printf("zombie id: %d\n",*it2->body[0]);
-        //delete zombie
-        if(lifeArray[*it2->body[0]] <= 0){
+        // printf("zombie id: %d\n",*it2->body[0]);
+        // delete zombie
+        if (lifeArray[*it2->body[0]] <= 0) {
           vec2Array.erase(*it2->father);
-          textureRepository.getBySpriteId(spriteArray[*it2->body[0]].id)->removeLinkById(spriteArray[*it2->body[0]].id);
+          textureRepository.getBySpriteId(spriteArray[*it2->body[0]].id)
+              ->removeLinkById(spriteArray[*it2->body[0]].id);
           spriteArray.erase(*it2->body[0]);
           animationArray.erase(*it2->body[0]);
           lifeArray.erase(*it2->body[0]);
@@ -277,17 +276,19 @@ void ProjectileManager::zombieCollision() {
           Entities::deleteID(*it2->father);
           Entities::deleteID(*it2->body[0]);
           it2 = zombie.erase(it2);
-         
+
           // zombiesCreated--;
-        } 
+        }
 
         // delete projectile
-        
-        printf("borrando proyectil\n");
-        printf("it: %d\n",*it);
-        printf("it end: %d\n\n",*projectile.end());
-        Tyra::Texture* text = textureRepository.getBySpriteId(spriteArray[*it].id);
-        TYRA_ASSERT(text,"No se encontro la textura del proyectil with id: ",*it);
+
+        // printf("borrando proyectil\n");
+        // printf("it: %d\n",*it);
+        // printf("it end: %d\n\n",*projectile.end());
+        Tyra::Texture* text =
+            textureRepository.getBySpriteId(spriteArray[*it].id);
+        TYRA_ASSERT(text,
+                    "No se encontro la textura del proyectil with id: ", *it);
 
         text->removeLinkById(spriteArray[*it].id);
         spriteArray.erase(*it);
@@ -297,28 +298,38 @@ void ProjectileManager::zombieCollision() {
         it = projectile.erase(it);
 
         // Break projectile loop if exist another zombie
-        if(it == projectile.end()){
+        if (it == projectile.end()) {
           it2 = zombie.end();
         }
-        
+
         projectilesCreated--;
       }
     }
   }
-
 }
 
 void newCursor(int* cursor, Tyra::Vec2 pos) {
   *cursor = Entities::newID();
-  printf("cursor id: %d\n",*cursor);
-  createSprite(*cursor, Tyra::MODE_STRETCH,
-               pos, Vec2(56, 48));
+  printf("cursor id: %d\n", *cursor);
+  createSprite(*cursor, Tyra::MODE_STRETCH, pos, Vec2(56, 48));
   createTexture(*cursor, "cursor6.png");
   // vec2Array[cursor] = new Vec2(0,0);
   vec2Array[*cursor] = Vec2(0, 0);
-  boxColliderArray[*cursor] = BoxCollider(
-      pos.x, pos.y, 24, 24, 28 / 2, 24 / 2);
+  boxColliderArray[*cursor] = BoxCollider(pos.x, pos.y, 24, 24, 28 / 2, 24 / 2);
   createDebugBoxCollider(*cursor, Tyra::MODE_STRETCH);
+}
+
+void newDeckCursor(int* cursor, Tyra::Vec2 pos) {
+  *cursor = Entities::newID();
+  printf("deck cursor id: %d\n", *cursor);
+  // createSprite(*cursor, Tyra::MODE_STRETCH,
+  //              pos, Vec2(56, 48));
+  // createTexture(*cursor, "cursor6.png");
+
+  // vec2Array[*cursor] = Vec2(0, 0);
+  // boxColliderArray[*cursor] = BoxCollider(
+  //     pos.x, pos.y, 24, 24, 28 / 2, 24 / 2);
+  // createDebugBoxCollider(*cursor, Tyra::MODE_STRETCH);
 }
 
 void newProjectile(Vec2 position) {
