@@ -1,9 +1,9 @@
 #pragma once
 
 #include <vector>
-#include "components.hpp"
+#include "../components.hpp"
 // #include <string>
-#include "plants.hpp"
+#include "entities/plants.hpp"
 
 // struct Animations
 // {
@@ -13,4 +13,6 @@
 // // void loadPeashooterAnim(Plant* t_plant);
 void loadPeaShooterAnimation();
 void loadZombieAnimation();
+void loadSunAnimation();
+// void loadSunSuavizadoAnimation(); borrar
 // extern Animations animations;
