@@ -46,7 +46,7 @@ void deactiveDebugMode() {
 }
 
 bool menuUpOption(Tyra::Pad& pad) {
-  if ((pad.getPressed().DpadUp || leftJoy->v <= 100) && padTimer <= 0) {
+  if ((pad.getPressed().DpadUp || leftJoy->v <= 100)) {
     padTimer = 10;
     return true;
   }
@@ -54,7 +54,7 @@ bool menuUpOption(Tyra::Pad& pad) {
 }
 
 bool menuDownOption(Tyra::Pad& pad) {
-  if ((pad.getPressed().DpadDown || leftJoy->v >= 200) && padTimer <= 0) {
+  if ((pad.getPressed().DpadDown || leftJoy->v >= 200)) {
     padTimer = 10;
     return true;
   }
@@ -62,7 +62,7 @@ bool menuDownOption(Tyra::Pad& pad) {
 }
 
 bool menuLeftOption(Tyra::Pad& pad) {
-  if ((pad.getPressed().DpadLeft || leftJoy->h <= 100) && padTimer <= 0) {
+  if ((pad.getPressed().DpadLeft || leftJoy->h <= 100)) {
     padTimer = 10;
     return true;
   }
@@ -70,7 +70,7 @@ bool menuLeftOption(Tyra::Pad& pad) {
 }
 
 bool menuRightOption(Tyra::Pad& pad) {
-  if ((pad.getPressed().DpadRight || leftJoy->h >= 200) && padTimer <= 0) {
+  if ((pad.getPressed().DpadRight || leftJoy->h >= 200)) {
     padTimer = 10;
     return true;
   }
@@ -261,24 +261,26 @@ int menuDebugAnimation(Tyra::Pad& pad, Tyra::Font& font) {
 
     if (padTimer > 0) {
       padTimer--;
-    } else if (menuUpOption(pad)) {
-      texPos->y--;
-      animManager.debugChangeFrame(debugEntitieId,
-                                   animationArray[debugEntitieId].key);
-    } else if (menuDownOption(pad)) {
-      texPos->y++;
-      animManager.debugChangeFrame(debugEntitieId,
-                                   animationArray[debugEntitieId].key);
-    }
-    
-    if (menuLeftOption(pad)) {
-      texPos->x--;
-      animManager.debugChangeFrame(debugEntitieId,
-                                   animationArray[debugEntitieId].key);
-    } else if (menuRightOption(pad)) {
-      texPos->x++;
-      animManager.debugChangeFrame(debugEntitieId,
-                                   animationArray[debugEntitieId].key);
+    } else {
+      if (menuUpOption(pad)) {
+        texPos->y--;
+        animManager.debugChangeFrame(debugEntitieId,
+                                     animationArray[debugEntitieId].key);
+      } else if (menuDownOption(pad)) {
+        texPos->y++;
+        animManager.debugChangeFrame(debugEntitieId,
+                                     animationArray[debugEntitieId].key);
+      }
+
+      if (menuLeftOption(pad)) {
+        texPos->x--;
+        animManager.debugChangeFrame(debugEntitieId,
+                                     animationArray[debugEntitieId].key);
+      } else if (menuRightOption(pad)) {
+        texPos->x++;
+        animManager.debugChangeFrame(debugEntitieId,
+                                     animationArray[debugEntitieId].key);
+      }
     }
 
     if (playAnimation == true) {
