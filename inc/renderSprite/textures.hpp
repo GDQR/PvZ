@@ -10,6 +10,7 @@ void loadSprite(Sprite* sprite);
 void loadSprite(Sprite* sprite, Vec2 size);
 void loadSprite(Sprite* sprite,Tyra::SpriteMode mode, Vec2 position, Vec2 size);
 
+void createTexture(int id, std::string fileImage);
 void loadTexture(Sprite* sprite, std::string fileImage);
 void loadTexture(int spriteID, std::string fileImage);
 Tyra::Texture* loadTexture(std::string fileImage);
