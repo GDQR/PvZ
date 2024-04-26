@@ -34,7 +34,7 @@
         {
             "type": "shell",
             "label": "3. Copy binaries to host",
-            "command": "docker exec -t tyra-game-pvz-compiler sh -c 'rsync -zac --include=\"*/\" --include=\"*bin*/**\" --exclude=\"*\" /src/ /host/'",
+            "command": "docker exec -t tyra-game-pvz-compiler sh -c 'rsync -zac --include=\"*/\" --include=\"*bin*/**\" --exclude=\"*\" /src/ /host/'"
         },
         {
             "type": "shell",
