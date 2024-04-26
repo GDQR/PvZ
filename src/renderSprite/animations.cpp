@@ -17,6 +17,7 @@ void loadPeaShooterAnimation() {
     filepath += ".png";
     texture = loadTexture(filepath);
     animationDataArray[peaShooterHead].keys.push_back(texture);
+    animationDataArray[peaShooterHead].position.push_back(new Tyra::Vec2(0,0));
     animationTime[peaShooterHead].seconds.push_back(2);
   }
   texture = loadTexture("Animations/PeaShooterSingle/PeaShooterSingle0005.png");
@@ -37,6 +38,7 @@ void loadZombieAnimation() {
     filepath += ".png";
     texture = loadTexture(filepath);
     animationDataArray[zombieWalk].keys.push_back(texture);
+    animationDataArray[zombieWalk].position.push_back(new Tyra::Vec2(0,0));
     animationTime[zombieWalk].seconds.push_back(2);
   }
 
@@ -49,6 +51,7 @@ void loadZombieAnimation() {
     filepath += ".png";
     texture = loadTexture(filepath);
     animationDataArray[zombieNormalAttack].keys.push_back(texture);
+    animationDataArray[zombieNormalAttack].position.push_back(new Tyra::Vec2(0,0));
     animationTime[zombieNormalAttack].seconds.push_back(2);
   }
 }
@@ -69,8 +72,8 @@ void loadSunAnimation() {
     filepath += std::to_string(i);
     filepath += ".png";
     texture = loadTexture(filepath);
-    texture->print();
     animationDataArray[sunAnim].keys.push_back(texture);
+    animationDataArray[sunAnim].position.push_back(new Tyra::Vec2(0,0));
     animationTime[sunAnim].seconds.push_back(2);
   }
 }
