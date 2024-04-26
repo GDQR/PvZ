@@ -269,7 +269,9 @@ int menuDebugAnimation(Tyra::Pad& pad, Tyra::Font& font) {
       texPos->y++;
       animManager.debugChangeFrame(debugEntitieId,
                                    animationArray[debugEntitieId].key);
-    } else if (menuLeftOption(pad)) {
+    }
+    
+    if (menuLeftOption(pad)) {
       texPos->x--;
       animManager.debugChangeFrame(debugEntitieId,
                                    animationArray[debugEntitieId].key);
