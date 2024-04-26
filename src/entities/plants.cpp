@@ -39,7 +39,7 @@ void createPeashotter(int id, int row, int column, Tyra::Vec2 pos) {
   // printf("plant[%d].id[1]: %d\n",pos,plant[pos].id[1]);
   // printf("plant[%d].id[2]: %d\n",pos,plant[pos].id[2]);
 
-  vec2Array[*plant[id].father] = pos;  // Vec2(row, column);
+  posArray[*plant[id].father] = pos;  // Vec2(row, column);
 
   createSprite(*plant[id].body[0], Tyra::MODE_STRETCH, Vec2(pos.x, pos.y + 5),
                Vec2(128 / 1.6f, 128 / 1.6f));
@@ -72,7 +72,7 @@ void deletePeashotter(const int pos) {
   
   plantCreatedInMap[plant[pos].row][plant[pos].column] = false;
 
-  vec2Array.erase(*plant[pos].father);
+  posArray.erase(*plant[pos].father);
 
   engine->renderer.getTextureRepository()
       .getBySpriteId(spriteArray[*plant[pos].body[0]].id)

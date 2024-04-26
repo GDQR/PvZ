@@ -6,7 +6,7 @@ std::map<int, Animation> animationArray;
 std::map<int, Time> animationTime;
 std::unordered_map<int, AnimationData> animationDataArray;
 std::vector<MultipleID*> componentMultipleID(100, nullptr);
-std::map<int, Tyra::Vec2> vec2Array;
+std::map<int, Tyra::Vec2> posArray;
 std::map<int, Tyra::Sprite> spriteArray;
 std::map<int, Tyra::Vec2> pointColliderArray;
 std::map<int, BoxCollider> boxColliderArray;
@@ -92,7 +92,8 @@ void AnimationManager::update() {
         animationDataArray[animationArray[it->first].animID].keys.size()) {
       animationArray[it->first].key = 0;
     }
-
+    spriteArray[it->first].position.x = posArray[it->first].x + animationDataArray[animationArray[it->first].animID].position[animationArray[it->first].key]->x;
+    spriteArray[it->first].position.y = posArray[it->first].y + animationDataArray[animationArray[it->first].animID].position[animationArray[it->first].key]->y;
     animationDataArray[animationArray[it->first].animID]
         .keys[animationArray[it->first].key]
         ->addLink(spriteArray[it->first].id);
@@ -260,7 +261,7 @@ void ProjectileManager::zombieCollision() {
         // printf("zombie id: %d\n",*it2->body[0]);
         // delete zombie
         if (lifeArray[*it2->body[0]] <= 0) {
-          vec2Array.erase(*it2->father);
+          posArray.erase(*it2->father);
           textureRepository.getBySpriteId(spriteArray[*it2->body[0]].id)
               ->removeLinkById(spriteArray[*it2->body[0]].id);
           spriteArray.erase(*it2->body[0]);
@@ -308,8 +309,7 @@ void newCursor(int* cursor, Tyra::Vec2 pos) {
   printf("cursor id: %d\n", *cursor);
   createSprite(*cursor, Tyra::MODE_STRETCH, pos, Vec2(56, 48));
   createTexture(*cursor, "cursor6.png");
-  // vec2Array[cursor] = new Vec2(0,0);
-  vec2Array[*cursor] = Vec2(0, 0);
+  posArray[*cursor] = Vec2(pos.x, pos.y);
   boxColliderArray[*cursor] = BoxCollider(pos.x, pos.y, 24, 24, 28 / 2, 24 / 2);
   createDebugBoxCollider(*cursor, Tyra::MODE_STRETCH);
 }
@@ -321,7 +321,7 @@ void newDeckCursor(int* cursor, Tyra::Vec2 pos) {
   //              pos, Vec2(56, 48));
   // createTexture(*cursor, "cursor6.png");
 
-  // vec2Array[*cursor] = Vec2(0, 0);
+  // posArray[*cursor] = Vec2(0, 0);
   // boxColliderArray[*cursor] = BoxCollider(
   //     pos.x, pos.y, 24, 24, 28 / 2, 24 / 2);
   // createDebugBoxCollider(*cursor, Tyra::MODE_STRETCH);
