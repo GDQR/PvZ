@@ -1,6 +1,6 @@
 #include "components.hpp"
 #include "renderSprite/textures.hpp"
-#include "plants.hpp"
+#include "entities/plants.hpp"
 
 using Tyra::FileUtils;
 
@@ -22,6 +22,13 @@ void loadSprite(Sprite* sprite,Tyra::SpriteMode mode, Vec2 position, Vec2 size){
     sprite->mode = mode;
     sprite->position = position;
     sprite->size = size;
+}
+
+void createTexture(int id, std::string fileImage) {
+  textureArray[id] = loadTexture(fileImage);
+  TYRA_ASSERT(!(spriteArray.find(id) == spriteArray.end()), "Entitie id: ", id,
+              "Is NULL, use <<CreateSprite>> function");
+  textureArray[id]->addLink(spriteArray[id].id);
 }
 
 void loadTexture(Sprite* sprite, std::string fileImage){
