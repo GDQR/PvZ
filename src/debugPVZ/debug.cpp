@@ -8,12 +8,42 @@ bool debugMode = false;
 bool debugMenu = false;
 bool debugAnimation = false;
 bool stopAnimation = false;
+bool isMainMenuAnimationActive = false;
 
 Tyra::Texture* debugBoxTexture;
 Tyra::Texture* debugFillBoxTexture;
 Tyra::Texture* debugPointTexture;
 
 int padTimer = 0;
+float colorSprite = -2;
+
+void activeDebugMode() {
+  switch (debugOption) {
+    case AnimationDebug:
+      debugAnimation = true;
+      stopAnimation = true;
+      isMainMenuAnimationActive = true;
+      break;
+    case testDebug:
+      break;
+    default:
+      break;
+  }
+}
+
+void deactiveDebugMode() {
+  switch (debugOption) {
+    case AnimationDebug:
+      debugAnimation = false;
+      stopAnimation = false;
+      isMainMenuAnimationActive = false;
+      break;
+    case testDebug:
+      break;
+    default:
+      break;
+  }
+}
 
 bool menuUpOption(Tyra::Pad& pad) {
   if ((pad.getPressed().DpadUp || leftJoy->v <= 100) && padTimer <= 0) {
@@ -31,22 +61,63 @@ bool menuDownOption(Tyra::Pad& pad) {
   return false;
 }
 
-bool menuCrossClickedOption(Tyra::Pad& pad, const bool isActive){
-  if(pad.getClicked().Cross && isActive == true){
+bool menuLeftOption(Tyra::Pad& pad) {
+  if ((pad.getPressed().DpadLeft || leftJoy->h <= 100) && padTimer <= 0) {
+    padTimer = 10;
     return true;
   }
   return false;
 }
 
-bool menuCircleClickedOption(Tyra::Pad& pad, const bool isActive){
-  if(pad.getClicked().Circle && isActive == true){
+bool menuRightOption(Tyra::Pad& pad) {
+  if ((pad.getPressed().DpadRight || leftJoy->h >= 200) && padTimer <= 0) {
+    padTimer = 10;
     return true;
   }
   return false;
 }
 
+bool menuCrossClickedOption(Tyra::Pad& pad, const bool isActive) {
+  if (pad.getClicked().Cross && isActive == true) {
+    return true;
+  }
+  return false;
+}
 
-void debugMenuMode() {
+bool menuCircleClickedOption(Tyra::Pad& pad, const bool isActive) {
+  if (pad.getClicked().Circle && isActive == true) {
+    return true;
+  }
+  return false;
+}
+
+void menuDebugMode(Tyra::Pad& pad) {
+  if (padTimer > 0) {
+    padTimer--;
+  } else if (menuUpOption(pad)) {
+    if (debugOption == 0) {
+      debugOption = debugModesSize - 1;
+    } else {
+      debugOption--;
+    }
+  } else if (menuDownOption(pad)) {
+    if (debugOption == debugModesSize - 1) {
+      debugOption = 0;
+    } else {
+      debugOption++;
+    }
+  }
+
+  if (menuCrossClickedOption(pad, true)) {
+    activeDebugMode();
+    // debugMenu = false;
+  } else if (menuCircleClickedOption(pad, true)) {
+    deactiveDebugMode();
+    debugMode = false;
+    debugMenu = false;
+    printf("\nDEBUG MODE DEACTIVE\n");
+  }
+
   Tyra::Color colorMenu;
   for (unsigned int i = 0; i < debugModesSize; i++) {
     if (debugOption != i) {
@@ -73,123 +144,145 @@ void debugMenuMode() {
 }
 
 bool startDebug = true;
-int debugSprite;
-
-void debugOptions(Tyra::Pad& pad, Tyra::Font& font) {
-    if (padTimer > 0) {
-      padTimer--;
-    } else if (menuUpOption(pad)) {
-      if (debugOption == 0) {
-        debugOption = debugModesSize - 1;
-      } else {
-        debugOption--;
-      }
-    } else if (menuDownOption(pad)) {
-      if (debugOption == debugModesSize - 1) {
-        debugOption = 0;
-      } else {
-        debugOption++;
-      }
-    }
-
-    if (menuCrossClickedOption(pad,true)) {
-      activeDebugMode();
-      debugMenu = false;
-    } else if (menuCrossClickedOption(pad,true)) {
-      deactiveDebugMode();
-      debugMode = false;
-      debugMenu = false;
-      printf("\nDEBUG MODE DEACTIVE\n");
-    }
-  
-}
-
-void activeDebugMode() {
-  switch (debugOption) {
-    case AnimationDebug:
-      debugAnimation = true;
-      stopAnimation = true;
-      break;
-    case testDebug:
-      break;
-    default:
-      break;
-  }
-}
-
-void deactiveDebugMode() {
-  switch (debugOption) {
-    case AnimationDebug:
-      debugAnimation = false;
-      stopAnimation = false;
-      break;
-    case testDebug:
-      break;
-    default:
-      break;
-  }
-}
+bool hideText = false;
+int debugEntitieId;
 
 int startDebugAnimationMode() {
   if (startDebug == false) {
     return 1;
   }
-  startDebug = false;
+ 
+  if (animationArray.size() == 0) {
+    if (engine->pad.getClicked().Circle) {
+      debugAnimation = false;
+    }
+    engine->font.drawText(&myFont, "Animations not found", 30, 80, 16, black);
+    engine->font.drawText(&myFont, "PRESS O FOR GO BACK", 30, 320, 16, black);
+    return 2;
+  }
+
   printf("start debug animation\n");
-  printf("sprites size: %d\n", spriteArray.size());
-  std::map<int, Sprite>::iterator it;
-  it = spriteArray.begin();
-  // it++;
+  startDebug = false;
+  std::map<int, Animation>::iterator it;
+  it = animationArray.begin();
   printf("base id: %d\n", it->first);
-  debugSprite = it->first;
-  // debugSprite = Entities::newID();
-  // createDebugBoxFill(debugSprite,
-  // Tyra::SpriteMode::MODE_STRETCH,it->second.position,it->second.size);
-  // debugSpriteBoxCollider[debugSprite].color = Tyra::Color(255.0f, 0.0f, 0,
-  // 100.0f);
+  debugEntitieId = it->first;
 
   return 0;
 }
 
-float colorSprite = -2;
-void debugAnimationMode(Tyra::Pad& pad, Tyra::Font& font) {
-  spriteArray[debugSprite].color.a += colorSprite;
-  if (spriteArray[debugSprite].color.a <= 30.0f) {
-    colorSprite = 2;
-  } else if (spriteArray[debugSprite].color.a >= 128.0f) {
-    colorSprite = -2;
+int menuDebugAnimation(Tyra::Pad& pad, Tyra::Font& font) {
+  if (startDebug == true) {
+    return 1;
   }
+  if (isMainMenuAnimationActive == true) {
+    // Main menu Animation
 
-  if (pad.getClicked().Cross) {
-
-  }else if(pad.getClicked().Circle){
-
-  }
-
-  if (padTimer > 0) {
-    padTimer--;
-  } else if (menuUpOption(pad)) {
-    spriteArray[debugSprite].color.a = 128.0f;
-
-    std::map<int, Sprite>::iterator it = spriteArray.find(debugSprite);
-
-    if (std::next(it)->first == spriteArray.end()->first) {
-      debugSprite = spriteArray.begin()->first;
-    } else {
-      debugSprite = std::next(it)->first;
+    spriteArray[debugEntitieId].color.a += colorSprite;
+    if (spriteArray[debugEntitieId].color.a <= 30.0f) {
+      colorSprite = 2;
+    } else if (spriteArray[debugEntitieId].color.a >= 128.0f) {
+      colorSprite = -2;
     }
 
-  } else if (menuDownOption(pad)) {
-    spriteArray[debugSprite].color.a = 128.0f;
+    if (menuCrossClickedOption(pad, isMainMenuAnimationActive)) {
+      isMainMenuAnimationActive = false;
+      spriteArray[debugEntitieId].color.a = 128.0f;
+    } else if (menuCircleClickedOption(pad, isMainMenuAnimationActive)) {
+      debugAnimation = false;
+      startDebug = true;
+      spriteArray[debugEntitieId].color.a = 128.0f;
+    }
 
-    std::map<int, Sprite>::iterator it = spriteArray.find(debugSprite);
+    if (padTimer > 0) {
+      padTimer--;
+    } else if (menuUpOption(pad)) {
+      spriteArray[debugEntitieId].color.a = 128.0f;
 
-    if (debugSprite == spriteArray.begin()->first) {
-      debugSprite = spriteArray.rbegin()->first;
-    } else {
-      debugSprite = std::prev(it)->first;
+      std::map<int, Animation>::iterator it =
+          animationArray.find(debugEntitieId);
+
+      if (std::next(it)->first == animationArray.end()->first) {
+        debugEntitieId = animationArray.begin()->first;
+      } else {
+        debugEntitieId = std::next(it)->first;
+      }
+
+    } else if (menuDownOption(pad)) {
+      spriteArray[debugEntitieId].color.a = 128.0f;
+
+      std::map<int, Animation>::iterator it =
+          animationArray.find(debugEntitieId);
+
+      if (debugEntitieId == animationArray.begin()->first) {
+        debugEntitieId = animationArray.rbegin()->first;
+      } else {
+        debugEntitieId = std::prev(it)->first;
+      }
+    }
+    engine->font.drawText(&myFont, "PRESS X FOR SELECT THE TEXTURE", 30, 300,
+                          16, black);
+  } else {
+    // SubMenu for move position
+    Vec2* texPos = animationDataArray[animationArray[debugEntitieId].animID].position[animationArray[debugEntitieId].key];
+    
+    if (pad.getClicked().Cross) {
+    } else if (pad.getClicked().Circle) {
+      isMainMenuAnimationActive = true;
+      hideText = false;
+    } else if (pad.getClicked().Square) {
+      hideText = !hideText;
+    }
+    if (padTimer > 0) {
+      padTimer--;
+    } else if (menuUpOption(pad)) {
+      texPos->y--;
+    } else if (menuDownOption(pad)) {
+      texPos->y++;
+    } else if (menuLeftOption(pad)) {
+      texPos->x--;
+    } else if (menuRightOption(pad)) {
+      texPos->x++;
+    }
+    if (hideText == false) {
+      std::string position =
+          "Position: " +
+          std::to_string(spriteArray[debugEntitieId].position.x) + ", " +
+          std::to_string(spriteArray[debugEntitieId].position.y);
+      std::string texPosition =
+          "Texture Position: " +
+          std::to_string(texPos->x) + ", " +
+          std::to_string(texPos->y);
+
+      std::string animSize =
+          "Total textures: " +
+          std::to_string(
+              animationDataArray[animationArray[debugEntitieId].animID]
+                  .keys.size());
+      engine->font.drawText(&myFont, position, 30, 120, 16,
+                            Tyra::Color(0, 0, 0, 128));
+      engine->font.drawText(&myFont, texPosition, 30, 140, 16,
+                            Tyra::Color(0, 0, 0, 128));
+      engine->font.drawText(&myFont, animSize, 30, 160, 16, black);
+      engine->font.drawText(&myFont, "PRESS [] FOR HIDE/SHOW TEXT", 30, 300, 16,
+                            black);
     }
   }
+
+  if (hideText == false) {
+    std::string textId = "Entitie ID: " + std::to_string(debugEntitieId);
+    std::string name =
+        "Name Texture: " + renderer->getTextureRepository()
+                               .getBySpriteId(spriteArray[debugEntitieId].id)
+                               ->name;
+    engine->font.drawText(&myFont, textId, 30, 80, 16,
+                          Tyra::Color(0, 0, 0, 128));
+    engine->font.drawText(&myFont, name, 30, 100, 16,
+                          Tyra::Color(0, 0, 0, 128));
+
+    engine->font.drawText(&myFont, "PRESS O FOR GO BACK", 30, 320, 16, black);
+  }
+  return 0;
 }
 
 void loadDebugTextures() {
@@ -233,16 +326,4 @@ void createDebugPoint(const int id, Tyra::SpriteMode mode) {
 void deleteDebugPoint(const int id) {
   debugPointTexture->removeLinkById(debugSpritePointCollider[id].id);
   debugSpritePointCollider.erase(id);
-}
-
-void menuDebugAnimation(Tyra::Font& font) {
-  std::string textId = "Entitie ID: " + std::to_string(debugSprite);
-  std::string name = "Name Texture: " + renderer->getTextureRepository().getBySpriteId(spriteArray[debugSprite].id)->name;
-  std::string position =
-      "Position: " + std::to_string(spriteArray[debugSprite].position.x) +
-      ", " + std::to_string(spriteArray[debugSprite].position.y);
-  engine->font.drawText(&myFont, textId, 30, 80, 16, Tyra::Color(0, 0, 0, 128));
-  engine->font.drawText(&myFont, name, 30, 100, 16, Tyra::Color(0, 0, 0, 128));
-  engine->font.drawText(&myFont, position, 30, 120, 16,
-                        Tyra::Color(0, 0, 0, 128));
 }

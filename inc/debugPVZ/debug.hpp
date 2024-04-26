@@ -20,13 +20,11 @@ extern Tyra::Texture* debugBoxTexture;
 extern Tyra::Texture* debugFillBoxTexture;
 extern Tyra::Texture* debugPointTexture;
 
-void debugMenuMode();
+void menuDebugMode(Tyra::Pad& pad);
 void activeDebugMode();
 void deactiveDebugMode();
-void debugOptions(Tyra::Pad& pad, Tyra::Font& font);
 int startDebugAnimationMode();
-void debugAnimationMode(Tyra::Pad& pad, Tyra::Font& font);
-void menuDebugAnimation(Tyra::Font& font);
+int menuDebugAnimation(Tyra::Pad& pad, Tyra::Font& font);
 
 void loadDebugTextures();
 
