@@ -25,10 +25,10 @@ void loadSprite(Sprite* sprite,Tyra::SpriteMode mode, Vec2 position, Vec2 size){
 }
 
 void createTexture(int id, std::string fileImage) {
-  textureArray[id] = loadTexture(fileImage);
+  Tyra::Texture* texture = loadTexture(fileImage);
   TYRA_ASSERT(!(spriteArray.find(id) == spriteArray.end()), "Entitie id: ", id,
               "Is NULL, use <<CreateSprite>> function");
-  textureArray[id]->addLink(spriteArray[id].id);
+  texture->addLink(spriteArray[id].id);
 }
 
 void loadTexture(Sprite* sprite, std::string fileImage){
@@ -83,7 +83,6 @@ void loadTexture(int spriteID, std::string fileImage){
 
   texture->addLink(spriteArray[spriteID].id);
 
-  textureArray[spriteID] = texture;
   TYRA_LOG("Texture loaded!");
 }
 
