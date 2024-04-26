@@ -1,4 +1,4 @@
-#include "zombie.hpp"
+#include "entities/zombie.hpp"
 #include "components.hpp"
 
 int zombiesCreated = 0;
