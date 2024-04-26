@@ -80,7 +80,8 @@ class AnimationManager{
     public:
     Tyra::TextureRepository* texRepo;
     void update();
-    void debug();
+    int debug(const int entitieID);
+    void debugChangeFrame(const int entitieID, const int key);
 };
 
 class RendererDebugSpritesManager{
@@ -106,6 +107,7 @@ class ProjectileManager {
   void zombieCollision();
 };
 
+extern AnimationManager animManager;
 
 void newCursor(int* cursor, Tyra::Vec2 pos);
 void newProjectile(Vec2 position);

@@ -70,7 +70,6 @@ Animation::Animation() {}
 Animation::Animation(enumAnimation anim) { animID = anim; }
 
 void AnimationManager::update() {
-  // printf("entro\n");
   std::map<int, Animation>::iterator it;
   auto& textureRepository = renderer->getTextureRepository();
 
@@ -92,15 +91,77 @@ void AnimationManager::update() {
         animationDataArray[animationArray[it->first].animID].keys.size()) {
       animationArray[it->first].key = 0;
     }
-    spriteArray[it->first].position.x = posArray[it->first].x + animationDataArray[animationArray[it->first].animID].position[animationArray[it->first].key]->x;
-    spriteArray[it->first].position.y = posArray[it->first].y + animationDataArray[animationArray[it->first].animID].position[animationArray[it->first].key]->y;
+    spriteArray[it->first].position.x =
+        posArray[it->first].x +
+        animationDataArray[animationArray[it->first].animID]
+            .position[animationArray[it->first].key]
+            ->x;
+    spriteArray[it->first].position.y =
+        posArray[it->first].y +
+        animationDataArray[animationArray[it->first].animID]
+            .position[animationArray[it->first].key]
+            ->y;
     animationDataArray[animationArray[it->first].animID]
         .keys[animationArray[it->first].key]
         ->addLink(spriteArray[it->first].id);
   }
 }
 
-void AnimationManager::debug() {}
+int AnimationManager::debug(const int entitieID) {
+  auto& textureRepository = renderer->getTextureRepository();
+
+  if (animationArray[entitieID].time <
+      animationTime[animationArray[entitieID].animID]
+          .seconds[animationArray[entitieID].key]) {
+    animationArray[entitieID].time++;
+    return 1;
+  }
+
+  textureRepository.getBySpriteId(spriteArray[entitieID].id)
+      ->removeLinkById(spriteArray[entitieID].id);
+
+  animationArray[entitieID].key++;
+  animationArray[entitieID].time = 0;
+
+  if (animationArray[entitieID].key >=
+      animationDataArray[animationArray[entitieID].animID].keys.size()) {
+    animationArray[entitieID].key = 0;
+  }
+  spriteArray[entitieID].position.x =
+      posArray[entitieID].x +
+      animationDataArray[animationArray[entitieID].animID]
+          .position[animationArray[entitieID].key]
+          ->x;
+  spriteArray[entitieID].position.y =
+      posArray[entitieID].y +
+      animationDataArray[animationArray[entitieID].animID]
+          .position[animationArray[entitieID].key]
+          ->y;
+  animationDataArray[animationArray[entitieID].animID]
+      .keys[animationArray[entitieID].key]
+      ->addLink(spriteArray[entitieID].id);
+    return 0;
+}
+
+void AnimationManager::debugChangeFrame(const int entitieID, const int key) {
+  auto& textureRepository = renderer->getTextureRepository();
+
+  // Unlink Texture from the sprite entitie
+  textureRepository.getBySpriteId(spriteArray[entitieID].id)
+      ->removeLinkById(spriteArray[entitieID].id);
+
+  spriteArray[entitieID].position.x =
+      posArray[entitieID].x +
+      animationDataArray[animationArray[entitieID].animID].position[key]->x;
+  spriteArray[entitieID].position.y =
+      posArray[entitieID].y +
+      animationDataArray[animationArray[entitieID].animID].position[key]->y;
+
+  // Link new Texture to the sprite entitie
+  animationDataArray[animationArray[entitieID].animID]
+      .keys[animationArray[entitieID].key]
+      ->addLink(spriteArray[entitieID].id);
+}
 
 void RendererDebugSpritesManager::update() {
   std::map<int, Sprite>::iterator it;
