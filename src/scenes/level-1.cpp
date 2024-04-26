@@ -30,18 +30,18 @@ RendererSprites renderSprites;
 RendererDebugSpritesManager renderDebugSpritesManager;
 ZombiesManager zombiesManager;
 
-class Cursor{
-  public:
+class Cursor {
+ public:
   int id = -1;
   Sprite sprite;
   Vec2 cursorTile;
 };
 
-class DeckCursor{
-  public:
+class DeckCursor {
+ public:
   int id = -1;
   int pos = 0;
-  int cost; // plantCost
+  int cost;  // plantCost
 };
 
 Cursor cursor;
@@ -74,11 +74,11 @@ void plantMovement() {
   if (x != 0 || y != 0) {
     printf("me movi\n");
   }
-  // *vec2Array[plant.father] = Vec2(x,y);
-  // spriteArray[plant.body[0]]->position += *vec2Array[plant.father];
-  // spriteArray[plant.body[1]]->position += *vec2Array[plant.father];
+  // *posArray[plant.father] = Vec2(x,y);
+  // spriteArray[plant.body[0]]->position += *posArray[plant.father];
+  // spriteArray[plant.body[1]]->position += *posArray[plant.father];
 
-  // *vec2Array[plant.father] = Vec2(0,1);
+  // *posArray[plant.father] = Vec2(0,1);
 }
 
 void cursorMovement() {
@@ -97,9 +97,8 @@ void cursorMovement() {
     y = 1;
   }
 
-  vec2Array[cursor.id] = Vec2(x, y);
-  spriteArray[cursor.id].position += vec2Array[cursor.id];
-  vec2Array[cursor.id] = Vec2(0, 1);
+  posArray[cursor.id] += Vec2(x, y);
+  spriteArray[cursor.id].position = posArray[cursor.id];
 }
 
 void updateBoxCollider() {
@@ -116,18 +115,18 @@ void Level1::init() {
   animManager.texRepo = &engine->renderer.getTextureRepository();
   loadDebugTextures();
   // // load background
-  createSprite(background,MODE_STRETCH,Vec2(-56, -1),Vec2(780, 524));
-  createTexture(background,"Backgrounds/DAY Unsodded.png");
+  createSprite(background, MODE_STRETCH, Vec2(-56, -1), Vec2(780, 524));
+  createTexture(background, "Backgrounds/DAY Unsodded.png");
   // // printf("background id: %d\n",background);
 
   // // TODO: Fix size seedBank
   // createSprite(seedBank,MODE_STRETCH,Vec2(63,10),Vec2(512/1.5f,128/1.5f));
   // createTexture(seedBank,"UI/SeedBank.png");
-  
+
   // createSprite(seeds,MODE_REPEAT,Vec2(120,10),Vec2(50,70));
   // createTexture(seeds,"UI/Seeds.png");
   // spriteArray[seeds].offset.x = 100;
-  
+
   // createSprite(seedShadow,MODE_REPEAT,Vec2(120,10),Vec2(50,70));
   // createTexture(seedShadow,"UI/Seeds.png");
   // spriteArray[seedShadow].color = Color(0.0F,0.0F,0.0F,60.0F);
@@ -150,12 +149,13 @@ void Level1::init() {
       mapCollider[i][j].width = 45;
       mapCollider[i][j].height = 72;
       map[i][j] = Entities::newID();
-      // createSprite(map[i][j],SpriteMode::MODE_STRETCH,Vec2(mapCollider[i][j].x, mapCollider[i][j].y),Vec2(mapCollider[i][j].width, mapCollider[i][j].height));
-      // createTexture(map[i][j],"UI/Seeds.png");
+      // createSprite(map[i][j],SpriteMode::MODE_STRETCH,Vec2(mapCollider[i][j].x,
+      // mapCollider[i][j].y),Vec2(mapCollider[i][j].width,
+      // mapCollider[i][j].height)); createTexture(map[i][j],"UI/Seeds.png");
       // map[i][j].mode = SpriteMode::MODE_STRETCH;
       // map[i][j].position = Vec2(mapCollider[i][j].x, mapCollider[i][j].y);
-      // map[i][j].size = Vec2(mapCollider[i][j].width, mapCollider[i][j].height);
-      // debugBoxTexture->addLink(map[i][j].id);
+      // map[i][j].size = Vec2(mapCollider[i][j].width,
+      // mapCollider[i][j].height); debugBoxTexture->addLink(map[i][j].id);
     }
   }
   // map[0][1].color = Color(0, 255, 0, 128);
@@ -166,7 +166,7 @@ void Level1::init() {
             Vec2(mapCollider[0][0].x,
                  mapCollider[0][0].y +
                      30) /*Vec2(map[0][0].position.x, map[0][0].position.y)*/);
-  newDeckCursor(&deckCursor.id,Vec2(0,0));
+  newDeckCursor(&deckCursor.id, Vec2(0, 0));
   deckCursor.cost = 50;
   loadPeaShooterAnimation();
   loadZombieAnimation();
@@ -177,8 +177,8 @@ void Level1::init() {
   // createSunSuavizado(Vec2(100,50)); // borrar
   // createPlant(5,9);
   // renderer->core.setFrameLimit(false);
-  
-  sunTimer = 60*6;
+
+  sunTimer = 60 * 6;
 }
 
 void Level1::update() {
@@ -190,7 +190,8 @@ void Level1::update() {
 
   for (int i = 0; i < 5; i++) {
     for (int j = 0; j < 9; j++) {
-      if (boxCollision(&boxColliderArray[cursor.id], &mapCollider[i][j]) == true) {
+      if (boxCollision(&boxColliderArray[cursor.id], &mapCollider[i][j]) ==
+          true) {
         cursor.cursorTile = Vec2(i, j);
         //  printf("estoy en tile %d,%d\n",j,i);
         i = 5;
@@ -203,38 +204,38 @@ void Level1::update() {
     if (zombieCreateRow[(int)cursor.cursorTile.x] == true) {
       if (sunCounter >= deckCursor.cost && plantsCreated < maxPlants) {
         sunCounter -= deckCursor.cost;
-        createPlant(cursor.cursorTile.x,cursor. cursorTile.y);
+        createPlant(cursor.cursorTile.x, cursor.cursorTile.y);
       } else {
         printf("max plants created\n");
       }
     }
   }
 
-
   if (stopAnimation == false) {
     projectileManager.update();
     zombiesManager.update();
     animManager.update();
   }
-  
-  for (std::vector<Sun>::iterator it = sun.begin(); it < sun.end(); it++) {
-    if(spriteArray[it->id].position.y < 370){
-      spriteArray[it->id].position.y++;
-      boxColliderArray[it->id].y++;
-      debugSpriteBoxCollider[it->id].position.y++;
-    } 
+  if (debugMode == false) {
+    for (std::vector<Sun>::iterator it = sun.begin(); it < sun.end(); it++) {
+      if (posArray[it->id].y < 370) {
+        posArray[it->id].y++;
+        boxColliderArray[it->id].y++;
+        debugSpriteBoxCollider[it->id].position.y = boxColliderArray[it->id].y;
+      }
+    }
   }
 
   if (stopAnimation == false) {
-  // 6 segundos
-  if (sunTimer > 0) {
-    sunTimer--;
-  } else {
-    sunTimer = 60*6;
-  // min:50 max:420
-    float x = 50 + rand() % 420;
-    createSun(Vec2(x, 10), sunCost::normalSun);
-  }
+    // 6 segundos
+    if (sunTimer > 0) {
+      sunTimer--;
+    } else {
+      sunTimer = 60 * 6;
+      // min:50 max:420
+      float x = 50 + rand() % 420;
+      createSun(Vec2(x, 10), sunCost::normalSun);
+    }
   }
 
   for (std::vector<Sun>::iterator it = sun.begin(); it < sun.end(); it++) {
@@ -330,24 +331,21 @@ void Level1::update() {
   engine->font.drawText(&myFont, std::to_string(sunCounter), 30, 30, 16,
                         Color(255, 255, 255, 128));
 
-  if(engine->pad.getClicked().R1){
-      debugMode = true;
-      debugMenu = true;
-      printf("\nDEBUG MODE ACTIVE\n"); 
+  if (engine->pad.getClicked().R1 && debugMode == false) {
+    debugMode = true;
+    debugMenu = true;
+    printf("\nDEBUG MODE ACTIVE\n");
   }
 
-  if(debugMenu == true){
-    debugMenuMode();
-    debugOptions(engine->pad,engine->font);
+  if (debugMenu == true) {
+    if (debugAnimation) {
+      startDebugAnimationMode();
+      menuDebugAnimation(engine->pad, engine->font);
+    } else {
+      menuDebugMode(engine->pad);
+    }
   }
-    
-  if(debugAnimation){
-    startDebugAnimationMode();
-    debugAnimationMode(engine->pad, engine->font);
-    menuDebugAnimation(engine->font);
-  }
-    
-  
+
   renderer->endFrame();
 }
 
