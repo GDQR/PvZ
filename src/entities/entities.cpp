@@ -1,4 +1,4 @@
-#include <entities.hpp>
+#include <entities/entities.hpp>
 
 unsigned int Entities::counter = 0;
 std::vector<unsigned int> Entities::aliveEntities;
