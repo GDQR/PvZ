@@ -34,11 +34,11 @@ void createZombie(Vec2 pos) {
   zom->id[0] = Entities::newID();
   zom->id[1] = Entities::newID();
   
-  vec2Array[*zom->father] = Vec2(pos.x+10,pos.y-20);//Vec2(pos.x,pos.y-10);
+  posArray[*zom->father] = Vec2(pos.x+10,pos.y-20);//Vec2(pos.x,pos.y-10);
   spriteArray[*zom->body[0]] = Sprite();
 
   loadSprite(&spriteArray[*zom->body[0]], Tyra::MODE_STRETCH,
-             vec2Array[*zom->father], Vec2(255 / 1.6f, 255 / 1.5f));
+             posArray[*zom->father], Vec2(255 / 1.6f, 255 / 1.5f));
 
   animationArray[*zom->body[0]] = Animation(enumAnimation::zombieWalk);
   animationDataArray[zombieWalk].keys[0]->addLink(

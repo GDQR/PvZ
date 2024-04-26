@@ -33,6 +33,7 @@ class Animation{
 class AnimationData{
     public:
     std::vector <Tyra::Texture*> keys;
+    std::vector <Tyra::Vec2*> position;
 };
 
 class Time{
@@ -54,11 +55,11 @@ class BoxCollider{
 };
 
 // sparse array
-extern std::map <int,Animation> animationArray;
+extern std::map <int,Animation> animationArray;  // Link the sprite with the texture
 extern std::map <int,Time> animationTime;
-extern std::unordered_map <int,AnimationData> animationDataArray;
+extern std::unordered_map <int,AnimationData> animationDataArray; // Save the animation textures
 extern std::vector <MultipleID*> componentMultipleID;
-extern std::map<int,Tyra::Vec2> vec2Array;
+extern std::map<int,Tyra::Vec2> posArray;
 extern std::map <int,Tyra::Sprite> spriteArray; 
 extern std::map <int,Tyra::Vec2> pointColliderArray;
 extern std::map <int,BoxCollider> boxColliderArray;
