@@ -1,5 +1,6 @@
 #pragma once
 #include "states.hpp"
+#include <tyra>
 
 class Level1{
     public:
