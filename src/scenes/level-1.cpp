@@ -81,24 +81,44 @@ void plantMovement() {
   // *posArray[plant.father] = Vec2(0,1);
 }
 
+int cursorTimer = 0;
+float cursorSpeed = 1;
+
 void cursorMovement() {
   float x = 0.0F;
   float y = 0.0F;
 
   if (leftJoy->h <= 100) {
-    x = -1;
+    x = -cursorSpeed;
   } else if (leftJoy->h >= 200) {
-    x = 1;
+    x = cursorSpeed;
   }
 
   if (leftJoy->v <= 100) {
-    y = -1;
+    y = -cursorSpeed;
   } else if (leftJoy->v >= 200) {
-    y = 1;
+    y = cursorSpeed;
   }
 
   posArray[cursor.id] += Vec2(x, y);
-  spriteArray[cursor.id].position = posArray[cursor.id];
+  if (spriteArray[cursor.id].position.x != posArray[cursor.id].x ||
+      spriteArray[cursor.id].position.y != posArray[cursor.id].y) {
+    spriteArray[cursor.id].position = posArray[cursor.id];
+
+    if (cursorTimer < 20) {
+      cursorTimer++;
+
+      if (cursorTimer == 10) {
+        cursorSpeed = 1.5f;
+      } else if (cursorTimer == 20) {
+        cursorSpeed = 2.0f;
+      }
+    }
+
+  } else {
+    cursorTimer = 0;
+    cursorSpeed = 1;
+  }
 }
 
 void updateBoxCollider() {
