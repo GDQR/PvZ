@@ -193,7 +193,7 @@ void RendererSprites::update() {
   for (it = spriteArray.begin(); it != spriteArray.end(); it++) {
     // printf("key: %d. sprite ID: %d\n",it->first,it->second.id);
 
-    //finalPos += entitiePos
+    // finalPos += entitiePos
 
     finalPosArray[it->first].x += posArray[it->first].x;
     finalPosArray[it->first].y += posArray[it->first].y;
@@ -202,7 +202,8 @@ void RendererSprites::update() {
         finalPosArray[it->first].y != it->second.position.y) {
       it->second.position.x = finalPosArray[it->first].x;
       it->second.position.y = finalPosArray[it->first].y;
-      // printf("key: %d. sprite pos: %f,%f\n",it->first,it->second.position.x,it->second.position.y);
+      // printf("key: %d. sprite pos:
+      // %f,%f\n",it->first,it->second.position.x,it->second.position.y);
     }
 
     renderer->renderer2D.render(it->second);
@@ -311,7 +312,7 @@ void ProjectileManager::update() {
   for (it = projectile.begin(); it < projectile.end(); it++) {
     // printf("projectile id: %d\n", *it);
     posArray[*it].x++;
-    printf("proyectile pos: %f,%f\n",posArray[*it].x,posArray[*it].y);
+    // printf("proyectile pos: %f,%f\n", posArray[*it].x, posArray[*it].y);
     // printf("position: %f,%f\n",
     // spriteArray[*it].position.x,spriteArray[*it].position.y);
     boxColliderArray[*it].x = posArray[*it].x;
@@ -352,6 +353,9 @@ void ProjectileManager::zombieCollision() {
           posArray.erase(*it2->father);
           posArray.erase(*it2->body[0]);
           // posArray.erase(*it2->body[1]);
+
+          deleteFatherID(it2->father,it2->body[0]);
+          // deleteFatherID(*it2->father,*it2->body[1]);
           textureRepository.getBySpriteId(spriteArray[*it2->body[0]].id)
               ->removeLinkById(spriteArray[*it2->body[0]].id);
           spriteArray.erase(*it2->body[0]);
@@ -395,8 +399,16 @@ void ProjectileManager::zombieCollision() {
 }
 
 void newFatherID(int* fatherID, int* childID) {
-  printf("new father: %d, child: %d\n", *fatherID, *childID);
+  // printf("new father: %d, child: %d\n", *fatherID, *childID);
   fatherIDArray[*fatherID].id.push_back(*childID);
+}
+
+void deleteFatherID(int* fatherID, int* childID) {
+  // printf("delete father: %d, child: %d\n", *fatherID, *childID);
+  std::vector<int>::iterator it =
+      find(fatherIDArray[*fatherID].id.begin(),
+           fatherIDArray[*fatherID].id.end(), *childID);
+  fatherIDArray[*fatherID].id.erase(it);
 }
 
 void newCursor(int* cursor, Tyra::Vec2 pos) {
@@ -437,8 +449,8 @@ void newProjectile(Vec2 position) {
     damageArray[*id] = 20;
     // hitbox
     boxColliderArray[*id] =
-        BoxCollider(posArray[*id].x, posArray[*id].y,
-                    spriteArray[*id].size.x, spriteArray[*id].size.y);
+        BoxCollider(posArray[*id].x, posArray[*id].y, spriteArray[*id].size.x,
+                    spriteArray[*id].size.y);
     createDebugBoxCollider(*id, Tyra::MODE_STRETCH);
     projectilesCreated++;
   }

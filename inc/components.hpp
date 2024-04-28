@@ -129,5 +129,7 @@ void newProjectile(Vec2 position);
 void newDeckCursor(int* cursor, Tyra::Vec2 pos);
 void createSprite(int id, Tyra::SpriteMode mode, Tyra::Vec2 position,
                   Tyra::Vec2 size);
+
+void deleteFatherID(int* fatherID, int* childID);
 void deleteSprite(const int id);
 bool boxCollision(BoxCollider* col1, BoxCollider* col2);

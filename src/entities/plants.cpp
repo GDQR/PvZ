@@ -79,6 +79,9 @@ void deletePeashotter(const int pos) {
   posArray.erase(*plant[pos].body[0]);
   posArray.erase(*plant[pos].body[1]);
 
+  deleteFatherID(plant[pos].father,plant[pos].body[0]);
+  deleteFatherID(plant[pos].father,plant[pos].body[1]);
+  
   engine->renderer.getTextureRepository()
       .getBySpriteId(spriteArray[*plant[pos].body[0]].id)
       ->removeLinkById(spriteArray[*plant[pos].body[0]].id);
