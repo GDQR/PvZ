@@ -439,8 +439,10 @@ void newProjectile(Vec2 position) {
     projectile.insert(projectile.begin() + projectilesCreated,
                       Entities::newID());
     int* id = &projectile[projectilesCreated];
-    printf("projectile ID: %d\n", *id);
+    // printf("projectile ID: %d\n", *id);
+    // printf("projectile pos %f,%f\n", position.x,position.y);
 
+    position.y -= 15.0f;
     createSprite(*id, Tyra::MODE_STRETCH, position, Vec2(31 / 1.6f, 31 / 1.6f));
     // Sprite* spriteProjectile = &spriteArray[*id];
     projectilePea->addLink(spriteArray[*id].id);
