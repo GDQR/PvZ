@@ -284,14 +284,13 @@ int menuDebugAnimation(Tyra::Pad& pad, Tyra::Font& font) {
     }
 
     if (playAnimation == true) {
-      animManager.debug(debugEntitieId);
+      animManager.debugAnim(debugEntitieId);
     }
 
     if (hideText == false) {
       std::string position =
-          "Position: " +
-          std::to_string(spriteArray[debugEntitieId].position.x) + ", " +
-          std::to_string(spriteArray[debugEntitieId].position.y);
+          "Position: " + std::to_string(posArray[debugEntitieId].x) + ", " +
+          std::to_string(posArray[debugEntitieId].y);
       std::string texPosition =
           "Texture Position: " + std::to_string(texPos->x) + ", " +
           std::to_string(texPos->y);
