@@ -139,22 +139,22 @@ void Level1::init() {
   // // printf("background id: %d\n",background);
 
   // // TODO: Fix size seedBank
-  // createSprite(seedBank,MODE_STRETCH,Vec2(63,10),Vec2(512/1.5f,128/1.5f));
-  // createTexture(seedBank,"UI/SeedBank.png");
+  createSprite(seedBank,MODE_STRETCH,Vec2(63,10),Vec2(512/1.5f,128/1.5f));
+  createTexture(seedBank,"UI/SeedBank.png");
 
-  // createSprite(seeds,MODE_REPEAT,Vec2(120,10),Vec2(50,70));
-  // createTexture(seeds,"UI/Seeds.png");
-  // spriteArray[seeds].offset.x = 100;
+  createSprite(seeds,MODE_REPEAT,Vec2(120,10),Vec2(50,70));
+  createTexture(seeds,"UI/Seeds.png");
+  spriteArray[seeds].offset.x = 100;
 
-  // createSprite(seedShadow,MODE_REPEAT,Vec2(120,10),Vec2(50,70));
-  // createTexture(seedShadow,"UI/Seeds.png");
-  // spriteArray[seedShadow].color = Color(0.0F,0.0F,0.0F,60.0F);
+  createSprite(seedShadow,MODE_REPEAT,Vec2(120,10),Vec2(50,70));
+  createTexture(seedShadow,"UI/Seeds.png");
+  spriteArray[seedShadow].color = Color(0.0F,0.0F,0.0F,60.0F);
   // // seedShadow.flipVertical= true;
   // // seedShadow.offset.y = 70;
 
-  // createSprite(seedShadowTimer,MODE_REPEAT,Vec2(120,10),Vec2(50,70));
-  // createTexture(seedShadowTimer,"UI/Seeds.png");
-  // spriteArray[seedShadowTimer].color = Color(0.0F,0.0F,0.0F,60.0F);
+  createSprite(seedShadowTimer,MODE_REPEAT,Vec2(120,10),Vec2(50,70));
+  createTexture(seedShadowTimer,"UI/Seeds.png");
+  spriteArray[seedShadowTimer].color = Color(0.0F,0.0F,0.0F,60.0F);
   // seedShadowTimer.flipVertical= true;
   // seedShadowTimer.offset.y = 70;
 
@@ -331,7 +331,7 @@ void Level1::update() {
         row = rand() % 5;
       }
 
-      // createZombie(Vec2(mapCollider[row][8].x, mapCollider[row][8].y));
+      createZombie(Vec2(mapCollider[row][8].x, mapCollider[row][8].y));
       timerZombies = 60;
       zombiescreados++;
     }
