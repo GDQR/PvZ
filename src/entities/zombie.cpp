@@ -3,42 +3,45 @@
 
 int zombiesCreated = 0;
 
-void Zombie::createSpace(){
-    switch (type)
-    {
+void Zombie::createSpace() {
+  switch (type) {
     case ZombieNormal:
-        id.reserve(3);
-        body.reserve(2);
-        father = &id[0];
-        body[0] = &id[1];
-        body[1] = &id[2];
-        // body[2] = &id[3];
-        break;
-    
+      id.reserve(3);
+      body.reserve(2);
+      father = &id[0];
+      body[0] = &id[1];
+      body[1] = &id[2];
+      // body[2] = &id[3];
+      break;
+
     default:
-        break;
-    }
+      break;
+  }
 }
 
-void Zombie::newZombie(Zombie_State_enum newType){
-    type = newType;
-    createSpace();
+void Zombie::newZombie(Zombie_State_enum newType) {
+  type = newType;
+  createSpace();
 }
 
 void createZombie(Vec2 pos) {
-
-//   zombie.insert(zombie.begin() + zombiesCreated, Zombie());
+  //   zombie.insert(zombie.begin() + zombiesCreated, Zombie());
   zombie.push_back(Zombie());
-  Zombie* zom = &(zombie[zombie.size()-1]);  
+  Zombie* zom = &(zombie[zombie.size() - 1]);
   zom->newZombie(ZombieNormal);
   zom->id[0] = Entities::newID();
   zom->id[1] = Entities::newID();
-  
-  posArray[*zom->father] = Vec2(pos.x+10,pos.y-20);//Vec2(pos.x,pos.y-10);
-  spriteArray[*zom->body[0]] = Sprite();
+  printf("zombie 0 ID: %d\n", zom->id[0]);
+  printf("zombie 1 ID: %d\n", zom->id[1]);
+  printf("zom pos: %f,%f\n", pos.x, pos.y);
+  posArray[*zom->father] =
+      Vec2(pos.x + 10, pos.y - 20);  // Vec2(pos.x,pos.y-10);
 
-  loadSprite(&spriteArray[*zom->body[0]], Tyra::MODE_STRETCH,
-             posArray[*zom->father], Vec2(255 / 1.6f, 255 / 1.5f));
+  newFatherID(zom->father, zom->body[0]);
+  //   newFatherID(zom->father,zom->body[1]);
+
+  createSprite(*zom->body[0], Tyra::MODE_STRETCH, Vec2(0, 0),
+               Vec2(255 / 1.6f, 255 / 1.5f));
 
   animationArray[*zom->body[0]] = Animation(enumAnimation::zombieWalk);
   animationDataArray[zombieWalk].keys[0]->addLink(
@@ -54,7 +57,7 @@ void createZombie(Vec2 pos) {
 
   // HitBox
   boxColliderArray[*zom->body[0]] = BoxCollider(pos.x + 60, pos.y + 10, 28, 50);
-    //   BoxCollider(pos.x + 100, pos.y + 20, 28, 50);
+  //   BoxCollider(pos.x + 100, pos.y + 20, 28, 50);
   createDebugBoxCollider(*zom->body[0], Tyra::MODE_STRETCH);
 
   zombiesCreated++;

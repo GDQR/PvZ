@@ -194,7 +194,7 @@ void RendererSprites::update() {
     // printf("key: %d. sprite ID: %d\n",it->first,it->second.id);
 
     //finalPos += entitiePos
-    
+
     finalPosArray[it->first].x += posArray[it->first].x;
     finalPosArray[it->first].y += posArray[it->first].y;
 
@@ -202,6 +202,7 @@ void RendererSprites::update() {
         finalPosArray[it->first].y != it->second.position.y) {
       it->second.position.x = finalPosArray[it->first].x;
       it->second.position.y = finalPosArray[it->first].y;
+      // printf("key: %d. sprite pos: %f,%f\n",it->first,it->second.position.x,it->second.position.y);
     }
 
     renderer->renderer2D.render(it->second);
@@ -223,12 +224,14 @@ void ZombiesManager::update() {
       // spriteArray[*it->body[0]].position.x,spriteArray[*it->body[0]].position.y);
       // printf("box: %f,%f\n",
       // boxColliderArray[*it->body[0]].x,boxColliderArray[*it->body[0]].y);
-      spriteArray[*it->body[0]].position.x--;
+      posArray[*it->father].x--;
 
       boxColliderArray[*it->body[0]].x =
-          spriteArray[*it->body[0]].position.x + 60;
+          posArray[*it->father].x + posArray[*it->body[0]].x + 60;
       debugSpriteBoxCollider[*it->body[0]].position.x =
           boxColliderArray[*it->body[0]].x;
+      // printf("box: %f,%f\n",
+      // boxColliderArray[*it->body[0]].x,boxColliderArray[*it->body[0]].y);
     }
   }
 }
@@ -307,18 +310,20 @@ void ProjectileManager::update() {
 
   for (it = projectile.begin(); it < projectile.end(); it++) {
     // printf("projectile id: %d\n", *it);
-    spriteArray[*it].position.x++;
+    posArray[*it].x++;
+    printf("proyectile pos: %f,%f\n",posArray[*it].x,posArray[*it].y);
     // printf("position: %f,%f\n",
     // spriteArray[*it].position.x,spriteArray[*it].position.y);
-    boxColliderArray[*it].x = spriteArray[*it].position.x;
+    boxColliderArray[*it].x = posArray[*it].x;
     debugSpriteBoxCollider[*it].position.x = boxColliderArray[*it].x;
-    if (spriteArray[*it].position.x >= 580) {
+    if (posArray[*it].x >= 580) {
       // delete projectile
       printf("borrando proyectil\n");
       textureRepository.getBySpriteId(spriteArray[*it].id)
           ->removeLinkById(spriteArray[*it].id);
       spriteArray.erase(*it);
       boxColliderArray.erase(*it);
+      posArray.erase(*it);
       deleteDebugBoxCollider(*it);
       Entities::deleteID(*it);
       it = projectile.erase(it);
@@ -345,6 +350,8 @@ void ProjectileManager::zombieCollision() {
         // delete zombie
         if (lifeArray[*it2->body[0]] <= 0) {
           posArray.erase(*it2->father);
+          posArray.erase(*it2->body[0]);
+          // posArray.erase(*it2->body[1]);
           textureRepository.getBySpriteId(spriteArray[*it2->body[0]].id)
               ->removeLinkById(spriteArray[*it2->body[0]].id);
           spriteArray.erase(*it2->body[0]);
@@ -430,7 +437,7 @@ void newProjectile(Vec2 position) {
     damageArray[*id] = 20;
     // hitbox
     boxColliderArray[*id] =
-        BoxCollider(spriteArray[*id].position.x, spriteArray[*id].position.y,
+        BoxCollider(posArray[*id].x, posArray[*id].y,
                     spriteArray[*id].size.x, spriteArray[*id].size.y);
     createDebugBoxCollider(*id, Tyra::MODE_STRETCH);
     projectilesCreated++;
