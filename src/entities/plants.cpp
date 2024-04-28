@@ -39,11 +39,14 @@ void createPeashotter(int id, int row, int column, Tyra::Vec2 pos) {
   // printf("plant[%d].id[1]: %d\n",pos,plant[pos].id[1]);
   // printf("plant[%d].id[2]: %d\n",pos,plant[pos].id[2]);
 
+  newFatherID(plant[id].father,plant[id].body[0]);
+  newFatherID(plant[id].father,plant[id].body[1]);
+
   posArray[*plant[id].father] = pos;  // Vec2(row, column);
 
-  createSprite(*plant[id].body[0], Tyra::MODE_STRETCH, Vec2(pos.x, pos.y + 5),
+  createSprite(*plant[id].body[0], Tyra::MODE_STRETCH, Vec2(0, 5),
                Vec2(128 / 1.6f, 128 / 1.6f));
-  createSprite(*plant[id].body[1], Tyra::MODE_STRETCH, Vec2(pos.x, pos.y + 5),
+  createSprite(*plant[id].body[1], Tyra::MODE_STRETCH, Vec2(0, 5),
                Vec2(128 / 1.6f, 128 / 1.6f));
 
   animationArray[*plant[id].body[0]] = Animation(peaShooterHead);

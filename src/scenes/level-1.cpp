@@ -81,31 +81,50 @@ void plantMovement() {
   // *posArray[plant.father] = Vec2(0,1);
 }
 
+int cursorTimer = 0;
+float cursorSpeed = 1;
+
 void cursorMovement() {
   float x = 0.0F;
   float y = 0.0F;
 
   if (leftJoy->h <= 100) {
-    x = -1;
+    x = -cursorSpeed;
   } else if (leftJoy->h >= 200) {
-    x = 1;
+    x = cursorSpeed;
   }
 
   if (leftJoy->v <= 100) {
-    y = -1;
+    y = -cursorSpeed;
   } else if (leftJoy->v >= 200) {
-    y = 1;
+    y = cursorSpeed;
   }
 
   posArray[cursor.id] += Vec2(x, y);
-  spriteArray[cursor.id].position = posArray[cursor.id];
+  if (spriteArray[cursor.id].position.x != posArray[cursor.id].x ||
+      spriteArray[cursor.id].position.y != posArray[cursor.id].y) {
+
+    if (cursorTimer < 20) {
+      cursorTimer++;
+
+      if (cursorTimer == 10) {
+        cursorSpeed = 1.5f;
+      } else if (cursorTimer == 20) {
+        cursorSpeed = 2.0f;
+      }
+    }
+
+  } else {
+    cursorTimer = 0;
+    cursorSpeed = 1;
+  }
 }
 
 void updateBoxCollider() {
   boxColliderArray[cursor.id].x =
-      boxColliderArray[cursor.id].offsetX + spriteArray[cursor.id].position.x;
+      boxColliderArray[cursor.id].offsetX + posArray[cursor.id].x;
   boxColliderArray[cursor.id].y =
-      boxColliderArray[cursor.id].offsetY + spriteArray[cursor.id].position.y;
+      boxColliderArray[cursor.id].offsetY + posArray[cursor.id].y;
   debugSpriteBoxCollider[cursor.id].position =
       Vec2(boxColliderArray[cursor.id].x, boxColliderArray[cursor.id].y);
 }
@@ -320,6 +339,7 @@ void Level1::update() {
 
   renderer->beginFrame();
 
+  renderSprites.updateChildPos();
   renderSprites.update();
 
   // for(int i=0;i<5;i++){
@@ -341,8 +361,12 @@ void Level1::update() {
     if (debugAnimation) {
       startDebugAnimationMode();
       menuDebugAnimation(engine->pad, engine->font);
+      animManager.debug();
     } else {
       menuDebugMode(engine->pad);
+      if(stopAnimation == true){
+        animManager.debug();
+      }
     }
   }
 

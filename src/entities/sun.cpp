@@ -10,11 +10,7 @@ void createSun(Tyra::Vec2 position, sunCost cost) {
   sun[indexpos].cost = cost;
   printf("sun id: %d\n", sun[indexpos].id);
 
-  posArray[sun[indexpos].id] = position;
-  spriteArray[sun[indexpos].id] = Sprite();
-
-  loadSprite(&spriteArray[sun[indexpos].id], Tyra::MODE_STRETCH,
-             posArray[sun[indexpos].id], Vec2(128 / 1.5f, 128 / 1.5f));
+  createSprite(sun[indexpos].id, Tyra::MODE_STRETCH, position,Vec2(128 / 1.5f, 128 / 1.5f));
 
   // HitBox
   boxColliderArray[sun[indexpos].id] =

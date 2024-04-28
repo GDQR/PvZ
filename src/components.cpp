@@ -5,8 +5,9 @@
 std::map<int, Animation> animationArray;
 std::map<int, Time> animationTime;
 std::unordered_map<int, AnimationData> animationDataArray;
-std::vector<MultipleID*> componentMultipleID(100, nullptr);
+std::map<int, FatherID> fatherIDArray;
 std::map<int, Tyra::Vec2> posArray;
+std::map<int, Tyra::Vec2> finalPosArray;
 std::map<int, Tyra::Sprite> spriteArray;
 std::map<int, Tyra::Vec2> pointColliderArray;
 std::map<int, BoxCollider> boxColliderArray;
@@ -29,8 +30,10 @@ std::map<int, Tyra::Sprite> debugSpriteBoxCollider;
 void createSprite(int id, Tyra::SpriteMode mode, Tyra::Vec2 position,
                   Tyra::Vec2 size) {
   spriteArray[id] = Sprite();
+  posArray[id] = position;
+  finalPosArray[id] = Vec2(0, 0);
   // printf("nuevo sprite id: %d. pos: %d\n",spriteArray[id].id,id);
-  loadSprite(&spriteArray[id], mode, position, size);
+  loadSprite(&spriteArray[id], mode, Vec2(0.0f, 0.0f), size);
 }
 
 void deleteSprite(const int id) { spriteArray.erase(id); }
@@ -63,8 +66,6 @@ BoxCollider::BoxCollider(float x, float y, float width, float height,
   this->offsetY = offsetY;
 }
 
-MultipleID::MultipleID(const int fatherID) { id.push_back(fatherID); }
-
 Animation::Animation() {}
 
 Animation::Animation(enumAnimation anim) { animID = anim; }
@@ -78,9 +79,12 @@ void AnimationManager::update() {
         animationTime[animationArray[it->first].animID]
             .seconds[animationArray[it->first].key]) {
       animationArray[it->first].time++;
+
+      position(it->first);
       continue;
     }
 
+    // Unlink Texture from the sprite entitie
     textureRepository.getBySpriteId(spriteArray[it->first].id)
         ->removeLinkById(spriteArray[it->first].id);
 
@@ -91,23 +95,32 @@ void AnimationManager::update() {
         animationDataArray[animationArray[it->first].animID].keys.size()) {
       animationArray[it->first].key = 0;
     }
-    spriteArray[it->first].position.x =
-        posArray[it->first].x +
-        animationDataArray[animationArray[it->first].animID]
-            .position[animationArray[it->first].key]
-            ->x;
-    spriteArray[it->first].position.y =
-        posArray[it->first].y +
-        animationDataArray[animationArray[it->first].animID]
-            .position[animationArray[it->first].key]
-            ->y;
+
+    // Link new Texture to the sprite entitie
     animationDataArray[animationArray[it->first].animID]
         .keys[animationArray[it->first].key]
         ->addLink(spriteArray[it->first].id);
+
+    position(it->first);
   }
 }
 
-int AnimationManager::debug(const int entitieID) {
+void AnimationManager::position(const int entitieID) {
+  // finalPos += animPos
+  finalPosArray[entitieID] =
+      *animationDataArray[animationArray[entitieID].animID]
+           .position[animationArray[entitieID].key];
+}
+
+void AnimationManager::debug() {
+  std::map<int, Animation>::iterator it;
+
+  for (it = animationArray.begin(); it != animationArray.end(); it++) {
+    position(it->first);
+  }
+}
+
+int AnimationManager::debugAnim(const int entitieID) {
   auto& textureRepository = renderer->getTextureRepository();
 
   if (animationArray[entitieID].time <
@@ -127,20 +140,11 @@ int AnimationManager::debug(const int entitieID) {
       animationDataArray[animationArray[entitieID].animID].keys.size()) {
     animationArray[entitieID].key = 0;
   }
-  spriteArray[entitieID].position.x =
-      posArray[entitieID].x +
-      animationDataArray[animationArray[entitieID].animID]
-          .position[animationArray[entitieID].key]
-          ->x;
-  spriteArray[entitieID].position.y =
-      posArray[entitieID].y +
-      animationDataArray[animationArray[entitieID].animID]
-          .position[animationArray[entitieID].key]
-          ->y;
+
   animationDataArray[animationArray[entitieID].animID]
       .keys[animationArray[entitieID].key]
       ->addLink(spriteArray[entitieID].id);
-    return 0;
+  return 0;
 }
 
 void AnimationManager::debugChangeFrame(const int entitieID, const int key) {
@@ -149,13 +153,6 @@ void AnimationManager::debugChangeFrame(const int entitieID, const int key) {
   // Unlink Texture from the sprite entitie
   textureRepository.getBySpriteId(spriteArray[entitieID].id)
       ->removeLinkById(spriteArray[entitieID].id);
-
-  spriteArray[entitieID].position.x =
-      posArray[entitieID].x +
-      animationDataArray[animationArray[entitieID].animID].position[key]->x;
-  spriteArray[entitieID].position.y =
-      posArray[entitieID].y +
-      animationDataArray[animationArray[entitieID].animID].position[key]->y;
 
   // Link new Texture to the sprite entitie
   animationDataArray[animationArray[entitieID].animID]
@@ -178,12 +175,37 @@ void RendererDebugSpritesManager::update() {
   }
 }
 
+void RendererSprites::updateChildPos() {
+  std::map<int, FatherID>::iterator it;
+  for (it = fatherIDArray.begin(); it != fatherIDArray.end(); it++) {
+    for (unsigned int i = 0; i < it->second.id.size(); i++) {
+      // finalPos += fatherPos
+
+      finalPosArray[it->second.id[i]].x += posArray[it->first].x;
+      finalPosArray[it->second.id[i]].y += posArray[it->first].y;
+    }
+  }
+}
+
 void RendererSprites::update() {
   std::map<int, Sprite>::iterator it;
   // printf("size: %d\n", spriteArray.size());
   for (it = spriteArray.begin(); it != spriteArray.end(); it++) {
     // printf("key: %d. sprite ID: %d\n",it->first,it->second.id);
+
+    //finalPos += entitiePos
+    
+    finalPosArray[it->first].x += posArray[it->first].x;
+    finalPosArray[it->first].y += posArray[it->first].y;
+
+    if (finalPosArray[it->first].x != it->second.position.x ||
+        finalPosArray[it->first].y != it->second.position.y) {
+      it->second.position.x = finalPosArray[it->first].x;
+      it->second.position.y = finalPosArray[it->first].y;
+    }
+
     renderer->renderer2D.render(it->second);
+    finalPosArray[it->first] = Vec2(0.0f, 0.0f);
   }
   // printf("Render Finish\n");
 }
@@ -363,6 +385,11 @@ void ProjectileManager::zombieCollision() {
       }
     }
   }
+}
+
+void newFatherID(int* fatherID, int* childID) {
+  printf("new father: %d, child: %d\n", *fatherID, *childID);
+  fatherIDArray[*fatherID].id.push_back(*childID);
 }
 
 void newCursor(int* cursor, Tyra::Vec2 pos) {
