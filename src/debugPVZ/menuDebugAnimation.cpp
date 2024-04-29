@@ -30,7 +30,7 @@ int menuDebugAnimation(Tyra::Pad& pad, Tyra::Font& font) {
 
     if (padTimer > 0) {
       padTimer--;
-    } else if (menuUpOption(pad)) {
+    } else if (menuUpOption(pad) || menuRightOption(pad)) {
       spriteArray[debugEntitieId].color.a = 128.0f;
 
       std::map<int, Animation>::iterator it =
@@ -42,7 +42,7 @@ int menuDebugAnimation(Tyra::Pad& pad, Tyra::Font& font) {
         debugEntitieId = std::next(it)->first;
       }
 
-    } else if (menuDownOption(pad)) {
+    } else if (menuDownOption(pad) || menuLeftOption(pad)) {
       spriteArray[debugEntitieId].color.a = 128.0f;
 
       std::map<int, Animation>::iterator it =
