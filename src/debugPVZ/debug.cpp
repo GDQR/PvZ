@@ -94,8 +94,8 @@ void menuDebugMode(Tyra::Pad& pad) {
     }
   }
 
-  engine->font.drawText(&myFont, "PRESS X FOR ACTIVE", 30, 300, 16, black);
-  engine->font.drawText(&myFont, "PRESS O FOR DESACTIVE", 30, 320, 16, black);
+  engine->font.drawText(&myFont, "PRESS X FOR ACTIVE", 30, 400, 16, black);
+  engine->font.drawText(&myFont, "PRESS O FOR DESACTIVE", 30, 420, 16, black);
 }
 
 int startDebugAnimationMode(Tyra::Pad& pad, Tyra::Font& font) {
