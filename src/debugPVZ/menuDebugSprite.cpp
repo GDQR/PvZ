@@ -50,7 +50,6 @@ void subMenuSprite(Tyra::Pad& pad, Tyra::Font& font, int& entitieID) {
   }
 
   if (animationFound == true && playAnimation == true) {
-    printf("pase por animManager\n");
     animManager.debugAnim(entitieID);
   }
 
@@ -88,12 +87,13 @@ void subMenuSprite(Tyra::Pad& pad, Tyra::Font& font, int& entitieID) {
                             black);
       engine->font.drawText(&myFont, "PRESS R1 FOR Next Texture", 30, 360, 16,
                             black);
+      engine->font.drawText(&myFont, "PRESS X FOR PLAY/STOP ANIMATION", 30, 400,
+                          16, black);
     }
 
     engine->font.drawText(&myFont, "PRESS [] FOR HIDE/SHOW TEXT", 30, 380, 16,
                           black);
-    engine->font.drawText(&myFont, "PRESS X FOR PLAY/STOP ANIMATION", 30, 400,
-                          16, black);
+    
   }
 }
 
