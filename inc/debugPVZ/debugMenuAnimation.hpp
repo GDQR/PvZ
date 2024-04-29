@@ -5,4 +5,4 @@
 extern bool startAnimationDebug;
 extern int debugEntitieId;
 
-int menuDebugAnimation(Tyra::Pad& pad, Tyra::Font& font);
+void menuDebugAnimation(Tyra::Pad& pad, Tyra::Font& font);
