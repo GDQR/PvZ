@@ -1,5 +1,7 @@
+#include "font/font.hpp"
 #include "debugPVZ/debug.hpp"
-#include "debugPVZ/debugMenuAnimation.hpp"
+#include "debugPVZ/menuDebugAnimation.hpp"
+#include "debugPVZ/menuDebugSprite.hpp"
 #include "components.hpp"
 #include <iostream>
 #include <iterator>
@@ -10,6 +12,8 @@ bool debugMenu = false;
 bool debugAnimation = false;
 bool stopAnimation = false;
 bool debugSprite = false;
+float debugAlphaColor;
+int debugEntitieId;
 
 Tyra::Texture* debugBoxTexture;
 Tyra::Texture* debugFillBoxTexture;
@@ -20,10 +24,10 @@ void activeDebugMode() {
     case AnimationDebug:
       debugAnimation = true;
       stopAnimation = true;
-      // isMainMenuAnimationActive = true;
       break;
     case SpriteDebug:
       debugSprite = true;
+      stopAnimation = true;
       break;
     case testDebug:
       break;
@@ -37,7 +41,10 @@ void deactiveDebugMode() {
     case AnimationDebug:
       debugAnimation = false;
       stopAnimation = false;
-      // isMainMenuAnimationActive = false;
+      break;
+    case SpriteDebug:
+      debugSprite = false;
+      stopAnimation = false;
       break;
     case testDebug:
       break;
@@ -74,6 +81,7 @@ void menuDebugMode(Tyra::Pad& pad) {
   }
 
   Tyra::Color colorMenu;
+  int textPos = 100;
   for (unsigned int i = 0; i < debugModesSize; i++) {
     if (debugOption != i) {
       colorMenu = black;
@@ -83,15 +91,20 @@ void menuDebugMode(Tyra::Pad& pad) {
 
     switch (i) {
       case AnimationDebug:
-        engine->font.drawText(&myFont, "Animation Debug", 30, 100, 16,
+        engine->font.drawText(&myFont, "Animation Debug", 30, textPos, 16,
+                              colorMenu);
+        break;
+      case SpriteDebug:
+        engine->font.drawText(&myFont, "Sprite Debug", 30, textPos, 16,
                               colorMenu);
         break;
       case testDebug:
-        engine->font.drawText(&myFont, "Test Debug", 30, 120, 16, colorMenu);
+        engine->font.drawText(&myFont, "Test Debug", 30, textPos, 16, colorMenu);
         break;
       default:
         break;
     }
+    textPos += 20;
   }
 
   engine->font.drawText(&myFont, "PRESS X FOR ACTIVE", 30, 400, 16, black);
@@ -118,7 +131,32 @@ int startDebugAnimationMode(Tyra::Pad& pad, Tyra::Font& font) {
     debugEntitieId = it->first;
   }
 
-  menuDebugAnimation(pad, font);
+  menuDebugAnimation(pad, font, debugEntitieId);
+  return 0;
+}
+
+int startDebugSpriteMode(Tyra::Pad& pad, Tyra::Font& font) {
+  if (spriteArray.size() == 0) {
+    // ERROR MENU
+    if (engine->pad.getClicked().Circle) {
+      debugAnimation = false;
+    }
+    engine->font.drawText(&myFont, "Sprites not found", 30, 80, 16, black);
+    engine->font.drawText(&myFont, "PRESS O FOR GO BACK", 30, 320, 16, black);
+    return 1;
+  }
+
+  if (startSpriteDebug == true) {
+    printf("start debug sprite\n");
+    startSpriteDebug = false;
+    std::map<int, Sprite>::iterator it;
+    it = spriteArray.begin();
+    printf("base id: %d\n", it->first);
+    debugEntitieId = it->first;
+    debugAlphaColor = it->second.color.a;
+  }
+
+  menuDebugSprite(pad, font, debugEntitieId);
   return 0;
 }
 

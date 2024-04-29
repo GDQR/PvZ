@@ -1,4 +1,4 @@
-// #include "font/font.hpp"
+#include "font/font.hpp"
 #include "renderSprite/textures.hpp"
 #include "renderSprite/animations.hpp"
 #include "states.hpp"
@@ -362,7 +362,10 @@ void Level1::update() {
     if (debugAnimation) {
       startDebugAnimationMode(engine->pad, engine->font);
       animManager.debug();
-    } else {
+    } else if(debugSprite){
+      startDebugSpriteMode(engine->pad, engine->font);
+    }
+    else {
       menuDebugMode(engine->pad);
       if(stopAnimation == true){
         animManager.debug();

@@ -1,7 +1,6 @@
 #pragma once
 #include <tyra>
 #include <stdio.h>
-#include "../font/font.hpp"
 #include "../renderSprite/textures.hpp"
 
 enum debugModes { AnimationDebug, SpriteDebug, testDebug, debugModesSize};
@@ -13,6 +12,7 @@ extern bool debugMenu;
 extern bool debugAnimation;
 extern bool stopAnimation;
 extern bool debugSprite;
+extern float debugAlphaColor;
 
 extern std::map <int,Tyra::Sprite> debugSpritePointCollider;
 extern std::map <int,Tyra::Sprite> debugSpriteBoxCollider;
@@ -25,6 +25,7 @@ void menuDebugMode(Tyra::Pad& pad);
 void activeDebugMode();
 void deactiveDebugMode();
 int startDebugAnimationMode(Tyra::Pad& pad, Tyra::Font& font);
+int startDebugSpriteMode(Tyra::Pad& pad, Tyra::Font& font);
 
 void loadDebugTextures();
 
