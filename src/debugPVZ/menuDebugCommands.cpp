@@ -1,6 +1,9 @@
 #include "debugPVZ/menuDebugCommands.hpp"
 
 int padTimer = 0;
+bool hideText = false;
+bool playAnimation = false;
+float colorSprite = -2;
 
 bool menuUpOption(Tyra::Pad& pad) {
   if ((pad.getPressed().DpadUp || leftJoy->v <= 100)) {

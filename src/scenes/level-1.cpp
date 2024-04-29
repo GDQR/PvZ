@@ -1,4 +1,4 @@
-// #include "font/font.hpp"
+#include "font/font.hpp"
 #include "renderSprite/textures.hpp"
 #include "renderSprite/animations.hpp"
 #include "states.hpp"
@@ -20,6 +20,8 @@ int seedBank = Entities::newID();
 int seeds = Entities::newID();
 int seedShadow = Entities::newID();
 int seedShadowTimer = Entities::newID();
+int seedTimer = 60*8;
+
 int map[5][9];
 // Sprite map[5][9];
 
@@ -134,7 +136,7 @@ void Level1::init() {
   srand(time(NULL));
   animManager.texRepo = &engine->renderer.getTextureRepository();
   loadDebugTextures();
-  // // load background
+  // load background
   createSprite(background, MODE_STRETCH, Vec2(-56, -1), Vec2(780, 524));
   createTexture(background, "Backgrounds/DAY Unsodded.png");
   // // printf("background id: %d\n",background);
@@ -208,6 +210,13 @@ void Level1::update() {
     updateBoxCollider();
   }
 
+  if(seedTimer > 0){
+    seedTimer--;
+    spriteArray[seedShadowTimer].size.y -= (70.0f/8.0f/60.0f); // el size Y es 70
+  } else {
+
+  }
+
   for (int i = 0; i < 5; i++) {
     for (int j = 0; j < 9; j++) {
       if (boxCollision(&boxColliderArray[cursor.id], &mapCollider[i][j]) ==
@@ -222,8 +231,10 @@ void Level1::update() {
 
   if (engine->pad.getClicked().Cross && debugMode == false) {
     if (zombieCreateRow[(int)cursor.cursorTile.x] == true) {
-      if (sunCounter >= deckCursor.cost && plantsCreated < maxPlants) {
+      if (sunCounter >= deckCursor.cost && plantsCreated < maxPlants && seedTimer == 0) {
         sunCounter -= deckCursor.cost;
+        seedTimer = 60*8;
+        spriteArray[seedShadowTimer].size.y = 70;
         createPlant(cursor.cursorTile.x, cursor.cursorTile.y);
       } else {
         printf("max plants created\n");
@@ -311,7 +322,7 @@ void Level1::update() {
           // printf("hay un zombi en frente\n");
           if (plant[i].attackTimer >= 0) {
             plant[i].attackTimer--;
-          } else {
+          } else if(stopAnimation == false){
             // printf("disparar\n");
             newProjectile(pointColliderArray[*plant[i].body[0]]);
             plant[i].attackTimer = 60;
@@ -362,7 +373,10 @@ void Level1::update() {
     if (debugAnimation) {
       startDebugAnimationMode(engine->pad, engine->font);
       animManager.debug();
-    } else {
+    } else if(debugSprite){
+      startDebugSpriteMode(engine->pad, engine->font);
+    }
+    else {
       menuDebugMode(engine->pad);
       if(stopAnimation == true){
         animManager.debug();
