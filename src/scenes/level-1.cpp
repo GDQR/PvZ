@@ -10,6 +10,7 @@
 #include "components.hpp"
 #include "debugPVZ/debug.hpp"
 #include "font/font.hpp"
+#include "debugPVZ/menuDebugCommands.hpp"
 #include <stdlib.h>
 #include <time.h>
 using namespace Tyra;
@@ -359,8 +360,7 @@ void Level1::update() {
 
   if (debugMenu == true) {
     if (debugAnimation) {
-      startDebugAnimationMode();
-      menuDebugAnimation(engine->pad, engine->font);
+      startDebugAnimationMode(engine->pad, engine->font);
       animManager.debug();
     } else {
       menuDebugMode(engine->pad);
