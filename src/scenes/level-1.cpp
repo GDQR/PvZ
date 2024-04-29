@@ -17,10 +17,16 @@ using namespace Tyra;
 
 int background = Entities::newID();
 int seedBank = Entities::newID();
-int seeds = Entities::newID();
-int seedShadow = Entities::newID();
-int seedShadowTimer = Entities::newID();
-int seedTimer = 60*8;
+
+class Card{
+  public:
+  int seed;
+  int seedShadow;
+  int seedShadowTimer;
+  int seedTimer;
+};
+
+Card card1;
 
 int map[5][9];
 // Sprite map[5][9];
@@ -49,6 +55,7 @@ class DeckCursor {
 
 Cursor cursor;
 DeckCursor deckCursor;
+int maxDeck = 2;
 
 int timerZombies = 0;
 int maxZombies = 5;
@@ -132,6 +139,39 @@ void updateBoxCollider() {
       Vec2(boxColliderArray[cursor.id].x, boxColliderArray[cursor.id].y);
 }
 
+void cursorDeckMovement(){
+  if(engine->pad.getClicked().DpadLeft){
+    deckCursor.pos--;
+    if(deckCursor.pos < 0){ deckCursor.pos = maxDeck-1; }
+    printf("deck pos: %d\n",deckCursor.pos);
+  }else if(engine->pad.getClicked().DpadRight){
+    deckCursor.pos++;
+    if(deckCursor.pos >= maxDeck){ deckCursor.pos = 0; }
+    printf("deck pos: %d\n",deckCursor.pos);
+  }
+}
+
+void createCard(Card* card, Vec2 pos){
+  card->seed = Entities::newID();
+  card->seedShadow = Entities::newID();
+  card->seedShadowTimer = Entities::newID();
+  card->seedTimer = Entities::newID();
+
+  createSprite(card->seed,MODE_REPEAT,pos,Vec2(50,70));
+  createTexture(card->seed,"UI/Seeds.png");
+  spriteArray[card->seed].offset.x = 100;
+
+  createSprite(card->seedShadow,MODE_REPEAT,pos,Vec2(50,70));
+  createTexture(card->seedShadow,"UI/Seeds.png");
+  spriteArray[card->seedShadow].color = Color(255.0F,255.0F,255.0F,60.0F);
+
+  createSprite(card->seedShadowTimer,MODE_REPEAT,pos,Vec2(50,70));
+  createTexture(card->seedShadowTimer,"UI/Seeds.png");
+  spriteArray[card->seedShadowTimer].color = Color(0.0F,0.0F,0.0F,60.0F);
+
+  card->seedTimer = 60*8;
+}
+
 void Level1::init() {
   srand(time(NULL));
   animManager.texRepo = &engine->renderer.getTextureRepository();
@@ -140,26 +180,12 @@ void Level1::init() {
   createSprite(background, MODE_STRETCH, Vec2(-56, -1), Vec2(780, 524));
   createTexture(background, "Backgrounds/DAY Unsodded.png");
   // // printf("background id: %d\n",background);
-
+  printf("background id: %d\n",background);
   // // TODO: Fix size seedBank
   createSprite(seedBank,MODE_STRETCH,Vec2(63,10),Vec2(512/1.5f,128/1.5f));
   createTexture(seedBank,"UI/SeedBank.png");
 
-  createSprite(seeds,MODE_REPEAT,Vec2(120,10),Vec2(50,70));
-  createTexture(seeds,"UI/Seeds.png");
-  spriteArray[seeds].offset.x = 100;
-
-  createSprite(seedShadow,MODE_REPEAT,Vec2(120,10),Vec2(50,70));
-  createTexture(seedShadow,"UI/Seeds.png");
-  spriteArray[seedShadow].color = Color(0.0F,0.0F,0.0F,60.0F);
-  // // seedShadow.flipVertical= true;
-  // // seedShadow.offset.y = 70;
-
-  createSprite(seedShadowTimer,MODE_REPEAT,Vec2(120,10),Vec2(50,70));
-  createTexture(seedShadowTimer,"UI/Seeds.png");
-  spriteArray[seedShadowTimer].color = Color(0.0F,0.0F,0.0F,60.0F);
-  // seedShadowTimer.flipVertical= true;
-  // seedShadowTimer.offset.y = 70;
+  createCard(&card1, Vec2(120,10));
 
   // loadTexture(&map[0][0],"asset_box.png"); // debug map
 
@@ -188,7 +214,7 @@ void Level1::init() {
             Vec2(mapCollider[0][0].x,
                  mapCollider[0][0].y +
                      30) /*Vec2(map[0][0].position.x, map[0][0].position.y)*/);
-  newDeckCursor(&deckCursor.id, Vec2(0, 0));
+  newDeckCursor(&deckCursor.id, Vec2(120, -10));
   deckCursor.cost = 50;
   loadPeaShooterAnimation();
   loadZombieAnimation();
@@ -208,13 +234,15 @@ void Level1::update() {
   if (cursor.id != -1 && debugMode == false) {
     cursorMovement();
     updateBoxCollider();
+    cursorDeckMovement();
   }
 
-  if(seedTimer > 0){
-    seedTimer--;
-    spriteArray[seedShadowTimer].size.y -= (70.0f/8.0f/60.0f); // el size Y es 70
-  } else {
-
+  if(card1.seedTimer > 0){
+    card1.seedTimer--;
+    spriteArray[card1.seedShadow].size = Vec2(50, 70);
+    spriteArray[card1.seedShadowTimer].size.y -= (70.0f/8.0f/60.0f); // el size Y es 70
+  } else if(sunCounter >= deckCursor.cost){
+    spriteArray[card1.seedShadow].size = Vec2(0, 0);
   }
 
   for (int i = 0; i < 5; i++) {
@@ -231,10 +259,10 @@ void Level1::update() {
 
   if (engine->pad.getClicked().Cross && debugMode == false) {
     if (zombieCreateRow[(int)cursor.cursorTile.x] == true) {
-      if (sunCounter >= deckCursor.cost && plantsCreated < maxPlants && seedTimer == 0) {
+      if (sunCounter >= deckCursor.cost && plantsCreated < maxPlants && card1.seedTimer == 0) {
         sunCounter -= deckCursor.cost;
-        seedTimer = 60*8;
-        spriteArray[seedShadowTimer].size.y = 70;
+        card1.seedTimer = 60*8;
+        spriteArray[card1.seedShadowTimer].size.y = 70;
         createPlant(cursor.cursorTile.x, cursor.cursorTile.y);
       } else {
         printf("max plants created\n");

@@ -416,7 +416,6 @@ void newCursor(int* cursor, Tyra::Vec2 pos) {
   printf("cursor id: %d\n", *cursor);
   createSprite(*cursor, Tyra::MODE_STRETCH, pos, Vec2(56, 48));
   createTexture(*cursor, "cursor6.png");
-  posArray[*cursor] = Vec2(pos.x, pos.y);
   boxColliderArray[*cursor] = BoxCollider(pos.x, pos.y, 24, 24, 28 / 2, 24 / 2);
   createDebugBoxCollider(*cursor, Tyra::MODE_STRETCH);
 }
@@ -424,6 +423,8 @@ void newCursor(int* cursor, Tyra::Vec2 pos) {
 void newDeckCursor(int* cursor, Tyra::Vec2 pos) {
   *cursor = Entities::newID();
   printf("deck cursor id: %d\n", *cursor);
+  createSprite(*cursor, Tyra::MODE_STRETCH, pos, Vec2(56, 48));
+  createTexture(*cursor, "cursor6.png");
   // createSprite(*cursor, Tyra::MODE_STRETCH,
   //              pos, Vec2(56, 48));
   // createTexture(*cursor, "cursor6.png");
