@@ -27,7 +27,7 @@ void Plant::newPlant(Plant_State_enum newType) {
 
 void createPeashotter(int id, int row, int column, Tyra::Vec2 pos) {
   plant[id].newPlant(PeaShotter);
-  
+
   plant[id].row = row;
   plant[id].column = column;
 
@@ -39,8 +39,8 @@ void createPeashotter(int id, int row, int column, Tyra::Vec2 pos) {
   // printf("plant[%d].id[1]: %d\n",id,plant[id].id[1]);
   // printf("plant[%d].id[2]: %d\n",id,plant[id].id[2]);
 
-  newFatherID(plant[id].father,plant[id].body[0]);
-  newFatherID(plant[id].father,plant[id].body[1]);
+  newFatherID(plant[id].father, plant[id].body[0]);
+  newFatherID(plant[id].father, plant[id].body[1]);
 
   posArray[*plant[id].father] = pos;  // Vec2(row, column);
 
@@ -72,16 +72,16 @@ void createPeashotter(int id, int row, int column, Tyra::Vec2 pos) {
 
 void deletePeashotter(const int pos) {
   plant[pos].type = NonePlant;
-  
+
   plantCreatedInMap[plant[pos].row][plant[pos].column] = false;
 
   posArray.erase(*plant[pos].father);
   posArray.erase(*plant[pos].body[0]);
   posArray.erase(*plant[pos].body[1]);
 
-  deleteFatherID(plant[pos].father,plant[pos].body[0]);
-  deleteFatherID(plant[pos].father,plant[pos].body[1]);
-  
+  deleteFatherID(plant[pos].father, plant[pos].body[0]);
+  deleteFatherID(plant[pos].father, plant[pos].body[1]);
+
   engine->renderer.getTextureRepository()
       .getBySpriteId(spriteArray[*plant[pos].body[0]].id)
       ->removeLinkById(spriteArray[*plant[pos].body[0]].id);
@@ -105,15 +105,43 @@ void deletePeashotter(const int pos) {
   plantsCreated--;
 }
 
-void createPlant(const int row, const int column) {
+void createPlant(Plant_State_enum typePlant, const int row, const int column) {
   if (plantCreatedInMap[row][column] == false) {
     plantCreatedInMap[row][column] = true;
-    createPeashotter(plantsCreated,row,column, Vec2(mapCollider[row][column].x,
-                                         mapCollider[row][column].y));
     plantsCreated++;
+
+    switch (typePlant) {
+      case PeaShotter:
+        printf("peashooter\n");
+        createPeashotter(
+            plantsCreated, row, column,
+            Vec2(mapCollider[row][column].x, mapCollider[row][column].y));
+        break;
+      case SunFlower:
+        printf("sunflower\n");
+        break;
+
+      default:
+        break;
+    }
+
     // printf("estoy en tile %f,%f\n",cursorTile.x,cursorTile.y);
     // printf("plantas creadas: %d\n",plantsCreated);
   } else {
     printf("no se puede crear aqui, ya existe una planta\n");
   }
+}
+
+int getPlantCost(Plant_State_enum typePlant) {
+  switch (typePlant) {
+    case PeaShotter:
+      printf("peashooter\n");
+      return 100;
+    case SunFlower:
+      printf("sunflower\n");
+      return 50;
+    default:
+      break;
+  }
+  return 0;
 }
