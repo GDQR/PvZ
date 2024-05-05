@@ -3,6 +3,8 @@
 
 extern const Tyra::PadJoy* leftJoy;
 extern int padTimer;
+extern int padPressTimer;
+extern int padSpeed;
 extern bool hideText;
 extern bool playAnimation;
 extern float colorSprite;
