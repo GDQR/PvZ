@@ -1,6 +1,8 @@
 #include "debugPVZ/menuDebugCommands.hpp"
 
 int padTimer = 0;
+int padPressTimer = 0;
+int padSpeed = 1;
 bool hideText = false;
 bool playAnimation = false;
 float colorSprite = -2;

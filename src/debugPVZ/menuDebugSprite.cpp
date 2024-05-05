@@ -37,15 +37,57 @@ void subMenuSprite(Tyra::Pad& pad, Tyra::Font& font, int& entitieID) {
     padTimer--;
   } else {
     if (menuUpOption(pad)) {
-      posArray[entitieID].y--;
+      if (padPressTimer < 20) {
+        padPressTimer++;
+
+        if (padPressTimer == 10) {
+          padSpeed = 2.0f;
+        } else if (padPressTimer == 20) {
+          padSpeed = 3.0f;
+        }
+      }
+      posArray[entitieID].y -= padSpeed;
     } else if (menuDownOption(pad)) {
-      posArray[entitieID].y++;
+      if (padPressTimer < 20) {
+        padPressTimer++;
+
+        if (padPressTimer == 10) {
+          padSpeed = 2.0f;
+        } else if (padPressTimer == 20) {
+          padSpeed = 3.0f;
+        }
+      }
+      posArray[entitieID].y += padSpeed;
     }
 
     if (menuLeftOption(pad)) {
-      posArray[entitieID].x--;
+      if (padPressTimer < 20) {
+        padPressTimer++;
+
+        if (padPressTimer == 10) {
+          padSpeed = 2.0f;
+        } else if (padPressTimer == 20) {
+          padSpeed = 3.0f;
+        }
+      }
+      posArray[entitieID].x -= padSpeed;
     } else if (menuRightOption(pad)) {
-      posArray[entitieID].x++;
+      if (padPressTimer < 20) {
+        padPressTimer++;
+
+        if (padPressTimer == 10) {
+          padSpeed = 2.0f;
+        } else if (padPressTimer == 20) {
+          padSpeed = 3.0f;
+        }
+      }
+      posArray[entitieID].x += padSpeed;
+    }
+
+    if (menuUpOption(pad) == false && menuDownOption(pad) == false &&
+    menuLeftOption(pad) == false && menuRightOption(pad) == false) {
+      padPressTimer = 0;
+      padSpeed = 1;
     }
   }
 
