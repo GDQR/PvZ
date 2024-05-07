@@ -71,6 +71,8 @@ extern std::map<int, FatherID> fatherIDArray;
 extern std::map<int, Tyra::Vec2> posArray;
 extern std::map<int, Tyra::Vec2> finalPosArray;
 extern std::map<int, Tyra::Sprite> spriteArray;
+extern std::map<int, Tyra::Sprite> spritesRotate;
+extern std::map<int, float> angles;
 extern std::map<int, Tyra::Vec2> pointColliderArray;
 extern std::map<int, BoxCollider> boxColliderArray;
 extern std::map<int, int> damageArray;
@@ -106,6 +108,7 @@ class RendererSprites {
  public:
   void updateChildPos();
   void update();
+  void updateRotate();
 };
 
 class ZombiesManager {
@@ -129,6 +132,8 @@ void newProjectile(Vec2 position);
 void newDeckCursor(int* cursor, Tyra::Vec2 pos);
 void createSprite(int id, Tyra::SpriteMode mode, Tyra::Vec2 position,
                   Tyra::Vec2 size);
+void createSpriteRotate(int id, Tyra::SpriteMode mode, Tyra::Vec2 position,
+                  Tyra::Vec2 size, const float angle);
 
 void deleteFatherID(int* fatherID, int* childID);
 void deleteSprite(const int id);

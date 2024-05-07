@@ -9,6 +9,8 @@ std::map<int, FatherID> fatherIDArray;
 std::map<int, Tyra::Vec2> posArray;
 std::map<int, Tyra::Vec2> finalPosArray;
 std::map<int, Tyra::Sprite> spriteArray;
+std::map<int, Tyra::Sprite> spritesRotate;
+std::map<int, float> angles;
 std::map<int, Tyra::Vec2> pointColliderArray;
 std::map<int, BoxCollider> boxColliderArray;
 std::map<int, int> damageArray;
@@ -34,6 +36,16 @@ void createSprite(int id, Tyra::SpriteMode mode, Tyra::Vec2 position,
   finalPosArray[id] = Vec2(0, 0);
   // printf("nuevo sprite id: %d. pos: %d\n",spriteArray[id].id,id);
   loadSprite(&spriteArray[id], mode, Vec2(0.0f, 0.0f), size);
+}
+
+void createSpriteRotate(int id, Tyra::SpriteMode mode, Tyra::Vec2 position,
+                  Tyra::Vec2 size, const float angle) {
+  spritesRotate[id] = Sprite();             
+  posArray[id] = position;
+  finalPosArray[id] = Vec2(0, 0);
+  // printf("nuevo sprite id: %d. pos: %d\n",spritesRotate[id].id,id);
+  angles[id] = angle;
+  loadSprite(&spritesRotate[id], mode, Vec2(0.0f, 0.0f), size);
 }
 
 void deleteSprite(const int id) { spriteArray.erase(id); }
@@ -209,6 +221,36 @@ void RendererSprites::update() {
     renderer->renderer2D.render(it->second);
     finalPosArray[it->first] = Vec2(0.0f, 0.0f);
   }
+  // printf("Render Finish\n");
+}
+
+void RendererSprites::updateRotate() {
+  std::map<int, Sprite>::iterator it;
+  // static float angle = 0;
+  
+  for (it = spritesRotate.begin(); it != spritesRotate.end(); it++) {
+    // printf("key: %d. sprite ID: %d\n",it->first,it->second.id);
+
+    // finalPos += entitiePos
+    
+    finalPosArray[it->first].x += posArray[it->first].x;
+    finalPosArray[it->first].y += posArray[it->first].y;
+
+    if (finalPosArray[it->first].x != it->second.position.x ||
+        finalPosArray[it->first].y != it->second.position.y) {
+      it->second.position.x = finalPosArray[it->first].x;
+      it->second.position.y = finalPosArray[it->first].y;
+      // printf("key: %d. sprite pos:
+      // %f,%f\n",it->first,it->second.position.x,it->second.position.y);
+    }
+
+    renderer->renderer2D.renderRotate(it->second,angles[it->first]);
+    finalPosArray[it->first] = Vec2(0.0f, 0.0f);
+  }
+  // angle++;
+  // if(angle>360){
+  //   angle =0;
+  // }
   // printf("Render Finish\n");
 }
 
