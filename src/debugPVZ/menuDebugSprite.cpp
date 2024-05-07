@@ -8,6 +8,7 @@ bool animationFound = false;
 bool rotateFound = false;
 bool rotateMode = false;
 bool sizeMode = false;
+bool hideSprite = false;
 
 void speedDebugOptions() {
   if (padPressTimer < 20) {
@@ -17,6 +18,23 @@ void speedDebugOptions() {
       padSpeed = 2.0f;
     } else if (padPressTimer == 20) {
       padSpeed = 3.0f;
+    }
+  }
+}
+
+void activateRender() {
+  int id;
+  if (rotateFound == true) {
+    for (unsigned int i = 0; i < debugStopRenderRotateSprites.size(); i++) {
+      id = debugStopRenderRotateSprites.front();
+      spritesRotateRender[id] = &spritesRotate[id];
+      debugStopRenderRotateSprites.pop_back();
+    }
+  } else {
+    for (unsigned int i = 0; i < debugStopRenderNormalSprites.size(); i++) {
+      id = debugStopRenderNormalSprites.front();
+      spritesNormalRender[id] = &spriteArray[id];
+      debugStopRenderNormalSprites.pop_back();
     }
   }
 }
@@ -43,8 +61,10 @@ void subMenuSprite(Tyra::Pad& pad, Tyra::Font& font, int& entitieID) {
     hideText = false;
     playAnimation = false;
     rotateMode = false;
-    rotateFound = false;
     sizeMode = false;
+    hideSprite = false;
+    activateRender();
+    rotateFound = false;
   } else if (pad.getClicked().Square) {
     hideText = !hideText;
   } else if (pad.getClicked().Cross && animationFound == true) {
@@ -58,6 +78,19 @@ void subMenuSprite(Tyra::Pad& pad, Tyra::Font& font, int& entitieID) {
     sizeMode = !sizeMode;
     if (rotateMode == true) {
       rotateMode = false;
+    }
+  } else if (pad.getClicked().R3) {
+    hideSprite = !hideSprite;
+    if (hideSprite == true) {
+      if (rotateFound == true) {
+        spritesRotateRender.erase(entitieID);
+        debugStopRenderRotateSprites.push_back(entitieID);
+      } else {
+        spritesNormalRender.erase(entitieID);
+        debugStopRenderNormalSprites.push_back(entitieID);
+      }
+    } else {
+      activateRender();
     }
   }
 
@@ -184,6 +217,8 @@ void subMenuSprite(Tyra::Pad& pad, Tyra::Font& font, int& entitieID) {
       engine->font.drawText(&myFont, "PRESS X FOR PLAY/STOP ANIMATION", 30, 400,
                             16, black);
     }
+    engine->font.drawText(&myFont, "PRESS R3 FOR HIDE SPRITE", 30, 280, 16,
+                          black);
 
     engine->font.drawText(&myFont, "PRESS L3 FOR SIZE MODE", 30, 300, 16,
                           black);

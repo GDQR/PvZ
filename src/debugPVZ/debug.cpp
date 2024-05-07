@@ -16,6 +16,8 @@ float debugAlphaColor;
 int debugEntitieId;
 
 std::map<int, Tyra::Sprite*> debugSpritesType;  // Normal or rotated sprites
+std::vector<int> debugStopRenderRotateSprites;
+std::vector<int> debugStopRenderNormalSprites;
 
 Tyra::Texture* debugBoxTexture;
 Tyra::Texture* debugFillBoxTexture;

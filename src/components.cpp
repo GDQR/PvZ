@@ -9,7 +9,9 @@ std::map<int, FatherID> fatherIDArray;
 std::map<int, Tyra::Vec2> posArray;
 std::map<int, Tyra::Vec2> finalPosArray;
 std::map<int, Tyra::Sprite> spriteArray;
+std::map<int, Tyra::Sprite*> spritesNormalRender;
 std::map<int, Tyra::Sprite> spritesRotate;
+std::map<int, Tyra::Sprite*> spritesRotateRender;
 std::map<int, float> angles;
 std::map<int, Tyra::Vec2> pointColliderArray;
 std::map<int, BoxCollider> boxColliderArray;
@@ -36,19 +38,29 @@ void createSprite(int id, Tyra::SpriteMode mode, Tyra::Vec2 position,
   finalPosArray[id] = Vec2(0, 0);
   // printf("nuevo sprite id: %d. pos: %d\n",spriteArray[id].id,id);
   loadSprite(&spriteArray[id], mode, Vec2(0.0f, 0.0f), size);
+  spritesNormalRender[id] = &spriteArray[id];
 }
 
 void createSpriteRotate(int id, Tyra::SpriteMode mode, Tyra::Vec2 position,
-                  Tyra::Vec2 size, const float angle) {
-  spritesRotate[id] = Sprite();             
+                        Tyra::Vec2 size, const float angle) {
+  spritesRotate[id] = Sprite();
   posArray[id] = position;
   finalPosArray[id] = Vec2(0, 0);
   // printf("nuevo sprite id: %d. pos: %d\n",spritesRotate[id].id,id);
   angles[id] = angle;
   loadSprite(&spritesRotate[id], mode, Vec2(0.0f, 0.0f), size);
+  spritesRotateRender[id] = &spritesRotate[id];
 }
 
-void deleteSprite(const int id) { spriteArray.erase(id); }
+void deleteSprite(const int entitieID) {
+  engine->renderer.getTextureRepository()
+      .getBySpriteId(spriteArray[entitieID].id)
+      ->removeLinkById(spriteArray[entitieID].id);
+  spriteArray.erase(entitieID);
+  if (spritesNormalRender.count(entitieID)) {
+    spritesNormalRender.erase(entitieID);
+  }
+}
 
 /*
  * @return True if collision exist
@@ -200,9 +212,10 @@ void RendererSprites::updateChildPos() {
 }
 
 void RendererSprites::update() {
-  std::map<int, Sprite>::iterator it;
+  std::map<int, Sprite*>::iterator it;
   // printf("size: %d\n", spriteArray.size());
-  for (it = spriteArray.begin(); it != spriteArray.end(); it++) {
+  for (it = spritesNormalRender.begin(); it != spritesNormalRender.end();
+       it++) {
     // printf("key: %d. sprite ID: %d\n",it->first,it->second.id);
 
     // finalPos += entitiePos
@@ -210,10 +223,10 @@ void RendererSprites::update() {
     finalPosArray[it->first].x += posArray[it->first].x;
     finalPosArray[it->first].y += posArray[it->first].y;
 
-    if (finalPosArray[it->first].x != it->second.position.x ||
-        finalPosArray[it->first].y != it->second.position.y) {
-      it->second.position.x = finalPosArray[it->first].x;
-      it->second.position.y = finalPosArray[it->first].y;
+    if (finalPosArray[it->first].x != it->second->position.x ||
+        finalPosArray[it->first].y != it->second->position.y) {
+      it->second->position.x = finalPosArray[it->first].x;
+      it->second->position.y = finalPosArray[it->first].y;
       // printf("key: %d. sprite pos:
       // %f,%f\n",it->first,it->second.position.x,it->second.position.y);
     }
@@ -225,26 +238,27 @@ void RendererSprites::update() {
 }
 
 void RendererSprites::updateRotate() {
-  std::map<int, Sprite>::iterator it;
+  std::map<int, Sprite*>::iterator it;
   // static float angle = 0;
-  
-  for (it = spritesRotate.begin(); it != spritesRotate.end(); it++) {
+
+  for (it = spritesRotateRender.begin(); it != spritesRotateRender.end();
+       it++) {
     // printf("key: %d. sprite ID: %d\n",it->first,it->second.id);
 
     // finalPos += entitiePos
-    
+
     finalPosArray[it->first].x += posArray[it->first].x;
     finalPosArray[it->first].y += posArray[it->first].y;
 
-    if (finalPosArray[it->first].x != it->second.position.x ||
-        finalPosArray[it->first].y != it->second.position.y) {
-      it->second.position.x = finalPosArray[it->first].x;
-      it->second.position.y = finalPosArray[it->first].y;
+    if (finalPosArray[it->first].x != it->second->position.x ||
+        finalPosArray[it->first].y != it->second->position.y) {
+      it->second->position.x = finalPosArray[it->first].x;
+      it->second->position.y = finalPosArray[it->first].y;
       // printf("key: %d. sprite pos:
       // %f,%f\n",it->first,it->second.position.x,it->second.position.y);
     }
 
-    renderer->renderer2D.renderRotate(it->second,angles[it->first]);
+    renderer->renderer2D.renderRotate(*it->second, angles[it->first]);
     finalPosArray[it->first] = Vec2(0.0f, 0.0f);
   }
   // angle++;
@@ -349,7 +363,6 @@ int ZombiesManager::collision() {
 
 void ProjectileManager::update() {
   std::vector<int>::iterator it;
-  auto& textureRepository = renderer->getTextureRepository();
 
   for (it = projectile.begin(); it < projectile.end(); it++) {
     // printf("projectile id: %d\n", *it);
@@ -362,9 +375,7 @@ void ProjectileManager::update() {
     if (posArray[*it].x >= 580) {
       // delete projectile
       printf("borrando proyectil\n");
-      textureRepository.getBySpriteId(spriteArray[*it].id)
-          ->removeLinkById(spriteArray[*it].id);
-      spriteArray.erase(*it);
+      deleteSprite(*it);
       boxColliderArray.erase(*it);
       posArray.erase(*it);
       deleteDebugBoxCollider(*it);
@@ -396,11 +407,9 @@ void ProjectileManager::zombieCollision() {
           posArray.erase(*it2->body[0]);
           // posArray.erase(*it2->body[1]);
 
-          deleteFatherID(it2->father,it2->body[0]);
+          deleteFatherID(it2->father, it2->body[0]);
           // deleteFatherID(*it2->father,*it2->body[1]);
-          textureRepository.getBySpriteId(spriteArray[*it2->body[0]].id)
-              ->removeLinkById(spriteArray[*it2->body[0]].id);
-          spriteArray.erase(*it2->body[0]);
+          deleteSprite(*it2->body[0]);
           animationArray.erase(*it2->body[0]);
           lifeArray.erase(*it2->body[0]);
           boxColliderArray.erase(*it2->body[0]);
@@ -421,9 +430,7 @@ void ProjectileManager::zombieCollision() {
             textureRepository.getBySpriteId(spriteArray[*it].id);
         TYRA_ASSERT(text,
                     "No se encontro la textura del proyectil with id: ", *it);
-
-        text->removeLinkById(spriteArray[*it].id);
-        spriteArray.erase(*it);
+        deleteSprite(*it);
         boxColliderArray.erase(*it);
         deleteDebugBoxCollider(*it);
         Entities::deleteID(*it);
