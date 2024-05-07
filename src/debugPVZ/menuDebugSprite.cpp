@@ -5,6 +5,8 @@
 bool startSpriteDebug = true;
 bool isMainMenuActive = true;
 bool animationFound = false;
+bool rotateFound = false;
+bool rotateMode = false;
 
 void subMenuSprite(Tyra::Pad& pad, Tyra::Font& font, int& entitieID) {
   if (pad.getClicked().L1 && animationFound == true) {
@@ -27,10 +29,14 @@ void subMenuSprite(Tyra::Pad& pad, Tyra::Font& font, int& entitieID) {
     animationFound = false;
     hideText = false;
     playAnimation = false;
+    rotateMode = false;
+    rotateFound = false;
   } else if (pad.getClicked().Square) {
     hideText = !hideText;
-  } else if (pad.getClicked().Cross) {
+  } else if (pad.getClicked().Cross && animationFound == true) {
     playAnimation = !playAnimation;
+  } else if (pad.getClicked().Triangle && rotateFound == true) {
+    rotateMode = !rotateMode;
   }
 
   if (padTimer > 0) {
@@ -46,7 +52,13 @@ void subMenuSprite(Tyra::Pad& pad, Tyra::Font& font, int& entitieID) {
           padSpeed = 3.0f;
         }
       }
-      posArray[entitieID].y -= padSpeed;
+
+      if (rotateMode == false) {
+        posArray[entitieID].y -= padSpeed;
+      } else {
+        angles[entitieID] += padSpeed;
+      }
+
     } else if (menuDownOption(pad)) {
       if (padPressTimer < 20) {
         padPressTimer++;
@@ -57,7 +69,12 @@ void subMenuSprite(Tyra::Pad& pad, Tyra::Font& font, int& entitieID) {
           padSpeed = 3.0f;
         }
       }
-      posArray[entitieID].y += padSpeed;
+
+      if (rotateMode == false) {
+        posArray[entitieID].y += padSpeed;
+      } else {
+        angles[entitieID] -= padSpeed;
+      }
     }
 
     if (menuLeftOption(pad)) {
@@ -70,7 +87,11 @@ void subMenuSprite(Tyra::Pad& pad, Tyra::Font& font, int& entitieID) {
           padSpeed = 3.0f;
         }
       }
-      posArray[entitieID].x -= padSpeed;
+      if (rotateMode == false) {
+        posArray[entitieID].x -= padSpeed;
+      } else {
+        angles[entitieID] -= padSpeed;
+      }
     } else if (menuRightOption(pad)) {
       if (padPressTimer < 20) {
         padPressTimer++;
@@ -81,11 +102,15 @@ void subMenuSprite(Tyra::Pad& pad, Tyra::Font& font, int& entitieID) {
           padSpeed = 3.0f;
         }
       }
-      posArray[entitieID].x += padSpeed;
+      if (rotateMode == false) {
+        posArray[entitieID].x += padSpeed;
+      } else {
+        angles[entitieID] += padSpeed;
+      }
     }
 
     if (menuUpOption(pad) == false && menuDownOption(pad) == false &&
-    menuLeftOption(pad) == false && menuRightOption(pad) == false) {
+        menuLeftOption(pad) == false && menuRightOption(pad) == false) {
       padPressTimer = 0;
       padSpeed = 1;
     }
@@ -95,13 +120,23 @@ void subMenuSprite(Tyra::Pad& pad, Tyra::Font& font, int& entitieID) {
     animManager.debugAnim(entitieID);
   }
 
-  if (hideText == false) {
-    std::string position =
-        "Position: " + std::to_string(posArray[entitieID].x) + ", " +
-        std::to_string(posArray[entitieID].y);
+  if (hideText == false && isMainMenuActive == false) {
+    if (rotateFound == true) {
+      engine->font.drawText(&myFont, "PRESS A FOR Rotate", 30, 320, 16, black);
+    }
+    if (rotateMode == false) {
+      std::string position =
+          "Position: " + std::to_string(posArray[entitieID].x) + ", " +
+          std::to_string(posArray[entitieID].y);
 
-    engine->font.drawText(&myFont, position, 30, 140, 16,
-                          Tyra::Color(0, 0, 0, 128));
+      engine->font.drawText(&myFont, position, 30, 140, 16,
+                            Tyra::Color(0, 0, 0, 128));
+    } else {
+      std::string angle = "Angle: " + std::to_string(angles[entitieID]);
+      engine->font.drawText(&myFont, angle, 30, 140, 16,
+                            Tyra::Color(0, 0, 0, 128));
+    }
+
     if (animationFound == true) {
       Vec2* texPos = animationDataArray[animationArray[entitieID].animID]
                          .position[animationArray[entitieID].key];
@@ -130,64 +165,75 @@ void subMenuSprite(Tyra::Pad& pad, Tyra::Font& font, int& entitieID) {
       engine->font.drawText(&myFont, "PRESS R1 FOR Next Texture", 30, 360, 16,
                             black);
       engine->font.drawText(&myFont, "PRESS X FOR PLAY/STOP ANIMATION", 30, 400,
-                          16, black);
+                            16, black);
     }
 
-    engine->font.drawText(&myFont, "PRESS [] FOR HIDE/SHOW TEXT", 30, 380, 16,
+    engine->font.drawText(&myFont, "PRESS [ ] FOR HIDE/SHOW TEXT", 30, 380, 16,
                           black);
-    
   }
+}
+
+void getNextSprite(int& entitieID) {
+  debugSpritesType[entitieID]->color.a = debugAlphaColor;
+
+  std::map<int, Sprite*>::iterator it = debugSpritesType.find(entitieID);
+  if (std::next(it)->first == debugSpritesType.end()->first) {
+    entitieID = debugSpritesType.begin()->first;
+  } else {
+    entitieID = std::next(it)->first;
+  }
+
+  debugAlphaColor = debugSpritesType[entitieID]->color.a;
+}
+
+void getPrevSprite(int& entitieID) {
+  debugSpritesType[entitieID]->color.a = debugAlphaColor;
+
+  std::map<int, Sprite*>::iterator it = debugSpritesType.find(entitieID);
+  if (entitieID == debugSpritesType.begin()->first) {
+    entitieID = debugSpritesType.rbegin()->first;
+  } else {
+    entitieID = std::prev(it)->first;
+  }
+
+  debugAlphaColor = debugSpritesType[entitieID]->color.a;
 }
 
 void menuDebugSprite(Tyra::Pad& pad, Tyra::Font& font, int& entitieID) {
   if (isMainMenuActive == true) {
     // Main menu Sprite
 
-    spriteArray[entitieID].color.a += colorSprite;
-    if (spriteArray[entitieID].color.a <= 30.0f) {
+    debugSpritesType[entitieID]->color.a += colorSprite;
+
+    if (debugSpritesType[entitieID]->color.a <= 30.0f) {
       colorSprite = 2;
-    } else if (spriteArray[entitieID].color.a >= 128.0f) {
+    } else if (debugSpritesType[entitieID]->color.a >= 128.0f) {
       colorSprite = -2;
     }
 
     if (menuCrossClickedOption(pad, true)) {
       isMainMenuActive = false;
-      spriteArray[entitieID].color.a = debugAlphaColor;
+      debugSpritesType[entitieID]->color.a = debugAlphaColor;
       if (animationArray.count(entitieID) == 1) {
         animationFound = true;
+      }
+      if (spritesRotate.count(entitieID) == 1) {
+        rotateFound = true;
       }
     } else if (menuCircleClickedOption(pad, true)) {
       debugSprite = false;
       animationFound = false;
+      rotateFound = false;
       startSpriteDebug = true;
-      spriteArray[entitieID].color.a = debugAlphaColor;
+      debugSpritesType[entitieID]->color.a = debugAlphaColor;
     }
 
     if (padTimer > 0) {
       padTimer--;
     } else if (menuUpOption(pad) || menuRightOption(pad)) {
-      spriteArray[entitieID].color.a = debugAlphaColor;
-
-      std::map<int, Sprite>::iterator it = spriteArray.find(entitieID);
-
-      if (std::next(it)->first == spriteArray.end()->first) {
-        entitieID = spriteArray.begin()->first;
-      } else {
-        entitieID = std::next(it)->first;
-      }
-      debugAlphaColor = spriteArray[entitieID].color.a;
-
+      getNextSprite(entitieID);
     } else if (menuDownOption(pad) || menuLeftOption(pad)) {
-      spriteArray[entitieID].color.a = debugAlphaColor;
-
-      std::map<int, Sprite>::iterator it = spriteArray.find(entitieID);
-
-      if (entitieID == spriteArray.begin()->first) {
-        entitieID = spriteArray.rbegin()->first;
-      } else {
-        entitieID = std::prev(it)->first;
-      }
-      debugAlphaColor = spriteArray[entitieID].color.a;
+      getPrevSprite(entitieID);
     }
     engine->font.drawText(&myFont, "PRESS X FOR SELECT THE TEXTURE", 30, 400,
                           16, black);
@@ -200,7 +246,7 @@ void menuDebugSprite(Tyra::Pad& pad, Tyra::Font& font, int& entitieID) {
     std::string textId = "Entitie ID: " + std::to_string(entitieID);
     std::string name =
         "Name Texture: " + renderer->getTextureRepository()
-                               .getBySpriteId(spriteArray[entitieID].id)
+                               .getBySpriteId(debugSpritesType[entitieID]->id)
                                ->name;
     engine->font.drawText(&myFont, textId, 30, 80, 16,
                           Tyra::Color(0, 0, 0, 128));

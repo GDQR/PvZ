@@ -16,6 +16,7 @@ extern float debugAlphaColor;
 
 extern std::map <int,Tyra::Sprite> debugSpritePointCollider;
 extern std::map <int,Tyra::Sprite> debugSpriteBoxCollider;
+extern std::map <int,Tyra::Sprite*> debugSpritesType; // Normal or rotate sprites IDs
 
 extern Tyra::Texture* debugBoxTexture;
 extern Tyra::Texture* debugFillBoxTexture;

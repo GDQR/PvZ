@@ -15,6 +15,8 @@ bool debugSprite = false;
 float debugAlphaColor;
 int debugEntitieId;
 
+std::map<int, Tyra::Sprite*> debugSpritesType;  // Normal or rotated sprites
+
 Tyra::Texture* debugBoxTexture;
 Tyra::Texture* debugFillBoxTexture;
 Tyra::Texture* debugPointTexture;
@@ -77,6 +79,9 @@ void menuDebugMode(Tyra::Pad& pad) {
     deactiveDebugMode();
     debugMode = false;
     debugMenu = false;
+    if (debugSpritesType.empty() == false) {
+      debugSpritesType.clear();
+    }
     printf("\nDEBUG MODE DEACTIVE\n");
   }
 
@@ -99,7 +104,8 @@ void menuDebugMode(Tyra::Pad& pad) {
                               colorMenu);
         break;
       case testDebug:
-        engine->font.drawText(&myFont, "Test Debug", 30, textPos, 16, colorMenu);
+        engine->font.drawText(&myFont, "Test Debug", 30, textPos, 16,
+                              colorMenu);
         break;
       default:
         break;
@@ -149,11 +155,20 @@ int startDebugSpriteMode(Tyra::Pad& pad, Tyra::Font& font) {
   if (startSpriteDebug == true) {
     printf("start debug sprite\n");
     startSpriteDebug = false;
+
+    // Get all normal and rotated sprites
     std::map<int, Sprite>::iterator it;
-    it = spriteArray.begin();
-    printf("base id: %d\n", it->first);
-    debugEntitieId = it->first;
-    debugAlphaColor = it->second.color.a;
+    for (it = spriteArray.begin(); it != spriteArray.end(); it++) {
+      debugSpritesType[it->first] = &it->second;
+    }
+
+    for (it = spritesRotate.begin(); it != spritesRotate.end(); it++) {
+      debugSpritesType[it->first] = &it->second;
+    }
+
+    debugEntitieId = debugSpritesType.begin()->first;
+    debugAlphaColor = debugSpritesType.begin()->second->color.a;
+    printf("base id: %d\n", debugEntitieId);
   }
 
   menuDebugSprite(pad, font, debugEntitieId);
