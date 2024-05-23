@@ -14,6 +14,7 @@ bool stopAnimation = false;
 bool debugSprite = false;
 float debugAlphaColor;
 int debugEntitieId;
+Vec2* texPos = NULL;
 
 std::map<int, Tyra::Sprite*> debugSpritesType;  // Normal or rotated sprites
 std::vector<int> debugStopRenderRotateSprites;
@@ -60,13 +61,13 @@ void deactiveDebugMode() {
 void menuDebugMode(Tyra::Pad& pad) {
   if (padTimer > 0) {
     padTimer--;
-  } else if (menuUpOption(pad)) {
+  } else if (menuUpOptionLeftJoy(pad)) {
     if (debugOption == 0) {
       debugOption = debugModesSize - 1;
     } else {
       debugOption--;
     }
-  } else if (menuDownOption(pad)) {
+  } else if (menuDownOptionLeftJoy(pad)) {
     if (debugOption == debugModesSize - 1) {
       debugOption = 0;
     } else {

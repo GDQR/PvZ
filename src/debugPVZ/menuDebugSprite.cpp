@@ -40,6 +40,14 @@ void activateRender() {
 }
 
 void subMenuSprite(Tyra::Pad& pad, Tyra::Font& font, int& entitieID) {
+  if (animationFound == true) {
+    texPos = animationDataArray[animationArray[entitieID].animID]
+                 .position[animationArray[entitieID].key];
+  } else if (texPos == NULL) {
+    texPos = new Vec2(0.0f, 0.0f);
+    printf("texpos created: %p\n",texPos);
+  }
+
   if (pad.getClicked().L1 && animationFound == true) {
     if (animationArray[entitieID].key > 0) {
       animationArray[entitieID].key--;
@@ -57,7 +65,6 @@ void subMenuSprite(Tyra::Pad& pad, Tyra::Font& font, int& entitieID) {
     animManager.debugChangeFrame(entitieID, animationArray[entitieID].key);
   } else if (pad.getClicked().Circle) {
     isMainMenuActive = true;
-    animationFound = false;
     hideText = false;
     playAnimation = false;
     rotateMode = false;
@@ -65,6 +72,11 @@ void subMenuSprite(Tyra::Pad& pad, Tyra::Font& font, int& entitieID) {
     hideSprite = false;
     activateRender();
     rotateFound = false;
+    if (animationFound == false) {
+      delete texPos;
+    }
+    texPos = NULL;
+    animationFound = false;
   } else if (pad.getClicked().Square) {
     hideText = !hideText;
   } else if (pad.getClicked().Cross && animationFound == true) {
@@ -97,7 +109,7 @@ void subMenuSprite(Tyra::Pad& pad, Tyra::Font& font, int& entitieID) {
   if (padTimer > 0) {
     padTimer--;
   } else {
-    if (menuUpOption(pad)) {
+    if (menuUpOptionLeftJoy(pad)) {
       speedDebugOptions();
       if (rotateMode == false && sizeMode == false) {
         posArray[entitieID].y -= padSpeed;
@@ -107,7 +119,7 @@ void subMenuSprite(Tyra::Pad& pad, Tyra::Font& font, int& entitieID) {
         debugSpritesType[entitieID]->size.y -= padSpeed;
       }
 
-    } else if (menuDownOption(pad)) {
+    } else if (menuDownOptionLeftJoy(pad)) {
       speedDebugOptions();
 
       if (rotateMode == false && sizeMode == false) {
@@ -119,7 +131,7 @@ void subMenuSprite(Tyra::Pad& pad, Tyra::Font& font, int& entitieID) {
       }
     }
 
-    if (menuLeftOption(pad)) {
+    if (menuLeftOptionLeftJoy(pad)) {
       speedDebugOptions();
 
       if (rotateMode == false && sizeMode == false) {
@@ -129,7 +141,7 @@ void subMenuSprite(Tyra::Pad& pad, Tyra::Font& font, int& entitieID) {
       } else {
         debugSpritesType[entitieID]->size.x -= padSpeed;
       }
-    } else if (menuRightOption(pad)) {
+    } else if (menuRightOptionLeftJoy(pad)) {
       speedDebugOptions();
 
       if (rotateMode == false && sizeMode == false) {
@@ -141,21 +153,56 @@ void subMenuSprite(Tyra::Pad& pad, Tyra::Font& font, int& entitieID) {
       }
     }
 
-    if (menuUpOption(pad) == false && menuDownOption(pad) == false &&
-        menuLeftOption(pad) == false && menuRightOption(pad) == false) {
-      if (pad.getPressed().L2 && sizeMode == true) {
+    if (menuUpOptionLeftJoy(pad) == false &&
+        menuDownOptionLeftJoy(pad) == false &&
+        menuLeftOptionLeftJoy(pad) == false &&
+        menuRightOptionLeftJoy(pad) == false) {
+      if (menuUpOptionRightJoy(pad)) {
         speedDebugOptions();
-        padTimer = 10;
-        debugSpritesType[entitieID]->size.x -= padSpeed;
-        debugSpritesType[entitieID]->size.y -= padSpeed;
-      } else if (pad.getPressed().R2 && sizeMode == true) {
+        if (animationFound == false) {
+          posArray[entitieID].y -= padSpeed;
+        }
+        texPos->y -= padSpeed;
+      } else if (menuDownOptionRightJoy(pad)) {
         speedDebugOptions();
-        padTimer = 10;
-        debugSpritesType[entitieID]->size.x += padSpeed;
-        debugSpritesType[entitieID]->size.y += padSpeed;
-      } else {
-        padPressTimer = 0;
-        padSpeed = 1;
+        if (animationFound == false) {
+          posArray[entitieID].y += padSpeed;
+        }
+        texPos->y += padSpeed;
+      }
+
+      if (menuLeftOptionRightJoy(pad)) {
+        speedDebugOptions();
+        if (animationFound == false) {
+          posArray[entitieID].x -= padSpeed;
+        }
+        texPos->x -= padSpeed;
+      } else if (menuRightOptionRightJoy(pad)) {
+        speedDebugOptions();
+        if (animationFound == false) {
+          posArray[entitieID].x += padSpeed;
+        }
+        texPos->x += padSpeed;
+      }
+
+      if (menuUpOptionRightJoy(pad) == false &&
+          menuDownOptionRightJoy(pad) == false &&
+          menuLeftOptionRightJoy(pad) == false &&
+          menuRightOptionRightJoy(pad) == false) {
+        if (pad.getPressed().L2 && sizeMode == true) {
+          speedDebugOptions();
+          padTimer = 10;
+          debugSpritesType[entitieID]->size.x -= padSpeed;
+          debugSpritesType[entitieID]->size.y -= padSpeed;
+        } else if (pad.getPressed().R2 && sizeMode == true) {
+          speedDebugOptions();
+          padTimer = 10;
+          debugSpritesType[entitieID]->size.x += padSpeed;
+          debugSpritesType[entitieID]->size.y += padSpeed;
+        } else {
+          padPressTimer = 0;
+          padSpeed = 1;
+        }
       }
     }
   }
@@ -188,15 +235,8 @@ void subMenuSprite(Tyra::Pad& pad, Tyra::Font& font, int& entitieID) {
     }
 
     if (animationFound == true) {
-      Vec2* texPos = animationDataArray[animationArray[entitieID].animID]
-                         .position[animationArray[entitieID].key];
-
       std::string textKey =
           "Key: " + std::to_string(animationArray[entitieID].key);
-
-      std::string texPosition =
-          "Texture Position: " + std::to_string(texPos->x) + ", " +
-          std::to_string(texPos->y);
 
       std::string animSize =
           "Total textures: " +
@@ -204,9 +244,6 @@ void subMenuSprite(Tyra::Pad& pad, Tyra::Font& font, int& entitieID) {
               animationDataArray[animationArray[entitieID].animID].keys.size());
 
       engine->font.drawText(&myFont, textKey, 30, 120, 16, black);
-
-      engine->font.drawText(&myFont, texPosition, 30, 160, 16,
-                            Tyra::Color(0, 0, 0, 128));
 
       engine->font.drawText(&myFont, animSize, 30, 180, 16, black);
 
@@ -217,6 +254,11 @@ void subMenuSprite(Tyra::Pad& pad, Tyra::Font& font, int& entitieID) {
       engine->font.drawText(&myFont, "PRESS X FOR PLAY/STOP ANIMATION", 30, 400,
                             16, black);
     }
+
+    std::string texPosition = "Texture Position: " + std::to_string(texPos->x) +
+                              ", " + std::to_string(texPos->y);
+    engine->font.drawText(&myFont, texPosition, 30, 160, 16,
+                          Tyra::Color(0, 0, 0, 128));
     engine->font.drawText(&myFont, "PRESS R3 FOR HIDE SPRITE", 30, 280, 16,
                           black);
 
@@ -285,9 +327,9 @@ void menuDebugSprite(Tyra::Pad& pad, Tyra::Font& font, int& entitieID) {
 
     if (padTimer > 0) {
       padTimer--;
-    } else if (menuUpOption(pad) || menuRightOption(pad)) {
+    } else if (menuUpOptionLeftJoy(pad) || menuRightOptionLeftJoy(pad)) {
       getNextSprite(entitieID);
-    } else if (menuDownOption(pad) || menuLeftOption(pad)) {
+    } else if (menuDownOptionLeftJoy(pad) || menuLeftOptionLeftJoy(pad)) {
       getPrevSprite(entitieID);
     }
     engine->font.drawText(&myFont, "PRESS X FOR SELECT THE TEXTURE", 30, 400,
