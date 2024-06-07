@@ -103,6 +103,8 @@ void subMenuSprite(Tyra::Pad& pad, Tyra::Font& font, int& entitieID) {
     activateRender();
     rotateFound = false;
     if (animationFound == false) {
+      posArray[entitieID].y -= texPos->y;
+      posArray[entitieID].x -= texPos->x;
       delete texPos;
     }
     texPos = NULL;
