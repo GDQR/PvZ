@@ -33,7 +33,7 @@ void loadZombieAnimation() {
   std::string filepath;
   Tyra::Texture* texture;
   for (int i = 45; i <= 91; i++) {
-    filepath = "Animations/Zombie/Zombie00";
+    filepath = "Animations/Zombie/debug/head/suav/Zombie00";
     filepath += std::to_string(i);
     filepath += ".png";
     texture = loadTexture(filepath);
@@ -75,6 +75,28 @@ void loadSunAnimation() {
     animationDataArray[sunAnim].keys.push_back(texture);
     animationDataArray[sunAnim].position.push_back(new Tyra::Vec2(0,0));
     animationTime[sunAnim].seconds.push_back(2);
+  }
+}
+
+void loadSunFlowerAnimation() {
+  animationDataArray[SunFlowerHead] = AnimationData();
+  animationTime[SunFlowerHead] = Time();
+
+  std::string filepath;
+  Tyra::Texture* texture;
+  for (int i = 1; i <= 1; i++) {
+    if (i < 10) {
+      filepath = "Animations/sunflower/SunFlower_double_petals";
+    } else {
+      filepath = "Animations/sunflower/SunFlower_double_petals";
+    }
+
+    // filepath += std::to_string(i);
+    filepath += ".png";
+    texture = loadTexture(filepath);
+    animationDataArray[SunFlowerHead].keys.push_back(texture);
+    animationDataArray[SunFlowerHead].position.push_back(new Tyra::Vec2(0,0));
+    animationTime[SunFlowerHead].seconds.push_back(2);
   }
 }
 

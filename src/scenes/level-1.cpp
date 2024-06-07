@@ -17,6 +17,7 @@ using namespace Tyra;
 
 int background = Entities::newID();
 int seedBank = Entities::newID();
+int zombieDebug = Entities::newID();
 
 class Card {
  public:
@@ -62,7 +63,7 @@ int maxZombies = 5;
 
 ProjectileManager projectileManager;
 
-int sunCounter = 0;
+int sunCounter = 100;
 int sunTimer;
 
 void plantMovement() {
@@ -189,8 +190,6 @@ void Level1::init() {
   // load background
   createSprite(background, MODE_STRETCH, Vec2(-56, -1), Vec2(780, 524));
   createTexture(background, "Backgrounds/DAY Unsodded.png");
-  // // printf("background id: %d\n",background);
-  printf("background id: %d\n", background);
   // // TODO: Fix size seedBank
   createSprite(seedBank, MODE_STRETCH, Vec2(63, 10),
                Vec2(512 / 1.5f, 128 / 1.5f));
@@ -232,12 +231,18 @@ void Level1::init() {
   loadZombieAnimation();
   loadProjectile();
   loadSunAnimation();
+  loadSunFlowerAnimation();
   // loadSunSuavizadoAnimation(); // borrar
   engine->font.loadFont(&myFont, "Fonts/roboto-Bold.ttf");
   // createSunSuavizado(Vec2(100,50)); // borrar
   // createPlant(5,9);
   // renderer->core.setFrameLimit(false);
 
+  // printf("zombie debug id: %d\n",zombieDebug);
+  createSpriteRotate(zombieDebug, MODE_STRETCH, Vec2(220, 320), Vec2(50, 50),
+                     0.0f);  // tal vez lo mejor sea 50,50 //53,48
+  createTextureRotate(zombieDebug,
+                      "Animations/Zombie/normalZombie/Zombie_head.png");
   sunTimer = 60 * 6;
 }
 
@@ -249,13 +254,15 @@ void Level1::update() {
     cursorDeckMovement();
   }
 
-  if (cards[deckCursor.pos].seedTimer > 0) {
-    cards[deckCursor.pos].seedTimer--;
-    spriteArray[cards[deckCursor.pos].seedShadow].size = Vec2(50, 70);
-    spriteArray[cards[deckCursor.pos].seedShadowTimer].size.y -=
-        (70.0f / 8.0f / 60.0f);  // el size Y es 70
-  } else if (sunCounter >= cards[deckCursor.pos].cost) {
-    spriteArray[cards[deckCursor.pos].seedShadow].size = Vec2(0, 0);
+  for (unsigned int i = 0; i < cards.size(); i++) {
+    if (cards[i].seedTimer > 0) {
+      cards[i].seedTimer--;
+      spriteArray[cards[i].seedShadow].size = Vec2(50, 70);
+      spriteArray[cards[i].seedShadowTimer].size.y -=
+          (70.0f / 8.0f / 60.0f);  // el size Y es 70
+    } else if (sunCounter >= cards[i].cost) {
+      spriteArray[cards[i].seedShadow].size = Vec2(0, 0);
+    }
   }
 
   for (int i = 0; i < 5; i++) {
@@ -269,6 +276,8 @@ void Level1::update() {
       }
     }
   }
+
+  // create plant
 
   if (engine->pad.getClicked().Cross && debugMode == false) {
     if (zombieCreateRow[(int)cursor.cursorTile.x] == true) {
@@ -291,11 +300,12 @@ void Level1::update() {
     animManager.update();
   }
   if (debugMode == false) {
-    for (std::vector<Sun>::iterator it = sun.begin(); it < sun.end(); it++) {
-      if (posArray[it->id].y < 370) {
-        posArray[it->id].y++;
-        boxColliderArray[it->id].y++;
-        debugSpriteBoxCollider[it->id].position.y = boxColliderArray[it->id].y;
+    for (std::vector<int>::iterator it = naturalSunIds.begin();
+         it != naturalSunIds.end(); it++) {
+      if (posArray[(*it)].y < 370) {
+        posArray[(*it)].y++;
+        boxColliderArray[(*it)].y++;
+        debugSpriteBoxCollider[(*it)].position.y = boxColliderArray[(*it)].y;
       }
     }
   }
@@ -308,25 +318,31 @@ void Level1::update() {
       sunTimer = 60 * 6;
       // min:50 max:420
       float x = 50 + rand() % 420;
-      createSun(Vec2(x, 10), sunCost::normalSun);
+      createSun(Vec2(x, 10), sunCost::normalSun, false);
     }
   }
 
-  for (std::vector<Sun>::iterator it = sun.begin(); it < sun.end(); it++) {
+  for (std::vector<Sun>::iterator it = sun.begin(); it != sun.end();) {
     if (boxCollision(&boxColliderArray[cursor.id], &boxColliderArray[it->id])) {
-      printf("borrando soles\n");
+      printf("Deleting sun\n");
       sunCounter += it->cost;
-      engine->renderer.getTextureRepository()
-          .getBySpriteId(spriteArray[it->id].id)
-          ->removeLinkById(spriteArray[it->id].id);
-      spriteArray.erase(it->id);
+      deleteSprite(it->id);
       boxColliderArray.erase(it->id);
 
       animationArray.erase(it->id);
       deleteDebugBoxCollider(it->id);
       Entities::deleteID(it->id);
+
+      // delete natural sun if exists
+      std::vector<int>::iterator it2 = find(naturalSunIds.begin(), naturalSunIds.end(),it->id);
+      if(it2 != naturalSunIds.end()){
+        it2 = naturalSunIds.erase(it2);
+      }
+
       it = sun.erase(it);
       sunsCreated--;
+    } else {
+      it++;
     }
   }
   // printf("FPS: %d\n",engine->info.getFps()) ;
@@ -340,7 +356,7 @@ void Level1::update() {
   std::vector<Zombie>::iterator it;
 
   for (int i = 0; i < 45; i++) {
-    if (plant[i].type != NonePlant) {
+    if (plant[i].type == PeaShotter) {
       // printf("hay una planta en %d\n",i);
 
       for (it = zombie.begin(); it < zombie.end(); it++) {
@@ -373,6 +389,15 @@ void Level1::update() {
           it = zombie.end();
         }
       }
+    } else if (plant[i].type == SunFlower) {
+      if (plant[i].attackTimer > 0) {
+        plant[i].attackTimer--;
+      } else {
+        printf("sunflower create sun\n");
+        createSun(spriteArray[*plant[i].body[0]].position, sunCost::normalSun,
+                  true);
+        plant[i].attackTimer = 60 * 6;
+      }
     }
   }
 
@@ -380,7 +405,7 @@ void Level1::update() {
     timerZombies--;
   } else {
     static int zombiescreados = 0;
-    if (zombiescreados < 2) {
+    if (zombiescreados < 1) {
       int row = rand() % 5;
       while (zombieCreateRow[row] == false) {
         row = rand() % 5;
@@ -394,8 +419,21 @@ void Level1::update() {
 
   renderer->beginFrame();
 
+  // atest_t atest;
+  // atest.enable = 0;
+  // atest.method = ATEST_METHOD_GREATER;
+  // atest.compval = 128;
+  // atest.keep = ATEST_KEEP_ALL;
+
+  // dtest_t dtest;
+  // dtest.enable =0;
+  // dtest.pass = 0;
+
+  // renderer->core.renderer2D.pixelTest(&atest,&dtest,ZTEST_METHOD_GREATER);
+
   renderSprites.updateChildPos();
   renderSprites.update();
+  renderSprites.updateRotate();
 
   // for(int i=0;i<5;i++){
   //     for(int j=0;j<9;j++){

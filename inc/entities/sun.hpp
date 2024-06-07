@@ -8,6 +8,5 @@ class Sun {
   int id;
   int cost;
 };
-// solo se necesita 1
-extern void createSun(Tyra::Vec2 position, sunCost cost);
-// extern void createSunSuavizado(Tyra::Vec2 position); //borrar
+
+void createSun(Tyra::Vec2 position, sunCost cost, bool createdByPlant);

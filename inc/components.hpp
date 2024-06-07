@@ -19,7 +19,8 @@ enum enumAnimation {
   zombieWalk,
   zombieNormalAttack,
   sunAnim,
-  sunAnim2
+  sunAnim2,
+  SunFlowerHead
 };
 
 class FatherID {
@@ -84,6 +85,7 @@ const int maxPlants = 5 * 9;
 extern Plant plant[maxPlants];
 extern std::vector<Zombie> zombie;
 extern std::vector<Sun> sun;
+extern std::vector<int> naturalSunIds;
 extern std::vector<int> projectile;
 
 extern bool zombieCreateRow[5];

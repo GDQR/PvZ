@@ -21,6 +21,7 @@ std::map<int, int> lifeArray;
 Plant plant[maxPlants];
 std::vector<Zombie> zombie;
 std::vector<Sun> sun;
+std::vector<int> naturalSunIds;
 std::vector<int> projectile;
 int projectilesCreated = 0;
 
@@ -99,6 +100,7 @@ void AnimationManager::update() {
   auto& textureRepository = renderer->getTextureRepository();
 
   for (it = animationArray.begin(); it != animationArray.end(); it++) {
+    // printf("sprite id: %d\n", spriteArray[it->first].id);
     if (animationArray[it->first].time <
         animationTime[animationArray[it->first].animID]
             .seconds[animationArray[it->first].key]) {
@@ -216,7 +218,7 @@ void RendererSprites::update() {
   // printf("size: %d\n", spriteArray.size());
   for (it = spritesNormalRender.begin(); it != spritesNormalRender.end();
        it++) {
-    // printf("key: %d. sprite ID: %d\n",it->first,it->second.id);
+    // printf("key: %d. sprite ID: %d\n",it->first,it->second->id);
 
     // finalPos += entitiePos
 
@@ -345,7 +347,12 @@ int ZombiesManager::collision() {
 
             if (lifeArray[*plant[i].body[0]] <= 0) {
               printf("borre planta id: %d\n", *plant[i].body[0]);
-              deletePeashotter(i);
+              if(plant[i].type == PeaShotter){
+                deletePeashotter(i);
+              }else if(plant[i].type == SunFlower){
+                deleteSunflower(i);
+              }
+              
               it->attack = false;
               animationArray[*it->body[0]].animID = zombieWalk;
             }
