@@ -63,7 +63,6 @@ int maxZombies = 5;
 
 ProjectileManager projectileManager;
 
-int sunCounter = 100;
 int sunTimer;
 
 void plantMovement() {
@@ -300,14 +299,7 @@ void Level1::update() {
     animManager.update();
   }
   if (debugMode == false) {
-    for (std::vector<int>::iterator it = naturalSunIds.begin();
-         it != naturalSunIds.end(); it++) {
-      if (posArray[(*it)].y < 370) {
-        posArray[(*it)].y++;
-        boxColliderArray[(*it)].y++;
-        debugSpriteBoxCollider[(*it)].position.y = boxColliderArray[(*it)].y;
-      }
-    }
+    moveNaturalSun();
   }
 
   if (stopAnimation == false) {
@@ -322,29 +314,8 @@ void Level1::update() {
     }
   }
 
-  for (std::vector<Sun>::iterator it = sun.begin(); it != sun.end();) {
-    if (boxCollision(&boxColliderArray[cursor.id], &boxColliderArray[it->id])) {
-      printf("Deleting sun\n");
-      sunCounter += it->cost;
-      deleteSprite(it->id);
-      boxColliderArray.erase(it->id);
+  deleteSun(cursor.id);
 
-      animationArray.erase(it->id);
-      deleteDebugBoxCollider(it->id);
-      Entities::deleteID(it->id);
-
-      // delete natural sun if exists
-      std::vector<int>::iterator it2 = find(naturalSunIds.begin(), naturalSunIds.end(),it->id);
-      if(it2 != naturalSunIds.end()){
-        it2 = naturalSunIds.erase(it2);
-      }
-
-      it = sun.erase(it);
-      sunsCreated--;
-    } else {
-      it++;
-    }
-  }
   // printf("FPS: %d\n",engine->info.getFps()) ;
   // printf("ram: %f\n",engine->info.getAvailableRAM()) ;
   zombiesManager.collision();

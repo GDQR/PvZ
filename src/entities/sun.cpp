@@ -2,6 +2,7 @@
 #include "components.hpp"
 
 int sunsCreated = 0;
+int sunCounter = 100;
 
 void createSun(Tyra::Vec2 position, sunCost cost, bool createdByPlant) {
   sun.push_back(Sun());
@@ -26,4 +27,42 @@ void createSun(Tyra::Vec2 position, sunCost cost, bool createdByPlant) {
     naturalSunIds.push_back(sun[indexpos].id);
   }
   sunsCreated++;
+}
+
+void deleteSun(const int cursorID) {
+  for (std::vector<Sun>::iterator it = sun.begin(); it != sun.end();) {
+    if (boxCollision(&boxColliderArray[cursorID], &boxColliderArray[it->id])) {
+      printf("Deleting sun\n");
+      sunCounter += it->cost;
+      deleteSprite(it->id);
+      boxColliderArray.erase(it->id);
+
+      animationArray.erase(it->id);
+      deleteDebugBoxCollider(it->id);
+      Entities::deleteID(it->id);
+
+      // delete natural sun if exists
+      std::vector<int>::iterator it2 =
+          find(naturalSunIds.begin(), naturalSunIds.end(), it->id);
+      if (it2 != naturalSunIds.end()) {
+        it2 = naturalSunIds.erase(it2);
+      }
+
+      it = sun.erase(it);
+      sunsCreated--;
+    } else {
+      it++;
+    }
+  }
+}
+
+void moveNaturalSun() {
+  for (std::vector<int>::iterator it = naturalSunIds.begin();
+       it != naturalSunIds.end(); it++) {
+    if (posArray[(*it)].y < 370) {
+      posArray[(*it)].y++;
+      boxColliderArray[(*it)].y++;
+      debugSpriteBoxCollider[(*it)].position.y = boxColliderArray[(*it)].y;
+    }
+  }
 }

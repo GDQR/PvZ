@@ -99,25 +99,3 @@ void loadSunFlowerAnimation() {
     animationTime[SunFlowerHead].seconds.push_back(2);
   }
 }
-
-// borrar
-// void loadSunSuavizadoAnimation() {
-//   animationDataArray[sunAnim2] = AnimationData();
-//   animationTime[sunAnim2] = Time();
-
-//   std::string filepath;
-//   Tyra::Texture* texture;
-//   for (int i = 1; i <= 13; i++) {
-//     if(i < 10){
-//         filepath = "Animations/sun/suavizado/sun000";
-//     }else{
-//         filepath = "Animations/sun/suavizado/sun00";
-//     }
-
-//     filepath += std::to_string(i);
-//     filepath += ".png";
-//     texture = loadTexture(filepath);
-//     animationDataArray[sunAnim2].keys.push_back(texture);
-//     animationTime[sunAnim2].seconds.push_back(2);
-//   }
-// }
