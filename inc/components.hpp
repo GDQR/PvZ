@@ -16,6 +16,8 @@ extern Tyra::Renderer* renderer;
 enum enumAnimation {
   peaShooterHead,
   peaShooterBody,
+  deb_zombieWalk,
+  deb_zombieNormalAttack,
   zombieWalk,
   zombieNormalAttack,
   sunAnim,
@@ -32,15 +34,17 @@ class Animation {
  public:
   Animation();
   Animation(enumAnimation anim);
-  int time = 0;
   int animID = -1;
-  unsigned int key = 0;
+  unsigned int framesCounter = 0; // es el time
+  unsigned int currentFrame = 0; // es el key
 };
 
 class AnimationData {
  public:
-  std::vector<Tyra::Texture*> keys;
-  std::vector<Tyra::Vec2*> position;
+  unsigned int maxFrame;
+  std::map<unsigned int, Tyra::Texture*> texture;
+  std::map<unsigned int, Tyra::Vec2> position;
+  std::map<unsigned int, float> angle;  
 };
 
 class Time {
@@ -65,7 +69,6 @@ class BoxCollider {
 // sparse array
 extern std::map<int, Animation>
     animationArray;  // Link the sprite with the texture
-extern std::map<int, Time> animationTime;
 extern std::unordered_map<int, AnimationData>
     animationDataArray;  // Save the animation textures
 extern std::map<int, FatherID> fatherIDArray;
@@ -93,6 +96,8 @@ extern bool plantCreatedInMap[5][9];
 extern BoxCollider mapCollider[5][9];
 
 class AnimationManager {
+ private:
+  unsigned int framesSpeed=20;
  public:
   Tyra::TextureRepository* texRepo;
   void update();

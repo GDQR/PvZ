@@ -13,6 +13,7 @@
 // // void loadPeashooterAnim(Plant* t_plant);
 void loadPeaShooterAnimation();
 void loadZombieAnimation();
+void loadDebugZombieAnimation();
 void loadSunAnimation();
 void loadSunFlowerAnimation();
 // extern Animations animations;

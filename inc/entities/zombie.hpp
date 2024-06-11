@@ -13,6 +13,7 @@ public:
     int timer = 0;
     int attackTimer = 0;
     bool attack = false;
+    bool debug = false;
     
     std::vector <int> id;
 
@@ -22,3 +23,4 @@ public:
 };
 
 void createZombie(Tyra::Vec2 pos);
+void createDebugZombie(Tyra::Vec2 pos);

@@ -56,9 +56,9 @@ void createPeashotter(int id, int row, int column, Tyra::Vec2 pos) {
 
   animationArray[*plant[id].body[0]] = Animation(peaShooterHead);
 
-  animationDataArray[peaShooterHead].keys[0]->addLink(
+  animationDataArray[peaShooterHead].texture[0]->addLink(
       spriteArray[*plant[id].body[0]].id);
-  animationDataArray[peaShooterBody].keys[0]->addLink(
+  animationDataArray[peaShooterBody].texture[0]->addLink(
       spriteArray[*plant[id].body[1]].id);
 
   // Life
@@ -118,7 +118,7 @@ void createSunflower(const int id, int row, int col, Tyra::Vec2 pos) {
   posArray[*plant[id].father] = pos;  // Vec2(row, column);
 
   createSprite(*plant[id].body[0], Tyra::MODE_STRETCH, Vec2(0, 5),
-               Vec2(128 / 1.6f, 128 / 1.6f));
+               Vec2(128 / 1.6f, 64 / 1.6f));
   // createSprite(*plant[id].body[1], Tyra::MODE_STRETCH, Vec2(0, 5),
   //              Vec2(128 / 1.6f, 128 / 1.6f));
 
@@ -130,9 +130,9 @@ void createSunflower(const int id, int row, int col, Tyra::Vec2 pos) {
 
   animationArray[*plant[id].body[0]] = Animation(SunFlowerHead);
 
-  animationDataArray[SunFlowerHead].keys[0]->addLink(
+  animationDataArray[SunFlowerHead].texture[0]->addLink(
       spriteArray[*plant[id].body[0]].id);
-  // animationDataArray[peaShooterBody].keys[0]->addLink(
+  // animationDataArray[peaShooterBody].texture[0]->addLink(
   //     spriteArray[*plant[id].body[1]].id);
 
   // Life

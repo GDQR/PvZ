@@ -65,29 +65,29 @@ void getPrevSprite(int& entitieID) {
   debugAlphaColor = debugSpritesType[entitieID]->color.a;
 }
 
-void getNextKey(int& entitieID) {
-  animationArray[entitieID].key++;
-  if (animationArray[entitieID].key >=
-      animationDataArray[animationArray[entitieID].animID].keys.size()) {
-    animationArray[entitieID].key = 0;
+void getNextFrame(int& entitieID) {
+  animationArray[entitieID].currentFrame++;
+  if (animationArray[entitieID].currentFrame >=
+      animationDataArray[animationArray[entitieID].animID].maxFrame) {
+    animationArray[entitieID].currentFrame = 0;
   }
-  animManager.debugChangeFrame(entitieID, animationArray[entitieID].key);
+  animManager.debugChangeFrame(entitieID, animationArray[entitieID].currentFrame);
 }
 
-void getPrevKey(int& entitieID) {
-  if (animationArray[entitieID].key > 0) {
-    animationArray[entitieID].key--;
+void getPrevFrame(int& entitieID) {
+  if (animationArray[entitieID].currentFrame > 0) {
+    animationArray[entitieID].currentFrame--;
   } else {
-    animationArray[entitieID].key =
-        animationDataArray[animationArray[entitieID].animID].keys.size() - 1;
+    animationArray[entitieID].currentFrame =
+        animationDataArray[animationArray[entitieID].animID].maxFrame - 1;
   }
-  animManager.debugChangeFrame(entitieID, animationArray[entitieID].key);
+  animManager.debugChangeFrame(entitieID, animationArray[entitieID].currentFrame);
 }
 
 void subMenuSprite(Tyra::Pad& pad, Tyra::Font& font, int& entitieID) {
   if (animationFound == true) {
-    texPos = animationDataArray[animationArray[entitieID].animID]
-                 .position[animationArray[entitieID].key];
+    texPos = &animationDataArray[animationArray[entitieID].animID]
+                 .position[animationArray[entitieID].currentFrame];
   } else if (texPos == NULL) {
     texPos = new Vec2(0.0f, 0.0f);
     printf("texpos created: %p\n", texPos);
@@ -136,9 +136,9 @@ void subMenuSprite(Tyra::Pad& pad, Tyra::Font& font, int& entitieID) {
     }
   } else if (animationFound == true) {
     if (pad.getClicked().L1) {
-      getPrevKey(entitieID);
+      getPrevFrame(entitieID);
     } else if (pad.getClicked().R1) {
-      getNextKey(entitieID);
+      getNextFrame(entitieID);
     } else if (pad.getClicked().Cross) {
       playAnimation = !playAnimation;
     }
@@ -281,12 +281,12 @@ void subMenuSprite(Tyra::Pad& pad, Tyra::Font& font, int& entitieID) {
     // animation
     if (animationFound == true) {
       std::string textKey =
-          "Key: " + std::to_string(animationArray[entitieID].key);
+          "Key: " + std::to_string(animationArray[entitieID].currentFrame);
 
       std::string animSize =
           "Total textures: " +
           std::to_string(
-              animationDataArray[animationArray[entitieID].animID].keys.size());
+              animationDataArray[animationArray[entitieID].animID].texture.size());
 
       engine->font.drawText(&myFont, textKey, 30, 120, 16, black);
 

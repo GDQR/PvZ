@@ -3,7 +3,6 @@
 
 // sparse array
 std::map<int, Animation> animationArray;
-std::map<int, Time> animationTime;
 std::unordered_map<int, AnimationData> animationDataArray;
 std::map<int, FatherID> fatherIDArray;
 std::map<int, Tyra::Vec2> posArray;
@@ -100,42 +99,62 @@ void AnimationManager::update() {
   auto& textureRepository = renderer->getTextureRepository();
 
   for (it = animationArray.begin(); it != animationArray.end(); it++) {
-    // printf("sprite id: %d\n", spriteArray[it->first].id);
-    if (animationArray[it->first].time <
-        animationTime[animationArray[it->first].animID]
-            .seconds[animationArray[it->first].key]) {
-      animationArray[it->first].time++;
+    if (it->second.framesCounter >= (60 / framesSpeed)) {
+      it->second.framesCounter = 0;
+      it->second.currentFrame++;
 
-      position(it->first);
-      continue;
+      if (it->second.currentFrame >=
+          animationDataArray[it->second.animID].maxFrame) {
+        it->second.currentFrame = 0;
+      }
+
+      if (spriteArray.count(it->first) == 1) {
+        // printf("unlink sprite id: %d\n", spriteArray[it->first].id);
+        // Unlink Texture from the sprite entitie
+        textureRepository.getBySpriteId(spriteArray[it->first].id)
+            ->removeLinkById(spriteArray[it->first].id);
+
+        // Link new Texture to the sprite entitie
+        animationDataArray[animationArray[it->first].animID]
+            .texture[it->second.currentFrame]
+            ->addLink(spriteArray[it->first].id);
+      } else if (animationDataArray[it->second.animID].texture.count(
+                     it->second.currentFrame) == 1) {
+        // printf("unlink sprite rotate id: %d\n", spritesRotate[it->first].id);
+        // Unlink Texture from the sprite entitie
+        textureRepository.getBySpriteId(spritesRotate[it->first].id)
+            ->removeLinkById(spritesRotate[it->first].id);
+
+        // Link new Texture to the sprite entitie
+        animationDataArray[it->second.animID]
+            .texture[it->second.currentFrame]
+            ->addLink(spritesRotate[it->first].id);
+      }
+      angles[it->first] =
+          animationDataArray[it->second.animID].angle[it->second.currentFrame];
     }
-
-    // Unlink Texture from the sprite entitie
-    textureRepository.getBySpriteId(spriteArray[it->first].id)
-        ->removeLinkById(spriteArray[it->first].id);
-
-    animationArray[it->first].key++;
-    animationArray[it->first].time = 0;
-
-    if (animationArray[it->first].key >=
-        animationDataArray[animationArray[it->first].animID].keys.size()) {
-      animationArray[it->first].key = 0;
-    }
-
-    // Link new Texture to the sprite entitie
-    animationDataArray[animationArray[it->first].animID]
-        .keys[animationArray[it->first].key]
-        ->addLink(spriteArray[it->first].id);
-
     position(it->first);
+    it->second.framesCounter++;
   }
 }
 
 void AnimationManager::position(const int entitieID) {
   // finalPos += animPos
-  finalPosArray[entitieID] =
-      *animationDataArray[animationArray[entitieID].animID]
-           .position[animationArray[entitieID].key];
+
+  if (animationDataArray[animationArray[entitieID].animID].position.count(
+          animationArray[entitieID].currentFrame)) {
+    // printf("entity id: %d, frame: %d pos:%f,%f\n", entitieID,
+    //        animationArray[entitieID].currentFrame,
+    //        animationDataArray[zombieWalk]
+    //            .position[animationArray[entitieID].currentFrame]
+    //            .x,
+    //        animationDataArray[zombieWalk]
+    //            .position[animationArray[entitieID].currentFrame]
+    //            .y);
+    finalPosArray[entitieID] =
+        animationDataArray[animationArray[entitieID].animID]
+            .position[animationArray[entitieID].currentFrame];
+  }
 }
 
 void AnimationManager::debug() {
@@ -149,26 +168,24 @@ void AnimationManager::debug() {
 int AnimationManager::debugAnim(const int entitieID) {
   auto& textureRepository = renderer->getTextureRepository();
 
-  if (animationArray[entitieID].time <
-      animationTime[animationArray[entitieID].animID]
-          .seconds[animationArray[entitieID].key]) {
-    animationArray[entitieID].time++;
+  if (animationArray[entitieID].framesCounter < (60 / framesSpeed)) {
+    animationArray[entitieID].framesCounter++;
     return 1;
   }
-
+  printf("pase por debug anim\n");
   textureRepository.getBySpriteId(spriteArray[entitieID].id)
       ->removeLinkById(spriteArray[entitieID].id);
 
-  animationArray[entitieID].key++;
-  animationArray[entitieID].time = 0;
+  animationArray[entitieID].currentFrame++;
+  animationArray[entitieID].framesCounter = 0;
 
-  if (animationArray[entitieID].key >=
-      animationDataArray[animationArray[entitieID].animID].keys.size()) {
-    animationArray[entitieID].key = 0;
+  if (animationArray[entitieID].currentFrame >=
+      animationDataArray[animationArray[entitieID].animID].texture.size()) {
+    animationArray[entitieID].currentFrame = 0;
   }
 
   animationDataArray[animationArray[entitieID].animID]
-      .keys[animationArray[entitieID].key]
+      .texture[animationArray[entitieID].currentFrame]
       ->addLink(spriteArray[entitieID].id);
   return 0;
 }
@@ -176,14 +193,26 @@ int AnimationManager::debugAnim(const int entitieID) {
 void AnimationManager::debugChangeFrame(const int entitieID, const int key) {
   auto& textureRepository = renderer->getTextureRepository();
 
-  // Unlink Texture from the sprite entitie
-  textureRepository.getBySpriteId(spriteArray[entitieID].id)
-      ->removeLinkById(spriteArray[entitieID].id);
+  if (spriteArray.count(entitieID) == 1) {
+    // Unlink Texture from the sprite entitie
+    textureRepository.getBySpriteId(spriteArray[entitieID].id)
+        ->removeLinkById(spriteArray[entitieID].id);
 
-  // Link new Texture to the sprite entitie
-  animationDataArray[animationArray[entitieID].animID]
-      .keys[animationArray[entitieID].key]
-      ->addLink(spriteArray[entitieID].id);
+    // Link new Texture to the sprite entitie
+    animationDataArray[animationArray[entitieID].animID]
+        .texture[animationArray[entitieID].currentFrame]
+        ->addLink(spriteArray[entitieID].id);
+  }else if (animationDataArray[animationArray[entitieID].animID].texture.count(
+                     animationArray[entitieID].currentFrame) == 1){
+     // Unlink Texture from the sprite entitie
+    textureRepository.getBySpriteId(spritesRotate[entitieID].id)
+        ->removeLinkById(spritesRotate[entitieID].id);
+
+    // Link new Texture to the sprite entitie
+    animationDataArray[animationArray[entitieID].animID]
+        .texture[animationArray[entitieID].currentFrame]
+        ->addLink(spritesRotate[entitieID].id);
+  }
 }
 
 void RendererDebugSpritesManager::update() {
@@ -229,8 +258,9 @@ void RendererSprites::update() {
         finalPosArray[it->first].y != it->second->position.y) {
       it->second->position.x = finalPosArray[it->first].x;
       it->second->position.y = finalPosArray[it->first].y;
-      // printf("key: %d. sprite pos:
-      // %f,%f\n",it->first,it->second.position.x,it->second.position.y);
+      // printf("key: %d. sprite pos:%f,%f\n", it->first,
+      // it->second->position.x,
+      //        it->second->position.y);
     }
 
     renderer->renderer2D.render(it->second);
@@ -256,8 +286,8 @@ void RendererSprites::updateRotate() {
         finalPosArray[it->first].y != it->second->position.y) {
       it->second->position.x = finalPosArray[it->first].x;
       it->second->position.y = finalPosArray[it->first].y;
-      // printf("key: %d. sprite pos:
-      // %f,%f\n",it->first,it->second.position.x,it->second.position.y);
+      // printf("key: %d. sprite pos: %f,%f\n", it->first, it->second->position.x,
+      //        it->second->position.y);
     }
 
     renderer->renderer2D.renderRotate(*it->second, angles[it->first]);
@@ -274,6 +304,9 @@ void ZombiesManager::update() {
   std::vector<Zombie>::iterator it;
 
   for (it = zombie.begin(); it < zombie.end(); it++) {
+    if (it->debug == true) {
+      continue;
+    }
     if (it->timer > 0) {
       it->timer--;
     } else if (it->attack == false) {
@@ -300,6 +333,9 @@ int ZombiesManager::collision() {
 
   if (plantsCreated == 0) {
     for (it = zombie.begin(); it < zombie.end(); it++) {
+      if (it->debug == true) {
+        continue;
+      }
       it->attack = false;
       animationArray[*it->body[0]].animID = zombieWalk;
     }
@@ -308,7 +344,9 @@ int ZombiesManager::collision() {
 
   for (it = zombie.begin(); it < zombie.end(); it++) {
     // printf("hay una planta en %d\n",i);
-
+    if (it->debug == true) {
+      continue;
+    }
     for (int i = 0; i < 45; i++) {
       if (plant[i].type != NonePlant) {
         //  printf("vec plant %f,%f. vec zombi %f,%f,%f,%f\n",
@@ -347,12 +385,12 @@ int ZombiesManager::collision() {
 
             if (lifeArray[*plant[i].body[0]] <= 0) {
               printf("borre planta id: %d\n", *plant[i].body[0]);
-              if(plant[i].type == PeaShotter){
+              if (plant[i].type == PeaShotter) {
                 deletePeashotter(i);
-              }else if(plant[i].type == SunFlower){
+              } else if (plant[i].type == SunFlower) {
                 deleteSunflower(i);
               }
-              
+
               it->attack = false;
               animationArray[*it->body[0]].animID = zombieWalk;
             }

@@ -5,6 +5,7 @@ int sunsCreated = 0;
 int sunCounter = 100;
 
 void createSun(Tyra::Vec2 position, sunCost cost, bool createdByPlant) {
+  TYRA_LOG("SUN CREATED");
   sun.push_back(Sun());
   int indexpos = sun.size() - 1;
   sun[indexpos].id = Entities::newID();
@@ -21,7 +22,7 @@ void createSun(Tyra::Vec2 position, sunCost cost, bool createdByPlant) {
   createDebugBoxCollider(sun[indexpos].id, Tyra::MODE_STRETCH);
 
   animationArray[sun[indexpos].id] = Animation(enumAnimation::sunAnim);
-  animationDataArray[sunAnim].keys[0]->addLink(
+  animationDataArray[sunAnim].texture[0]->addLink(
       spriteArray[sun[indexpos].id].id);
   if (createdByPlant == false) {
     naturalSunIds.push_back(sun[indexpos].id);

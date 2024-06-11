@@ -220,28 +220,25 @@ void Level1::init() {
 
   printf("pase una vez 1\n");
   zombieCreateRow[2] = true;
-  newCursor(&cursor.id,
-            Vec2(mapCollider[0][0].x,
-                 mapCollider[0][0].y +
-                     30) /*Vec2(map[0][0].position.x, map[0][0].position.y)*/);
+  newCursor(&cursor.id, Vec2(mapCollider[0][0].x, mapCollider[0][0].y + 30));
   newDeckCursor(&deckCursor.id,
                 Vec2(posArray[cards[deckCursor.pos].seed].x - 3, -10));
   loadPeaShooterAnimation();
   loadZombieAnimation();
+  // loadDebugZombieAnimation();
   loadProjectile();
   loadSunAnimation();
   loadSunFlowerAnimation();
-  // loadSunSuavizadoAnimation(); // borrar
   engine->font.loadFont(&myFont, "Fonts/roboto-Bold.ttf");
-  // createSunSuavizado(Vec2(100,50)); // borrar
+  createZombie(Vec2(mapCollider[2][8].x, mapCollider[2][8].y));
   // createPlant(5,9);
   // renderer->core.setFrameLimit(false);
 
   // printf("zombie debug id: %d\n",zombieDebug);
-  createSpriteRotate(zombieDebug, MODE_STRETCH, Vec2(220, 320), Vec2(50, 50),
-                     0.0f);  // tal vez lo mejor sea 50,50 //53,48
-  createTextureRotate(zombieDebug,
-                      "Animations/Zombie/normalZombie/Zombie_head.png");
+  // createSpriteRotate(zombieDebug, MODE_STRETCH, Vec2(220, 320), Vec2(50, 50),
+  //                    0.0f);  // tal vez lo mejor sea 50,50 //53,48
+  // createTextureRotate(zombieDebug,
+  //                     "Animations/Zombie/normalZombie/Zombie_head.png");
   sunTimer = 60 * 6;
 }
 
@@ -382,7 +379,7 @@ void Level1::update() {
         row = rand() % 5;
       }
 
-      createZombie(Vec2(mapCollider[row][8].x, mapCollider[row][8].y));
+      // createDebugZombie(Vec2(mapCollider[row][8].x, mapCollider[row][8].y));
       timerZombies = 60;
       zombiescreados++;
     }
