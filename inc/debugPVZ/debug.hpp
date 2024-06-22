@@ -14,6 +14,7 @@ extern bool stopAnimation;
 extern bool debugSprite;
 extern float debugAlphaColor;
 extern Vec2* texPos;
+extern float* d_angle; 
 
 extern std::map<int, Tyra::Sprite> debugSpritePointCollider;
 extern std::map<int, Tyra::Sprite> debugSpriteBoxCollider;

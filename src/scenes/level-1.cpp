@@ -223,11 +223,14 @@ void Level1::init() {
   newCursor(&cursor.id, Vec2(mapCollider[0][0].x, mapCollider[0][0].y + 30));
   newDeckCursor(&deckCursor.id,
                 Vec2(posArray[cards[deckCursor.pos].seed].x - 3, -10));
+  
+  // loadAnimNameFiles();
   loadPeaShooterAnimation();
   loadZombieAnimation();
   // loadDebugZombieAnimation();
   loadProjectile();
-  loadSunAnimation();
+  // loadSunAnimation();
+  loadSunAnimationDebug();
   loadSunFlowerAnimation();
   engine->font.loadFont(&myFont, "Fonts/roboto-Bold.ttf");
   createZombie(Vec2(mapCollider[2][8].x, mapCollider[2][8].y));
@@ -240,6 +243,7 @@ void Level1::init() {
   // createTextureRotate(zombieDebug,
   //                     "Animations/Zombie/normalZombie/Zombie_head.png");
   sunTimer = 60 * 6;
+  createSun2(Vec2(277, 10), sunCost::normalSun, false);
 }
 
 void Level1::update() {
@@ -307,7 +311,7 @@ void Level1::update() {
       sunTimer = 60 * 6;
       // min:50 max:420
       float x = 50 + rand() % 420;
-      createSun(Vec2(x, 10), sunCost::normalSun, false);
+      createSun2(Vec2(x, 10), sunCost::normalSun, false);
     }
   }
 
@@ -362,7 +366,7 @@ void Level1::update() {
         plant[i].attackTimer--;
       } else {
         printf("sunflower create sun\n");
-        createSun(spriteArray[*plant[i].body[0]].position, sunCost::normalSun,
+        createSun2(spriteArray[*plant[i].body[0]].position, sunCost::normalSun,
                   true);
         plant[i].attackTimer = 60 * 6;
       }

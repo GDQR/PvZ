@@ -85,12 +85,23 @@ void getPrevFrame(int& entitieID) {
 }
 
 void subMenuSprite(Tyra::Pad& pad, Tyra::Font& font, int& entitieID) {
-  if (animationFound == true) {
+  if (animationFound == true && animationDataArray[animationArray[entitieID].animID].position.count(
+          animationArray[entitieID].currentFrame) == 1) {
     texPos = &animationDataArray[animationArray[entitieID].animID]
                  .position[animationArray[entitieID].currentFrame];
   } else if (texPos == NULL) {
     texPos = new Vec2(0.0f, 0.0f);
     printf("texpos created: %p\n", texPos);
+  }
+
+  if (rotateFound == true && animationDataArray[animationArray[entitieID].animID].angle.count(
+          animationArray[entitieID].currentFrame) == 1) {
+    d_angle = &animationDataArray[animationArray[entitieID].animID]
+                 .angle[animationArray[entitieID].currentFrame];
+    // printf("angle from frame %d, angle:%f\n",animationArray[entitieID].currentFrame,*d_angle);
+  } else if (d_angle == NULL) {
+    d_angle = new float(0.0f);
+    printf("angle created: %p\n", texPos);
   }
 
   if (pad.getClicked().Circle) {
@@ -101,14 +112,18 @@ void subMenuSprite(Tyra::Pad& pad, Tyra::Font& font, int& entitieID) {
     sizeMode = false;
     hideSprite = false;
     activateRender();
-    rotateFound = false;
     if (animationFound == false) {
       posArray[entitieID].y -= texPos->y;
       posArray[entitieID].x -= texPos->x;
       delete texPos;
     }
+    if (rotateFound == false) {
+      delete d_angle; // maybe this give me problems in the future
+    }
     texPos = NULL;
+    d_angle = NULL;
     animationFound = false;
+    rotateFound = false;
   } else if (pad.getClicked().Square) {
     hideText = !hideText;
   } else if (pad.getClicked().L3) {
@@ -152,7 +167,8 @@ void subMenuSprite(Tyra::Pad& pad, Tyra::Font& font, int& entitieID) {
       if (rotateMode == false && sizeMode == false) {
         posArray[entitieID].y -= padSpeed;
       } else if (sizeMode == false) {
-        angles[entitieID] += padSpeed;
+        *d_angle += padSpeed;
+        angles[entitieID] = *d_angle;
       } else {
         debugSpritesType[entitieID]->size.y -= padSpeed;
       }
@@ -163,7 +179,8 @@ void subMenuSprite(Tyra::Pad& pad, Tyra::Font& font, int& entitieID) {
       if (rotateMode == false && sizeMode == false) {
         posArray[entitieID].y += padSpeed;
       } else if (sizeMode == false) {
-        angles[entitieID] -= padSpeed;
+        *d_angle -= padSpeed;
+        angles[entitieID] = *d_angle;
       } else {
         debugSpritesType[entitieID]->size.y += padSpeed;
       }
@@ -175,7 +192,8 @@ void subMenuSprite(Tyra::Pad& pad, Tyra::Font& font, int& entitieID) {
       if (rotateMode == false && sizeMode == false) {
         posArray[entitieID].x -= padSpeed;
       } else if (sizeMode == false) {
-        angles[entitieID] -= padSpeed;
+        *d_angle -= padSpeed;
+        angles[entitieID] = *d_angle;
       } else {
         debugSpritesType[entitieID]->size.x -= padSpeed;
       }
@@ -185,7 +203,8 @@ void subMenuSprite(Tyra::Pad& pad, Tyra::Font& font, int& entitieID) {
       if (rotateMode == false && sizeMode == false) {
         posArray[entitieID].x += padSpeed;
       } else if (sizeMode == false) {
-        angles[entitieID] += padSpeed;
+        *d_angle += padSpeed;
+        angles[entitieID] = *d_angle;
       } else {
         debugSpritesType[entitieID]->size.x += padSpeed;
       }
@@ -245,6 +264,10 @@ void subMenuSprite(Tyra::Pad& pad, Tyra::Font& font, int& entitieID) {
     }
   }
 
+  if(texPos != NULL) {
+    texPosArray[entitieID] = *texPos;
+  }
+
   if (animationFound == true && playAnimation == true) {
     animManager.debugAnim(entitieID);
   }
@@ -262,7 +285,7 @@ void subMenuSprite(Tyra::Pad& pad, Tyra::Font& font, int& entitieID) {
       engine->font.drawText(&myFont, position, 30, 140, 16,
                             Tyra::Color(0, 0, 0, 128));
     } else if (sizeMode == false) {
-      std::string angle = "Angle: " + std::to_string(angles[entitieID]);
+      std::string angle = "Angle: " + std::to_string(*d_angle);
       engine->font.drawText(&myFont, angle, 30, 140, 16,
                             Tyra::Color(0, 0, 0, 128));
     } else {

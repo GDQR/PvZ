@@ -12,7 +12,7 @@
 extern Tyra::Engine* engine;
 extern Tyra::Renderer* renderer;
 
-
+extern std::map<std::string, std::vector<int>> m_animID;
 enum enumAnimation {
   peaShooterHead,
   peaShooterBody,
@@ -22,6 +22,9 @@ enum enumAnimation {
   zombieNormalAttack,
   sunAnim,
   sunAnim2,
+  Sun1,
+  Sun2,
+  Sun3,
   SunFlowerHead
 };
 
@@ -44,7 +47,9 @@ class AnimationData {
   unsigned int maxFrame;
   std::map<unsigned int, Tyra::Texture*> texture;
   std::map<unsigned int, Tyra::Vec2> position;
+  std::map<unsigned int, Tyra::Vec2> size;  
   std::map<unsigned int, float> angle;  
+  std::map<unsigned int, float> alpha;  
 };
 
 class Time {
@@ -72,6 +77,7 @@ extern std::map<int, Animation>
 extern std::unordered_map<int, AnimationData>
     animationDataArray;  // Save the animation textures
 extern std::map<int, FatherID> fatherIDArray;
+extern std::map<int, Tyra::Vec2> texPosArray;
 extern std::map<int, Tyra::Vec2> posArray;
 extern std::map<int, Tyra::Vec2> finalPosArray;
 extern std::map<int, Tyra::Sprite> spriteArray;
@@ -79,6 +85,7 @@ extern std::map<int, Tyra::Sprite*> spritesNormalRender;
 extern std::map<int, Tyra::Sprite> spritesRotate;
 extern std::map<int, Tyra::Sprite*> spritesRotateRender;
 extern std::map<int, float> angles;
+extern std::map<int, Tyra::Vec2> originalSize;
 extern std::map<int, Tyra::Vec2> pointColliderArray;
 extern std::map<int, BoxCollider> boxColliderArray;
 extern std::map<int, int> damageArray;
@@ -88,7 +95,7 @@ const int maxPlants = 5 * 9;
 extern Plant plant[maxPlants];
 extern std::vector<Zombie> zombie;
 extern std::vector<Sun> sun;
-extern std::vector<int> naturalSunIds;
+extern std::vector<NaturalSun> naturalSun;
 extern std::vector<int> projectile;
 
 extern bool zombieCreateRow[5];
@@ -102,7 +109,9 @@ class AnimationManager {
   Tyra::TextureRepository* texRepo;
   void update();
   void position(const int entitieID);
-
+  void angle(const int entitieID);
+  void alpha(const int entitieID);
+  void size(const int entitieID);
   void debug();
   int debugAnim(const int entitieID);
   void debugChangeFrame(const int entitieID, const int key);
