@@ -61,7 +61,7 @@ function RunPCSX2 {
     $isNewVersion = IsNewQtVersionOfPCSX2 -path $dirPath
     $executableName = FindPCSX2Executable -directory $dirPath
     $executableNameWithoutExt = (Split-Path $executableName -Leaf).Split('.')[0]
-    $targetFileName = "$PWD/bin/$(GetTargetELFName)"
+    $targetFileName = "$PWD\bin\$(GetTargetELFName)"
 
     Stop-Process -Name $executableNameWithoutExt -ErrorAction 'SilentlyContinue'
 
