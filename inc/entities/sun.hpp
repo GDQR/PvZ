@@ -3,11 +3,20 @@
 
 enum sunCost { BigSun = 50, normalSun = 25, smallerSun = 15 };
 extern int sunsCreated;
+extern int sunCounter;
 class Sun {
  public:
-  int id;
+  std::vector<int> id;
   int cost;
 };
-// solo se necesita 1
-extern void createSun(Tyra::Vec2 position, sunCost cost);
-// extern void createSunSuavizado(Tyra::Vec2 position); //borrar
+
+class NaturalSun{
+  public:
+  std::vector<int> id;
+};
+
+// void createSun(Tyra::Vec2 position, sunCost cost, bool createdByPlant);
+void createSun2(Tyra::Vec2 position, sunCost cost, bool createdByPlant);
+void deleteSun(const int cursorID);
+
+void moveNaturalSun();

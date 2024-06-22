@@ -2,15 +2,19 @@
 #include <iostream>
 
 // sparse array
+std::map<std::string, std::vector<int>> m_animID;
 std::map<int, Animation> animationArray;
-std::map<int, Time> animationTime;
 std::unordered_map<int, AnimationData> animationDataArray;
 std::map<int, FatherID> fatherIDArray;
 std::map<int, Tyra::Vec2> posArray;
+std::map<int, Tyra::Vec2> texPosArray;
 std::map<int, Tyra::Vec2> finalPosArray;
 std::map<int, Tyra::Sprite> spriteArray;
+std::map<int, Tyra::Sprite*> spritesNormalRender;
 std::map<int, Tyra::Sprite> spritesRotate;
+std::map<int, Tyra::Sprite*> spritesRotateRender;
 std::map<int, float> angles;
+std::map<int, Tyra::Vec2> originalSize;
 std::map<int, Tyra::Vec2> pointColliderArray;
 std::map<int, BoxCollider> boxColliderArray;
 std::map<int, int> damageArray;
@@ -19,6 +23,7 @@ std::map<int, int> lifeArray;
 Plant plant[maxPlants];
 std::vector<Zombie> zombie;
 std::vector<Sun> sun;
+std::vector<NaturalSun> naturalSun;
 std::vector<int> projectile;
 int projectilesCreated = 0;
 
@@ -36,19 +41,39 @@ void createSprite(int id, Tyra::SpriteMode mode, Tyra::Vec2 position,
   finalPosArray[id] = Vec2(0, 0);
   // printf("nuevo sprite id: %d. pos: %d\n",spriteArray[id].id,id);
   loadSprite(&spriteArray[id], mode, Vec2(0.0f, 0.0f), size);
+  spritesNormalRender[id] = &spriteArray[id];
 }
 
 void createSpriteRotate(int id, Tyra::SpriteMode mode, Tyra::Vec2 position,
-                  Tyra::Vec2 size, const float angle) {
-  spritesRotate[id] = Sprite();             
+                        Tyra::Vec2 size, const float angle) {
+  spritesRotate[id] = Sprite();
   posArray[id] = position;
   finalPosArray[id] = Vec2(0, 0);
   // printf("nuevo sprite id: %d. pos: %d\n",spritesRotate[id].id,id);
   angles[id] = angle;
   loadSprite(&spritesRotate[id], mode, Vec2(0.0f, 0.0f), size);
+  spritesRotateRender[id] = &spritesRotate[id];
 }
 
-void deleteSprite(const int id) { spriteArray.erase(id); }
+void deleteSprite(const int entitieID) {
+  if (spriteArray.count(entitieID) == 1) {
+    engine->renderer.getTextureRepository()
+        .getBySpriteId(spriteArray[entitieID].id)
+        ->removeLinkById(spriteArray[entitieID].id);
+    spriteArray.erase(entitieID);
+    if (spritesNormalRender.count(entitieID)) {
+      spritesNormalRender.erase(entitieID);
+    }
+  } else {
+    engine->renderer.getTextureRepository()
+        .getBySpriteId(spritesRotate[entitieID].id)
+        ->removeLinkById(spritesRotate[entitieID].id);
+    spritesRotate.erase(entitieID);
+    if (spritesRotateRender.count(entitieID)) {
+      spritesRotateRender.erase(entitieID);
+    }
+  }
+}
 
 /*
  * @return True if collision exist
@@ -87,41 +112,130 @@ void AnimationManager::update() {
   auto& textureRepository = renderer->getTextureRepository();
 
   for (it = animationArray.begin(); it != animationArray.end(); it++) {
-    if (animationArray[it->first].time <
-        animationTime[animationArray[it->first].animID]
-            .seconds[animationArray[it->first].key]) {
-      animationArray[it->first].time++;
+    if (it->second.framesCounter >= (60 / framesSpeed)) {
+      it->second.framesCounter = 0;
+      it->second.currentFrame++;
 
-      position(it->first);
-      continue;
+      if (it->second.currentFrame >=
+          animationDataArray[it->second.animID].maxFrame) {
+        it->second.currentFrame = 0;
+      }
+      // printf("AnimID: %d, currentFrame: %d\n",
+      // animationArray[it->first].animID,
+      //        it->second.currentFrame);
+
+      if (spriteArray.count(it->first) == 1 &&
+          animationDataArray[it->second.animID].texture.count(
+              it->second.currentFrame) == 1) {
+        // printf("unlink sprite id: %d\n", spriteArray[it->first].id);
+        // Unlink Texture from the sprite entitie
+        textureRepository.getBySpriteId(spriteArray[it->first].id)
+            ->removeLinkById(spriteArray[it->first].id);
+
+        // Link new Texture to the sprite entitie
+        animationDataArray[animationArray[it->first].animID]
+            .texture[it->second.currentFrame]
+            ->addLink(spriteArray[it->first].id);
+      } else if (animationDataArray[it->second.animID].texture.count(
+                     it->second.currentFrame) == 1) {
+        // printf("unlink sprite rotate id: %d\n", spritesRotate[it->first].id);
+        // Unlink Texture from the sprite entitie
+        textureRepository.getBySpriteId(spritesRotate[it->first].id)
+            ->removeLinkById(spritesRotate[it->first].id);
+
+        // Link new Texture to the sprite entitie
+        animationDataArray[it->second.animID]
+            .texture[it->second.currentFrame]
+            ->addLink(spritesRotate[it->first].id);
+      }
+      angle(it->first);
+      alpha(it->first);
+      size(it->first);
     }
-
-    // Unlink Texture from the sprite entitie
-    textureRepository.getBySpriteId(spriteArray[it->first].id)
-        ->removeLinkById(spriteArray[it->first].id);
-
-    animationArray[it->first].key++;
-    animationArray[it->first].time = 0;
-
-    if (animationArray[it->first].key >=
-        animationDataArray[animationArray[it->first].animID].keys.size()) {
-      animationArray[it->first].key = 0;
-    }
-
-    // Link new Texture to the sprite entitie
-    animationDataArray[animationArray[it->first].animID]
-        .keys[animationArray[it->first].key]
-        ->addLink(spriteArray[it->first].id);
-
     position(it->first);
+    it->second.framesCounter++;
   }
 }
 
 void AnimationManager::position(const int entitieID) {
   // finalPos += animPos
-  finalPosArray[entitieID] =
-      *animationDataArray[animationArray[entitieID].animID]
-           .position[animationArray[entitieID].key];
+
+  if (animationDataArray[animationArray[entitieID].animID].position.count(
+          animationArray[entitieID].currentFrame)) {
+    texPosArray[entitieID] =
+        animationDataArray[animationArray[entitieID].animID]
+            .position[animationArray[entitieID].currentFrame];
+    // if (animationArray[entitieID].animID == 22) {
+    //   printf("cambie la posicion en frame: %d. AnimID:%d\n",
+    //          animationArray[entitieID].currentFrame,
+    //          animationArray[entitieID].animID);
+    //   // finalPosArray[entitieID].print();
+    // }
+  }
+  // if (animationArray[entitieID].animID == 22) {
+  //     printf("posicion en frame: %d. AnimID:%d\n",
+  //            animationArray[entitieID].currentFrame,
+  //            animationArray[entitieID].animID);
+  //     finalPosArray[entitieID].print();
+  //   }
+}
+
+void AnimationManager::angle(const int entitieID) {
+  if (animationDataArray[animationArray[entitieID].animID].angle.count(
+          animationArray[entitieID].currentFrame) == 1) {
+    angles[entitieID] = animationDataArray[animationArray[entitieID].animID]
+                            .angle[animationArray[entitieID].currentFrame];
+
+    // if (animationArray[entitieID].animID == 21) {
+    //   printf("cambie el angle en frame: %d. AnimID:%d, angle: %f\n",
+    //          animationArray[entitieID].currentFrame,
+    //          animationArray[entitieID].animID, angles[entitieID]);
+    // }
+  }
+}
+void AnimationManager::alpha(const int entitieID) {
+  if (animationDataArray[animationArray[entitieID].animID].alpha.count(
+          animationArray[entitieID].currentFrame) == 1) {
+    // if(animationArray[entitieID].animID == 20){
+    //   printf("cambie el alpha en frame: %d. AnimID:%d\n",
+    //        animationArray[entitieID].currentFrame,
+    //        animationArray[entitieID].animID);
+    // }
+
+    float alpha = animationDataArray[animationArray[entitieID].animID]
+                      .alpha[animationArray[entitieID].currentFrame] *
+                  128;
+    if (spriteArray.count(entitieID) == 1) {
+      spriteArray[entitieID].color.a = alpha;
+    } else {
+      spritesRotate[entitieID].color.a = alpha;
+    }
+  }
+}
+
+void AnimationManager::size(const int entitieID) {
+  if (animationDataArray[animationArray[entitieID].animID].size.count(
+          animationArray[entitieID].currentFrame) == 1) {
+    if (spriteArray.count(entitieID) == 1) {
+      spriteArray[entitieID].size =
+          originalSize[entitieID] *
+          animationDataArray[animationArray[entitieID].animID]
+              .size[animationArray[entitieID].currentFrame];
+    } else {
+      spritesRotate[entitieID].size =
+          originalSize[entitieID] *
+          animationDataArray[animationArray[entitieID].animID]
+              .size[animationArray[entitieID].currentFrame];
+    }
+
+    // if (animationArray[entitieID].animID == 22) {
+    //   printf("cambie el size en frame: %d. AnimID:%d\n",
+    //          animationArray[entitieID].currentFrame,
+    //          animationArray[entitieID].animID);
+    //   printf("sprite size: \n");
+    //   spriteArray[entitieID].size.print();
+    // }
+  }
 }
 
 void AnimationManager::debug() {
@@ -135,54 +249,157 @@ void AnimationManager::debug() {
 int AnimationManager::debugAnim(const int entitieID) {
   auto& textureRepository = renderer->getTextureRepository();
 
-  if (animationArray[entitieID].time <
-      animationTime[animationArray[entitieID].animID]
-          .seconds[animationArray[entitieID].key]) {
-    animationArray[entitieID].time++;
+  if (animationArray[entitieID].framesCounter < (60 / framesSpeed)) {
+    animationArray[entitieID].framesCounter++;
     return 1;
   }
+  printf("pase por debug anim\n");
 
-  textureRepository.getBySpriteId(spriteArray[entitieID].id)
-      ->removeLinkById(spriteArray[entitieID].id);
+  animationArray[entitieID].currentFrame++;
+  animationArray[entitieID].framesCounter = 0;
 
-  animationArray[entitieID].key++;
-  animationArray[entitieID].time = 0;
-
-  if (animationArray[entitieID].key >=
-      animationDataArray[animationArray[entitieID].animID].keys.size()) {
-    animationArray[entitieID].key = 0;
+  if (animationArray[entitieID].currentFrame >=
+      animationDataArray[animationArray[entitieID].animID].maxFrame) {
+    animationArray[entitieID].currentFrame = 0;
   }
 
-  animationDataArray[animationArray[entitieID].animID]
-      .keys[animationArray[entitieID].key]
-      ->addLink(spriteArray[entitieID].id);
+  if (spriteArray.count(entitieID) == 1 &&
+      animationDataArray[animationArray[entitieID].animID].texture.count(
+          animationArray[entitieID].currentFrame) == 1) {
+    textureRepository.getBySpriteId(spriteArray[entitieID].id)
+        ->removeLinkById(spriteArray[entitieID].id);
+
+    animationDataArray[animationArray[entitieID].animID]
+        .texture[animationArray[entitieID].currentFrame]
+        ->addLink(spriteArray[entitieID].id);
+  } else if (animationDataArray[animationArray[entitieID].animID].texture.count(
+                 animationArray[entitieID].currentFrame) == 1) {
+    textureRepository.getBySpriteId(spritesRotate[entitieID].id)
+        ->removeLinkById(spritesRotate[entitieID].id);
+
+    animationDataArray[animationArray[entitieID].animID]
+        .texture[animationArray[entitieID].currentFrame]
+        ->addLink(spritesRotate[entitieID].id);
+  }
+
+  if (animationDataArray[animationArray[entitieID].animID].alpha.count(
+          animationArray[entitieID].currentFrame) == 1) {
+    float alpha = animationDataArray[animationArray[entitieID].animID]
+                      .alpha[animationArray[entitieID].currentFrame] *
+                  128;
+    if (spriteArray.count(entitieID) == 1) {
+      spriteArray[entitieID].color.a = alpha;
+    } else {
+      spritesRotate[entitieID].color.a = alpha;
+    }
+  }
+
+  if (animationDataArray[animationArray[entitieID].animID].size.count(
+          animationArray[entitieID].currentFrame) == 1) {
+    if (spriteArray.count(entitieID) == 1) {
+      spriteArray[entitieID].size =
+          originalSize[entitieID] *
+          animationDataArray[animationArray[entitieID].animID]
+              .size[animationArray[entitieID].currentFrame];
+    } else {
+      spritesRotate[entitieID].size =
+          originalSize[entitieID] *
+          animationDataArray[animationArray[entitieID].animID]
+              .size[animationArray[entitieID].currentFrame];
+    }
+  }
+
+  if (animationDataArray[animationArray[entitieID].animID].angle.count(
+          animationArray[entitieID].currentFrame) == 1) {
+    angles[entitieID] = animationDataArray[animationArray[entitieID].animID]
+                            .angle[animationArray[entitieID].currentFrame];
+    // printf("entitie ID: %d, frame:%d, angle:%f\n", entitieID,
+    //        animationArray[entitieID].currentFrame, angles[entitieID]);
+  }
+
   return 0;
 }
 
 void AnimationManager::debugChangeFrame(const int entitieID, const int key) {
   auto& textureRepository = renderer->getTextureRepository();
 
-  // Unlink Texture from the sprite entitie
-  textureRepository.getBySpriteId(spriteArray[entitieID].id)
-      ->removeLinkById(spriteArray[entitieID].id);
+  if (spriteArray.count(entitieID) == 1 &&
+      animationDataArray[animationArray[entitieID].animID].texture.count(
+          animationArray[entitieID].currentFrame) == 1) {
+    // Unlink Texture from the sprite entitie
+    textureRepository.getBySpriteId(spriteArray[entitieID].id)
+        ->removeLinkById(spriteArray[entitieID].id);
 
-  // Link new Texture to the sprite entitie
-  animationDataArray[animationArray[entitieID].animID]
-      .keys[animationArray[entitieID].key]
-      ->addLink(spriteArray[entitieID].id);
+    // Link new Texture to the sprite entitie
+    animationDataArray[animationArray[entitieID].animID]
+        .texture[animationArray[entitieID].currentFrame]
+        ->addLink(spriteArray[entitieID].id);
+  } else if (animationDataArray[animationArray[entitieID].animID].texture.count(
+                 animationArray[entitieID].currentFrame) == 1) {
+    // Unlink Texture from the sprite entitie
+    textureRepository.getBySpriteId(spritesRotate[entitieID].id)
+        ->removeLinkById(spritesRotate[entitieID].id);
+
+    // Link new Texture to the sprite entitie
+    animationDataArray[animationArray[entitieID].animID]
+        .texture[animationArray[entitieID].currentFrame]
+        ->addLink(spritesRotate[entitieID].id);
+  }
+
+  if (animationDataArray[animationArray[entitieID].animID].alpha.count(
+          animationArray[entitieID].currentFrame) == 1) {
+    float alpha = animationDataArray[animationArray[entitieID].animID]
+                      .alpha[animationArray[entitieID].currentFrame] *
+                  128;
+    if (spriteArray.count(entitieID) == 1) {
+      spriteArray[entitieID].color.a = alpha;
+    } else {
+      printf("entitie ID: %d, frame:%d, alpha:%f\n", entitieID,
+           animationArray[entitieID].currentFrame, alpha);
+      spritesRotate[entitieID].color.a = alpha;
+    }
+  }
+
+  if (animationDataArray[animationArray[entitieID].animID].size.count(
+          animationArray[entitieID].currentFrame) == 1) {
+    if (spriteArray.count(entitieID) == 1) {
+      spriteArray[entitieID].size =
+          originalSize[entitieID] *
+          animationDataArray[animationArray[entitieID].animID]
+              .size[animationArray[entitieID].currentFrame];
+    } else {
+      spritesRotate[entitieID].size =
+          originalSize[entitieID] *
+          animationDataArray[animationArray[entitieID].animID]
+              .size[animationArray[entitieID].currentFrame];
+    }
+  }
+
+  if (animationDataArray[animationArray[entitieID].animID].angle.count(
+          animationArray[entitieID].currentFrame) == 1) {
+    angles[entitieID] = animationDataArray[animationArray[entitieID].animID]
+                            .angle[animationArray[entitieID].currentFrame];
+    // printf("entitie ID: %d, frame:%d, angle:%f\n", entitieID,
+    //        animationArray[entitieID].currentFrame, angles[entitieID]);
+  }
 }
 
 void RendererDebugSpritesManager::update() {
   std::map<int, Sprite>::iterator it;
   // auto& textureRepository = renderer->getTextureRepository();
-
+  // TYRA_LOG("Render Debug");
+  // printf("debug size: %d\n",debugSpriteBoxCollider.size());
   for (it = debugSpriteBoxCollider.begin(); it != debugSpriteBoxCollider.end();
        it++) {
+    // printf("key: %d. sprite ID: %d\n",it->first,it->second.id);
     renderer->renderer2D.render(debugSpriteBoxCollider[it->first]);
   }
 
+  // TYRA_LOG("Render Debug Point");
+
   for (it = debugSpritePointCollider.begin();
        it != debugSpritePointCollider.end(); it++) {
+    // printf("key: %d. sprite ID: %d\n",it->first,it->second.id);
     renderer->renderer2D.render(debugSpritePointCollider[it->first]);
   }
 }
@@ -200,22 +417,24 @@ void RendererSprites::updateChildPos() {
 }
 
 void RendererSprites::update() {
-  std::map<int, Sprite>::iterator it;
+  std::map<int, Sprite*>::iterator it;
   // printf("size: %d\n", spriteArray.size());
-  for (it = spriteArray.begin(); it != spriteArray.end(); it++) {
-    // printf("key: %d. sprite ID: %d\n",it->first,it->second.id);
+  for (it = spritesNormalRender.begin(); it != spritesNormalRender.end();
+       it++) {
+    // printf("key: %d. sprite ID: %d\n",it->first,it->second->id);
 
     // finalPos += entitiePos
 
-    finalPosArray[it->first].x += posArray[it->first].x;
-    finalPosArray[it->first].y += posArray[it->first].y;
+    finalPosArray[it->first] += texPosArray[it->first];
+    finalPosArray[it->first] += posArray[it->first];
 
-    if (finalPosArray[it->first].x != it->second.position.x ||
-        finalPosArray[it->first].y != it->second.position.y) {
-      it->second.position.x = finalPosArray[it->first].x;
-      it->second.position.y = finalPosArray[it->first].y;
-      // printf("key: %d. sprite pos:
-      // %f,%f\n",it->first,it->second.position.x,it->second.position.y);
+    if (finalPosArray[it->first].x != it->second->position.x ||
+        finalPosArray[it->first].y != it->second->position.y) {
+      it->second->position.x = finalPosArray[it->first].x;
+      it->second->position.y = finalPosArray[it->first].y;
+      // printf("key: %d. sprite pos:%f,%f texture pos:%f,%f\n", it->first,
+      //        it->second->position.x, it->second->position.y,
+      //        texPosArray[it->first].x, texPosArray[it->first].y);
     }
 
     renderer->renderer2D.render(it->second);
@@ -225,26 +444,27 @@ void RendererSprites::update() {
 }
 
 void RendererSprites::updateRotate() {
-  std::map<int, Sprite>::iterator it;
+  std::map<int, Sprite*>::iterator it;
   // static float angle = 0;
-  
-  for (it = spritesRotate.begin(); it != spritesRotate.end(); it++) {
-    // printf("key: %d. sprite ID: %d\n",it->first,it->second.id);
+  // TYRA_LOG("Update Rotate");
+
+  for (it = spritesRotateRender.begin(); it != spritesRotateRender.end();
+       it++) {
+    // printf("key: %d. sprite ID: %d\n",it->first,it->second->id);
 
     // finalPos += entitiePos
-    
-    finalPosArray[it->first].x += posArray[it->first].x;
-    finalPosArray[it->first].y += posArray[it->first].y;
 
-    if (finalPosArray[it->first].x != it->second.position.x ||
-        finalPosArray[it->first].y != it->second.position.y) {
-      it->second.position.x = finalPosArray[it->first].x;
-      it->second.position.y = finalPosArray[it->first].y;
-      // printf("key: %d. sprite pos:
-      // %f,%f\n",it->first,it->second.position.x,it->second.position.y);
+    finalPosArray[it->first] += texPosArray[it->first];
+    finalPosArray[it->first] += posArray[it->first];
+
+    if (finalPosArray[it->first].x != it->second->position.x ||
+        finalPosArray[it->first].y != it->second->position.y) {
+      it->second->position = finalPosArray[it->first];
+      // printf("key: %d. sprite pos: %f,%f\n", it->first, it->second->position.x,
+      //        it->second->position.y);
     }
 
-    renderer->renderer2D.renderRotate(it->second,angles[it->first]);
+    renderer->renderer2D.renderRotate(*it->second, angles[it->first]);
     finalPosArray[it->first] = Vec2(0.0f, 0.0f);
   }
   // angle++;
@@ -258,6 +478,9 @@ void ZombiesManager::update() {
   std::vector<Zombie>::iterator it;
 
   for (it = zombie.begin(); it < zombie.end(); it++) {
+    if (it->debug == true) {
+      continue;
+    }
     if (it->timer > 0) {
       it->timer--;
     } else if (it->attack == false) {
@@ -284,6 +507,9 @@ int ZombiesManager::collision() {
 
   if (plantsCreated == 0) {
     for (it = zombie.begin(); it < zombie.end(); it++) {
+      if (it->debug == true) {
+        continue;
+      }
       it->attack = false;
       animationArray[*it->body[0]].animID = zombieWalk;
     }
@@ -292,7 +518,9 @@ int ZombiesManager::collision() {
 
   for (it = zombie.begin(); it < zombie.end(); it++) {
     // printf("hay una planta en %d\n",i);
-
+    if (it->debug == true) {
+      continue;
+    }
     for (int i = 0; i < 45; i++) {
       if (plant[i].type != NonePlant) {
         //  printf("vec plant %f,%f. vec zombi %f,%f,%f,%f\n",
@@ -331,7 +559,12 @@ int ZombiesManager::collision() {
 
             if (lifeArray[*plant[i].body[0]] <= 0) {
               printf("borre planta id: %d\n", *plant[i].body[0]);
-              deletePeashotter(i);
+              if (plant[i].type == PeaShotter) {
+                deletePeashotter(i);
+              } else if (plant[i].type == SunFlower) {
+                deleteSunflower(i);
+              }
+
               it->attack = false;
               animationArray[*it->body[0]].animID = zombieWalk;
             }
@@ -349,7 +582,6 @@ int ZombiesManager::collision() {
 
 void ProjectileManager::update() {
   std::vector<int>::iterator it;
-  auto& textureRepository = renderer->getTextureRepository();
 
   for (it = projectile.begin(); it < projectile.end(); it++) {
     // printf("projectile id: %d\n", *it);
@@ -362,9 +594,7 @@ void ProjectileManager::update() {
     if (posArray[*it].x >= 580) {
       // delete projectile
       printf("borrando proyectil\n");
-      textureRepository.getBySpriteId(spriteArray[*it].id)
-          ->removeLinkById(spriteArray[*it].id);
-      spriteArray.erase(*it);
+      deleteSprite(*it);
       boxColliderArray.erase(*it);
       posArray.erase(*it);
       deleteDebugBoxCollider(*it);
@@ -396,11 +626,9 @@ void ProjectileManager::zombieCollision() {
           posArray.erase(*it2->body[0]);
           // posArray.erase(*it2->body[1]);
 
-          deleteFatherID(it2->father,it2->body[0]);
+          deleteFatherID(it2->father, it2->body[0]);
           // deleteFatherID(*it2->father,*it2->body[1]);
-          textureRepository.getBySpriteId(spriteArray[*it2->body[0]].id)
-              ->removeLinkById(spriteArray[*it2->body[0]].id);
-          spriteArray.erase(*it2->body[0]);
+          deleteSprite(*it2->body[0]);
           animationArray.erase(*it2->body[0]);
           lifeArray.erase(*it2->body[0]);
           boxColliderArray.erase(*it2->body[0]);
@@ -421,9 +649,7 @@ void ProjectileManager::zombieCollision() {
             textureRepository.getBySpriteId(spriteArray[*it].id);
         TYRA_ASSERT(text,
                     "No se encontro la textura del proyectil with id: ", *it);
-
-        text->removeLinkById(spriteArray[*it].id);
-        spriteArray.erase(*it);
+        deleteSprite(*it);
         boxColliderArray.erase(*it);
         deleteDebugBoxCollider(*it);
         Entities::deleteID(*it);

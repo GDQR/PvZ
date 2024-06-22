@@ -9,9 +9,13 @@ extern bool hideText;
 extern bool playAnimation;
 extern float colorSprite;
 
-bool menuUpOption(Tyra::Pad& pad);
-bool menuDownOption(Tyra::Pad& pad);
-bool menuLeftOption(Tyra::Pad& pad);
-bool menuRightOption(Tyra::Pad& pad);
+bool menuUpOptionLeftJoy(Tyra::Pad& pad);
+bool menuDownOptionLeftJoy(Tyra::Pad& pad);
+bool menuLeftOptionLeftJoy(Tyra::Pad& pad);
+bool menuRightOptionLeftJoy(Tyra::Pad& pad);
+bool menuUpOptionRightJoy(Tyra::Pad& pad);
+bool menuDownOptionRightJoy(Tyra::Pad& pad);
+bool menuLeftOptionRightJoy(Tyra::Pad& pad);
+bool menuRightOptionRightJoy(Tyra::Pad& pad);
 bool menuCrossClickedOption(Tyra::Pad& pad, const bool isActive);
 bool menuCircleClickedOption(Tyra::Pad& pad, const bool isActive);

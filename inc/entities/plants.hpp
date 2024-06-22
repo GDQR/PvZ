@@ -27,5 +27,6 @@ class Plant {
 };
 
 void deletePeashotter(const int pos);
+void deleteSunflower(const int pos);
 void createPlant(Plant_State_enum typePlant, const int row, const int column);
 int getPlantCost(Plant_State_enum typePlant);

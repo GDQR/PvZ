@@ -7,32 +7,64 @@ bool hideText = false;
 bool playAnimation = false;
 float colorSprite = -2;
 
-bool menuUpOption(Tyra::Pad& pad) {
-  if ((pad.getPressed().DpadUp || leftJoy->v <= 100)) {
+bool menuUpOptionLeftJoy(Tyra::Pad& pad) {
+  if (pad.getPressed().DpadUp || leftJoy->v <= 100) {
     padTimer = 10;
     return true;
   }
   return false;
 }
 
-bool menuDownOption(Tyra::Pad& pad) {
-  if ((pad.getPressed().DpadDown || leftJoy->v >= 200)) {
+bool menuDownOptionLeftJoy(Tyra::Pad& pad) {
+  if (pad.getPressed().DpadDown || leftJoy->v >= 200) {
     padTimer = 10;
     return true;
   }
   return false;
 }
 
-bool menuLeftOption(Tyra::Pad& pad) {
-  if ((pad.getPressed().DpadLeft || leftJoy->h <= 100)) {
+bool menuLeftOptionLeftJoy(Tyra::Pad& pad) {
+  if (pad.getPressed().DpadLeft || leftJoy->h <= 100) {
     padTimer = 10;
     return true;
   }
   return false;
 }
 
-bool menuRightOption(Tyra::Pad& pad) {
-  if ((pad.getPressed().DpadRight || leftJoy->h >= 200)) {
+bool menuRightOptionLeftJoy(Tyra::Pad& pad) {
+  if (pad.getPressed().DpadRight || leftJoy->h >= 200) {
+    padTimer = 10;
+    return true;
+  }
+  return false;
+}
+
+bool menuUpOptionRightJoy(Tyra::Pad& pad) {
+  if (pad.getRightJoyPad().v <= 100) {
+    padTimer = 10;
+    return true;
+  }
+  return false;
+}
+
+bool menuDownOptionRightJoy(Tyra::Pad& pad) {
+  if (pad.getRightJoyPad().v >= 200) {
+    padTimer = 10;
+    return true;
+  }
+  return false;
+}
+
+bool menuLeftOptionRightJoy(Tyra::Pad& pad) {
+  if (pad.getRightJoyPad().h <= 100) {
+    padTimer = 10;
+    return true;
+  }
+  return false;
+}
+
+bool menuRightOptionRightJoy(Tyra::Pad& pad) {
+  if (pad.getRightJoyPad().h >= 200) {
     padTimer = 10;
     return true;
   }

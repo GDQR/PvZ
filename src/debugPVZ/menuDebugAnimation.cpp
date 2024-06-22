@@ -6,24 +6,24 @@ bool isMainMenuAnimationActive = true;
 bool startAnimationDebug = true;
 
 void subMenu(Tyra::Pad& pad, Tyra::Font& font, int& entitieID) {
-  Vec2* texPos = animationDataArray[animationArray[entitieID].animID]
-                     .position[animationArray[entitieID].key];
+  Vec2* texPos = &animationDataArray[animationArray[entitieID].animID]
+                     .position[animationArray[entitieID].currentFrame];
 
   if (pad.getClicked().L1) {
-    if (animationArray[entitieID].key > 0) {
-      animationArray[entitieID].key--;
+    if (animationArray[entitieID].currentFrame > 0) {
+      animationArray[entitieID].currentFrame--;
     } else {
-      animationArray[entitieID].key =
-          animationDataArray[animationArray[entitieID].animID].keys.size() - 1;
+      animationArray[entitieID].currentFrame =
+          animationDataArray[animationArray[entitieID].animID].texture.size() - 1;
     }
-    animManager.debugChangeFrame(entitieID, animationArray[entitieID].key);
+    animManager.debugChangeFrame(entitieID, animationArray[entitieID].currentFrame);
   } else if (pad.getClicked().R1) {
-    animationArray[entitieID].key++;
-    if (animationArray[entitieID].key >=
-        animationDataArray[animationArray[entitieID].animID].keys.size()) {
-      animationArray[entitieID].key = 0;
+    animationArray[entitieID].currentFrame++;
+    if (animationArray[entitieID].currentFrame >=
+        animationDataArray[animationArray[entitieID].animID].texture.size()) {
+      animationArray[entitieID].currentFrame = 0;
     }
-    animManager.debugChangeFrame(entitieID, animationArray[entitieID].key);
+    animManager.debugChangeFrame(entitieID, animationArray[entitieID].currentFrame);
   } else if (pad.getClicked().Circle) {
     isMainMenuAnimationActive = true;
     hideText = false;
@@ -37,15 +37,15 @@ void subMenu(Tyra::Pad& pad, Tyra::Font& font, int& entitieID) {
   if (padTimer > 0) {
     padTimer--;
   } else {
-    if (menuUpOption(pad)) {
+    if (menuUpOptionLeftJoy(pad)) {
       texPos->y--;
-    } else if (menuDownOption(pad)) {
+    } else if (menuDownOptionLeftJoy(pad)) {
       texPos->y++;
     }
 
-    if (menuLeftOption(pad)) {
+    if (menuLeftOptionLeftJoy(pad)) {
       texPos->x--;
-    } else if (menuRightOption(pad)) {
+    } else if (menuRightOptionLeftJoy(pad)) {
       texPos->x++;
     }
   }
@@ -64,10 +64,10 @@ void subMenu(Tyra::Pad& pad, Tyra::Font& font, int& entitieID) {
     std::string animSize =
         "Total textures: " +
         std::to_string(
-            animationDataArray[animationArray[entitieID].animID].keys.size());
+            animationDataArray[animationArray[entitieID].animID].texture.size());
 
     std::string textKey =
-        "Key: " + std::to_string(animationArray[entitieID].key);
+        "Key: " + std::to_string(animationArray[entitieID].currentFrame);
 
     engine->font.drawText(&myFont, textKey, 30, 120, 16, black);
     engine->font.drawText(&myFont, position, 30, 140, 16,
@@ -109,7 +109,7 @@ void menuDebugAnimation(Tyra::Pad& pad, Tyra::Font& font, int& entitieID) {
 
     if (padTimer > 0) {
       padTimer--;
-    } else if (menuUpOption(pad) || menuRightOption(pad)) {
+    } else if (menuUpOptionLeftJoy(pad) || menuRightOptionLeftJoy(pad)) {
       spriteArray[entitieID].color.a = 128.0f;
 
       std::map<int, Animation>::iterator it = animationArray.find(entitieID);
@@ -120,7 +120,7 @@ void menuDebugAnimation(Tyra::Pad& pad, Tyra::Font& font, int& entitieID) {
         entitieID = std::next(it)->first;
       }
 
-    } else if (menuDownOption(pad) || menuLeftOption(pad)) {
+    } else if (menuDownOptionLeftJoy(pad) || menuLeftOptionLeftJoy(pad)) {
       spriteArray[entitieID].color.a = 128.0f;
 
       std::map<int, Animation>::iterator it = animationArray.find(entitieID);
