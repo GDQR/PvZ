@@ -274,6 +274,13 @@ int AnimationManager::debugAnim(const int entitieID) {
         ->addLink(spritesRotate[entitieID].id);
   }
 
+  if (animationDataArray[animationArray[entitieID].animID].position.count(
+          animationArray[entitieID].currentFrame) == 1) {
+    texPosArray[entitieID] =
+        animationDataArray[animationArray[entitieID].animID]
+            .position[animationArray[entitieID].currentFrame];
+  }
+
   if (animationDataArray[animationArray[entitieID].animID].alpha.count(
           animationArray[entitieID].currentFrame) == 1) {
     float alpha = animationDataArray[animationArray[entitieID].animID]
@@ -334,6 +341,13 @@ void AnimationManager::debugChangeFrame(const int entitieID, const int key) {
     animationDataArray[animationArray[entitieID].animID]
         .texture[animationArray[entitieID].currentFrame]
         ->addLink(spritesRotate[entitieID].id);
+  }
+
+  if (animationDataArray[animationArray[entitieID].animID].position.count(
+          animationArray[entitieID].currentFrame) == 1) {
+    texPosArray[entitieID] =
+        animationDataArray[animationArray[entitieID].animID]
+            .position[animationArray[entitieID].currentFrame];
   }
 
   if (animationDataArray[animationArray[entitieID].animID].alpha.count(

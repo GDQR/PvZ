@@ -104,18 +104,6 @@ void subMenuSprite(Tyra::Pad& pad, Tyra::Font& font, int& entitieID) {
     printf("angle created: %p\n", texPos);
   }
 
-  if (animationDataArray[animationArray[entitieID].animID].scale.count(
-          animationArray[entitieID].currentFrame) == 1) {
-    d_scale = &animationDataArray[animationArray[entitieID].animID]
-                 .scale[animationArray[entitieID].currentFrame];
-    d_hasScale = true;
-    // printf("size from frame %d, size:%f,%f\n",animationArray[entitieID].currentFrame,*d_size->x,*d_size->y);
-  } else if (d_scale == NULL) {
-    d_scale = new float(1);
-    d_hasScale = false;
-    printf("size created: %p\n", texPos);
-  }
-
   if (pad.getClicked().Circle) {
     isMainMenuActive = true;
     hideText = false;
@@ -125,19 +113,14 @@ void subMenuSprite(Tyra::Pad& pad, Tyra::Font& font, int& entitieID) {
     hideSprite = false;
     activateRender();
     if (animationFound == false) {
-      posArray[entitieID].y -= texPos->y;
-      posArray[entitieID].x -= texPos->x;
+      posArray[entitieID] -= *texPos;
       delete texPos;
     }
     if (rotateFound == false) {
       delete d_angle; // maybe this give me problems in the future
     }
-    if(d_hasScale == false){
-      delete d_scale; // maybe this give me problems in the future
-    }
     texPos = NULL;
     d_angle = NULL;
-    d_scale = NULL;
     animationFound = false;
     rotateFound = false;
   } else if (pad.getClicked().Square) {
@@ -236,12 +219,14 @@ void subMenuSprite(Tyra::Pad& pad, Tyra::Font& font, int& entitieID) {
           posArray[entitieID].y -= padSpeed;
         }
         texPos->y -= padSpeed;
+        texPosArray[entitieID].y--;
       } else if (menuDownOptionRightJoy(pad)) {
         speedDebugOptions();
         if (animationFound == false) {
           posArray[entitieID].y += padSpeed;
         }
         texPos->y += padSpeed;
+        texPosArray[entitieID].y++;
       }
 
       if (menuLeftOptionRightJoy(pad)) {
@@ -250,12 +235,14 @@ void subMenuSprite(Tyra::Pad& pad, Tyra::Font& font, int& entitieID) {
           posArray[entitieID].x -= padSpeed;
         }
         texPos->x -= padSpeed;
+        texPosArray[entitieID].x--;
       } else if (menuRightOptionRightJoy(pad)) {
         speedDebugOptions();
         if (animationFound == false) {
           posArray[entitieID].x += padSpeed;
         }
         texPos->x += padSpeed;
+        texPosArray[entitieID].x++;
       }
 
       if (menuUpOptionRightJoy(pad) == false &&
@@ -276,10 +263,6 @@ void subMenuSprite(Tyra::Pad& pad, Tyra::Font& font, int& entitieID) {
         }
       }
     }
-  }
-
-  if(texPos != NULL) {
-    texPosArray[entitieID] = *texPos;
   }
 
   if (animationFound == true && playAnimation == true) {
@@ -315,6 +298,10 @@ void subMenuSprite(Tyra::Pad& pad, Tyra::Font& font, int& entitieID) {
     engine->font.drawText(&myFont, texPosition, 30, 160, 16,
                           Tyra::Color(0, 0, 0, 128));
 
+    std::string textScale = "Scale: " + std::to_string(debugSpritesType[entitieID]->scale);
+    engine->font.drawText(&myFont, textScale, 30, 180, 16,
+                          Tyra::Color(0, 0, 0, 128));
+
     // animation
     if (animationFound == true) {
       std::string textKey =
@@ -327,7 +314,7 @@ void subMenuSprite(Tyra::Pad& pad, Tyra::Font& font, int& entitieID) {
 
       engine->font.drawText(&myFont, textKey, 30, 120, 16, black);
 
-      engine->font.drawText(&myFont, animSize, 30, 180, 16, black);
+      engine->font.drawText(&myFont, animSize, 30, 200, 16, black);
       engine->font.drawText(&myFont, "PRESS X FOR PLAY/STOP ANIMATION", 30, 280,
                             16, black);
       // general y anim
