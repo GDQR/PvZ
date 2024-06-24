@@ -109,12 +109,7 @@ void readReanimFiles(std::string file) {
     } else if (insideArrow == "sx") { // es la escala de la imagen
       std::getline(MyReadFile, insideArrow, '<');
       std::cout << " SX: " << insideArrow;
-      animationDataArray[animID].size[countframes].x = std::stof(insideArrow);
-      std::getline(MyReadFile, insideArrow, '>');
-    } else if (insideArrow == "sy") {
-      std::getline(MyReadFile, insideArrow, '<');
-      std::cout << " SY: " << insideArrow;
-      animationDataArray[animID].size[countframes].y = std::stof(insideArrow);
+      animationDataArray[animID].scale[countframes] = std::stof(insideArrow);
       std::getline(MyReadFile, insideArrow, '>');
     } else if (insideArrow == "a") {
       std::getline(MyReadFile, insideArrow, '<');
@@ -187,6 +182,7 @@ void loadPeaShooterAnimation() {
   frame = 0;
   texture = loadTexture("Animations/PeaShooterSingle/PeaShooterSingle0005.png");
   animationDataArray[peaShooterBody].texture[frame] = texture;
+  animationDataArray[peaShooterBody].position[frame] = Tyra::Vec2(0, 0);
   animationDataArray[peaShooterBody].maxFrame = frame;
 }
 

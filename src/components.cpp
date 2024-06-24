@@ -31,8 +31,10 @@ bool zombieCreateRow[5];
 bool plantCreatedInMap[5][9];
 BoxCollider mapCollider[5][9];
 
-std::map<int, Tyra::Sprite> debugSpritePointCollider;
-std::map<int, Tyra::Sprite> debugSpriteBoxCollider;
+std::map<int, Tyra::Sprite> dm_SpritePointCollider;
+std::map<int, Tyra::Sprite> dm_SpriteBoxCollider;
+std::map<int, Tyra::Sprite> dm_SpriteNormal;
+std::map<int, Tyra::Sprite> dm_SpriteRotate;
 
 void createSprite(int id, Tyra::SpriteMode mode, Tyra::Vec2 position,
                   Tyra::Vec2 size) {
@@ -150,7 +152,7 @@ void AnimationManager::update() {
       }
       angle(it->first);
       alpha(it->first);
-      size(it->first);
+      scale(it->first);
     }
     position(it->first);
     it->second.framesCounter++;
@@ -213,28 +215,18 @@ void AnimationManager::alpha(const int entitieID) {
   }
 }
 
-void AnimationManager::size(const int entitieID) {
-  if (animationDataArray[animationArray[entitieID].animID].size.count(
+void AnimationManager::scale(const int entitieID) {
+  if (animationDataArray[animationArray[entitieID].animID].scale.count(
           animationArray[entitieID].currentFrame) == 1) {
     if (spriteArray.count(entitieID) == 1) {
-      spriteArray[entitieID].size =
-          originalSize[entitieID] *
+      spriteArray[entitieID].scale =
           animationDataArray[animationArray[entitieID].animID]
-              .size[animationArray[entitieID].currentFrame];
+              .scale[animationArray[entitieID].currentFrame];
     } else {
-      spritesRotate[entitieID].size =
-          originalSize[entitieID] *
+      spritesRotate[entitieID].scale =
           animationDataArray[animationArray[entitieID].animID]
-              .size[animationArray[entitieID].currentFrame];
+              .scale[animationArray[entitieID].currentFrame];
     }
-
-    // if (animationArray[entitieID].animID == 22) {
-    //   printf("cambie el size en frame: %d. AnimID:%d\n",
-    //          animationArray[entitieID].currentFrame,
-    //          animationArray[entitieID].animID);
-    //   printf("sprite size: \n");
-    //   spriteArray[entitieID].size.print();
-    // }
   }
 }
 
@@ -294,18 +286,16 @@ int AnimationManager::debugAnim(const int entitieID) {
     }
   }
 
-  if (animationDataArray[animationArray[entitieID].animID].size.count(
+  if (animationDataArray[animationArray[entitieID].animID].scale.count(
           animationArray[entitieID].currentFrame) == 1) {
     if (spriteArray.count(entitieID) == 1) {
-      spriteArray[entitieID].size =
-          originalSize[entitieID] *
+      spriteArray[entitieID].scale =
           animationDataArray[animationArray[entitieID].animID]
-              .size[animationArray[entitieID].currentFrame];
+              .scale[animationArray[entitieID].currentFrame];
     } else {
-      spritesRotate[entitieID].size =
-          originalSize[entitieID] *
+      spritesRotate[entitieID].scale =
           animationDataArray[animationArray[entitieID].animID]
-              .size[animationArray[entitieID].currentFrame];
+              .scale[animationArray[entitieID].currentFrame];
     }
   }
 
@@ -355,23 +345,21 @@ void AnimationManager::debugChangeFrame(const int entitieID, const int key) {
       spriteArray[entitieID].color.a = alpha;
     } else {
       printf("entitie ID: %d, frame:%d, alpha:%f\n", entitieID,
-           animationArray[entitieID].currentFrame, alpha);
+             animationArray[entitieID].currentFrame, alpha);
       spritesRotate[entitieID].color.a = alpha;
     }
   }
 
-  if (animationDataArray[animationArray[entitieID].animID].size.count(
+  if (animationDataArray[animationArray[entitieID].animID].scale.count(
           animationArray[entitieID].currentFrame) == 1) {
     if (spriteArray.count(entitieID) == 1) {
-      spriteArray[entitieID].size =
-          originalSize[entitieID] *
+      spriteArray[entitieID].scale =
           animationDataArray[animationArray[entitieID].animID]
-              .size[animationArray[entitieID].currentFrame];
+              .scale[animationArray[entitieID].currentFrame];
     } else {
-      spritesRotate[entitieID].size =
-          originalSize[entitieID] *
+      spritesRotate[entitieID].scale =
           animationDataArray[animationArray[entitieID].animID]
-              .size[animationArray[entitieID].currentFrame];
+              .scale[animationArray[entitieID].currentFrame];
     }
   }
 
@@ -389,18 +377,35 @@ void RendererDebugSpritesManager::update() {
   // auto& textureRepository = renderer->getTextureRepository();
   // TYRA_LOG("Render Debug");
   // printf("debug size: %d\n",debugSpriteBoxCollider.size());
-  for (it = debugSpriteBoxCollider.begin(); it != debugSpriteBoxCollider.end();
+  for (it = dm_SpriteBoxCollider.begin(); it != dm_SpriteBoxCollider.end();
        it++) {
     // printf("key: %d. sprite ID: %d\n",it->first,it->second.id);
-    renderer->renderer2D.render(debugSpriteBoxCollider[it->first]);
+    renderer->renderer2D.render(dm_SpriteBoxCollider[it->first]);
   }
 
   // TYRA_LOG("Render Debug Point");
 
-  for (it = debugSpritePointCollider.begin();
-       it != debugSpritePointCollider.end(); it++) {
+  for (it = dm_SpritePointCollider.begin(); it != dm_SpritePointCollider.end();
+       it++) {
     // printf("key: %d. sprite ID: %d\n",it->first,it->second.id);
-    renderer->renderer2D.render(debugSpritePointCollider[it->first]);
+    renderer->renderer2D.render(dm_SpritePointCollider[it->first]);
+  }
+
+  for (it = dm_SpriteNormal.begin(); it != dm_SpriteNormal.end(); it++) {
+    // printf("key: %d. sprite ID: %d\n",it->first,it->second.id);
+    dm_SpriteNormal[it->first].position = spriteArray[it->first].position;
+    dm_SpriteNormal[it->first].scale = spriteArray[it->first].scale;
+
+    renderer->renderer2D.render(dm_SpriteNormal[it->first]);
+  }
+
+  for (it = dm_SpriteRotate.begin(); it != dm_SpriteRotate.end(); it++) {
+    // printf("key: %d. sprite ID: %d\n", it->first, it->second.id);
+
+    dm_SpriteRotate[it->first].position = spritesRotate[it->first].position;
+    dm_SpriteRotate[it->first].scale = spritesRotate[it->first].scale;
+
+    renderer->renderer2D.renderRotate(dm_SpriteRotate[it->first],angles[it->first]);
   }
 }
 
@@ -430,8 +435,7 @@ void RendererSprites::update() {
 
     if (finalPosArray[it->first].x != it->second->position.x ||
         finalPosArray[it->first].y != it->second->position.y) {
-      it->second->position.x = finalPosArray[it->first].x;
-      it->second->position.y = finalPosArray[it->first].y;
+      it->second->position = finalPosArray[it->first];
       // printf("key: %d. sprite pos:%f,%f texture pos:%f,%f\n", it->first,
       //        it->second->position.x, it->second->position.y,
       //        texPosArray[it->first].x, texPosArray[it->first].y);
@@ -445,13 +449,13 @@ void RendererSprites::update() {
 
 void RendererSprites::updateRotate() {
   std::map<int, Sprite*>::iterator it;
-  // static float angle = 0;
   // TYRA_LOG("Update Rotate");
 
   for (it = spritesRotateRender.begin(); it != spritesRotateRender.end();
        it++) {
     // printf("key: %d. sprite ID: %d\n",it->first,it->second->id);
 
+    // finalPos += texPosArray
     // finalPos += entitiePos
 
     finalPosArray[it->first] += texPosArray[it->first];
@@ -460,17 +464,14 @@ void RendererSprites::updateRotate() {
     if (finalPosArray[it->first].x != it->second->position.x ||
         finalPosArray[it->first].y != it->second->position.y) {
       it->second->position = finalPosArray[it->first];
-      // printf("key: %d. sprite pos: %f,%f\n", it->first, it->second->position.x,
+      // printf("key: %d. sprite pos: %f,%f\n", it->first,
+      // it->second->position.x,
       //        it->second->position.y);
     }
 
     renderer->renderer2D.renderRotate(*it->second, angles[it->first]);
     finalPosArray[it->first] = Vec2(0.0f, 0.0f);
   }
-  // angle++;
-  // if(angle>360){
-  //   angle =0;
-  // }
   // printf("Render Finish\n");
 }
 
@@ -494,7 +495,7 @@ void ZombiesManager::update() {
 
       boxColliderArray[*it->body[0]].x =
           posArray[*it->father].x + posArray[*it->body[0]].x + 60;
-      debugSpriteBoxCollider[*it->body[0]].position.x =
+      dm_SpriteBoxCollider[*it->body[0]].position.x =
           boxColliderArray[*it->body[0]].x;
       // printf("box: %f,%f\n",
       // boxColliderArray[*it->body[0]].x,boxColliderArray[*it->body[0]].y);
@@ -590,7 +591,7 @@ void ProjectileManager::update() {
     // printf("position: %f,%f\n",
     // spriteArray[*it].position.x,spriteArray[*it].position.y);
     boxColliderArray[*it].x = posArray[*it].x;
-    debugSpriteBoxCollider[*it].position.x = boxColliderArray[*it].x;
+    dm_SpriteBoxCollider[*it].position.x = boxColliderArray[*it].x;
     if (posArray[*it].x >= 580) {
       // delete projectile
       printf("borrando proyectil\n");

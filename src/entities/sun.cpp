@@ -111,9 +111,14 @@ void createSun2(Tyra::Vec2 position, sunCost cost, bool createdByPlant) {
   originalSize[sun[indexpos].id[1]] = Vec2(77.0f, 79.0f);
   originalSize[sun[indexpos].id[2]] = Vec2(36.0f, 36.0f);
 
-  spritesRotate[sun[indexpos].id[0]].size = Vec2(117.0f * 0.8f, 116.0f * 0.8f);
-  spritesRotate[sun[indexpos].id[1]].size = Vec2(77.0f * 0.8f, 79.0f* 0.8f);
-  spriteArray[sun[indexpos].id[2]].size = Vec2(36.0f* 0.8f, 36.0f* 0.8f);
+  spritesRotate[sun[indexpos].id[0]].size = Vec2(117.0f , 116.0f);
+  spritesRotate[sun[indexpos].id[1]].size = Vec2(77.0f, 79.0f);
+  spriteArray[sun[indexpos].id[2]].size = Vec2(36.0f, 36.0f);
+
+  createDebugSprite(sun[indexpos].id[0], Tyra::MODE_STRETCH);
+  createDebugSprite(sun[indexpos].id[1], Tyra::MODE_STRETCH);
+  createDebugSprite(sun[indexpos].id[2], Tyra::MODE_STRETCH);
+
   // printf("sun hitbox id: %d\n", sun[indexpos].id[0]);
   // HitBox
   boxColliderArray[sun[indexpos].id[0]] =
@@ -135,8 +140,10 @@ void deleteSun(const int cursorID) {
       deleteDebugBoxCollider(it->id[0]);
 
       for (unsigned int i = 0; i < m_animID["Sun"].size(); i++) {
+        deleteDebugSprite(it->id[i]);
         deleteSprite(it->id[i]);
         animationArray.erase(it->id[i]);
+        texPosArray.erase(it->id[i]);
         Entities::deleteID(it->id[i]);
       }
 
@@ -168,7 +175,7 @@ void moveNaturalSun() {
       }
     }
 
-    debugSpriteBoxCollider[(it)->id[0]].position.y =
+    dm_SpriteBoxCollider[(it)->id[0]].position.y =
         boxColliderArray[(it)->id[0]].y;
   }
 }

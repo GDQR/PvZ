@@ -99,9 +99,21 @@ void subMenuSprite(Tyra::Pad& pad, Tyra::Font& font, int& entitieID) {
     d_angle = &animationDataArray[animationArray[entitieID].animID]
                  .angle[animationArray[entitieID].currentFrame];
     // printf("angle from frame %d, angle:%f\n",animationArray[entitieID].currentFrame,*d_angle);
-  } else if (d_angle == NULL) {
+  } else if (rotateFound == true && d_angle == NULL) {
     d_angle = new float(0.0f);
     printf("angle created: %p\n", texPos);
+  }
+
+  if (animationDataArray[animationArray[entitieID].animID].scale.count(
+          animationArray[entitieID].currentFrame) == 1) {
+    d_scale = &animationDataArray[animationArray[entitieID].animID]
+                 .scale[animationArray[entitieID].currentFrame];
+    d_hasScale = true;
+    // printf("size from frame %d, size:%f,%f\n",animationArray[entitieID].currentFrame,*d_size->x,*d_size->y);
+  } else if (d_scale == NULL) {
+    d_scale = new float(1);
+    d_hasScale = false;
+    printf("size created: %p\n", texPos);
   }
 
   if (pad.getClicked().Circle) {
@@ -120,8 +132,12 @@ void subMenuSprite(Tyra::Pad& pad, Tyra::Font& font, int& entitieID) {
     if (rotateFound == false) {
       delete d_angle; // maybe this give me problems in the future
     }
+    if(d_hasScale == false){
+      delete d_scale; // maybe this give me problems in the future
+    }
     texPos = NULL;
     d_angle = NULL;
+    d_scale = NULL;
     animationFound = false;
     rotateFound = false;
   } else if (pad.getClicked().Square) {
@@ -249,13 +265,11 @@ void subMenuSprite(Tyra::Pad& pad, Tyra::Font& font, int& entitieID) {
         if (pad.getPressed().L2 && sizeMode == true) {
           speedDebugOptions();
           padTimer = 10;
-          debugSpritesType[entitieID]->size.x -= padSpeed;
-          debugSpritesType[entitieID]->size.y -= padSpeed;
+          debugSpritesType[entitieID]->size -= padSpeed;
         } else if (pad.getPressed().R2 && sizeMode == true) {
           speedDebugOptions();
           padTimer = 10;
-          debugSpritesType[entitieID]->size.x += padSpeed;
-          debugSpritesType[entitieID]->size.y += padSpeed;
+          debugSpritesType[entitieID]->size += padSpeed;
         } else {
           padPressTimer = 0;
           padSpeed = 1;

@@ -47,7 +47,7 @@ class AnimationData {
   unsigned int maxFrame;
   std::map<unsigned int, Tyra::Texture*> texture;
   std::map<unsigned int, Tyra::Vec2> position;
-  std::map<unsigned int, Tyra::Vec2> size;  
+  std::map<unsigned int, float> scale;  
   std::map<unsigned int, float> angle;  
   std::map<unsigned int, float> alpha;  
 };
@@ -111,7 +111,7 @@ class AnimationManager {
   void position(const int entitieID);
   void angle(const int entitieID);
   void alpha(const int entitieID);
-  void size(const int entitieID);
+  void scale(const int entitieID);
   void debug();
   int debugAnim(const int entitieID);
   void debugChangeFrame(const int entitieID, const int key);

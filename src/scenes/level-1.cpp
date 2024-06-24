@@ -134,7 +134,7 @@ void updateBoxCollider() {
       boxColliderArray[cursor.id].offsetX + posArray[cursor.id].x;
   boxColliderArray[cursor.id].y =
       boxColliderArray[cursor.id].offsetY + posArray[cursor.id].y;
-  debugSpriteBoxCollider[cursor.id].position =
+  dm_SpriteBoxCollider[cursor.id].position =
       Vec2(boxColliderArray[cursor.id].x, boxColliderArray[cursor.id].y);
 }
 
