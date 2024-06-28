@@ -102,10 +102,6 @@ void readReanimFiles(std::string file) {
       std::cout << " KX: " << insideArrow;
       animationDataArray[animID].angle[countframes] = std::stof(insideArrow);
       std::getline(MyReadFile, insideArrow, '>');
-    // } else if (insideArrow == "ky") { // esto talvez lo borre
-    //   std::getline(MyReadFile, insideArrow, '<');
-    //   std::cout << " KY: " << insideArrow;
-    //   std::getline(MyReadFile, insideArrow, '>');
     } else if (insideArrow == "sx") { // es la escala de la imagen
       std::getline(MyReadFile, insideArrow, '<');
       std::cout << " SX: " << insideArrow;

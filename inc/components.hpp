@@ -85,11 +85,12 @@ extern std::map<int, Tyra::Sprite*> spritesNormalRender;
 extern std::map<int, Tyra::Sprite> spritesRotate;
 extern std::map<int, Tyra::Sprite*> spritesRotateRender;
 extern std::map<int, float> angles;
-extern std::map<int, Tyra::Vec2> originalSize;
+extern std::map<int, Tyra::Vec2> scaleTexture;
 extern std::map<int, Tyra::Vec2> pointColliderArray;
 extern std::map<int, BoxCollider> boxColliderArray;
 extern std::map<int, int> damageArray;
 extern std::map<int, int> lifeArray;
+extern std::map<int, Tyra::Vec2> pivot;
 
 const int maxPlants = 5 * 9;
 extern Plant plant[maxPlants];

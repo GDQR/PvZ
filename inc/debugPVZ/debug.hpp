@@ -22,6 +22,8 @@ extern std::map<int, Tyra::Sprite> dm_SpritePointCollider;
 extern std::map<int, Tyra::Sprite> dm_SpriteBoxCollider;
 extern std::map<int, Tyra::Sprite> dm_SpriteNormal;
 extern std::map<int, Tyra::Sprite> dm_SpriteRotate;
+extern std::map<int, Tyra::Sprite> dm_SpriteNormalPivot;
+extern std::map<int, Tyra::Sprite> dm_SpriteRotatePivot;
 
 // Normal or rotate sprites IDs
 extern std::map<int, Tyra::Sprite*> debugSpritesType;
@@ -41,11 +43,13 @@ int startDebugSpriteMode(Tyra::Pad& pad, Tyra::Font& font);
 void loadDebugTextures();
 
 void createDebugSprite(const int id, Tyra::SpriteMode mode);
+void createDebugSpritePivot(const int id, Tyra::SpriteMode mode);
 void createDebugBoxCollider(const int id, Tyra::SpriteMode mode);
 void createDebugBoxFill(const int id, Tyra::SpriteMode mode, Vec2 pos,
                         Vec2 size);
 void createDebugPoint(const int id, Tyra::SpriteMode mode);
 
 void deleteDebugSprite(const int id);
+void deleteDebugSpritePivot(const int id);
 void deleteDebugBoxCollider(const int id);
 void deleteDebugPoint(const int id);

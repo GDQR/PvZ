@@ -170,6 +170,7 @@ void subMenuSprite(Tyra::Pad& pad, Tyra::Font& font, int& entitieID) {
         angles[entitieID] = *d_angle;
       } else {
         debugSpritesType[entitieID]->size.y -= padSpeed;
+        scaleTexture[entitieID].y = debugSpritesType[entitieID]->size.y / animationDataArray[animationArray[entitieID].animID].texture[animationArray[entitieID].currentFrame]->getHeight();
       }
 
     } else if (menuDownOptionLeftJoy(pad)) {
@@ -182,6 +183,7 @@ void subMenuSprite(Tyra::Pad& pad, Tyra::Font& font, int& entitieID) {
         angles[entitieID] = *d_angle;
       } else {
         debugSpritesType[entitieID]->size.y += padSpeed;
+        scaleTexture[entitieID].y = debugSpritesType[entitieID]->size.y / animationDataArray[animationArray[entitieID].animID].texture[animationArray[entitieID].currentFrame]->getHeight();
       }
     }
 
@@ -195,6 +197,7 @@ void subMenuSprite(Tyra::Pad& pad, Tyra::Font& font, int& entitieID) {
         angles[entitieID] = *d_angle;
       } else {
         debugSpritesType[entitieID]->size.x -= padSpeed;
+        scaleTexture[entitieID].x = debugSpritesType[entitieID]->size.x / animationDataArray[animationArray[entitieID].animID].texture[animationArray[entitieID].currentFrame]->getWidth();
       }
     } else if (menuRightOptionLeftJoy(pad)) {
       speedDebugOptions();
@@ -206,7 +209,7 @@ void subMenuSprite(Tyra::Pad& pad, Tyra::Font& font, int& entitieID) {
         angles[entitieID] = *d_angle;
       } else {
         debugSpritesType[entitieID]->size.x += padSpeed;
-      }
+        scaleTexture[entitieID].x = debugSpritesType[entitieID]->size.x / animationDataArray[animationArray[entitieID].animID].texture[animationArray[entitieID].currentFrame]->getWidth();      }
     }
 
     if (menuUpOptionLeftJoy(pad) == false &&
@@ -253,10 +256,12 @@ void subMenuSprite(Tyra::Pad& pad, Tyra::Font& font, int& entitieID) {
           speedDebugOptions();
           padTimer = 10;
           debugSpritesType[entitieID]->size -= padSpeed;
+          scaleTexture[entitieID] = Vec2(debugSpritesType[entitieID]->size.x / animationDataArray[animationArray[entitieID].animID].texture[animationArray[entitieID].currentFrame]->getWidth(), scaleTexture[entitieID].y = debugSpritesType[entitieID]->size.y / animationDataArray[animationArray[entitieID].animID].texture[animationArray[entitieID].currentFrame]->getHeight());
         } else if (pad.getPressed().R2 && sizeMode == true) {
           speedDebugOptions();
           padTimer = 10;
           debugSpritesType[entitieID]->size += padSpeed;
+          scaleTexture[entitieID] = Vec2(debugSpritesType[entitieID]->size.x / animationDataArray[animationArray[entitieID].animID].texture[animationArray[entitieID].currentFrame]->getWidth(), scaleTexture[entitieID].y = debugSpritesType[entitieID]->size.y / animationDataArray[animationArray[entitieID].animID].texture[animationArray[entitieID].currentFrame]->getHeight());
         } else {
           padPressTimer = 0;
           padSpeed = 1;

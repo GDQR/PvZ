@@ -4,33 +4,7 @@
 int sunsCreated = 0;
 int sunCounter = 100;
 
-// void createSun(Tyra::Vec2 position, sunCost cost, bool createdByPlant) {
-// TYRA_LOG("SUN CREATED");
-// sun.push_back(Sun());
-// int indexpos = sun.size() - 1;
-// sun[indexpos].id = Entities::newID();
-// sun[indexpos].cost = cost;
-// // printf("sun id: %d\n", sun[indexpos].id);
-
-// createSprite(sun[indexpos].id, Tyra::MODE_STRETCH, position,
-//              Vec2(128 / 1.5f, 128 / 1.5f));
-
-// // HitBox
-// boxColliderArray[sun[indexpos].id] =
-//     BoxCollider(position.x + 31, position.y + 32, 32, 32);
-
-// createDebugBoxCollider(sun[indexpos].id, Tyra::MODE_STRETCH);
-
-// animationArray[sun[indexpos].id] = Animation(enumAnimation::sunAnim);
-// animationDataArray[sunAnim].texture[0]->addLink(
-//     spriteArray[sun[indexpos].id].id);
-// if (createdByPlant == false) {
-//   naturalSunIds.push_back(sun[indexpos].id);
-// }
-// sunsCreated++;
-// }
-
-void createSun2(Tyra::Vec2 position, sunCost cost, bool createdByPlant) {
+void createSun(Tyra::Vec2 position, sunCost cost, bool createdByPlant) {
   TYRA_LOG("SUN CREATED");
   sun.push_back(Sun());
   int indexpos = sun.size() - 1;
@@ -77,7 +51,7 @@ void createSun2(Tyra::Vec2 position, sunCost cost, bool createdByPlant) {
         animationDataArray[m_animID["Sun"][i]].angle[0] = 0.0f;
       }
       createSpriteRotate(entitieID, Tyra::MODE_STRETCH, Vec2(0.0f, 0.0f),
-                         Vec2(128 / 1.5f, 128 / 1.5f),
+                         Vec2(0, 0),
                          animationDataArray[m_animID["Sun"][i]].angle[0]);
 
       animationArray[entitieID] = Animation((enumAnimation)m_animID["Sun"][i]);
@@ -85,10 +59,11 @@ void createSun2(Tyra::Vec2 position, sunCost cost, bool createdByPlant) {
           spritesRotate[entitieID].id);
 
       if (animationDataArray[m_animID["Sun"][i]].scale.count(0) == 0) {
-          animationDataArray[m_animID["Sun"][i]].scale[0] = 1.0f;
+        animationDataArray[m_animID["Sun"][i]].scale[0] = 1.0f;
       }
 
-      spritesRotate[entitieID].scale = animationDataArray[m_animID["Sun"][i]].scale[0];
+      spritesRotate[entitieID].scale =
+          animationDataArray[m_animID["Sun"][i]].scale[0];
 
       if (hasAlpha == true) {
         if (animationDataArray[m_animID["Sun"][i]].alpha.count(0) == 0) {
@@ -98,18 +73,18 @@ void createSun2(Tyra::Vec2 position, sunCost cost, bool createdByPlant) {
         spritesRotate[entitieID].color.a = alpha;
       }
     } else {
-      createSprite(entitieID, Tyra::MODE_STRETCH, Vec2(0.0f, 0.0f),
-                   Vec2(128 / 1.5f, 128 / 1.5f));
+      createSprite(entitieID, Tyra::MODE_STRETCH, Vec2(0.0f, 0.0f), Vec2(0, 0));
 
       animationArray[entitieID] = Animation((enumAnimation)m_animID["Sun"][i]);
       animationDataArray[m_animID["Sun"][i]].texture[0]->addLink(
           spriteArray[entitieID].id);
-      
+
       if (animationDataArray[m_animID["Sun"][i]].scale.count(0) == 0) {
-          animationDataArray[m_animID["Sun"][i]].scale[0] = 1.0f;
+        animationDataArray[m_animID["Sun"][i]].scale[0] = 1.0f;
       }
 
-      spriteArray[entitieID].scale = animationDataArray[m_animID["Sun"][i]].scale[0];
+      spriteArray[entitieID].scale =
+          animationDataArray[m_animID["Sun"][i]].scale[0];
 
       if (hasAlpha == true) {
         float alpha = animationDataArray[m_animID["Sun"][i]].alpha[0] * 128;
@@ -121,23 +96,39 @@ void createSun2(Tyra::Vec2 position, sunCost cost, bool createdByPlant) {
     hasAngle = false;
   }
 
-  originalSize[sun[indexpos].id[0]] = Vec2(117.0f, 116.0f);
-  originalSize[sun[indexpos].id[1]] = Vec2(77.0f, 79.0f);
-  originalSize[sun[indexpos].id[2]] = Vec2(36.0f, 36.0f);
+  spritesRotate[sun[indexpos].id[0]].size = Vec2(128.0f, 128.0f);
+  spritesRotate[sun[indexpos].id[1]].size = Vec2(128.0f, 128.0f);
+  spriteArray[sun[indexpos].id[2]].size = Vec2(64.0f, 64.0f);
 
-  spritesRotate[sun[indexpos].id[0]].size = Vec2(117.0f, 116.0f);
-  spritesRotate[sun[indexpos].id[1]].size = Vec2(77.0f, 79.0f);
-  spriteArray[sun[indexpos].id[2]].size = Vec2(36.0f, 36.0f);
+  scaleTexture[sun[indexpos].id[0]] =
+      Vec2(spritesRotate[sun[indexpos].id[0]].size.x /
+               animationDataArray[m_animID["Sun"][0]].texture[0]->getWidth(),
+           spritesRotate[sun[indexpos].id[0]].size.y /
+               animationDataArray[m_animID["Sun"][0]].texture[0]->getHeight());
+  scaleTexture[sun[indexpos].id[1]] =
+      Vec2(spritesRotate[sun[indexpos].id[1]].size.x /
+               animationDataArray[m_animID["Sun"][1]].texture[0]->getWidth(),
+           spritesRotate[sun[indexpos].id[1]].size.y /
+               animationDataArray[m_animID["Sun"][1]].texture[0]->getHeight());
+  scaleTexture[sun[indexpos].id[2]] =
+      Vec2(spriteArray[sun[indexpos].id[2]].size.x /
+               animationDataArray[m_animID["Sun"][2]].texture[0]->getWidth(),
+           spriteArray[sun[indexpos].id[2]].size.y /
+               animationDataArray[m_animID["Sun"][2]].texture[0]->getHeight());
 
   createDebugSprite(sun[indexpos].id[0], Tyra::MODE_STRETCH);
   createDebugSprite(sun[indexpos].id[1], Tyra::MODE_STRETCH);
   createDebugSprite(sun[indexpos].id[2], Tyra::MODE_STRETCH);
 
+  createDebugSpritePivot(sun[indexpos].id[0], Tyra::MODE_STRETCH);
+  createDebugSpritePivot(sun[indexpos].id[1], Tyra::MODE_STRETCH);
+  createDebugSpritePivot(sun[indexpos].id[2], Tyra::MODE_STRETCH);
+
   // printf("sun hitbox id: %d\n", sun[indexpos].id[0]);
   // HitBox
   boxColliderArray[sun[indexpos].father] =
-      BoxCollider(position.x + 31, position.y + 32, 32, 32);
-
+      BoxCollider(position.x + texPosArray[entitieID].x,
+                  position.y + texPosArray[entitieID].y, 32, 32);
   createDebugBoxCollider(sun[indexpos].father, Tyra::MODE_STRETCH);
 
   sunsCreated++;
@@ -157,6 +148,7 @@ void deleteSun(const int cursorID) {
 
       for (unsigned int i = 0; i < m_animID["Sun"].size(); i++) {
         deleteDebugSprite(it->id[i]);
+        deleteDebugSpritePivot(it->id[i]);
         deleteSprite(it->id[i]);
         animationArray.erase(it->id[i]);
         texPosArray.erase(it->id[i]);

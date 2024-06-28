@@ -14,11 +14,12 @@ std::map<int, Tyra::Sprite*> spritesNormalRender;
 std::map<int, Tyra::Sprite> spritesRotate;
 std::map<int, Tyra::Sprite*> spritesRotateRender;
 std::map<int, float> angles;
-std::map<int, Tyra::Vec2> originalSize;
+std::map<int, Tyra::Vec2> scaleTexture;
 std::map<int, Tyra::Vec2> pointColliderArray;
 std::map<int, BoxCollider> boxColliderArray;
 std::map<int, int> damageArray;
 std::map<int, int> lifeArray;
+std::map<int, Tyra::Vec2> pivot;
 
 Plant plant[maxPlants];
 std::vector<Zombie> zombie;
@@ -35,6 +36,8 @@ std::map<int, Tyra::Sprite> dm_SpritePointCollider;
 std::map<int, Tyra::Sprite> dm_SpriteBoxCollider;
 std::map<int, Tyra::Sprite> dm_SpriteNormal;
 std::map<int, Tyra::Sprite> dm_SpriteRotate;
+std::map<int, Tyra::Sprite> dm_SpriteNormalPivot;
+std::map<int, Tyra::Sprite> dm_SpriteRotatePivot;
 
 void createSprite(int id, Tyra::SpriteMode mode, Tyra::Vec2 position,
                   Tyra::Vec2 size) {
@@ -409,6 +412,7 @@ void RendererDebugSpritesManager::update() {
     // printf("key: %d. sprite ID: %d\n",it->first,it->second.id);
     dm_SpriteNormal[it->first].position = spriteArray[it->first].position;
     dm_SpriteNormal[it->first].scale = spriteArray[it->first].scale;
+    dm_SpriteNormal[it->first].size = spriteArray[it->first].size;
 
     renderer->renderer2D.render(dm_SpriteNormal[it->first]);
   }
@@ -418,8 +422,31 @@ void RendererDebugSpritesManager::update() {
 
     dm_SpriteRotate[it->first].position = spritesRotate[it->first].position;
     dm_SpriteRotate[it->first].scale = spritesRotate[it->first].scale;
+    dm_SpriteRotate[it->first].size = spritesRotate[it->first].size;
 
-    renderer->renderer2D.renderRotate(dm_SpriteRotate[it->first],angles[it->first]);
+    renderer->renderer2D.renderRotate(dm_SpriteRotate[it->first],
+                                      angles[it->first]);
+  }
+
+  for (it = dm_SpriteNormalPivot.begin(); it != dm_SpriteNormalPivot.end();
+       it++) {
+    // printf("key: %d. sprite ID: %d\n",it->first,it->second.id);
+    dm_SpriteNormalPivot[it->first].position = spriteArray[it->first].position;
+    dm_SpriteNormalPivot[it->first].scale = spriteArray[it->first].scale;
+
+    renderer->renderer2D.render(dm_SpriteNormalPivot[it->first]);
+  }
+
+  for (it = dm_SpriteRotatePivot.begin(); it != dm_SpriteRotatePivot.end();
+       it++) {
+    // printf("pase\n");
+    // printf("key: %d. sprite ID: %d\n", it->first, it->second.id);
+
+    dm_SpriteRotatePivot[it->first].position =
+        spritesRotate[it->first].position;
+
+    renderer->renderer2D.renderRotate(dm_SpriteRotatePivot[it->first],
+                                      angles[it->first]);
   }
 }
 
@@ -444,7 +471,9 @@ void RendererSprites::update() {
 
     // finalPos += entitiePos
 
-    finalPosArray[it->first] += texPosArray[it->first];
+    finalPosArray[it->first] +=
+        texPosArray[it->first] * scaleTexture[it->first];
+
     finalPosArray[it->first] += posArray[it->first];
 
     if (finalPosArray[it->first].x != it->second->position.x ||
@@ -472,7 +501,9 @@ void RendererSprites::updateRotate() {
     // finalPos += texPosArray
     // finalPos += entitiePos
 
-    finalPosArray[it->first] += texPosArray[it->first];
+    finalPosArray[it->first] +=
+        texPosArray[it->first] * scaleTexture[it->first];
+
     finalPosArray[it->first] += posArray[it->first];
 
     if (finalPosArray[it->first].x != it->second->position.x ||
