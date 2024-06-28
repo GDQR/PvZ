@@ -4,31 +4,6 @@
 // Animations animations;
 
 int maxAnimID = 20;
-// void loadAnimNameFiles() {
-//   std::ifstream MyReadFile(Tyra::FileUtils::fromCwd("animNamefiles.txt"),
-//                            std::ios::binary);
-//   TYRA_ASSERT(MyReadFile.is_open(), "animNamefiles.txt could not be found");
-//   std::string myText;
-//   while (std::getline(MyReadFile, myText, ',')) {
-//     // Output the text from the file
-//     std::cout << myText << ": " << maxAnimID << std::endl;
-//     m_animID[myText] = maxAnimID;
-//     maxAnimID++;
-//     std::getline(MyReadFile, myText, '\n');
-//   }
-// }
-
-// void GetAnimID(std::string name, int* animID) {
-//   if (m_animID.count(name)) {
-//     *animID = m_animID[name];
-//     std::cout << "AnimID: " << *animID << std::endl;
-//   } else {
-//     *animID = -1;
-//     TYRA_ASSERT(
-//         *animID != -1,
-//         "Animation Namefile doesn't exist or you forget include ',':", name);
-//   }
-// }
 
 void readReanimFiles(std::string file) {
   std::string myText;
@@ -262,29 +237,6 @@ void loadDebugZombieAnimation() {
 }
 
 void loadSunAnimation() {
-  animationDataArray[sunAnim] = AnimationData();
-
-  std::string filepath;
-  Tyra::Texture* texture;
-  int frame = 0;
-  animationDataArray[sunAnim].position[frame] = Tyra::Vec2(0, 0);
-  for (int i = 1; i <= 13; i++) {
-    if (i < 10) {
-      filepath = "Animations/sun/sun000";
-    } else {
-      filepath = "Animations/sun/sun00";
-    }
-
-    filepath += std::to_string(i);
-    filepath += ".png";
-    texture = loadTexture(filepath);
-    animationDataArray[sunAnim].texture[frame] = (texture);
-    frame++;
-  }
-  animationDataArray[sunAnim].maxFrame = frame;
-}
-
-void loadSunAnimationDebug() {
   readReanimFiles(Tyra::FileUtils::fromCwd("Sun.reanim"));
 }
 

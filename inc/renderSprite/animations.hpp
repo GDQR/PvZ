@@ -16,6 +16,5 @@ void loadPeaShooterAnimation();
 void loadZombieAnimation();
 void loadDebugZombieAnimation();
 void loadSunAnimation();
-void loadSunAnimationDebug();
 void loadSunFlowerAnimation();
 // extern Animations animations;

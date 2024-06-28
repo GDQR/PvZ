@@ -229,8 +229,7 @@ void Level1::init() {
   loadZombieAnimation();
   // loadDebugZombieAnimation();
   loadProjectile();
-  // loadSunAnimation();
-  loadSunAnimationDebug();
+  loadSunAnimation();
   loadSunFlowerAnimation();
   engine->font.loadFont(&myFont, "Fonts/roboto-Bold.ttf");
   createZombie(Vec2(mapCollider[2][8].x, mapCollider[2][8].y));
