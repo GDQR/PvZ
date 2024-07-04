@@ -32,8 +32,6 @@ class Card {
 std::vector<Card> cards;
 
 int map[5][9];
-// Sprite map[5][9];
-
 int xMap = 9;
 int yMap = 5;
 
@@ -84,11 +82,6 @@ void plantMovement() {
   if (x != 0 || y != 0) {
     printf("me movi\n");
   }
-  // *posArray[plant.father] = Vec2(x,y);
-  // spriteArray[plant.body[0]]->position += *posArray[plant.father];
-  // spriteArray[plant.body[1]]->position += *posArray[plant.father];
-
-  // *posArray[plant.father] = Vec2(0,1);
 }
 
 int cursorTimer = 0;
@@ -197,7 +190,7 @@ void Level1::init() {
   createTexture(background, "Backgrounds/DAY Unsodded.png");
   texPosArray[background] = Vec2(0.0f, 0.0f);
   scaleTexture[background] = Vec2(1.0f, 1.0f);
-  // // TODO: Fix size seedBank
+  // TODO: Fix size seedBank
   createSprite(seedBank, MODE_STRETCH, Vec2(63, 10),
                Vec2(512 / 1.5f, 128 / 1.5f));
   createTexture(seedBank, "UI/SeedBank.png");
@@ -217,16 +210,8 @@ void Level1::init() {
       mapCollider[i][j].width = 45;
       mapCollider[i][j].height = 72;
       map[i][j] = Entities::newID();
-      // createSprite(map[i][j],SpriteMode::MODE_STRETCH,Vec2(mapCollider[i][j].x,
-      // mapCollider[i][j].y),Vec2(mapCollider[i][j].width,
-      // mapCollider[i][j].height)); createTexture(map[i][j],"UI/Seeds.png");
-      // map[i][j].mode = SpriteMode::MODE_STRETCH;
-      // map[i][j].position = Vec2(mapCollider[i][j].x, mapCollider[i][j].y);
-      // map[i][j].size = Vec2(mapCollider[i][j].width,
-      // mapCollider[i][j].height); debugBoxTexture->addLink(map[i][j].id);
     }
   }
-  // map[0][1].color = Color(0, 255, 0, 128);
 
   printf("pase una vez 1\n");
   zombieCreateRow[2] = true;
@@ -234,10 +219,8 @@ void Level1::init() {
   newDeckCursor(&deckCursor.id,
                 Vec2(posArray[cards[deckCursor.pos].seed].x - 3, -10));
 
-  // loadAnimNameFiles();
   loadPeaShooterAnimation();
   loadZombieAnimation();
-  // loadDebugZombieAnimation();
   loadProjectile();
   loadSunAnimation();
   loadSunFlowerAnimation();
@@ -246,11 +229,6 @@ void Level1::init() {
   // createPlant(5,9);
   // renderer->core.setFrameLimit(false);
 
-  // printf("zombie debug id: %d\n",zombieDebug);
-  // createSpriteRotate(zombieDebug, MODE_STRETCH, Vec2(220, 320), Vec2(50, 50),
-  //                    0.0f);  // tal vez lo mejor sea 50,50 //53,48
-  // createTextureRotate(zombieDebug,
-  //                     "Animations/Zombie/normalZombie/Zombie_head.png");
   sunTimer = 60 * 6;
   // createSun(Vec2(277, 77), sunCost::normalSun, false);
 }
@@ -279,7 +257,6 @@ void Level1::update() {
       if (boxCollision(&boxColliderArray[cursor.id], &mapCollider[i][j]) ==
           true) {
         cursor.cursorTile = Vec2(i, j);
-        //  printf("estoy en tile %d,%d\n",j,i);
         i = 5;
         j = 9;
       }
@@ -313,7 +290,7 @@ void Level1::update() {
   }
 
   if (stopAnimation == false) {
-    // 6 segundos
+    // 6 seconds
     if (sunTimer > 0) {
       sunTimer--;
     } else {
@@ -331,8 +308,6 @@ void Level1::update() {
   // zombiesManager.collision();
   // projectileManager.zombieCollision();
   // printf("texture free space: %f\n",engine->renderer.core.gs.vram.getFreeSpaceInMB());
-
-  // printf("animarray size: %d\n",animationArray.size());
 
   // shoot zombies
   std::vector<Zombie>::iterator it;
@@ -417,11 +392,6 @@ void Level1::update() {
   renderSprites.update();
   renderSprites.updateRotate();
 
-  // for(int i=0;i<5;i++){
-  //     for(int j=0;j<9;j++){
-  //         renderer->renderer2D.render(&map[i][j]);
-  //     }
-  // }
   renderDebugSpritesManager.update();
   engine->font.drawText(&myFont, std::to_string(sunCounter), 30, 30, 16,
                         Color(255, 255, 255, 128));

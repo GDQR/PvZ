@@ -1,7 +1,6 @@
 #include "renderSprite/animations.hpp"
 #include "renderSprite/textures.hpp"
 #include <iostream>
-// Animations animations;
 
 int maxAnimID = 20;
 
@@ -20,18 +19,6 @@ void loadAnimationSprite(const int entityID, const int animID){
         break;
       }
     }
-    printf("entityID1 en ya seabe: %d\n", entityID);
-    // if(rotateSprite == true){
-    //   printf("Es rotate\n");
-    // }else{
-    //   printf("no es rotate\n");
-    // }
-
-    // if(hasAlpha == true){
-    //   printf("tiene alpha\n");
-    // }else{
-    //   printf("no tiene alpha\n");
-    // }
 
     if(rotateSprite == false){
       printf("entre en normal\n");
@@ -149,7 +136,6 @@ void loadAnimationSprite(const int entityID, const int animID){
       createDebugSprite(entityID, Tyra::MODE_STRETCH);
       }
     }
-    printf("entityID2 en ya seabe: %d\n", entityID);
     
     printf("termine\n\n");
 }
@@ -372,39 +358,6 @@ void loadZombieAnimation() {
 
   // // Close the file
   // headPosFile.close();
-}
-
-void loadDebugZombieAnimation() {
-  animationDataArray[deb_zombieWalk] = AnimationData();
-
-  TYRA_LOG("Loading DEBUG Zombie animation\n");
-  std::string filepath;
-  Tyra::Texture* texture;
-  int frame = 0;
-  animationDataArray[deb_zombieWalk].position[frame] = Tyra::Vec2(0, 0);
-  for (int i = 45; i <= 91; i++) {
-    filepath = "Animations/Zombie/debug/head/suav/Zombie00";
-    filepath += std::to_string(i);
-    filepath += ".png";
-    texture = loadTexture(filepath);
-    animationDataArray[deb_zombieWalk].texture[frame] = texture;
-    frame++;
-  }
-  animationDataArray[deb_zombieWalk].maxFrame = frame;
-  // printf("anim pos size: %d\n",
-  // animationDataArray[deb_zombieWalk].position.size());
-  frame = 0;
-  animationDataArray[deb_zombieNormalAttack] = AnimationData();
-  animationDataArray[deb_zombieNormalAttack].position[frame] = Tyra::Vec2(0, 0);
-  for (int i = 139; i <= 178; i++) {
-    filepath = "Animations/Zombie/Attack/Zombie0";
-    filepath += std::to_string(i);
-    filepath += ".png";
-    texture = loadTexture(filepath);
-    animationDataArray[deb_zombieNormalAttack].texture[frame] = texture;
-    frame++;
-  }
-  animationDataArray[deb_zombieNormalAttack].maxFrame = frame;
 }
 
 void loadSunAnimation() {

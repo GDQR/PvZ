@@ -8,8 +8,6 @@ int plantsCreated = 0;
 void Plant::createSpace() {
   switch (type) {
     case PeaShotter:
-      // id.reserve(3);
-      // body[2] = &id[3];
       break;
     case SunFlower:
       id.reserve(3);

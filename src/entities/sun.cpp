@@ -5,7 +5,6 @@ int sunsCreated = 0;
 int sunCounter = 1000;
 
 void createSun(Tyra::Vec2 position, sunCost cost, bool createdByPlant) {
-  TYRA_LOG("SUN CREATED");
   sun.push_back(Sun());
   int indexpos = sun.size() - 1;
   sun[indexpos].cost = cost;
@@ -21,7 +20,6 @@ void createSun(Tyra::Vec2 position, sunCost cost, bool createdByPlant) {
     naturalSun.push_back(NaturalSun());
     naturalSun[naturalSunID].father = sun[indexpos].father;
   }
-  // printf("position: %f,%f\n", position.x, position.y);
 
   for (unsigned int i = 0; i < m_animID["Sun"].size(); i++) {
     sun[indexpos].id.push_back(Entities::newID());
@@ -43,7 +41,6 @@ void createSun(Tyra::Vec2 position, sunCost cost, bool createdByPlant) {
       }
     }
 
-    // printf("sun id: %d\n", entitieID);
     texPosArray[entitieID] = animationDataArray[m_animID["Sun"][i]].position[0];
 
     if (hasAngle == true) {

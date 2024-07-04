@@ -16,7 +16,6 @@ class NaturalSun{
   int father;
 };
 
-// void createSun(Tyra::Vec2 position, sunCost cost, bool createdByPlant);
 void createSun(Tyra::Vec2 position, sunCost cost, bool createdByPlant);
 void deleteSun(const int cursorID);
 
