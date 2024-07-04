@@ -1,15 +1,13 @@
 #include "font/font.hpp"
 #include "manager.hpp"
-
-Tyra::Engine* engine;
-Tyra::Renderer* renderer;
-const Tyra::PadJoy* leftJoy;
+#include "components.hpp"
 
 int main() {
   Tyra::Engine e;
   engine = &e;
   renderer = &e.renderer;
   leftJoy = &e.pad.getLeftJoyPad();
+  texRepo = &engine->renderer.getTextureRepository();
   loadFonts();
   Manager game(engine);
   e.run(&game);

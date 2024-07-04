@@ -1,6 +1,12 @@
 #include "components.hpp"
 #include <iostream>
 
+
+Tyra::Engine* engine;
+Tyra::Renderer* renderer;
+const Tyra::PadJoy* leftJoy;
+Tyra::TextureRepository* texRepo;
+
 // sparse array
 std::map<std::string, std::vector<int>> m_animID;
 std::map<int, Animation> animationArray;

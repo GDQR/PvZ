@@ -6,7 +6,6 @@ class AnimationManager {
   unsigned int framesSpeed = 20;
 
  public:
-  Tyra::TextureRepository* texRepo;
   void update();
   void draw(const int entitieID, const int animID, const int currentFrame);
   void position(const int entitieID);

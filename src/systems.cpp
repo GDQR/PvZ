@@ -139,7 +139,6 @@ void AnimationManager::debug() {
 }
 
 int AnimationManager::debugAnim(const int entitieID) {
-  auto& textureRepository = renderer->getTextureRepository();
 
   if (animationArray[entitieID].framesCounter < (60 / framesSpeed)) {
     animationArray[entitieID].framesCounter++;
@@ -157,7 +156,7 @@ int AnimationManager::debugAnim(const int entitieID) {
   if (spriteArray.count(entitieID) == 1 &&
       animationDataArray[animationArray[entitieID].animID].texture.count(
           animationArray[entitieID].currentFrame) == 1) {
-    textureRepository.getBySpriteId(spriteArray[entitieID].id)
+    texRepo->getBySpriteId(spriteArray[entitieID].id)
         ->removeLinkById(spriteArray[entitieID].id);
 
     animationDataArray[animationArray[entitieID].animID]
@@ -165,7 +164,7 @@ int AnimationManager::debugAnim(const int entitieID) {
         ->addLink(spriteArray[entitieID].id);
   } else if (animationDataArray[animationArray[entitieID].animID].texture.count(
                  animationArray[entitieID].currentFrame) == 1) {
-    textureRepository.getBySpriteId(spritesRotate[entitieID].id)
+    texRepo->getBySpriteId(spritesRotate[entitieID].id)
         ->removeLinkById(spritesRotate[entitieID].id);
 
     animationDataArray[animationArray[entitieID].animID]
@@ -213,7 +212,6 @@ int AnimationManager::debugAnim(const int entitieID) {
 }
 
 void AnimationManager::debugChangeFrame(const int entitieID, const int key) {
-  auto& textureRepository = renderer->getTextureRepository();
 
   if (animationDataArray[animationArray[entitieID].animID].draw.count(animationArray[entitieID].currentFrame)) {
     animationArray[entitieID].draw =
@@ -236,7 +234,7 @@ void AnimationManager::debugChangeFrame(const int entitieID, const int key) {
           animationArray[entitieID].currentFrame) == 1) {
     // Unlink Texture from the sprite entitie
     if (texRepo->getBySpriteId(spriteArray[entitieID].id) != nullptr) {
-      textureRepository.getBySpriteId(spriteArray[entitieID].id)
+      texRepo->getBySpriteId(spriteArray[entitieID].id)
         ->removeLinkById(spriteArray[entitieID].id);
     }
 
@@ -247,7 +245,7 @@ void AnimationManager::debugChangeFrame(const int entitieID, const int key) {
   } else if (animationDataArray[animationArray[entitieID].animID].texture.count(
                  animationArray[entitieID].currentFrame) == 1) {
     // Unlink Texture from the sprite entitie
-    textureRepository.getBySpriteId(spritesRotate[entitieID].id)
+    texRepo->getBySpriteId(spritesRotate[entitieID].id)
         ->removeLinkById(spritesRotate[entitieID].id);
 
     // Link new Texture to the sprite entitie
@@ -522,7 +520,6 @@ void ProjectileManager::update() {
 void ProjectileManager::zombieCollision() {
   std::vector<int>::iterator it;
   std::vector<Zombie>::iterator it2;
-  auto& textureRepository = renderer->getTextureRepository();
   for (it = projectile.begin(); it < projectile.end(); it++) {
     for (it2 = zombie.begin(); it2 < zombie.end(); it2++) {
       if (boxCollision(&boxColliderArray[*it],
@@ -554,7 +551,7 @@ void ProjectileManager::zombieCollision() {
         // delete projectile
 
         Tyra::Texture* text =
-            textureRepository.getBySpriteId(spriteArray[*it].id);
+            texRepo->getBySpriteId(spriteArray[*it].id);
         TYRA_ASSERT(text,
                     "No se encontro la textura del proyectil with id: ", *it);
         deleteSprite(*it);

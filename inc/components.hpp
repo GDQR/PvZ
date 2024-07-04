@@ -95,7 +95,8 @@ class BoxCollider {
 
 extern Tyra::Engine* engine;
 extern Tyra::Renderer* renderer;
-
+extern const Tyra::PadJoy* leftJoy;
+extern Tyra::TextureRepository* texRepo;
 extern std::map<std::string, std::vector<int>> m_animID;
 
 // sparse array
