@@ -18,8 +18,7 @@ class Plant {
 
   std::vector<int> id;
 
-  int* father;
-  std::vector<int*> body;
+  int father;
   void newPlant(Plant_State_enum newType);
   int attackTimer = 0;
   int row;

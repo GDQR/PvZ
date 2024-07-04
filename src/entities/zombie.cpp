@@ -41,7 +41,7 @@ void createZombie(Vec2 pos) {
 
   createSpriteRotate(*zom->body[0], Tyra::MODE_STRETCH, Vec2(0, 0),
                      Vec2(50, 50),
-                     0.0f);  // 80, 139 = 128,256
+                     Vec2(0, 0));  // 80, 139 = 128,256
   
   TYRA_LOG("zombie sprite ID: %d\n",spritesRotate[*zom->body[0]].id);
 

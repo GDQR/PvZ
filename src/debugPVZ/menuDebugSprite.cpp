@@ -71,7 +71,8 @@ void getNextFrame(int& entitieID) {
       animationDataArray[animationArray[entitieID].animID].maxFrame) {
     animationArray[entitieID].currentFrame = 0;
   }
-  animManager.debugChangeFrame(entitieID, animationArray[entitieID].currentFrame);
+  animManager.debugChangeFrame(entitieID,
+                               animationArray[entitieID].currentFrame);
 }
 
 void getPrevFrame(int& entitieID) {
@@ -81,26 +82,30 @@ void getPrevFrame(int& entitieID) {
     animationArray[entitieID].currentFrame =
         animationDataArray[animationArray[entitieID].animID].maxFrame - 1;
   }
-  animManager.debugChangeFrame(entitieID, animationArray[entitieID].currentFrame);
+  animManager.debugChangeFrame(entitieID,
+                               animationArray[entitieID].currentFrame);
 }
 
 void subMenuSprite(Tyra::Pad& pad, Tyra::Font& font, int& entitieID) {
-  if (animationFound == true && animationDataArray[animationArray[entitieID].animID].position.count(
+  if (animationFound == true &&
+      animationDataArray[animationArray[entitieID].animID].position.count(
           animationArray[entitieID].currentFrame) == 1) {
     texPos = &animationDataArray[animationArray[entitieID].animID]
-                 .position[animationArray[entitieID].currentFrame];
+                  .position[animationArray[entitieID].currentFrame];
   } else if (texPos == NULL) {
     texPos = new Vec2(0.0f, 0.0f);
     printf("texpos created: %p\n", texPos);
   }
 
-  if (rotateFound == true && animationDataArray[animationArray[entitieID].animID].angle.count(
+  if (rotateFound == true &&
+      animationDataArray[animationArray[entitieID].animID].angle.count(
           animationArray[entitieID].currentFrame) == 1) {
     d_angle = &animationDataArray[animationArray[entitieID].animID]
-                 .angle[animationArray[entitieID].currentFrame];
-    // printf("angle from frame %d, angle:%f\n",animationArray[entitieID].currentFrame,*d_angle);
+                   .angle[animationArray[entitieID].currentFrame];
+    // printf("angle from frame %d,
+    // angle:%f\n",animationArray[entitieID].currentFrame,*d_angle);
   } else if (rotateFound == true && d_angle == NULL) {
-    d_angle = new float(0.0f);
+    d_angle = new Vec2(0.0f,0.0f);
     printf("angle created: %p\n", texPos);
   }
 
@@ -117,7 +122,7 @@ void subMenuSprite(Tyra::Pad& pad, Tyra::Font& font, int& entitieID) {
       delete texPos;
     }
     if (rotateFound == false) {
-      delete d_angle; // maybe this give me problems in the future
+      delete d_angle;  // maybe this give me problems in the future
     }
     texPos = NULL;
     d_angle = NULL;
@@ -169,8 +174,14 @@ void subMenuSprite(Tyra::Pad& pad, Tyra::Font& font, int& entitieID) {
         *d_angle += padSpeed;
         angles[entitieID] = *d_angle;
       } else {
-        debugSpritesType[entitieID]->size.y -= padSpeed;
-        scaleTexture[entitieID].y = debugSpritesType[entitieID]->size.y / animationDataArray[animationArray[entitieID].animID].texture[animationArray[entitieID].currentFrame]->getHeight();
+        originalSize[entitieID].y -= padSpeed;
+        if(animationDataArray[animationArray[entitieID].animID]
+                .texture.count(animationArray[entitieID].currentFrame) == 0) {
+          printf("no hay textura\n");        
+        }
+        Tyra::Texture* texture = engine->renderer.getTextureRepository().getBySpriteId(debugSpritesType[entitieID]->id);
+        scaleTexture[entitieID].y =
+            originalSize[entitieID].y / texture->getHeight();
       }
 
     } else if (menuDownOptionLeftJoy(pad)) {
@@ -182,8 +193,17 @@ void subMenuSprite(Tyra::Pad& pad, Tyra::Font& font, int& entitieID) {
         *d_angle -= padSpeed;
         angles[entitieID] = *d_angle;
       } else {
-        debugSpritesType[entitieID]->size.y += padSpeed;
-        scaleTexture[entitieID].y = debugSpritesType[entitieID]->size.y / animationDataArray[animationArray[entitieID].animID].texture[animationArray[entitieID].currentFrame]->getHeight();
+        originalSize[entitieID].y += padSpeed;
+        if(animationDataArray[animationArray[entitieID].animID]
+                .texture.count(animationArray[entitieID].currentFrame) == 0) {
+          printf("no hay textura\n");        
+        }
+        Tyra::Texture* texture = engine->renderer.getTextureRepository().getBySpriteId(debugSpritesType[entitieID]->id);
+
+        scaleTexture[entitieID].y =
+            originalSize[entitieID].y /texture->getHeight();
+        debugSpritesType[entitieID]->size = originalSize[entitieID] * animationDataArray[animationArray[entitieID].animID]
+              .scale[animationArray[entitieID].currentFrame];
       }
     }
 
@@ -196,8 +216,12 @@ void subMenuSprite(Tyra::Pad& pad, Tyra::Font& font, int& entitieID) {
         *d_angle -= padSpeed;
         angles[entitieID] = *d_angle;
       } else {
-        debugSpritesType[entitieID]->size.x -= padSpeed;
-        scaleTexture[entitieID].x = debugSpritesType[entitieID]->size.x / animationDataArray[animationArray[entitieID].animID].texture[animationArray[entitieID].currentFrame]->getWidth();
+        originalSize[entitieID].x -= padSpeed;
+        Tyra::Texture* texture = engine->renderer.getTextureRepository().getBySpriteId(debugSpritesType[entitieID]->id);
+        scaleTexture[entitieID].x =
+            originalSize[entitieID].x / texture->getWidth();
+        debugSpritesType[entitieID]->size = originalSize[entitieID] * animationDataArray[animationArray[entitieID].animID]
+              .scale[animationArray[entitieID].currentFrame];
       }
     } else if (menuRightOptionLeftJoy(pad)) {
       speedDebugOptions();
@@ -208,8 +232,13 @@ void subMenuSprite(Tyra::Pad& pad, Tyra::Font& font, int& entitieID) {
         *d_angle += padSpeed;
         angles[entitieID] = *d_angle;
       } else {
-        debugSpritesType[entitieID]->size.x += padSpeed;
-        scaleTexture[entitieID].x = debugSpritesType[entitieID]->size.x / animationDataArray[animationArray[entitieID].animID].texture[animationArray[entitieID].currentFrame]->getWidth();      }
+        originalSize[entitieID].x += padSpeed;
+        Tyra::Texture* texture = engine->renderer.getTextureRepository().getBySpriteId(debugSpritesType[entitieID]->id);
+        scaleTexture[entitieID].x =
+            originalSize[entitieID].x /texture->getWidth();
+        debugSpritesType[entitieID]->size = originalSize[entitieID] * animationDataArray[animationArray[entitieID].animID]
+              .scale[animationArray[entitieID].currentFrame];
+      }
     }
 
     if (menuUpOptionLeftJoy(pad) == false &&
@@ -255,13 +284,23 @@ void subMenuSprite(Tyra::Pad& pad, Tyra::Font& font, int& entitieID) {
         if (pad.getPressed().L2 && sizeMode == true) {
           speedDebugOptions();
           padTimer = 10;
-          debugSpritesType[entitieID]->size -= padSpeed;
-          scaleTexture[entitieID] = Vec2(debugSpritesType[entitieID]->size.x / animationDataArray[animationArray[entitieID].animID].texture[animationArray[entitieID].currentFrame]->getWidth(), scaleTexture[entitieID].y = debugSpritesType[entitieID]->size.y / animationDataArray[animationArray[entitieID].animID].texture[animationArray[entitieID].currentFrame]->getHeight());
+          originalSize[entitieID] -= padSpeed;
+          Tyra::Texture* texture = engine->renderer.getTextureRepository().getBySpriteId(debugSpritesType[entitieID]->id);
+          scaleTexture[entitieID] =
+              Vec2(originalSize[entitieID].x / texture->getWidth(),
+                       originalSize[entitieID].y /texture->getHeight());
+          debugSpritesType[entitieID]->size = originalSize[entitieID] * animationDataArray[animationArray[entitieID].animID]
+              .scale[animationArray[entitieID].currentFrame];
         } else if (pad.getPressed().R2 && sizeMode == true) {
           speedDebugOptions();
           padTimer = 10;
-          debugSpritesType[entitieID]->size += padSpeed;
-          scaleTexture[entitieID] = Vec2(debugSpritesType[entitieID]->size.x / animationDataArray[animationArray[entitieID].animID].texture[animationArray[entitieID].currentFrame]->getWidth(), scaleTexture[entitieID].y = debugSpritesType[entitieID]->size.y / animationDataArray[animationArray[entitieID].animID].texture[animationArray[entitieID].currentFrame]->getHeight());
+          originalSize[entitieID] += padSpeed;
+          Tyra::Texture* texture = engine->renderer.getTextureRepository().getBySpriteId(debugSpritesType[entitieID]->id);
+          scaleTexture[entitieID] =
+              Vec2(originalSize[entitieID].x /texture->getWidth(),
+                       originalSize[entitieID].y /texture->getHeight());
+          debugSpritesType[entitieID]->size = originalSize[entitieID] * animationDataArray[animationArray[entitieID].animID]
+              .scale[animationArray[entitieID].currentFrame];
         } else {
           padPressTimer = 0;
           padSpeed = 1;
@@ -287,13 +326,13 @@ void subMenuSprite(Tyra::Pad& pad, Tyra::Font& font, int& entitieID) {
       engine->font.drawText(&myFont, position, 30, 140, 16,
                             Tyra::Color(0, 0, 0, 128));
     } else if (sizeMode == false) {
-      std::string angle = "Angle: " + std::to_string(*d_angle);
+      std::string angle = "Angle: " + std::to_string(d_angle->x) + "," + std::to_string(d_angle->y);
       engine->font.drawText(&myFont, angle, 30, 140, 16,
                             Tyra::Color(0, 0, 0, 128));
     } else {
       std::string size =
-          "Size: " + std::to_string(debugSpritesType[entitieID]->size.x) +
-          ", " + std::to_string(debugSpritesType[entitieID]->size.y);
+          "Size: " + std::to_string(originalSize[entitieID].x) +
+          ", " + std::to_string(originalSize[entitieID].y);
       engine->font.drawText(&myFont, size, 30, 140, 16,
                             Tyra::Color(0, 0, 0, 128));
     }
@@ -303,7 +342,8 @@ void subMenuSprite(Tyra::Pad& pad, Tyra::Font& font, int& entitieID) {
     engine->font.drawText(&myFont, texPosition, 30, 160, 16,
                           Tyra::Color(0, 0, 0, 128));
 
-    std::string textScale = "Scale: " + std::to_string(debugSpritesType[entitieID]->scale);
+    std::string textScale =
+        "Scale: " + std::to_string(debugSpritesType[entitieID]->scale);
     engine->font.drawText(&myFont, textScale, 30, 180, 16,
                           Tyra::Color(0, 0, 0, 128));
 
@@ -314,8 +354,8 @@ void subMenuSprite(Tyra::Pad& pad, Tyra::Font& font, int& entitieID) {
 
       std::string animSize =
           "Total textures: " +
-          std::to_string(
-              animationDataArray[animationArray[entitieID].animID].texture.size());
+          std::to_string(animationDataArray[animationArray[entitieID].animID]
+                             .texture.size());
 
       engine->font.drawText(&myFont, textKey, 30, 120, 16, black);
 
@@ -339,7 +379,7 @@ void subMenuSprite(Tyra::Pad& pad, Tyra::Font& font, int& entitieID) {
   }
 }
 
-void mainMenuSprite(Tyra::Pad& pad, int& entitieID) {
+void mainMenuSprite(Tyra::Pad& pad, int& entitieID, std::string& name) {
   debugSpritesType[entitieID]->color.a += colorSprite;
 
   if (debugSpritesType[entitieID]->color.a <= 30.0f) {
@@ -372,23 +412,34 @@ void mainMenuSprite(Tyra::Pad& pad, int& entitieID) {
   } else if (menuDownOptionLeftJoy(pad) || menuLeftOptionLeftJoy(pad)) {
     getPrevSprite(entitieID);
   }
+
+  if (renderer->getTextureRepository().getBySpriteId(
+          debugSpritesType[entitieID]->id) != nullptr) {
+    name =
+        "Name Texture: " + renderer->getTextureRepository()
+                               .getBySpriteId(debugSpritesType[entitieID]->id)
+                               ->name;
+  } else {
+    name =
+        "Name Texture: frame without texture";
+  }
+
   engine->font.drawText(&myFont, "PRESS X FOR SELECT THE TEXTURE", 30, 400, 16,
                         black);
 }
 
 void menuDebugSprite(Tyra::Pad& pad, Tyra::Font& font, int& entitieID) {
+  std::string name;
+
   if (isMainMenuActive == true) {
-    mainMenuSprite(pad, entitieID);
+    mainMenuSprite(pad, entitieID, name);
   } else {
     subMenuSprite(pad, font, entitieID);
   }
 
   if (hideText == false) {
     std::string textId = "Entitie ID: " + std::to_string(entitieID);
-    std::string name =
-        "Name Texture: " + renderer->getTextureRepository()
-                               .getBySpriteId(debugSpritesType[entitieID]->id)
-                               ->name;
+
     engine->font.drawText(&myFont, textId, 30, 80, 16,
                           Tyra::Color(0, 0, 0, 128));
     engine->font.drawText(&myFont, name, 30, 100, 16,

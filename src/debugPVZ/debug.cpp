@@ -16,7 +16,7 @@ float debugAlphaColor;
 int debugEntitieId;
 Vec2* texPos = NULL;
 float* d_scale = NULL;
-float* d_angle = NULL;
+Vec2* d_angle = NULL;
 bool d_hasScale = false;
 
 std::map<int, Tyra::Sprite*> debugSpritesType;  // Normal or rotated sprites

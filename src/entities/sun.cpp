@@ -2,7 +2,7 @@
 #include "components.hpp"
 
 int sunsCreated = 0;
-int sunCounter = 100;
+int sunCounter = 1000;
 
 void createSun(Tyra::Vec2 position, sunCost cost, bool createdByPlant) {
   TYRA_LOG("SUN CREATED");
@@ -48,7 +48,7 @@ void createSun(Tyra::Vec2 position, sunCost cost, bool createdByPlant) {
 
     if (hasAngle == true) {
       if (animationDataArray[m_animID["Sun"][i]].angle.count(0) == 0) {
-        animationDataArray[m_animID["Sun"][i]].angle[0] = 0.0f;
+        animationDataArray[m_animID["Sun"][i]].angle[0] = Vec2(0.0f,0.0f);
       }
       createSpriteRotate(entitieID, Tyra::MODE_STRETCH, Vec2(0.0f, 0.0f),
                          Vec2(0, 0),
@@ -57,13 +57,14 @@ void createSun(Tyra::Vec2 position, sunCost cost, bool createdByPlant) {
       animationArray[entitieID] = Animation((enumAnimation)m_animID["Sun"][i]);
       animationDataArray[m_animID["Sun"][i]].texture[0]->addLink(
           spritesRotate[entitieID].id);
+      
+      originalSize[entitieID] = Vec2(animationDataArray[m_animID["Sun"][i]].texture[0]->getWidth(), animationDataArray[m_animID["Sun"][i]].texture[0]->getHeight());
 
       if (animationDataArray[m_animID["Sun"][i]].scale.count(0) == 0) {
-        animationDataArray[m_animID["Sun"][i]].scale[0] = 1.0f;
+        animationDataArray[m_animID["Sun"][i]].scale[0] = Vec2(1.0f,1.0f);
       }
 
-      spritesRotate[entitieID].scale =
-          animationDataArray[m_animID["Sun"][i]].scale[0];
+      spritesRotate[entitieID].size = originalSize[entitieID] * animationDataArray[animationArray[entitieID].animID].scale[0];
 
       if (hasAlpha == true) {
         if (animationDataArray[m_animID["Sun"][i]].alpha.count(0) == 0) {
@@ -78,13 +79,14 @@ void createSun(Tyra::Vec2 position, sunCost cost, bool createdByPlant) {
       animationArray[entitieID] = Animation((enumAnimation)m_animID["Sun"][i]);
       animationDataArray[m_animID["Sun"][i]].texture[0]->addLink(
           spriteArray[entitieID].id);
+      
+      originalSize[entitieID] = Vec2(animationDataArray[m_animID["Sun"][i]].texture[0]->getWidth(), animationDataArray[m_animID["Sun"][i]].texture[0]->getHeight());
 
       if (animationDataArray[m_animID["Sun"][i]].scale.count(0) == 0) {
-        animationDataArray[m_animID["Sun"][i]].scale[0] = 1.0f;
+        animationDataArray[m_animID["Sun"][i]].scale[0] = Vec2(1.0f,1.0f);
       }
 
-      spriteArray[entitieID].scale =
-          animationDataArray[m_animID["Sun"][i]].scale[0];
+      spriteArray[entitieID].size = originalSize[entitieID] * animationDataArray[animationArray[entitieID].animID].scale[0];
 
       if (hasAlpha == true) {
         float alpha = animationDataArray[m_animID["Sun"][i]].alpha[0] * 128;
@@ -96,26 +98,28 @@ void createSun(Tyra::Vec2 position, sunCost cost, bool createdByPlant) {
     hasAngle = false;
   }
 
-  spritesRotate[sun[indexpos].id[0]].size = Vec2(128.0f, 128.0f);
-  spritesRotate[sun[indexpos].id[1]].size = Vec2(128.0f, 128.0f);
-  spriteArray[sun[indexpos].id[2]].size = Vec2(64.0f, 64.0f);
+  // spritesRotate[sun[indexpos].id[0]].size = Vec2(128.0f/2, 128.0f/2);
+  // spritesRotate[sun[indexpos].id[1]].size = Vec2(128.0f/2, 128.0f/2);
+  // spriteArray[sun[indexpos].id[2]].size = Vec2(64.0f/2, 64.0f/2);
 
   scaleTexture[sun[indexpos].id[0]] =
-      Vec2(spritesRotate[sun[indexpos].id[0]].size.x /
+      Vec2(originalSize[sun[indexpos].id[0]].x /
                animationDataArray[m_animID["Sun"][0]].texture[0]->getWidth(),
-           spritesRotate[sun[indexpos].id[0]].size.y /
+           originalSize[sun[indexpos].id[0]].y /
                animationDataArray[m_animID["Sun"][0]].texture[0]->getHeight());
   scaleTexture[sun[indexpos].id[1]] =
-      Vec2(spritesRotate[sun[indexpos].id[1]].size.x /
+      Vec2(originalSize[sun[indexpos].id[1]].x /
                animationDataArray[m_animID["Sun"][1]].texture[0]->getWidth(),
-           spritesRotate[sun[indexpos].id[1]].size.y /
+           originalSize[sun[indexpos].id[1]].y /
                animationDataArray[m_animID["Sun"][1]].texture[0]->getHeight());
   scaleTexture[sun[indexpos].id[2]] =
-      Vec2(spriteArray[sun[indexpos].id[2]].size.x /
+      Vec2(originalSize[sun[indexpos].id[2]].x /
                animationDataArray[m_animID["Sun"][2]].texture[0]->getWidth(),
-           spriteArray[sun[indexpos].id[2]].size.y /
+           originalSize[sun[indexpos].id[2]].y /
                animationDataArray[m_animID["Sun"][2]].texture[0]->getHeight());
 
+  printf("sun sizeX: %f, sizeY: %f\n", spriteArray[sun[indexpos].id[2]].size.x*0.8f,spriteArray[sun[indexpos].id[2]].size.y*0.8f);
+  printf("scaleTexture: %s\n", scaleTexture[sun[indexpos].id[2]].getPrint().c_str());
   createDebugSprite(sun[indexpos].id[0], Tyra::MODE_STRETCH);
   createDebugSprite(sun[indexpos].id[1], Tyra::MODE_STRETCH);
   createDebugSprite(sun[indexpos].id[2], Tyra::MODE_STRETCH);

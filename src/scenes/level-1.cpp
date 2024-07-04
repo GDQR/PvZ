@@ -164,16 +164,22 @@ void createCard(Plant_State_enum typePlant, Vec2 pos) {
   createSprite(card.seed, MODE_REPEAT, pos, Vec2(50, 70));
   createTexture(card.seed, "UI/Seeds.png");
   spriteArray[card.seed].offset.x = 100;
+  texPosArray[card.seed] = Vec2(0.0f, 0.0f);
+  scaleTexture[card.seed] = Vec2(1.0f, 1.0f);
 
   createSprite(card.seedShadow, MODE_REPEAT, pos, Vec2(50, 70));
   createTexture(card.seedShadow, "UI/Seeds.png");
   spriteArray[card.seedShadow].color = Color(0.0F, 0.0F, 0.0F, 60.0F);
+  texPosArray[card.seedShadow] = Vec2(0.0f, 0.0f);
+  scaleTexture[card.seedShadow] = Vec2(1.0f, 1.0f);
 
-  createSprite(card.seedShadowTimer, MODE_REPEAT, pos, Vec2(50, 70));
+  createSprite(card.seedShadowTimer, MODE_REPEAT, pos, Vec2(0, 0));
   createTexture(card.seedShadowTimer, "UI/Seeds.png");
   spriteArray[card.seedShadowTimer].color = Color(0.0F, 0.0F, 0.0F, 60.0F);
+  texPosArray[card.seedShadowTimer] = Vec2(0.0f, 0.0f);
+  scaleTexture[card.seedShadowTimer] = Vec2(1.0f, 1.0f);
 
-  card.seedTimer = 60 * 8;
+  card.seedTimer = 0;//60 * 8;
 
   card.plant = typePlant;
 
@@ -189,10 +195,14 @@ void Level1::init() {
   // load background
   createSprite(background, MODE_STRETCH, Vec2(-56, -1), Vec2(780, 524));
   createTexture(background, "Backgrounds/DAY Unsodded.png");
+  texPosArray[background] = Vec2(0.0f, 0.0f);
+  scaleTexture[background] = Vec2(1.0f, 1.0f);
   // // TODO: Fix size seedBank
   createSprite(seedBank, MODE_STRETCH, Vec2(63, 10),
                Vec2(512 / 1.5f, 128 / 1.5f));
   createTexture(seedBank, "UI/SeedBank.png");
+  texPosArray[seedBank] = Vec2(0.0f, 0.0f);
+  scaleTexture[seedBank] = Vec2(1.0f, 1.0f);
 
   createCard(PeaShotter, Vec2(120, 10));
   createCard(SunFlower, Vec2(180, 10));
@@ -232,7 +242,7 @@ void Level1::init() {
   loadSunAnimation();
   loadSunFlowerAnimation();
   engine->font.loadFont(&myFont, "Fonts/roboto-Bold.ttf");
-  createZombie(Vec2(mapCollider[2][8].x, mapCollider[2][8].y));
+  // createZombie(Vec2(mapCollider[2][8].x, mapCollider[2][8].y));
   // createPlant(5,9);
   // renderer->core.setFrameLimit(false);
 
@@ -242,7 +252,7 @@ void Level1::init() {
   // createTextureRotate(zombieDebug,
   //                     "Animations/Zombie/normalZombie/Zombie_head.png");
   sunTimer = 60 * 6;
-  createSun(Vec2(277, 77), sunCost::normalSun, false);
+  // createSun(Vec2(277, 77), sunCost::normalSun, false);
 }
 
 void Level1::update() {
@@ -283,7 +293,7 @@ void Level1::update() {
       if (sunCounter >= cards[deckCursor.pos].cost &&
           plantsCreated < maxPlants && cards[deckCursor.pos].seedTimer == 0) {
         sunCounter -= cards[deckCursor.pos].cost;
-        cards[deckCursor.pos].seedTimer = 60 * 8;
+        // cards[deckCursor.pos].seedTimer = 60 * 8;
         spriteArray[cards[deckCursor.pos].seedShadowTimer].size.y = 70;
         createPlant(cards[deckCursor.pos].plant, cursor.cursorTile.x,
                     cursor.cursorTile.y);
@@ -317,60 +327,61 @@ void Level1::update() {
   deleteSun(cursor.id);
 
   // printf("FPS: %d\n",engine->info.getFps()) ;
-  // printf("ram: %f\n",engine->info.getAvailableRAM()) ;
-  zombiesManager.collision();
-  projectileManager.zombieCollision();
+  // printf("ram: %f\n",engine->info.getAvailableRAM());
+  // zombiesManager.collision();
+  // projectileManager.zombieCollision();
+  // printf("texture free space: %f\n",engine->renderer.core.gs.vram.getFreeSpaceInMB());
 
   // printf("animarray size: %d\n",animationArray.size());
 
   // shoot zombies
   std::vector<Zombie>::iterator it;
 
-  for (int i = 0; i < 45; i++) {
-    if (plant[i].type == PeaShotter) {
-      // printf("hay una planta en %d\n",i);
+  // for (int i = 0; i < 45; i++) {
+  //   if (plant[i].type == PeaShotter) {
+  //     // printf("hay una planta en %d\n",i);
 
-      for (it = zombie.begin(); it < zombie.end(); it++) {
-        //  printf("vec plant %f,%f. vec zombi %f,%f,%f,%f\n",
-        //  pointColliderArray[*plant[i].body[0]].x,
-        //  pointColliderArray[*plant[i].body[0]].y,
-        //  boxColliderArray[*zombie[j].body[0]].x,
-        //  boxColliderArray[*zombie[j].body[0]].y,
-        //  boxColliderArray[*zombie[j].body[0]].x +
-        //  boxColliderArray[*zombie[j].body[0]].width,
-        //  boxColliderArray[*zombie[j].body[0]].y +
-        //  boxColliderArray[*zombie[j].body[0]].height);
+  //     for (it = zombie.begin(); it < zombie.end(); it++) {
+  //       //  printf("vec plant %f,%f. vec zombi %f,%f,%f,%f\n",
+  //       //  pointColliderArray[*plant[i].body[0]].x,
+  //       //  pointColliderArray[*plant[i].body[0]].y,
+  //       //  boxColliderArray[*zombie[j].body[0]].x,
+  //       //  boxColliderArray[*zombie[j].body[0]].y,
+  //       //  boxColliderArray[*zombie[j].body[0]].x +
+  //       //  boxColliderArray[*zombie[j].body[0]].width,
+  //       //  boxColliderArray[*zombie[j].body[0]].y +
+  //       //  boxColliderArray[*zombie[j].body[0]].height);
 
-        if (pointColliderArray[*plant[i].body[0]].x <
-                boxColliderArray[*(it)->body[0]].x +
-                    boxColliderArray[*(it)->body[0]].width &&
-            pointColliderArray[*plant[i].body[0]].y >
-                boxColliderArray[*(it)->body[0]].y &&
-            pointColliderArray[*plant[i].body[0]].y <
-                boxColliderArray[*(it)->body[0]].y +
-                    boxColliderArray[*(it)->body[0]].height) {
-          // printf("hay un zombi en frente\n");
-          if (plant[i].attackTimer >= 0) {
-            plant[i].attackTimer--;
-          } else if (stopAnimation == false) {
-            // printf("disparar\n");
-            newProjectile(pointColliderArray[*plant[i].body[0]]);
-            plant[i].attackTimer = 60;
-          }
-          it = zombie.end();
-        }
-      }
-    } else if (plant[i].type == SunFlower) {
-      if (plant[i].attackTimer > 0) {
-        plant[i].attackTimer--;
-      } else {
-        printf("sunflower create sun\n");
-        createSun(spriteArray[*plant[i].body[0]].position, sunCost::normalSun,
-                   true);
-        plant[i].attackTimer = 60 * 6;
-      }
-    }
-  }
+  //       if (pointColliderArray[plant[i].father].x <
+  //               boxColliderArray[*(it)->body[0]].x +
+  //                   boxColliderArray[*(it)->body[0]].width &&
+  //           pointColliderArray[plant[i].father].y >
+  //               boxColliderArray[*(it)->body[0]].y &&
+  //           pointColliderArray[plant[i].father].y <
+  //               boxColliderArray[*(it)->body[0]].y +
+  //                   boxColliderArray[*(it)->body[0]].height) {
+  //         // printf("hay un zombi en frente\n");
+  //         if (plant[i].attackTimer >= 0) {
+  //           plant[i].attackTimer--;
+  //         } else if (stopAnimation == false) {
+  //           // printf("disparar\n");
+  //           newProjectile(pointColliderArray[plant[i].father]);
+  //           plant[i].attackTimer = 60;
+  //         }
+  //         it = zombie.end();
+  //       }
+  //     }
+  //   } else if (plant[i].type == SunFlower) {
+  //     if (plant[i].attackTimer > 0) {
+  //       plant[i].attackTimer--;
+  //     } else {
+  //       printf("sunflower create sun\n");
+  //       createSun(spriteArray[plant[i].id[0]].position, sunCost::normalSun,
+  //                  true);
+  //       plant[i].attackTimer = 60 * 6;
+  //     }
+  //   }
+  // }
 
   if (timerZombies > 0) {
     timerZombies--;

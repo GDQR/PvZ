@@ -15,7 +15,7 @@ extern bool debugSprite;
 extern float debugAlphaColor;
 extern Vec2* texPos;
 extern float* d_scale;
-extern float* d_angle;
+extern Vec2* d_angle;
 extern bool d_hasScale;
 
 extern std::map<int, Tyra::Sprite> dm_SpritePointCollider;

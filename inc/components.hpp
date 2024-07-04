@@ -38,23 +38,26 @@ class Animation {
   Animation();
   Animation(enumAnimation anim);
   int animID = -1;
-  unsigned int framesCounter = 0; // es el time
-  unsigned int currentFrame = 0; // es el key
+  bool draw = true;
+  unsigned int framesCounter = 0;  // es el time
+  unsigned int currentFrame = 0;   // es el key
 };
 
 class AnimationData {
  public:
   unsigned int maxFrame;
+  std::string name;
   std::map<unsigned int, Tyra::Texture*> texture;
   std::map<unsigned int, Tyra::Vec2> position;
-  std::map<unsigned int, float> scale;  
-  std::map<unsigned int, float> angle;  
-  std::map<unsigned int, float> alpha;  
+  std::map<unsigned int, Tyra::Vec2> scale;
+  std::map<unsigned int, Tyra::Vec2> angle;
+  std::map<unsigned int, float> alpha;
+  std::map<unsigned int, bool> draw;
 };
 
 class Time {
  public:
-  std::vector<int> seconds; // can't be 0 for animations
+  std::vector<int> seconds;  // can't be 0 for animations
 };
 
 class BoxCollider {
@@ -82,9 +85,13 @@ extern std::map<int, Tyra::Vec2> posArray;
 extern std::map<int, Tyra::Vec2> finalPosArray;
 extern std::map<int, Tyra::Sprite> spriteArray;
 extern std::map<int, Tyra::Sprite*> spritesNormalRender;
+extern std::vector<int> spriteNormalIdStopRender;
+extern std::vector<int> animationIdStopRender;
 extern std::map<int, Tyra::Sprite> spritesRotate;
 extern std::map<int, Tyra::Sprite*> spritesRotateRender;
-extern std::map<int, float> angles;
+extern std::vector<int> spritesRotateIdStopRender;
+extern std::map<int, Tyra::Vec2> angles;
+extern std::map<int, Tyra::Vec2> originalSize;
 extern std::map<int, Tyra::Vec2> scaleTexture;
 extern std::map<int, Tyra::Vec2> pointColliderArray;
 extern std::map<int, BoxCollider> boxColliderArray;
@@ -105,10 +112,12 @@ extern BoxCollider mapCollider[5][9];
 
 class AnimationManager {
  private:
-  unsigned int framesSpeed=20;
+  unsigned int framesSpeed = 20;
+
  public:
   Tyra::TextureRepository* texRepo;
   void update();
+  void draw(const int entitieID, const int animID, const int currentFrame);
   void position(const int entitieID);
   void angle(const int entitieID);
   void alpha(const int entitieID);
@@ -152,7 +161,7 @@ void newDeckCursor(int* cursor, Tyra::Vec2 pos);
 void createSprite(int id, Tyra::SpriteMode mode, Tyra::Vec2 position,
                   Tyra::Vec2 size);
 void createSpriteRotate(int id, Tyra::SpriteMode mode, Tyra::Vec2 position,
-                  Tyra::Vec2 size, const float angle);
+                        Tyra::Vec2 size, const Tyra::Vec2 angle);
 
 void deleteFatherID(int* fatherID, int* childID);
 void deleteSprite(const int entitieID);
