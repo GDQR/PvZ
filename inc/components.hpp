@@ -9,10 +9,6 @@
 #include "entities/zombie.hpp"
 #include "entities/sun.hpp"
 
-extern Tyra::Engine* engine;
-extern Tyra::Renderer* renderer;
-
-extern std::map<std::string, std::vector<int>> m_animID;
 enum enumAnimation {
   peaShooterHead,
   peaShooterBody,
@@ -33,14 +29,37 @@ class FatherID {
   std::vector<int> id;
 };
 
+class Cursor {
+ public:
+  int id = -1;
+  Sprite sprite;
+  Vec2 cursorTile;
+};
+
+class DeckCursor {
+ public:
+  int id = -1;
+  int pos = 0;
+};
+
+class Card {
+ public:
+  int seed;
+  int seedShadow;
+  int seedShadowTimer;
+  int seedTimer;
+  Plant_State_enum plant;
+  int cost;
+};
+
 class Animation {
  public:
   Animation();
   Animation(enumAnimation anim);
   int animID = -1;
   bool draw = true;
-  unsigned int framesCounter = 0;  // es el time
-  unsigned int currentFrame = 0;   // es el key
+  unsigned int framesCounter = 0;
+  unsigned int currentFrame = 0;
 };
 
 class AnimationData {
@@ -73,6 +92,11 @@ class BoxCollider {
   float offsetX;
   float offsetY;
 };
+
+extern Tyra::Engine* engine;
+extern Tyra::Renderer* renderer;
+
+extern std::map<std::string, std::vector<int>> m_animID;
 
 // sparse array
 extern std::map<int, Animation>

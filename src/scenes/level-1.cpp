@@ -20,34 +20,11 @@ int background = Entities::newID();
 int seedBank = Entities::newID();
 int zombieDebug = Entities::newID();
 
-class Card {
- public:
-  int seed;
-  int seedShadow;
-  int seedShadowTimer;
-  int seedTimer;
-  Plant_State_enum plant;
-  int cost;
-};
-
 std::vector<Card> cards;
 
 int map[5][9];
 int xMap = 9;
 int yMap = 5;
-
-class Cursor {
- public:
-  int id = -1;
-  Sprite sprite;
-  Vec2 cursorTile;
-};
-
-class DeckCursor {
- public:
-  int id = -1;
-  int pos = 0;
-};
 
 Cursor cursor;
 DeckCursor deckCursor;
