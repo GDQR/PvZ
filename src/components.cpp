@@ -1,7 +1,6 @@
 #include "components.hpp"
 #include <iostream>
 
-
 Tyra::Engine* engine;
 Tyra::Renderer* renderer;
 const Tyra::PadJoy* leftJoy;

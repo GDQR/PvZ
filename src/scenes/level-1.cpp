@@ -9,7 +9,6 @@
 
 #include "components.hpp"
 #include "debugPVZ/debug.hpp"
-#include "font/font.hpp"
 #include "debugPVZ/menuDebugCommands.hpp"
 #include "systems.hpp"
 #include <stdlib.h>

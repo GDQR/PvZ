@@ -124,7 +124,7 @@ void AnimationManager::scale(const int entitieID) {
       spritesRotate[entitieID].size = originalSize[entitieID] * animationDataArray[animationArray[entitieID].animID]
               .scale[animationArray[entitieID].currentFrame];
       if(entitieID == 63){
-        printf("frame: %d size: %s\n",animationArray[entitieID].currentFrame,spritesRotate[entitieID].size.getPrint().c_str());
+        // printf("frame: %d size: %s\n",animationArray[entitieID].currentFrame,spritesRotate[entitieID].size.getPrint().c_str());
       }
     }
   }
