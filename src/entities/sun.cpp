@@ -1,5 +1,5 @@
 #include "entities/sun.hpp"
-#include "components.hpp"
+#include "systems.hpp"
 
 int sunsCreated = 0;
 int sunCounter = 1000;

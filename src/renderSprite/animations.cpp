@@ -1,5 +1,6 @@
 #include "renderSprite/animations.hpp"
 #include "renderSprite/textures.hpp"
+#include "systems.hpp"
 #include <iostream>
 
 int maxAnimID = 20;

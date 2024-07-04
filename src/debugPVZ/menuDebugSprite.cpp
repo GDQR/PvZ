@@ -1,6 +1,6 @@
 #include "debugPVZ/menuDebugSprite.hpp"
 #include "font/font.hpp"
-#include "components.hpp"
+#include "systems.hpp"
 
 bool startSpriteDebug = true;
 bool isMainMenuActive = true;

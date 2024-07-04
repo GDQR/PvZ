@@ -1,7 +1,7 @@
 // File for all plants data
 #include "entities/plants.hpp"
-#include "components.hpp"
 #include "renderSprite/animations.hpp"
+#include "systems.hpp"
 
 int plantsCreated = 0;
 

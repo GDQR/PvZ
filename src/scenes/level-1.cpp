@@ -11,6 +11,7 @@
 #include "debugPVZ/debug.hpp"
 #include "font/font.hpp"
 #include "debugPVZ/menuDebugCommands.hpp"
+#include "systems.hpp"
 #include <stdlib.h>
 #include <time.h>
 using namespace Tyra;
@@ -35,11 +36,6 @@ int map[5][9];
 int xMap = 9;
 int yMap = 5;
 
-AnimationManager animManager;
-RendererSprites renderSprites;
-RendererDebugSpritesManager renderDebugSpritesManager;
-ZombiesManager zombiesManager;
-
 class Cursor {
  public:
   int id = -1;
@@ -58,8 +54,6 @@ DeckCursor deckCursor;
 
 int timerZombies = 0;
 int maxZombies = 5;
-
-ProjectileManager projectileManager;
 
 int sunTimer;
 
