@@ -34,6 +34,7 @@ std::vector<Zombie> zombie;
 std::vector<Sun> sun;
 std::vector<NaturalSun> naturalSun;
 std::vector<int> projectile;
+std::vector<Card> cards;
 
 bool zombieCreateRow[5];
 bool plantCreatedInMap[5][9];
@@ -45,10 +46,6 @@ std::map<int, Tyra::Sprite> dm_SpriteNormal;
 std::map<int, Tyra::Sprite> dm_SpriteRotate;
 std::map<int, Tyra::Sprite> dm_SpriteNormalPivot;
 std::map<int, Tyra::Sprite> dm_SpriteRotatePivot;
-
-Animation::Animation() {}
-
-Animation::Animation(enumAnimation anim) { animID = anim; }
 
 void createSprite(int id, Tyra::SpriteMode mode, Tyra::Vec2 position,
                   Tyra::Vec2 size) {
@@ -116,6 +113,60 @@ BoxCollider::BoxCollider(float x, float y, float width, float height,
   this->offsetX = offsetX;
   this->offsetY = offsetY;
 }
+
+void Cursor::move() {
+  float x = 0.0F;
+  float y = 0.0F;
+
+  if (leftJoy->h <= 100) {
+    x = -cursorSpeed;
+  } else if (leftJoy->h >= 200) {
+    x = cursorSpeed;
+  }
+
+  if (leftJoy->v <= 100) {
+    y = -cursorSpeed;
+  } else if (leftJoy->v >= 200) {
+    y = cursorSpeed;
+  }
+
+  posArray[id] += Vec2(x, y);
+  if (spriteArray[id].position.x != posArray[id].x ||
+      spriteArray[id].position.y != posArray[id].y) {
+    if (cursorTimer < 20) {
+      cursorTimer++;
+
+      if (cursorTimer == 10) {
+        cursorSpeed = 1.5f;
+      } else if (cursorTimer == 20) {
+        cursorSpeed = 2.0f;
+      }
+    }
+
+  } else {
+    cursorTimer = 0;
+    cursorSpeed = 1;
+  }
+}
+
+void DeckCursor::move() {
+  if (engine->pad.getClicked().DpadLeft) {
+    pos--;
+    if (pos < 0) {
+      pos = cards.size() - 1;
+    }
+    posArray[id].x = posArray[cards[pos].seed].x - 3;
+  } else if (engine->pad.getClicked().DpadRight) {
+    pos++;
+    if (pos >= (int)cards.size()) {
+      pos = 0;
+    }
+    posArray[id].x = posArray[cards[pos].seed].x - 3;
+  }
+}
+Animation::Animation() {}
+
+Animation::Animation(enumAnimation anim) { animID = anim; }
 
 void Animation::update(const int entityID) {
   if (framesCounter >= (60 / framesSpeed)) {

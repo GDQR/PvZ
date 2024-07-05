@@ -35,12 +35,16 @@ class Cursor {
   int id = -1;
   Sprite sprite;
   Vec2 cursorTile;
+  int cursorTimer = 0;
+  float cursorSpeed = 1;
+  void move();
 };
 
 class DeckCursor {
  public:
   int id = -1;
   int pos = 0;
+  void move();
 };
 
 class Card {
@@ -145,6 +149,7 @@ extern std::vector<Zombie> zombie;
 extern std::vector<Sun> sun;
 extern std::vector<NaturalSun> naturalSun;
 extern std::vector<int> projectile;
+extern std::vector<Card> cards;
 
 extern bool zombieCreateRow[5];
 extern bool plantCreatedInMap[5][9];

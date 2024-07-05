@@ -19,8 +19,6 @@ int background = Entities::newID();
 int seedBank = Entities::newID();
 int zombieDebug = Entities::newID();
 
-std::vector<Card> cards;
-
 int map[5][9];
 int xMap = 9;
 int yMap = 5;
@@ -52,44 +50,6 @@ void plantMovement() {
   }
 }
 
-int cursorTimer = 0;
-float cursorSpeed = 1;
-
-void cursorMovement() {
-  float x = 0.0F;
-  float y = 0.0F;
-
-  if (leftJoy->h <= 100) {
-    x = -cursorSpeed;
-  } else if (leftJoy->h >= 200) {
-    x = cursorSpeed;
-  }
-
-  if (leftJoy->v <= 100) {
-    y = -cursorSpeed;
-  } else if (leftJoy->v >= 200) {
-    y = cursorSpeed;
-  }
-
-  posArray[cursor.id] += Vec2(x, y);
-  if (spriteArray[cursor.id].position.x != posArray[cursor.id].x ||
-      spriteArray[cursor.id].position.y != posArray[cursor.id].y) {
-    if (cursorTimer < 20) {
-      cursorTimer++;
-
-      if (cursorTimer == 10) {
-        cursorSpeed = 1.5f;
-      } else if (cursorTimer == 20) {
-        cursorSpeed = 2.0f;
-      }
-    }
-
-  } else {
-    cursorTimer = 0;
-    cursorSpeed = 1;
-  }
-}
-
 void updateBoxCollider() {
   boxColliderArray[cursor.id].x =
       boxColliderArray[cursor.id].offsetX + posArray[cursor.id].x;
@@ -97,22 +57,6 @@ void updateBoxCollider() {
       boxColliderArray[cursor.id].offsetY + posArray[cursor.id].y;
   dm_SpriteBoxCollider[cursor.id].position =
       Vec2(boxColliderArray[cursor.id].x, boxColliderArray[cursor.id].y);
-}
-
-void cursorDeckMovement() {
-  if (engine->pad.getClicked().DpadLeft) {
-    deckCursor.pos--;
-    if (deckCursor.pos < 0) {
-      deckCursor.pos = cards.size() - 1;
-    }
-    posArray[deckCursor.id].x = posArray[cards[deckCursor.pos].seed].x - 3;
-  } else if (engine->pad.getClicked().DpadRight) {
-    deckCursor.pos++;
-    if (deckCursor.pos >= (int)cards.size()) {
-      deckCursor.pos = 0;
-    }
-    posArray[deckCursor.id].x = posArray[cards[deckCursor.pos].seed].x - 3;
-  }
 }
 
 void createCard(Plant_State_enum typePlant, Vec2 pos) {
@@ -201,9 +145,9 @@ void Level1::init() {
 void Level1::update() {
   // plantMovement();
   if (cursor.id != -1 && debugMode == false) {
-    cursorMovement();
+    cursor.move();
     updateBoxCollider();
-    cursorDeckMovement();
+    deckCursor.move();
   }
 
   for (unsigned int i = 0; i < cards.size(); i++) {
