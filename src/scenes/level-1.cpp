@@ -50,10 +50,6 @@ void plantMovement() {
   }
 }
 
-void updateBoxCollider() {
-  boxColliderArray[cursor.id].move(cursor.id);
-}
-
 void createCard(Plant_State_enum typePlant, Vec2 pos) {
   Card card;
   card.seed = Entities::newID();
@@ -73,13 +69,13 @@ void createCard(Plant_State_enum typePlant, Vec2 pos) {
   texPosArray[card.seedShadow] = Vec2(0.0f, 0.0f);
   scaleTexture[card.seedShadow] = Vec2(1.0f, 1.0f);
 
-  createSprite(card.seedShadowTimer, MODE_REPEAT, pos, Vec2(0, 0));
+  createSprite(card.seedShadowTimer, MODE_REPEAT, pos, Vec2(50, 70));
   createTexture(card.seedShadowTimer, "UI/Seeds.png");
   spriteArray[card.seedShadowTimer].color = Color(0.0F, 0.0F, 0.0F, 60.0F);
   texPosArray[card.seedShadowTimer] = Vec2(0.0f, 0.0f);
   scaleTexture[card.seedShadowTimer] = Vec2(1.0f, 1.0f);
 
-  card.seedTimer = 0;//60 * 8;
+  card.seedTimer = 60 * 8;
 
   card.plant = typePlant;
 
@@ -141,19 +137,12 @@ void Level1::update() {
   // plantMovement();
   if (cursor.id != -1 && debugMode == false) {
     cursor.move();
-    updateBoxCollider();
+    boxColliderArray[cursor.id].move(cursor.id);
     deckCursor.move();
   }
 
   for (unsigned int i = 0; i < cards.size(); i++) {
-    if (cards[i].seedTimer > 0) {
-      cards[i].seedTimer--;
-      spriteArray[cards[i].seedShadow].size = Vec2(50, 70);
-      spriteArray[cards[i].seedShadowTimer].size.y -=
-          (70.0f / 8.0f / 60.0f);  // el size Y es 70
-    } else if (sunCounter >= cards[i].cost) {
-      spriteArray[cards[i].seedShadow].size = Vec2(0, 0);
-    }
+    cards[i].update();
   }
 
   for (int i = 0; i < 5; i++) {
@@ -174,7 +163,7 @@ void Level1::update() {
       if (sunCounter >= cards[deckCursor.pos].cost &&
           plantsCreated < maxPlants && cards[deckCursor.pos].seedTimer == 0) {
         sunCounter -= cards[deckCursor.pos].cost;
-        // cards[deckCursor.pos].seedTimer = 60 * 8;
+        cards[deckCursor.pos].seedTimer = 60 * 8;
         spriteArray[cards[deckCursor.pos].seedShadowTimer].size.y = 70;
         createPlant(cards[deckCursor.pos].plant, cursor.cursorTile.x,
                     cursor.cursorTile.y);

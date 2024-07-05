@@ -55,6 +55,7 @@ class Card {
   int seedTimer;
   Plant_State_enum plant;
   int cost;
+  void update();
 };
 
 class Animation {

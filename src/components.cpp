@@ -114,7 +114,7 @@ BoxCollider::BoxCollider(float x, float y, float width, float height,
   this->offsetY = offsetY;
 }
 
-void BoxCollider::move(const int entityID){
+void BoxCollider::move(const int entityID) {
   x = offsetX + posArray[entityID].x;
   y = offsetY + posArray[entityID].y;
 }
@@ -169,6 +169,18 @@ void DeckCursor::move() {
     posArray[id].x = posArray[cards[pos].seed].x - 3;
   }
 }
+
+void Card::update() {
+  if (seedTimer > 0) {
+    seedTimer--;
+    spriteArray[seedShadow].size = Vec2(50, 70);
+    spriteArray[seedShadowTimer].size.y -=
+        (70.0f / 8.0f / 60.0f);  // el size Y es 70
+  } else if (sunCounter >= cost) {
+    spriteArray[seedShadow].size = Vec2(0, 0);
+  }
+}
+
 Animation::Animation() {}
 
 Animation::Animation(enumAnimation anim) { animID = anim; }
