@@ -98,6 +98,7 @@ class BoxCollider {
   BoxCollider(float x, float y, float width, float height);
   BoxCollider(float x, float y, float width, float height, float offsetX,
               float offsetY);
+  void move(const int entityID);
   float x;
   float y;
   float width;

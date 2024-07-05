@@ -184,6 +184,7 @@ void RendererDebugSpritesManager::update() {
   // for (it = dm_SpriteBoxCollider.begin(); it != dm_SpriteBoxCollider.end();
   //      it++) {
   //   // printf("key: %d. sprite ID: %d\n",it->first,it->second.id);
+  //   dm_SpriteBoxCollider[it->first].position = Vec2(boxColliderArray[it->first].x,boxColliderArray[it->first].y);  
   //   renderer->renderer2D.render(dm_SpriteBoxCollider[it->first]);
   // }
 
@@ -367,7 +368,6 @@ void ProjectileManager::update() {
   for (it = projectile.begin(); it < projectile.end(); it++) {
     posArray[*it].x++;
     boxColliderArray[*it].x = posArray[*it].x;
-    dm_SpriteBoxCollider[*it].position.x = boxColliderArray[*it].x;
     if (posArray[*it].x >= 580) {
       // delete projectile
       printf("borrando proyectil\n");

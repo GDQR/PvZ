@@ -114,6 +114,11 @@ BoxCollider::BoxCollider(float x, float y, float width, float height,
   this->offsetY = offsetY;
 }
 
+void BoxCollider::move(const int entityID){
+  x = offsetX + posArray[entityID].x;
+  y = offsetY + posArray[entityID].y;
+}
+
 void Cursor::move() {
   float x = 0.0F;
   float y = 0.0F;

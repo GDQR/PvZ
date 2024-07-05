@@ -181,7 +181,6 @@ void NaturalSun::move() {
   if (posArray[father].y < 370) {
     posArray[father].y++;
     boxColliderArray[father].y++;
-    dm_SpriteBoxCollider[father].position.y = boxColliderArray[father].y;
   }
 }
 

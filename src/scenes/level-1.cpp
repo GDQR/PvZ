@@ -51,12 +51,7 @@ void plantMovement() {
 }
 
 void updateBoxCollider() {
-  boxColliderArray[cursor.id].x =
-      boxColliderArray[cursor.id].offsetX + posArray[cursor.id].x;
-  boxColliderArray[cursor.id].y =
-      boxColliderArray[cursor.id].offsetY + posArray[cursor.id].y;
-  dm_SpriteBoxCollider[cursor.id].position =
-      Vec2(boxColliderArray[cursor.id].x, boxColliderArray[cursor.id].y);
+  boxColliderArray[cursor.id].move(cursor.id);
 }
 
 void createCard(Plant_State_enum typePlant, Vec2 pos) {
