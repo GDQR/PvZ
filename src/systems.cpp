@@ -20,113 +20,13 @@ void AnimationManager::update() {
         it->second.currentFrame = 0;
       }
 
-      draw(it->first, it->second.animID, it->second.currentFrame);
-      angle(it->first);
-      alpha(it->first);
-      scale(it->first);
+      it->second.drawSprite(it->first);
+      it->second.angle(it->first);
+      it->second.alpha(it->first);
+      it->second.scale(it->first);
     }
-    position(it->first);
+    it->second.position(it->first);
     it->second.framesCounter++;
-  }
-}
-
-void AnimationManager::draw(const int entitieID, const int animID,
-                            const int currentFrame) {
-  if (animationDataArray[animID].draw.count(currentFrame)) {
-    animationArray[entitieID].draw =
-        animationDataArray[animID].draw[currentFrame];
-    if(spriteArray.count(entitieID) == 1){
-      if (animationArray[entitieID].draw == false ) {
-          spritesNormalRender.erase(entitieID);
-          spriteNormalIdStopRender.push_back(entitieID);
-      } else {
-        spritesNormalRender[entitieID] = &spriteArray[entitieID];
-      }
-    }else{
-      if (animationArray[entitieID].draw == false ) {
-          spritesRotateRender.erase(entitieID);
-          spritesRotateIdStopRender.push_back(entitieID);
-      } else {
-        spritesRotateRender[entitieID] = &spritesRotate[entitieID];
-      }
-    }
-    
-  }
-
-  if (spriteArray.count(entitieID) == 1 &&
-      animationDataArray[animID].texture.count(currentFrame) == 1 &&
-      animationArray[entitieID].draw == true) {
-    // Unlink Texture from the sprite entitie
-    if (texRepo->getBySpriteId(spriteArray[entitieID].id) != nullptr) {
-      // printf("unlink sprite id: %d\n", spriteArray[entitieID].id);
-      texRepo->getBySpriteId(spriteArray[entitieID].id)
-          ->removeLinkById(spriteArray[entitieID].id);
-    }
-
-    // Link new Texture to the sprite entitie
-    animationDataArray[animID].texture[currentFrame]->addLink(
-        spriteArray[entitieID].id);
-  } else if (animationDataArray[animID].texture.count(currentFrame) == 1 &&
-             animationArray[entitieID].draw == true) {
-    // Unlink Texture from the sprite entitie
-    if (texRepo->getBySpriteId(spritesRotate[entitieID].id) != nullptr) {
-    // printf("unlink sprite rotate id: %d\n", spritesRotate[entitieID].id);
-      texRepo->getBySpriteId(spritesRotate[entitieID].id)
-          ->removeLinkById(spritesRotate[entitieID].id);
-    }
-
-    // Link new Texture to the sprite entitie
-    animationDataArray[animID].texture[currentFrame]->addLink(
-        spritesRotate[entitieID].id);
-  }
-}
-
-void AnimationManager::position(const int entitieID) {
-  // finalPos += animPos
-
-  if (animationDataArray[animationArray[entitieID].animID].position.count(
-          animationArray[entitieID].currentFrame)) {
-    texPosArray[entitieID] =
-        animationDataArray[animationArray[entitieID].animID]
-            .position[animationArray[entitieID].currentFrame];
-  }
-}
-
-void AnimationManager::angle(const int entitieID) {
-  if (animationDataArray[animationArray[entitieID].animID].angle.count(
-          animationArray[entitieID].currentFrame) == 1) {
-    angles[entitieID] = animationDataArray[animationArray[entitieID].animID]
-                            .angle[animationArray[entitieID].currentFrame];
-  }
-}
-void AnimationManager::alpha(const int entitieID) {
-  if (animationDataArray[animationArray[entitieID].animID].alpha.count(
-          animationArray[entitieID].currentFrame) == 1) {
-
-    float alpha = animationDataArray[animationArray[entitieID].animID]
-                      .alpha[animationArray[entitieID].currentFrame] *
-                  128;
-    if (spriteArray.count(entitieID) == 1) {
-      spriteArray[entitieID].color.a = alpha;
-    } else {
-      spritesRotate[entitieID].color.a = alpha;
-    }
-  }
-}
-
-void AnimationManager::scale(const int entitieID) {
-  if (animationDataArray[animationArray[entitieID].animID].scale.count(
-          animationArray[entitieID].currentFrame) == 1) {
-    if (spriteArray.count(entitieID) == 1) {
-      spriteArray[entitieID].size = originalSize[entitieID] * animationDataArray[animationArray[entitieID].animID]
-              .scale[animationArray[entitieID].currentFrame];
-    } else {
-      spritesRotate[entitieID].size = originalSize[entitieID] * animationDataArray[animationArray[entitieID].animID]
-              .scale[animationArray[entitieID].currentFrame];
-      if(entitieID == 63){
-        // printf("frame: %d size: %s\n",animationArray[entitieID].currentFrame,spritesRotate[entitieID].size.getPrint().c_str());
-      }
-    }
   }
 }
 
@@ -134,7 +34,7 @@ void AnimationManager::debug() {
   std::map<int, Animation>::iterator it;
 
   for (it = animationArray.begin(); it != animationArray.end(); it++) {
-    position(it->first);
+    it->second.position(it->first);
   }
 }
 

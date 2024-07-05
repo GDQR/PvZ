@@ -7,11 +7,6 @@ class AnimationManager {
 
  public:
   void update();
-  void draw(const int entitieID, const int animID, const int currentFrame);
-  void position(const int entitieID);
-  void angle(const int entitieID);
-  void alpha(const int entitieID);
-  void scale(const int entitieID);
   void debug();
   int debugAnim(const int entitieID);
   void debugChangeFrame(const int entitieID, const int key);

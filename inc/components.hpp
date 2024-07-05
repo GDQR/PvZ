@@ -56,6 +56,12 @@ class Animation {
  public:
   Animation();
   Animation(enumAnimation anim);
+  void drawSprite(const int entitieID);
+  void position(const int entitieID);
+  void angle(const int entitieID);
+  void alpha(const int entitieID);
+  void scale(const int entitieID);
+  
   int animID = -1;
   bool draw = true;
   unsigned int framesCounter = 0;

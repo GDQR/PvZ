@@ -117,3 +117,89 @@ BoxCollider::BoxCollider(float x, float y, float width, float height,
   this->offsetX = offsetX;
   this->offsetY = offsetY;
 }
+
+void Animation::drawSprite(const int entitieID) {
+  if (animationDataArray[animID].draw.count(currentFrame)) {
+    draw = animationDataArray[animID].draw[currentFrame];
+    if (spriteArray.count(entitieID) == 1) {
+      if (draw == false) {
+        spritesNormalRender.erase(entitieID);
+        spriteNormalIdStopRender.push_back(entitieID);
+      } else {
+        spritesNormalRender[entitieID] = &spriteArray[entitieID];
+      }
+    } else {
+      if (draw == false) {
+        spritesRotateRender.erase(entitieID);
+        spritesRotateIdStopRender.push_back(entitieID);
+      } else {
+        spritesRotateRender[entitieID] = &spritesRotate[entitieID];
+      }
+    }
+  }
+
+  if (spriteArray.count(entitieID) == 1 &&
+      animationDataArray[animID].texture.count(currentFrame) == 1 &&
+      draw == true) {
+    // Unlink Texture from the sprite entitie
+    if (texRepo->getBySpriteId(spriteArray[entitieID].id) != nullptr) {
+      // printf("unlink sprite id: %d\n", spriteArray[entitieID].id);
+      texRepo->getBySpriteId(spriteArray[entitieID].id)
+          ->removeLinkById(spriteArray[entitieID].id);
+    }
+
+    // Link new Texture to the sprite entitie
+    animationDataArray[animID].texture[currentFrame]->addLink(
+        spriteArray[entitieID].id);
+  } else if (animationDataArray[animID].texture.count(currentFrame) == 1 &&
+             draw == true) {
+    // Unlink Texture from the sprite entitie
+    if (texRepo->getBySpriteId(spritesRotate[entitieID].id) != nullptr) {
+      // printf("unlink sprite rotate id: %d\n", spritesRotate[entitieID].id);
+      texRepo->getBySpriteId(spritesRotate[entitieID].id)
+          ->removeLinkById(spritesRotate[entitieID].id);
+    }
+
+    // Link new Texture to the sprite entitie
+    animationDataArray[animID].texture[currentFrame]->addLink(
+        spritesRotate[entitieID].id);
+  }
+}
+
+void Animation::position(const int entitieID) {
+  // finalPos += animPos
+
+  if (animationDataArray[animID].position.count(currentFrame)) {
+    texPosArray[entitieID] = animationDataArray[animID].position[currentFrame];
+  }
+}
+
+void Animation::angle(const int entitieID) {
+  if (animationDataArray[animID].angle.count(currentFrame) == 1) {
+    angles[entitieID] = animationDataArray[animID].angle[currentFrame];
+  }
+}
+void Animation::alpha(const int entitieID) {
+  if (animationDataArray[animID].alpha.count(currentFrame) == 1) {
+    float alpha = animationDataArray[animID].alpha[currentFrame] * 128;
+    if (spriteArray.count(entitieID) == 1) {
+      spriteArray[entitieID].color.a = alpha;
+    } else {
+      spritesRotate[entitieID].color.a = alpha;
+    }
+  }
+}
+
+void Animation::scale(const int entitieID) {
+  if (animationDataArray[animID].scale.count(currentFrame) == 1) {
+    if (spriteArray.count(entitieID) == 1) {
+      spriteArray[entitieID].size =
+          originalSize[entitieID] *
+          animationDataArray[animID].scale[currentFrame];
+    } else {
+      spritesRotate[entitieID].size =
+          originalSize[entitieID] *
+          animationDataArray[animID].scale[currentFrame];
+    }
+  }
+}
