@@ -27,6 +27,7 @@ enum enumAnimation {
 class FatherID {
  public:
   std::vector<int> id;
+  void update(const int entityID);
 };
 
 class Cursor {
@@ -56,16 +57,18 @@ class Animation {
  public:
   Animation();
   Animation(enumAnimation anim);
-  void drawSprite(const int entitieID);
-  void position(const int entitieID);
-  void angle(const int entitieID);
-  void alpha(const int entitieID);
-  void scale(const int entitieID);
-  
+  void update(const int entityID);
+  void activeDrawNormalSprites(const int entityID);
+  void updateNormalSprites(const int entityID);
+  void activeDrawRotationSprites(const int entityID);
+  void updateRotationSprites(const int entityID);
+  void position(const int entityID);
+
   int animID = -1;
   bool draw = true;
   unsigned int framesCounter = 0;
   unsigned int currentFrame = 0;
+  unsigned int framesSpeed = 20;
 };
 
 class AnimationData {
@@ -99,6 +102,13 @@ class BoxCollider {
   float offsetY;
 };
 
+class RotationSprite {
+ public:
+  Tyra::Sprite sprite;
+  Tyra::Vec2 angle;
+  void update(const int entityID);
+};
+
 extern Tyra::Engine* engine;
 extern Tyra::Renderer* renderer;
 extern const Tyra::PadJoy* leftJoy;
@@ -118,10 +128,9 @@ extern std::map<int, Tyra::Sprite> spriteArray;
 extern std::map<int, Tyra::Sprite*> spritesNormalRender;
 extern std::vector<int> spriteNormalIdStopRender;
 extern std::vector<int> animationIdStopRender;
-extern std::map<int, Tyra::Sprite> spritesRotate;
-extern std::map<int, Tyra::Sprite*> spritesRotateRender;
+extern std::map<int, RotationSprite> rotationSprite;
+extern std::map<int, RotationSprite*> spritesRotateRender;
 extern std::vector<int> spritesRotateIdStopRender;
-extern std::map<int, Tyra::Vec2> angles;
 extern std::map<int, Tyra::Vec2> originalSize;
 extern std::map<int, Tyra::Vec2> scaleTexture;
 extern std::map<int, Tyra::Vec2> pointColliderArray;

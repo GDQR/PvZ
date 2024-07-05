@@ -55,7 +55,7 @@ void SunManager::create(Tyra::Vec2 position, sunCost cost, bool createdByPlant) 
 
       animationArray[entitieID] = Animation((enumAnimation)m_animID["Sun"][i]);
       animationDataArray[m_animID["Sun"][i]].texture[0]->addLink(
-          spritesRotate[entitieID].id);
+          rotationSprite[entitieID].sprite.id);
 
       originalSize[entitieID] =
           Vec2(animationDataArray[m_animID["Sun"][i]].texture[0]->getWidth(),
@@ -65,7 +65,7 @@ void SunManager::create(Tyra::Vec2 position, sunCost cost, bool createdByPlant) 
         animationDataArray[m_animID["Sun"][i]].scale[0] = Vec2(1.0f, 1.0f);
       }
 
-      spritesRotate[entitieID].size =
+      rotationSprite[entitieID].sprite.size =
           originalSize[entitieID] *
           animationDataArray[animationArray[entitieID].animID].scale[0];
 
@@ -74,7 +74,7 @@ void SunManager::create(Tyra::Vec2 position, sunCost cost, bool createdByPlant) 
           animationDataArray[m_animID["Sun"][i]].alpha[0] = 1.0f;
         }
         float alpha = animationDataArray[m_animID["Sun"][i]].alpha[0] * 128;
-        spritesRotate[entitieID].color.a = alpha;
+        rotationSprite[entitieID].sprite.color.a = alpha;
       }
     } else {
       createSprite(entitieID, Tyra::MODE_STRETCH, Vec2(0.0f, 0.0f), Vec2(0, 0));
@@ -105,8 +105,8 @@ void SunManager::create(Tyra::Vec2 position, sunCost cost, bool createdByPlant) 
     hasAngle = false;
   }
 
-  // spritesRotate[sun[indexpos].id[0]].size = Vec2(128.0f/2, 128.0f/2);
-  // spritesRotate[sun[indexpos].id[1]].size = Vec2(128.0f/2, 128.0f/2);
+  // rotationSprite[sun[indexpos].id[0]].sprite.size = Vec2(128.0f/2, 128.0f/2);
+  // rotationSprite[sun[indexpos].id[1]].sprite.size = Vec2(128.0f/2, 128.0f/2);
   // spriteArray[sun[indexpos].id[2]].size = Vec2(64.0f/2, 64.0f/2);
 
   scaleTexture[sun[indexpos].id[0]] =

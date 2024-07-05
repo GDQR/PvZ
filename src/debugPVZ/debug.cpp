@@ -168,8 +168,9 @@ int startDebugSpriteMode(Tyra::Pad& pad, Tyra::Font& font) {
       debugSpritesType[it->first] = &it->second;
     }
 
-    for (it = spritesRotate.begin(); it != spritesRotate.end(); it++) {
-      debugSpritesType[it->first] = &it->second;
+    std::map<int, RotationSprite>::iterator it2;
+    for (it2 = rotationSprite.begin(); it2 != rotationSprite.end(); it2++) {
+      debugSpritesType[it2->first] = &it2->second.sprite;
     }
 
     debugEntitieId = debugSpritesType.begin()->first;
@@ -195,8 +196,8 @@ void createDebugSprite(const int id, Tyra::SpriteMode mode) {
     debugBoxTexture->addLink(dm_SpriteNormal[id].id);
   }else{
     dm_SpriteRotate[id] = Sprite(); 
-    loadSprite(&dm_SpriteRotate[id], mode, spritesRotate[id].position,
-               spritesRotate[id].size);
+    loadSprite(&dm_SpriteRotate[id], mode, rotationSprite[id].sprite.position,
+               rotationSprite[id].sprite.size);
     debugBoxTexture->addLink(dm_SpriteRotate[id].id);
   }
 }
@@ -210,8 +211,8 @@ void createDebugSpritePivot(const int id, Tyra::SpriteMode mode) {
     dm_SpriteNormalPivot[id].color = Tyra::Color(255.0f, 0.0f, 0.0f, 128.0f);
   }else{
     dm_SpriteRotatePivot[id] = Sprite(); 
-    loadSprite(&dm_SpriteRotatePivot[id], mode, spritesRotate[id].position,
-               spritesRotate[id].size);
+    loadSprite(&dm_SpriteRotatePivot[id], mode, rotationSprite[id].sprite.position,
+               rotationSprite[id].sprite.size);
     debugPointTexture->addLink(dm_SpriteRotatePivot[id].id);
     dm_SpriteRotatePivot[id].color = Tyra::Color(255.0f, 0.0f, 0.0f, 128.0f);
   }

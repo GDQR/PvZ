@@ -43,11 +43,11 @@ void createZombie(Vec2 pos) {
                      Vec2(50, 50),
                      Vec2(0, 0));  // 80, 139 = 128,256
   
-  TYRA_LOG("zombie sprite ID: %d\n",spritesRotate[*zom->body[0]].id);
+  TYRA_LOG("zombie sprite ID: %d\n",rotationSprite[*zom->body[0]].sprite.id);
 
   animationArray[*zom->body[0]] = Animation(enumAnimation::zombieWalk);
   animationDataArray[zombieWalk].texture[0]->addLink(
-      spritesRotate[*zom->body[0]].id);
+      rotationSprite[*zom->body[0]].sprite.id);
 
   // Life
 

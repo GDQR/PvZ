@@ -81,7 +81,7 @@ void loadAnimationSprite(const int entityID, const int animID){
       createSpriteRotate(entityID, Tyra::MODE_STRETCH, Vec2(0, 0),
                  Vec2(128 / 1.6f, 128 / 1.6f),animationDataArray[animID].angle[0]);
 
-      int spriteID = spritesRotate[entityID].id;
+      int spriteID = rotationSprite[entityID].sprite.id;
       Tyra::Texture* texture;
       animationArray[entityID] = Animation((enumAnimation)animID);
 
@@ -116,7 +116,7 @@ void loadAnimationSprite(const int entityID, const int animID){
         animationDataArray[animID].scale[0] = Vec2(1.0f,1.0f);
       }
 
-      spritesRotate[entityID].size = originalSize[entityID] * animationDataArray[animID].scale[0];
+      rotationSprite[entityID].sprite.size = originalSize[entityID] * animationDataArray[animID].scale[0];
 
       if (animationDataArray[animID].draw.count(0)) {
         animationArray[entityID].draw = animationDataArray[animID].draw[0];

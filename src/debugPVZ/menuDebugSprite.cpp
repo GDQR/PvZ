@@ -27,7 +27,7 @@ void activateRender() {
   if (rotateFound == true) {
     for (unsigned int i = 0; i < debugStopRenderRotateSprites.size(); i++) {
       id = debugStopRenderRotateSprites.front();
-      spritesRotateRender[id] = &spritesRotate[id];
+      spritesRotateRender[id] = &rotationSprite[id];
       debugStopRenderRotateSprites.pop_back();
     }
   } else {
@@ -172,7 +172,7 @@ void subMenuSprite(Tyra::Pad& pad, Tyra::Font& font, int& entitieID) {
         posArray[entitieID].y -= padSpeed;
       } else if (sizeMode == false) {
         *d_angle += padSpeed;
-        angles[entitieID] = *d_angle;
+        rotationSprite[entitieID].angle = *d_angle;
       } else {
         originalSize[entitieID].y -= padSpeed;
         if(animationDataArray[animationArray[entitieID].animID]
@@ -191,7 +191,7 @@ void subMenuSprite(Tyra::Pad& pad, Tyra::Font& font, int& entitieID) {
         posArray[entitieID].y += padSpeed;
       } else if (sizeMode == false) {
         *d_angle -= padSpeed;
-        angles[entitieID] = *d_angle;
+        rotationSprite[entitieID].angle = *d_angle;
       } else {
         originalSize[entitieID].y += padSpeed;
         if(animationDataArray[animationArray[entitieID].animID]
@@ -214,7 +214,7 @@ void subMenuSprite(Tyra::Pad& pad, Tyra::Font& font, int& entitieID) {
         posArray[entitieID].x -= padSpeed;
       } else if (sizeMode == false) {
         *d_angle -= padSpeed;
-        angles[entitieID] = *d_angle;
+        rotationSprite[entitieID].angle = *d_angle;
       } else {
         originalSize[entitieID].x -= padSpeed;
         Tyra::Texture* texture = engine->renderer.getTextureRepository().getBySpriteId(debugSpritesType[entitieID]->id);
@@ -230,7 +230,7 @@ void subMenuSprite(Tyra::Pad& pad, Tyra::Font& font, int& entitieID) {
         posArray[entitieID].x += padSpeed;
       } else if (sizeMode == false) {
         *d_angle += padSpeed;
-        angles[entitieID] = *d_angle;
+        rotationSprite[entitieID].angle = *d_angle;
       } else {
         originalSize[entitieID].x += padSpeed;
         Tyra::Texture* texture = engine->renderer.getTextureRepository().getBySpriteId(debugSpritesType[entitieID]->id);
@@ -394,7 +394,7 @@ void mainMenuSprite(Tyra::Pad& pad, int& entitieID, std::string& name) {
     if (animationArray.count(entitieID) == 1) {
       animationFound = true;
     }
-    if (spritesRotate.count(entitieID) == 1) {
+    if (rotationSprite.count(entitieID) == 1) {
       rotateFound = true;
     }
   } else if (menuCircleClickedOption(pad, true)) {
