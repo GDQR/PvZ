@@ -9,14 +9,21 @@ class Sun {
   int father;
   std::vector<int> id;
   int cost;
+  bool erase(const int cursorID);
 };
 
-class NaturalSun{
-  public:
+class NaturalSun {
+ public:
   int father;
+  void move();
 };
 
-void createSun(Tyra::Vec2 position, sunCost cost, bool createdByPlant);
-void deleteSun(const int cursorID);
+class SunManager {
+ public:
+  void create(Tyra::Vec2 position, sunCost cost, bool createdByPlant);
+  void createByTime();
+  void erase(const int cursorID);
+  void updateNaturalSun();
+};
 
-void moveNaturalSun();
+extern SunManager sunManager;

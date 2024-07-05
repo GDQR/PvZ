@@ -7,10 +7,10 @@
 
 #include "entities/entities.hpp"
 
+#include "systems.hpp"
 #include "components.hpp"
 #include "debugPVZ/debug.hpp"
 #include "debugPVZ/menuDebugCommands.hpp"
-#include "systems.hpp"
 #include <stdlib.h>
 #include <time.h>
 using namespace Tyra;
@@ -30,8 +30,6 @@ DeckCursor deckCursor;
 
 int timerZombies = 0;
 int maxZombies = 5;
-
-int sunTimer;
 
 void plantMovement() {
   float x = 0.0F;
@@ -197,9 +195,7 @@ void Level1::init() {
   // createZombie(Vec2(mapCollider[2][8].x, mapCollider[2][8].y));
   // createPlant(5,9);
   // renderer->core.setFrameLimit(false);
-
-  sunTimer = 60 * 6;
-  // createSun(Vec2(277, 77), sunCost::normalSun, false);
+  // sunManager.createSun(Vec2(277, 77), sunCost::normalSun, false);
 }
 
 void Level1::update() {
@@ -255,22 +251,14 @@ void Level1::update() {
     animManager.update();
   }
   if (debugMode == false) {
-    moveNaturalSun();
+    sunManager.updateNaturalSun();
   }
 
   if (stopAnimation == false) {
-    // 6 seconds
-    if (sunTimer > 0) {
-      sunTimer--;
-    } else {
-      sunTimer = 60 * 6;
-      // min:50 max:420
-      float x = 50 + rand() % 420;
-      createSun(Vec2(x, 10), sunCost::normalSun, false);
-    }
+    sunManager.createByTime();
+    sunManager.erase(cursor.id);
   }
 
-  deleteSun(cursor.id);
 
   // printf("FPS: %d\n",engine->info.getFps()) ;
   // printf("ram: %f\n",engine->info.getAvailableRAM());
@@ -320,7 +308,7 @@ void Level1::update() {
   //       plant[i].attackTimer--;
   //     } else {
   //       printf("sunflower create sun\n");
-  //       createSun(spriteArray[plant[i].id[0]].position, sunCost::normalSun,
+  //       sunManager.createSun(spriteArray[plant[i].id[0]].position, sunCost::normalSun,
   //                  true);
   //       plant[i].attackTimer = 60 * 6;
   //     }
