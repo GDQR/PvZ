@@ -33,9 +33,9 @@ void createTexture(int id, std::string fileImage) {
 
 void createTextureRotate(int id, std::string fileImage) {
   Tyra::Texture* texture = loadTexture(fileImage);
-  TYRA_ASSERT(!(spritesRotate.find(id) == spritesRotate.end()), "Entitie id: ", id,
+  TYRA_ASSERT(!(rotationSprite.find(id) == rotationSprite.end()), "Entitie id: ", id,
               "Is NULL, use <<CreateSprite>> function");
-  texture->addLink(spritesRotate[id].id);
+  texture->addLink(rotationSprite[id].sprite.id);
 }
 
 void loadTexture(Sprite* sprite, std::string fileImage){

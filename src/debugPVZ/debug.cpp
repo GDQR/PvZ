@@ -15,7 +15,9 @@ bool debugSprite = false;
 float debugAlphaColor;
 int debugEntitieId;
 Vec2* texPos = NULL;
-float* d_angle = NULL; 
+float* d_scale = NULL;
+Vec2* d_angle = NULL;
+bool d_hasScale = false;
 
 std::map<int, Tyra::Sprite*> debugSpritesType;  // Normal or rotated sprites
 std::vector<int> debugStopRenderRotateSprites;
@@ -166,8 +168,9 @@ int startDebugSpriteMode(Tyra::Pad& pad, Tyra::Font& font) {
       debugSpritesType[it->first] = &it->second;
     }
 
-    for (it = spritesRotate.begin(); it != spritesRotate.end(); it++) {
-      debugSpritesType[it->first] = &it->second;
+    std::map<int, RotationSprite>::iterator it2;
+    for (it2 = rotationSprite.begin(); it2 != rotationSprite.end(); it2++) {
+      debugSpritesType[it2->first] = &it2->second.sprite;
     }
 
     debugEntitieId = debugSpritesType.begin()->first;
@@ -185,39 +188,90 @@ void loadDebugTextures() {
   debugPointTexture = loadTexture("debugPoint.png");
 }
 
+void createDebugSprite(const int id, Tyra::SpriteMode mode) {
+  if (spriteArray.count(id)) {
+    dm_SpriteNormal[id] = Sprite();
+    loadSprite(&dm_SpriteNormal[id], mode, spriteArray[id].position,
+               spriteArray[id].size);
+    debugBoxTexture->addLink(dm_SpriteNormal[id].id);
+  }else{
+    dm_SpriteRotate[id] = Sprite(); 
+    loadSprite(&dm_SpriteRotate[id], mode, rotationSprite[id].sprite.position,
+               rotationSprite[id].sprite.size);
+    debugBoxTexture->addLink(dm_SpriteRotate[id].id);
+  }
+}
+
+void createDebugSpritePivot(const int id, Tyra::SpriteMode mode) {
+  if (spriteArray.count(id)) {
+    dm_SpriteNormalPivot[id] = Sprite();
+    loadSprite(&dm_SpriteNormalPivot[id], mode, spriteArray[id].position,
+               spriteArray[id].size);
+    debugPointTexture->addLink(dm_SpriteNormalPivot[id].id);
+    dm_SpriteNormalPivot[id].color = Tyra::Color(255.0f, 0.0f, 0.0f, 128.0f);
+  }else{
+    dm_SpriteRotatePivot[id] = Sprite(); 
+    loadSprite(&dm_SpriteRotatePivot[id], mode, rotationSprite[id].sprite.position,
+               rotationSprite[id].sprite.size);
+    debugPointTexture->addLink(dm_SpriteRotatePivot[id].id);
+    dm_SpriteRotatePivot[id].color = Tyra::Color(255.0f, 0.0f, 0.0f, 128.0f);
+  }
+}
+
 void createDebugBoxCollider(const int id, Tyra::SpriteMode mode) {
   // printf("id debug box: %d\n", id);
-  debugSpriteBoxCollider[id] = Sprite();
-  loadSprite(&debugSpriteBoxCollider[id], mode,
+  dm_SpriteBoxCollider[id] = Sprite();
+  loadSprite(&dm_SpriteBoxCollider[id], mode,
              Vec2(boxColliderArray[id].x, boxColliderArray[id].y),
              Vec2(boxColliderArray[id].width, boxColliderArray[id].height));
-  debugBoxTexture->addLink(debugSpriteBoxCollider[id].id);
+  dm_SpriteBoxCollider[id].color = Tyra::Color(0.0f, 255.0f, 0.0, 128.0f);
+  debugBoxTexture->addLink(dm_SpriteBoxCollider[id].id);
 }
 
 void createDebugBoxFill(const int id, Tyra::SpriteMode mode, Vec2 pos,
                         Vec2 size) {
   // printf("id debug box: %d\n", id);
-  debugSpriteBoxCollider[id] = Sprite();
-  loadSprite(&debugSpriteBoxCollider[id], mode, pos, size);
-  debugFillBoxTexture->addLink(debugSpriteBoxCollider[id].id);
+  dm_SpriteBoxCollider[id] = Sprite();
+  loadSprite(&dm_SpriteBoxCollider[id], mode, pos, size);
+  debugFillBoxTexture->addLink(dm_SpriteBoxCollider[id].id);
+}
+
+void deleteDebugSprite(const int id) {
+  if (spriteArray.count(id)) {
+    debugBoxTexture->removeLinkById(dm_SpriteNormal[id].id);
+    dm_SpriteNormal.erase(id);
+  }else{
+    debugBoxTexture->removeLinkById(dm_SpriteRotate[id].id);
+    dm_SpriteRotate.erase(id);
+  }
+}
+
+void deleteDebugSpritePivot(const int id) {
+  if (spriteArray.count(id)) {
+    debugPointTexture->removeLinkById(dm_SpriteNormalPivot[id].id);
+    dm_SpriteNormalPivot.erase(id);
+  }else{
+    debugPointTexture->removeLinkById(dm_SpriteRotatePivot[id].id);
+    dm_SpriteRotatePivot.erase(id);
+  }
 }
 
 void deleteDebugBoxCollider(const int id) {
-  debugBoxTexture->removeLinkById(debugSpriteBoxCollider[id].id);
-  debugSpriteBoxCollider.erase(id);
+  debugBoxTexture->removeLinkById(dm_SpriteBoxCollider[id].id);
+  dm_SpriteBoxCollider.erase(id);
 }
 
 void createDebugPoint(const int id, Tyra::SpriteMode mode) {
   // printf("id point box: %d\n", id);
-  debugSpritePointCollider[id] = Sprite();
-  loadSprite(&debugSpritePointCollider[id], mode,
+  dm_SpritePointCollider[id] = Sprite();
+  loadSprite(&dm_SpritePointCollider[id], mode,
              Vec2(pointColliderArray[id].x - 1, pointColliderArray[id].y - 1),
              Vec2(31, 31));
-  debugPointTexture->addLink(debugSpritePointCollider[id].id);
-  debugSpritePointCollider[id].color = Tyra::Color(255.0f, 0.0f, 0.0f);
+  debugPointTexture->addLink(dm_SpritePointCollider[id].id);
+  dm_SpritePointCollider[id].color = Tyra::Color(255.0f, 0.0f, 0.0f);
 }
 
 void deleteDebugPoint(const int id) {
-  debugPointTexture->removeLinkById(debugSpritePointCollider[id].id);
-  debugSpritePointCollider.erase(id);
+  debugPointTexture->removeLinkById(dm_SpritePointCollider[id].id);
+  dm_SpritePointCollider.erase(id);
 }

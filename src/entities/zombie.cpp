@@ -1,5 +1,5 @@
 #include "entities/zombie.hpp"
-#include "components.hpp"
+#include "systems.hpp"
 
 int zombiesCreated = 0;
 
@@ -41,13 +41,13 @@ void createZombie(Vec2 pos) {
 
   createSpriteRotate(*zom->body[0], Tyra::MODE_STRETCH, Vec2(0, 0),
                      Vec2(50, 50),
-                     0.0f);  // 80, 139 = 128,256
+                     Vec2(0, 0));  // 80, 139 = 128,256
   
-  TYRA_LOG("zombie sprite ID: %d\n",spritesRotate[*zom->body[0]].id);
+  TYRA_LOG("zombie sprite ID: %d\n",rotationSprite[*zom->body[0]].sprite.id);
 
   animationArray[*zom->body[0]] = Animation(enumAnimation::zombieWalk);
   animationDataArray[zombieWalk].texture[0]->addLink(
-      spritesRotate[*zom->body[0]].id);
+      rotationSprite[*zom->body[0]].sprite.id);
 
   // Life
 

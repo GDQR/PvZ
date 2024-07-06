@@ -9,10 +9,6 @@
 #include "entities/zombie.hpp"
 #include "entities/sun.hpp"
 
-extern Tyra::Engine* engine;
-extern Tyra::Renderer* renderer;
-
-extern std::map<std::string, std::vector<int>> m_animID;
 enum enumAnimation {
   peaShooterHead,
   peaShooterBody,
@@ -31,30 +27,70 @@ enum enumAnimation {
 class FatherID {
  public:
   std::vector<int> id;
+  void update(const int entityID);
+};
+
+class Cursor {
+ public:
+  int id = -1;
+  Sprite sprite;
+  Vec2 cursorTile;
+  int cursorTimer = 0;
+  float cursorSpeed = 1;
+  void move();
+};
+
+class DeckCursor {
+ public:
+  int id = -1;
+  int pos = 0;
+  void move();
+};
+
+class Card {
+ public:
+  int seed;
+  int seedShadow;
+  int seedShadowTimer;
+  int seedTimer;
+  Plant_State_enum plant;
+  int cost;
+  void update();
 };
 
 class Animation {
  public:
   Animation();
   Animation(enumAnimation anim);
+  void update(const int entityID);
+  void activeDrawNormalSprites(const int entityID);
+  void updateNormalSprites(const int entityID);
+  void activeDrawRotationSprites(const int entityID);
+  void updateRotationSprites(const int entityID);
+  void position(const int entityID);
+
   int animID = -1;
-  unsigned int framesCounter = 0; // es el time
-  unsigned int currentFrame = 0; // es el key
+  bool draw = true;
+  unsigned int framesCounter = 0;
+  unsigned int currentFrame = 0;
+  unsigned int framesSpeed = 20;
 };
 
 class AnimationData {
  public:
   unsigned int maxFrame;
+  std::string name;
   std::map<unsigned int, Tyra::Texture*> texture;
   std::map<unsigned int, Tyra::Vec2> position;
-  std::map<unsigned int, Tyra::Vec2> size;  
-  std::map<unsigned int, float> angle;  
-  std::map<unsigned int, float> alpha;  
+  std::map<unsigned int, Tyra::Vec2> scale;
+  std::map<unsigned int, Tyra::Vec2> angle;
+  std::map<unsigned int, float> alpha;
+  std::map<unsigned int, bool> draw;
 };
 
 class Time {
  public:
-  std::vector<int> seconds; // can't be 0 for animations
+  std::vector<int> seconds;  // can't be 0 for animations
 };
 
 class BoxCollider {
@@ -63,6 +99,7 @@ class BoxCollider {
   BoxCollider(float x, float y, float width, float height);
   BoxCollider(float x, float y, float width, float height, float offsetX,
               float offsetY);
+  void move(const int entityID);
   float x;
   float y;
   float width;
@@ -70,6 +107,19 @@ class BoxCollider {
   float offsetX;
   float offsetY;
 };
+
+class RotationSprite {
+ public:
+  Tyra::Sprite sprite;
+  Tyra::Vec2 angle;
+  void update(const int entityID);
+};
+
+extern Tyra::Engine* engine;
+extern Tyra::Renderer* renderer;
+extern const Tyra::PadJoy* leftJoy;
+extern Tyra::TextureRepository* texRepo;
+extern std::map<std::string, std::vector<int>> m_animID;
 
 // sparse array
 extern std::map<int, Animation>
@@ -82,14 +132,18 @@ extern std::map<int, Tyra::Vec2> posArray;
 extern std::map<int, Tyra::Vec2> finalPosArray;
 extern std::map<int, Tyra::Sprite> spriteArray;
 extern std::map<int, Tyra::Sprite*> spritesNormalRender;
-extern std::map<int, Tyra::Sprite> spritesRotate;
-extern std::map<int, Tyra::Sprite*> spritesRotateRender;
-extern std::map<int, float> angles;
+extern std::vector<int> spriteNormalIdStopRender;
+extern std::vector<int> animationIdStopRender;
+extern std::map<int, RotationSprite> rotationSprite;
+extern std::map<int, RotationSprite*> spritesRotateRender;
+extern std::vector<int> spritesRotateIdStopRender;
 extern std::map<int, Tyra::Vec2> originalSize;
+extern std::map<int, Tyra::Vec2> scaleTexture;
 extern std::map<int, Tyra::Vec2> pointColliderArray;
 extern std::map<int, BoxCollider> boxColliderArray;
 extern std::map<int, int> damageArray;
 extern std::map<int, int> lifeArray;
+extern std::map<int, Tyra::Vec2> pivot;
 
 const int maxPlants = 5 * 9;
 extern Plant plant[maxPlants];
@@ -97,62 +151,8 @@ extern std::vector<Zombie> zombie;
 extern std::vector<Sun> sun;
 extern std::vector<NaturalSun> naturalSun;
 extern std::vector<int> projectile;
+extern std::vector<Card> cards;
 
 extern bool zombieCreateRow[5];
 extern bool plantCreatedInMap[5][9];
 extern BoxCollider mapCollider[5][9];
-
-class AnimationManager {
- private:
-  unsigned int framesSpeed=20;
- public:
-  Tyra::TextureRepository* texRepo;
-  void update();
-  void position(const int entitieID);
-  void angle(const int entitieID);
-  void alpha(const int entitieID);
-  void size(const int entitieID);
-  void debug();
-  int debugAnim(const int entitieID);
-  void debugChangeFrame(const int entitieID, const int key);
-};
-
-class RendererDebugSpritesManager {
- public:
-  void update();
-};
-
-class RendererSprites {
- public:
-  void updateChildPos();
-  void update();
-  void updateRotate();
-};
-
-class ZombiesManager {
- public:
-  int timer = 0;
-  void update();
-  int collision();
-};
-
-class ProjectileManager {
- public:
-  void update();
-  void zombieCollision();
-};
-
-extern AnimationManager animManager;
-
-void newFatherID(int* fatherID, int* childID);
-void newCursor(int* cursor, Tyra::Vec2 pos);
-void newProjectile(Vec2 position);
-void newDeckCursor(int* cursor, Tyra::Vec2 pos);
-void createSprite(int id, Tyra::SpriteMode mode, Tyra::Vec2 position,
-                  Tyra::Vec2 size);
-void createSpriteRotate(int id, Tyra::SpriteMode mode, Tyra::Vec2 position,
-                  Tyra::Vec2 size, const float angle);
-
-void deleteFatherID(int* fatherID, int* childID);
-void deleteSprite(const int entitieID);
-bool boxCollision(BoxCollider* col1, BoxCollider* col2);
