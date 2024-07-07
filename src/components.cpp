@@ -240,8 +240,15 @@ void Animation::updateNormalSprites(const int entityID) {
     }
 
     // Link new Texture to the sprite entitie
-    animationDataArray[animID].texture[currentFrame]->addLink(
-        spriteArray[entityID].id);
+    texRepo->getByTextureId(animationDataArray[animID].texture[currentFrame])
+        ->addLink(spriteArray[entityID].id);
+    originalSize[entityID] = Vec2(
+        texRepo
+            ->getByTextureId(animationDataArray[animID].texture[currentFrame])
+            ->getWidth(),
+        texRepo
+            ->getByTextureId(animationDataArray[animID].texture[currentFrame])
+            ->getHeight());
   }
   if (animationDataArray[animID].alpha.count(currentFrame) == 1) {
     spriteArray[entityID].color.a =
@@ -254,7 +261,7 @@ void Animation::updateNormalSprites(const int entityID) {
 }
 
 void Animation::updateRotationSprites(const int entityID) {
-  if (animationDataArray[animID].texture[currentFrame] != nullptr) {
+  if (animationDataArray[animID].texture.count(currentFrame) == 1) {
     // Unlink Texture from the sprite entitie
     if (texRepo->getBySpriteId(rotationSprite[entityID].sprite.id) != nullptr) {
       // printf("unlink sprite id: %d\n", spriteArray[entityID].id);
@@ -263,8 +270,15 @@ void Animation::updateRotationSprites(const int entityID) {
     }
 
     // Link new Texture to the sprite entitie
-    animationDataArray[animID].texture[currentFrame]->addLink(
-        rotationSprite[entityID].sprite.id);
+    texRepo->getByTextureId(animationDataArray[animID].texture[currentFrame])
+        ->addLink(rotationSprite[entityID].sprite.id);
+    originalSize[entityID] = Vec2(
+        texRepo
+            ->getByTextureId(animationDataArray[animID].texture[currentFrame])
+            ->getWidth(),
+        texRepo
+            ->getByTextureId(animationDataArray[animID].texture[currentFrame])
+            ->getHeight());
   }
 
   if (animationDataArray[animID].scale.count(currentFrame) == 1) {

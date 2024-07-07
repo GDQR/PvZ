@@ -54,12 +54,12 @@ void SunManager::create(Tyra::Vec2 position, sunCost cost, bool createdByPlant) 
                          animationDataArray[m_animID["Sun"][i]].angle[0]);
 
       animationArray[entitieID] = Animation((enumAnimation)m_animID["Sun"][i]);
-      animationDataArray[m_animID["Sun"][i]].texture[0]->addLink(
+      texRepo->getByTextureId(animationDataArray[m_animID["Sun"][i]].texture[0])->addLink(
           rotationSprite[entitieID].sprite.id);
 
       originalSize[entitieID] =
-          Vec2(animationDataArray[m_animID["Sun"][i]].texture[0]->getWidth(),
-               animationDataArray[m_animID["Sun"][i]].texture[0]->getHeight());
+          Vec2(texRepo->getByTextureId(animationDataArray[m_animID["Sun"][i]].texture[0])->getWidth(),
+               texRepo->getByTextureId(animationDataArray[m_animID["Sun"][i]].texture[0])->getHeight());
 
       if (animationDataArray[m_animID["Sun"][i]].scale.count(0) == 0) {
         animationDataArray[m_animID["Sun"][i]].scale[0] = Vec2(1.0f, 1.0f);
@@ -80,12 +80,12 @@ void SunManager::create(Tyra::Vec2 position, sunCost cost, bool createdByPlant) 
       createSprite(entitieID, Tyra::MODE_STRETCH, Vec2(0.0f, 0.0f), Vec2(0, 0));
 
       animationArray[entitieID] = Animation((enumAnimation)m_animID["Sun"][i]);
-      animationDataArray[m_animID["Sun"][i]].texture[0]->addLink(
+      texRepo->getByTextureId(animationDataArray[m_animID["Sun"][i]].texture[0])->addLink(
           spriteArray[entitieID].id);
 
       originalSize[entitieID] =
-          Vec2(animationDataArray[m_animID["Sun"][i]].texture[0]->getWidth(),
-               animationDataArray[m_animID["Sun"][i]].texture[0]->getHeight());
+          Vec2(texRepo->getByTextureId(animationDataArray[m_animID["Sun"][i]].texture[0])->getWidth(),
+               texRepo->getByTextureId(animationDataArray[m_animID["Sun"][i]].texture[0])->getHeight());
 
       if (animationDataArray[m_animID["Sun"][i]].scale.count(0) == 0) {
         animationDataArray[m_animID["Sun"][i]].scale[0] = Vec2(1.0f, 1.0f);
@@ -111,19 +111,19 @@ void SunManager::create(Tyra::Vec2 position, sunCost cost, bool createdByPlant) 
 
   scaleTexture[sun[indexpos].id[0]] =
       Vec2(originalSize[sun[indexpos].id[0]].x /
-               animationDataArray[m_animID["Sun"][0]].texture[0]->getWidth(),
+               texRepo->getByTextureId(animationDataArray[m_animID["Sun"][0]].texture[0])->getWidth(),
            originalSize[sun[indexpos].id[0]].y /
-               animationDataArray[m_animID["Sun"][0]].texture[0]->getHeight());
+               texRepo->getByTextureId(animationDataArray[m_animID["Sun"][0]].texture[0])->getHeight());
   scaleTexture[sun[indexpos].id[1]] =
       Vec2(originalSize[sun[indexpos].id[1]].x /
-               animationDataArray[m_animID["Sun"][1]].texture[0]->getWidth(),
+              texRepo->getByTextureId(animationDataArray[m_animID["Sun"][1]].texture[0])->getWidth(),
            originalSize[sun[indexpos].id[1]].y /
-               animationDataArray[m_animID["Sun"][1]].texture[0]->getHeight());
+              texRepo->getByTextureId(animationDataArray[m_animID["Sun"][1]].texture[0])->getHeight());
   scaleTexture[sun[indexpos].id[2]] =
       Vec2(originalSize[sun[indexpos].id[2]].x /
-               animationDataArray[m_animID["Sun"][2]].texture[0]->getWidth(),
+               texRepo->getByTextureId(animationDataArray[m_animID["Sun"][2]].texture[0])->getWidth(),
            originalSize[sun[indexpos].id[2]].y /
-               animationDataArray[m_animID["Sun"][2]].texture[0]->getHeight());
+               texRepo->getByTextureId(animationDataArray[m_animID["Sun"][2]].texture[0])->getHeight());
 
   // printf("sun sizeX: %f, sizeY: %f\n", spriteArray[sun[indexpos].id[2]].size.x*0.8f,spriteArray[sun[indexpos].id[2]].size.y*0.8f);
   // printf("scaleTexture: %s\n", scaleTexture[sun[indexpos].id[2]].getPrint().c_str());

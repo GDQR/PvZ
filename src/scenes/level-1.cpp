@@ -121,13 +121,13 @@ void Level1::init() {
   newDeckCursor(&deckCursor.id,
                 Vec2(posArray[cards[deckCursor.pos].seed].x - 3, -10));
 
-  loadPeaShooterAnimation();
+  // loadPeaShooterAnimation();
   loadZombieAnimation();
   loadProjectile();
-  loadSunAnimation();
+  // loadSunAnimation();
   loadSunFlowerAnimation();
   engine->font.loadFont(&myFont, "Fonts/roboto-Bold.ttf");
-  // createZombie(Vec2(mapCollider[2][8].x, mapCollider[2][8].y));
+  createZombie(Vec2(mapCollider[2][8].x, mapCollider[2][8].y));
   // createPlant(5,9);
   // renderer->core.setFrameLimit(false);
   // sunManager.createSun(Vec2(277, 77), sunCost::normalSun, false);
@@ -183,8 +183,8 @@ void Level1::update() {
   }
 
   if (stopAnimation == false) {
-    sunManager.createByTime();
-    sunManager.erase(cursor.id);
+    // sunManager.createByTime();
+    // sunManager.erase(cursor.id);
   }
 
 

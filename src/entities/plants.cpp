@@ -43,7 +43,6 @@ void createPeashotter(int id, int row, int column, Tyra::Vec2 pos) {
     animID = m_animID["PeaShooterSingle"][i];
     printf("plant ID: %d\n", entityID);
     printf("animID: %d\n", animID);
-    //hay algunas animaciones que no funcionan necesitan la escala SY
     newFatherID(&plant[id].father, &entityID);
     loadAnimationSprite(entityID, animID);
   }
@@ -108,50 +107,50 @@ void deletePeashotter(const int pos) {
 }
 
 void createSunflower(const int id, int row, int col, Tyra::Vec2 pos) {
-  plant[id].newPlant(SunFlower);
+  // plant[id].newPlant(SunFlower);
 
-  plant[id].row = row;
-  plant[id].column = col;
+  // plant[id].row = row;
+  // plant[id].column = col;
 
-  plant[id].id[0] = Entities::newID();
-  plant[id].id[1] = Entities::newID();
-  plant[id].id[2] = Entities::newID();
+  // plant[id].id[0] = Entities::newID();
+  // plant[id].id[1] = Entities::newID();
+  // plant[id].id[2] = Entities::newID();
 
-  newFatherID(&plant[id].father, &plant[id].id[0]);
-  newFatherID(&plant[id].father, &plant[id].id[1]);
+  // newFatherID(&plant[id].father, &plant[id].id[0]);
+  // newFatherID(&plant[id].father, &plant[id].id[1]);
 
-  posArray[plant[id].father] = pos;  // Vec2(row, column);
+  // posArray[plant[id].father] = pos;  // Vec2(row, column);
 
-  createSprite(plant[id].id[0], Tyra::MODE_STRETCH, Vec2(0, 5),
-               Vec2(128 / 1.6f, 64 / 1.6f));
-  // createSprite(*plant[id].body[1], Tyra::MODE_STRETCH, Vec2(0, 5),
-  //              Vec2(128 / 1.6f, 128 / 1.6f));
+  // createSprite(plant[id].id[0], Tyra::MODE_STRETCH, Vec2(0, 5),
+  //              Vec2(128 / 1.6f, 64 / 1.6f));
+  // // createSprite(*plant[id].body[1], Tyra::MODE_STRETCH, Vec2(0, 5),
+  // //              Vec2(128 / 1.6f, 128 / 1.6f));
 
-  // printf("plant[%d].id[0] sprite id: %d\n", id,
-  //        spriteArray[*plant[id].body[0]].id);
-  // printf("plant[%d].id[1] sprite id:
-  // %d\n",id,spriteArray[*plant[id].body[1]].id); printf("plant[%d].id[2]:
-  // %d\n",id,plant[id].id[2]);
+  // // printf("plant[%d].id[0] sprite id: %d\n", id,
+  // //        spriteArray[*plant[id].body[0]].id);
+  // // printf("plant[%d].id[1] sprite id:
+  // // %d\n",id,spriteArray[*plant[id].body[1]].id); printf("plant[%d].id[2]:
+  // // %d\n",id,plant[id].id[2]);
 
-  animationArray[plant[id].id[0]] = Animation(SunFlowerHead);
+  // animationArray[plant[id].id[0]] = Animation(SunFlowerHead);
 
-  animationDataArray[SunFlowerHead].texture[0]->addLink(
-      spriteArray[plant[id].id[0]].id);
-  // animationDataArray[peaShooterBody].texture[0]->addLink(
-  //     spriteArray[*plant[id].body[1]].id);
+  // animationDataArray[SunFlowerHead].texture[0]->addLink(
+  //     spriteArray[plant[id].id[0]].id);
+  // // animationDataArray[peaShooterBody].texture[0]->addLink(
+  // //     spriteArray[*plant[id].body[1]].id);
 
-  // Life
+  // // Life
 
-  lifeArray[plant[id].id[0]] = 300;
+  // lifeArray[plant[id].id[0]] = 300;
 
-  // time
+  // // time
 
-  plant[id].attackTimer = 30;
+  // plant[id].attackTimer = 30;
 
-  // HitBox
-  boxColliderArray[plant[id].id[0]] =
-      BoxCollider(pos.x + 10, pos.y + 20, 28, 38);
-  createDebugBoxCollider(plant[id].id[0], Tyra::MODE_STRETCH);
+  // // HitBox
+  // boxColliderArray[plant[id].id[0]] =
+  //     BoxCollider(pos.x + 10, pos.y + 20, 28, 38);
+  // createDebugBoxCollider(plant[id].id[0], Tyra::MODE_STRETCH);
 }
 
 void deleteSunflower(const int pos) {

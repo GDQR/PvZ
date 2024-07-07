@@ -35,7 +35,7 @@ void loadAnimationSprite(const int entityID, const int animID){
       for (unsigned int j = 0; j < animationDataArray[animID].maxFrame; j++) {
         if (animationDataArray[animID].texture.count(j) == 1) {
           // printf("frame %d\n", j);
-          texture = animationDataArray[animID].texture[j];
+          texture = texRepo->getByTextureId(animationDataArray[animID].texture[j]);
           texture->addLink(spriteID);
           // spriteArray[entityID].size =
           //     Vec2(texture->getWidth(), texture->getHeight());
@@ -96,7 +96,7 @@ void loadAnimationSprite(const int entityID, const int animID){
       for (unsigned int j = 0; j < animationDataArray[animID].maxFrame; j++) {
         if (animationDataArray[animID].texture.count(j) == 1) {
           // printf("frame %d\n", j);
-          texture = animationDataArray[animID].texture[j];
+          texture = texRepo->getByTextureId(animationDataArray[animID].texture[j]);
           texture->addLink(spriteID);
           // spritesRotate[entityID].size =
           //     Vec2(texture->getWidth(), texture->getHeight());
@@ -149,9 +149,8 @@ void readReanimFiles(std::string nameID, std::string file) {
 
   TYRA_ASSERT(MyReadFile.is_open(), "The next file could not be found:", file);
 
-  std::string openArrow;
   std::string insideArrow;
-  std::string closeArrow;
+  std::string fileName;
   int countTrack = 0;
   int countframes = 0;
   float floatValue;
@@ -165,6 +164,8 @@ void readReanimFiles(std::string nameID, std::string file) {
   bool passSX=false;
   bool passSY=false;
   bool useAnim = true;
+  Tyra::Texture* texture;
+  // int countImages = 0;
   while (!MyReadFile.eof()) {
     // int length = MyReadFile.tellg();
     //     std::cout << "pos: "<<length << std::endl;
@@ -207,14 +208,15 @@ void readReanimFiles(std::string nameID, std::string file) {
       }  
       std::getline(MyReadFile, insideArrow, '>');
     } else if (insideArrow == "i") {
+      // countImages++;
       std::getline(MyReadFile, insideArrow, '<');
       std::cout << " i: " << insideArrow;
       insideArrow.erase(0,13); // delete "IMAGE_REANIM_" from string
-      insideArrow += ".png";
+      fileName = "reanim/" + insideArrow + ".png";
       std::cout << " new i: " << insideArrow;
-      Tyra::Texture* texture;
-      texture = loadTexture(insideArrow);
-      animationDataArray[animID].texture[countframes] = texture;
+      texture = loadTexture(fileName);
+      
+      animationDataArray[animID].texture[countframes] = texture->id;
       useAnim = true;
       printf(" texture width: %d, height: %d\n",texture->getWidth(),texture->getHeight());
       std::getline(MyReadFile, insideArrow, '>');
@@ -306,16 +308,18 @@ void readReanimFiles(std::string nameID, std::string file) {
       countframes = 0;
     }
   }
-
+  // printf("Total images: %d\n", countImages);
   // Close the file
   MyReadFile.close();
 }
 
 void loadPeaShooterAnimation() {
-  readReanimFiles("PeaShooterSingle",Tyra::FileUtils::fromCwd("PeaShooterSingle.reanim"));
+  readReanimFiles("PeaShooterSingle",Tyra::FileUtils::fromCwd("reanim/PeaShooterSingle.reanim"));
 }
 
 void loadZombieAnimation() {
+  TYRA_LOG("Loading Zombie animation\n");
+  readReanimFiles("Zombie",Tyra::FileUtils::fromCwd("reanim/Zombie.reanim"));
   // animationDataArray[zombieWalk] = AnimationData();
 
   // TYRA_LOG("Loading Zombie animation\n");
@@ -362,27 +366,27 @@ void loadZombieAnimation() {
 }
 
 void loadSunAnimation() {
-  readReanimFiles("Sun",Tyra::FileUtils::fromCwd("Sun.reanim"));
+  readReanimFiles("Sun",Tyra::FileUtils::fromCwd("reanim/Sun.reanim"));
 }
 
 void loadSunFlowerAnimation() {
-  animationDataArray[SunFlowerHead] = AnimationData();
+  // animationDataArray[SunFlowerHead] = AnimationData();
 
-  std::string filepath;
-  Tyra::Texture* texture;
-  int frame = 0;
-  animationDataArray[SunFlowerHead].position[frame] = Tyra::Vec2(0, 0);
-  for (int i = 1; i <= 1; i++) {
-    if (i < 10) {
-      filepath = "Animations/sunflower/SunFlower_double_petals";
-    } else {
-      filepath = "Animations/sunflower/SunFlower_double_petals";
-    }
+  // std::string filepath;
+  // Tyra::Texture* texture;
+  // int frame = 0;
+  // animationDataArray[SunFlowerHead].position[frame] = Tyra::Vec2(0, 0);
+  // for (int i = 1; i <= 1; i++) {
+  //   if (i < 10) {
+  //     filepath = "Animations/sunflower/SunFlower_double_petals";
+  //   } else {
+  //     filepath = "Animations/sunflower/SunFlower_double_petals";
+  //   }
 
-    // filepath += std::to_string(i);
-    filepath += ".png";
-    texture = loadTexture(filepath);
-    animationDataArray[SunFlowerHead].texture[frame] = (texture);
-    frame++;
-  }
+  //   // filepath += std::to_string(i);
+  //   filepath += ".png";
+  //   texture = loadTexture(filepath);
+  //   animationDataArray[SunFlowerHead].texture[frame] = (texture);
+  //   frame++;
+  // }
 }

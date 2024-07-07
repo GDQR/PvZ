@@ -1,25 +1,24 @@
 #pragma once
 #include <tyra>
 #include <vector>
-enum Zombie_State_enum{NoneZombie,ZombieNormal};
+enum Zombie_State_enum { NoneZombie, ZombieNormal };
 
-class Zombie
-{
-private:
-    void createSpace();
-public:
-    Zombie_State_enum type = NoneZombie;
-    
-    int timer = 0;
-    int attackTimer = 0;
-    bool attack = false;
-    bool debug = false;
-    
-    std::vector <int> id;
+class Zombie {
+ private:
+  void createSpace();
 
-    int* father;
-    std::vector <int*> body;
-    void newZombie(Zombie_State_enum newType);
+ public:
+  Zombie_State_enum type = NoneZombie;
+
+  int timer = 0;
+  int attackTimer = 0;
+  bool attack = false;
+  bool debug = false;
+
+  int father;
+  std::vector<int> id;
+  void newZombie(Zombie_State_enum newType);
+  int move();
 };
 
 void createZombie(Tyra::Vec2 pos);

@@ -80,7 +80,7 @@ class AnimationData {
  public:
   unsigned int maxFrame;
   std::string name;
-  std::map<unsigned int, Tyra::Texture*> texture;
+  std::map<unsigned int, int> texture;
   std::map<unsigned int, Tyra::Vec2> position;
   std::map<unsigned int, Tyra::Vec2> scale;
   std::map<unsigned int, Tyra::Vec2> angle;

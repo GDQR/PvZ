@@ -44,16 +44,16 @@ int AnimationManager::debugAnim(const int entitieID) {
     texRepo->getBySpriteId(spriteArray[entitieID].id)
         ->removeLinkById(spriteArray[entitieID].id);
 
-    animationDataArray[animationArray[entitieID].animID]
-        .texture[animationArray[entitieID].currentFrame]
+    texRepo->getByTextureId(animationDataArray[animationArray[entitieID].animID]
+        .texture[animationArray[entitieID].currentFrame])
         ->addLink(spriteArray[entitieID].id);
   } else if (animationDataArray[animationArray[entitieID].animID].texture.count(
                  animationArray[entitieID].currentFrame) == 1) {
     texRepo->getBySpriteId(rotationSprite[entitieID].sprite.id)
         ->removeLinkById(rotationSprite[entitieID].sprite.id);
 
-    animationDataArray[animationArray[entitieID].animID]
-        .texture[animationArray[entitieID].currentFrame]
+    texRepo->getByTextureId(animationDataArray[animationArray[entitieID].animID]
+        .texture[animationArray[entitieID].currentFrame])
         ->addLink(rotationSprite[entitieID].sprite.id);
   }
 
@@ -124,9 +124,8 @@ void AnimationManager::debugChangeFrame(const int entitieID, const int key) {
     }
 
     // Link new Texture to the sprite entitie
-    animationDataArray[animationArray[entitieID].animID]
-        .texture[animationArray[entitieID].currentFrame]
-        ->addLink(spriteArray[entitieID].id);
+    texRepo->getByTextureId(animationDataArray[animationArray[entitieID].animID]
+        .texture[animationArray[entitieID].currentFrame])->addLink(spriteArray[entitieID].id);
   } else if (animationDataArray[animationArray[entitieID].animID].texture.count(
                  animationArray[entitieID].currentFrame) == 1) {
     // Unlink Texture from the sprite entitie
@@ -134,9 +133,8 @@ void AnimationManager::debugChangeFrame(const int entitieID, const int key) {
         ->removeLinkById(rotationSprite[entitieID].sprite.id);
 
     // Link new Texture to the sprite entitie
-    animationDataArray[animationArray[entitieID].animID]
-        .texture[animationArray[entitieID].currentFrame]
-        ->addLink(rotationSprite[entitieID].sprite.id);
+    texRepo->getByTextureId(animationDataArray[animationArray[entitieID].animID]
+        .texture[animationArray[entitieID].currentFrame])->addLink(rotationSprite[entitieID].sprite.id);
   }
 
   if (animationDataArray[animationArray[entitieID].animID].position.count(
@@ -181,12 +179,12 @@ void RendererDebugSpritesManager::update() {
   // auto& textureRepository = renderer->getTextureRepository();
 
   // printf("debug size: %d\n",debugSpriteBoxCollider.size());
-  // for (it = dm_SpriteBoxCollider.begin(); it != dm_SpriteBoxCollider.end();
-  //      it++) {
-  //   // printf("key: %d. sprite ID: %d\n",it->first,it->second.id);
-  //   dm_SpriteBoxCollider[it->first].position = Vec2(boxColliderArray[it->first].x,boxColliderArray[it->first].y);  
-  //   renderer->renderer2D.render(dm_SpriteBoxCollider[it->first]);
-  // }
+  for (it = dm_SpriteBoxCollider.begin(); it != dm_SpriteBoxCollider.end();
+       it++) {
+    // printf("key: %d. sprite ID: %d\n",it->first,it->second.id);
+    dm_SpriteBoxCollider[it->first].position = Vec2(boxColliderArray[it->first].x,boxColliderArray[it->first].y);  
+    renderer->renderer2D.render(dm_SpriteBoxCollider[it->first]);
+  }
 
   for (it = dm_SpritePointCollider.begin(); it != dm_SpritePointCollider.end();
        it++) {
@@ -279,22 +277,7 @@ void ZombiesManager::update() {
   std::vector<Zombie>::iterator it;
 
   for (it = zombie.begin(); it < zombie.end(); it++) {
-    if (it->debug == true) {
-      continue;
-    }
-    if (it->timer > 0) {
-      it->timer--;
-    } else if (it->attack == false) {
-      it->timer = 12;
-      posArray[*it->father].x--;
-
-      boxColliderArray[*it->body[0]].x =
-          posArray[*it->father].x + posArray[*it->body[0]].x + 60;
-      dm_SpriteBoxCollider[*it->body[0]].position.x =
-          boxColliderArray[*it->body[0]].x;
-      // printf("box: %f,%f\n",
-      // boxColliderArray[*it->body[0]].x,boxColliderArray[*it->body[0]].y);
-    }
+    it->move();
   }
 }
 
@@ -307,7 +290,7 @@ int ZombiesManager::collision() {
         continue;
       }
       it->attack = false;
-      animationArray[*it->body[0]].animID = zombieWalk;
+      animationArray[it->id[0]].animID = zombieWalk;
     }
     return 0;
   }
@@ -329,9 +312,9 @@ int ZombiesManager::collision() {
         //  boxColliderArray[*zombie[j].body[0]].height);
 
         if (boxCollision(&boxColliderArray[plant[i].id[0]],
-                         &boxColliderArray[*(it)->body[0]]) == true) {
+                         &boxColliderArray[it->id[0]]) == true) {
           it->attack = true;
-          animationArray[*it->body[0]].animID = zombieNormalAttack;
+          animationArray[it->id[0]].animID = zombieNormalAttack;
           if (it->attackTimer > 0) {
             it->attackTimer--;
           } else {
@@ -348,12 +331,12 @@ int ZombiesManager::collision() {
               }
 
               it->attack = false;
-              animationArray[*it->body[0]].animID = zombieWalk;
+              animationArray[it->id[0]].animID = zombieWalk;
             }
           }
         } else {
           it->attack = false;
-          animationArray[*it->body[0]].animID = zombieWalk;
+          animationArray[it->id[0]].animID = zombieWalk;
         }
       }
     }
@@ -388,26 +371,26 @@ void ProjectileManager::zombieCollision() {
   for (it = projectile.begin(); it < projectile.end(); it++) {
     for (it2 = zombie.begin(); it2 < zombie.end(); it2++) {
       if (boxCollision(&boxColliderArray[*it],
-                       &boxColliderArray[*(it2)->body[0]])) {
+                       &boxColliderArray[it2->id[0]])) {
 
         // damage zombie
-        lifeArray[*it2->body[0]] -= damageArray[*it];
-        // printf("zombie id: %d\n",*it2->body[0]);
+        lifeArray[it2->id[0]] -= damageArray[*it];
+        // printf("zombie id: %d\n",it2->id[0]);
         // delete zombie
-        if (lifeArray[*it2->body[0]] <= 0) {
-          posArray.erase(*it2->father);
-          posArray.erase(*it2->body[0]);
+        if (lifeArray[it2->id[0]] <= 0) {
+          posArray.erase(it2->father);
+          posArray.erase(it2->id[0]);
           // posArray.erase(*it2->body[1]);
 
-          deleteFatherID(it2->father, it2->body[0]);
-          // deleteFatherID(*it2->father,*it2->body[1]);
-          deleteSprite(*it2->body[0]);
-          animationArray.erase(*it2->body[0]);
-          lifeArray.erase(*it2->body[0]);
-          boxColliderArray.erase(*it2->body[0]);
-          deleteDebugBoxCollider(*it2->body[0]);
-          Entities::deleteID(*it2->father);
-          Entities::deleteID(*it2->body[0]);
+          deleteFatherID(&it2->father, &it2->id[0]);
+          // deleteFatherID(*it2->father,*it2->id[1]);
+          deleteSprite(it2->id[0]);
+          animationArray.erase(it2->id[0]);
+          lifeArray.erase(it2->id[0]);
+          boxColliderArray.erase(it2->id[0]);
+          deleteDebugBoxCollider(it2->id[0]);
+          Entities::deleteID(it2->father);
+          Entities::deleteID(it2->id[0]);
           it2 = zombie.erase(it2);
 
           // zombiesCreated--;
