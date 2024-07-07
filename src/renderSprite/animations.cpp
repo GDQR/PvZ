@@ -146,9 +146,11 @@ void readReanimFiles(std::string nameID, std::string file) {
   bool passY=false;
   bool passSX=false;
   bool passSY=false;
+  bool passKX=false;
+  bool passKY=false;
   bool useAnim = true;
   bool textureFounded = false;
-  Tyra::Texture* texture;
+  Tyra::Texture* texture = nullptr;
   while (!MyReadFile.eof()) {
     // int length = MyReadFile.tellg();
     //     std::cout << "pos: "<<length << std::endl;
@@ -227,11 +229,13 @@ void readReanimFiles(std::string nameID, std::string file) {
       animationDataArray[animID].position[countframes].y = std::stof(insideArrow);
       std::getline(MyReadFile, insideArrow, '>');
     } else if (insideArrow == "kx") { // kx son los grados del angulo
+      passKX = true;
       std::getline(MyReadFile, insideArrow, '<');
       std::cout << " KX: " << insideArrow;
       animationDataArray[animID].angle[countframes].x = std::stof(insideArrow);
       std::getline(MyReadFile, insideArrow, '>');
     } else if (insideArrow == "ky") { // ky son los grados del angulo
+      passKY = true;
       std::getline(MyReadFile, insideArrow, '<');
       std::cout << " KY: " << insideArrow;
       animationDataArray[animID].angle[countframes].y = std::stof(insideArrow);
@@ -272,11 +276,19 @@ void readReanimFiles(std::string nameID, std::string file) {
       if(passSY == false){
         animationDataArray[animID].scale[countframes].y = animationDataArray[animID].scale[countframes-1].y;
       }
+      if(passKX == true && passKY == false){
+        animationDataArray[animID].angle[countframes].y = animationDataArray[animID].angle[countframes].x;
+      }else if(passKX == false && passKY == true){
+        animationDataArray[animID].angle[countframes].x = animationDataArray[animID].angle[countframes].y;
+      }
+
       countframes++;
       passX = false;
       passY = false;
       passSX = false;
       passSY = false;
+      passKX = false;
+      passKY = false;
     } else if (insideArrow == "track" && finishCountFrames == false) {
       int length = MyReadFile.tellg();
       // std::cout << "pos: "<<length << std::endl;
