@@ -66,13 +66,6 @@ void loadAnimationSprite(const int entityID, const int animID){
         }
         // printf("plant draw: %d\n", animationArray[entityID].draw);
       }
-      if (animationDataArray[animID].name == "anim_blink" ||
-          animationDataArray[animID].name == "idle_shoot_blink") {
-        animationArray.erase(entityID);
-        animationIdStopRender.push_back(entityID);
-
-        printf("encontre anim_blink\n");
-      }
     }else{
       printf("entre en rotate\n");
       if (animationDataArray[animID].angle.count(0) == 0) {
@@ -126,16 +119,6 @@ void loadAnimationSprite(const int entityID, const int animID){
         }
         printf("plant draw: %d\n", animationArray[entityID].draw);
       }
-      if (animationDataArray[animID].name == "anim_blink" ||
-          animationDataArray[animID].name == "idle_shoot_blink") {
-        animationArray.erase(entityID);
-        animationIdStopRender.push_back(entityID);
-
-        printf("encontre anim_blink\n");
-      }
-      if(entityID == 63){
-      createDebugSprite(entityID, Tyra::MODE_STRETCH);
-      }
     }
     
     printf("termine\n\n");
@@ -165,7 +148,7 @@ void readReanimFiles(std::string nameID, std::string file) {
   bool passSY=false;
   bool useAnim = true;
   Tyra::Texture* texture;
-  // int countImages = 0;
+  int countImages = 0;
   while (!MyReadFile.eof()) {
     // int length = MyReadFile.tellg();
     //     std::cout << "pos: "<<length << std::endl;
@@ -208,7 +191,7 @@ void readReanimFiles(std::string nameID, std::string file) {
       }  
       std::getline(MyReadFile, insideArrow, '>');
     } else if (insideArrow == "i") {
-      // countImages++;
+      countImages++;
       std::getline(MyReadFile, insideArrow, '<');
       std::cout << " i: " << insideArrow;
       insideArrow.erase(0,13); // delete "IMAGE_REANIM_" from string
@@ -308,7 +291,7 @@ void readReanimFiles(std::string nameID, std::string file) {
       countframes = 0;
     }
   }
-  // printf("Total images: %d\n", countImages);
+  printf("Total images: %d\n", countImages);
   // Close the file
   MyReadFile.close();
 }
