@@ -147,8 +147,8 @@ void readReanimFiles(std::string nameID, std::string file) {
   bool passSX=false;
   bool passSY=false;
   bool useAnim = true;
+  bool textureFounded = false;
   Tyra::Texture* texture;
-  int countImages = 0;
   while (!MyReadFile.eof()) {
     // int length = MyReadFile.tellg();
     //     std::cout << "pos: "<<length << std::endl;
@@ -191,15 +191,25 @@ void readReanimFiles(std::string nameID, std::string file) {
       }  
       std::getline(MyReadFile, insideArrow, '>');
     } else if (insideArrow == "i") {
-      countImages++;
       std::getline(MyReadFile, insideArrow, '<');
       std::cout << " i: " << insideArrow;
       insideArrow.erase(0,13); // delete "IMAGE_REANIM_" from string
-      fileName = "reanim/" + insideArrow + ".png";
-      std::cout << " new i: " << insideArrow;
-      texture = loadTexture(fileName);
-      
-      animationDataArray[animID].texture[countframes] = texture->id;
+      insideArrow += ".png";
+      for(u32 i=0; i<texRepo->getTexturesCount(); i++){
+        if((*texRepo->getAll())[i]->name == insideArrow){
+          textureFounded = true;
+          animationDataArray[animID].texture[countframes] = (*texRepo->getAll())[i]->id;
+          break;
+        }
+      }
+      if(textureFounded == false){
+        fileName = "reanim/" + insideArrow;
+        std::cout << " new i: " << insideArrow;
+        texture = loadTexture(fileName);
+
+        animationDataArray[animID].texture[countframes] = texture->id;
+      }
+      textureFounded = false;
       useAnim = true;
       printf(" texture width: %d, height: %d\n",texture->getWidth(),texture->getHeight());
       std::getline(MyReadFile, insideArrow, '>');
@@ -291,7 +301,6 @@ void readReanimFiles(std::string nameID, std::string file) {
       countframes = 0;
     }
   }
-  printf("Total images: %d\n", countImages);
   // Close the file
   MyReadFile.close();
 }

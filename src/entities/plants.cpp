@@ -37,10 +37,10 @@ void createPeashotter(int id, int row, int column, Tyra::Vec2 pos) {
   int animID;
   // int spriteID;
 
-  for (unsigned int i = 0; i < 1/*m_animID["PeaShooterSingle"].size()*/; i++) {
+  for (unsigned int i = 0; i < m_animID["PeaShooterSingle"].size(); i++) {
     plant[id].id.push_back(Entities::newID());
     entityID = plant[id].id[i];
-    animID = m_animID["PeaShooterSingle"][12];
+    animID = m_animID["PeaShooterSingle"][i];
     printf("plant ID: %d\n", entityID);
     printf("animID: %d\n", animID);
     newFatherID(&plant[id].father, &entityID);
