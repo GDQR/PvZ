@@ -150,6 +150,8 @@ void readReanimFiles(std::string nameID, std::string file) {
   bool passKY=false;
   bool useAnim = true;
   bool textureFounded = false;
+  float kx = 0.0f;
+  float ky = 0.0f;
   Tyra::Texture* texture = nullptr;
   while (!MyReadFile.eof()) {
     // int length = MyReadFile.tellg();
@@ -167,6 +169,8 @@ void readReanimFiles(std::string nameID, std::string file) {
     } else if (insideArrow == "name") {
       std::getline(MyReadFile, insideArrow, '<');
       std::cout << "Name: " << insideArrow << std::endl;
+      ky = 0.0f;
+      kx = 0.0f;
       if(useAnim == true){
         m_animID[nameID].push_back(maxAnimID);
         animID = maxAnimID;
@@ -232,13 +236,15 @@ void readReanimFiles(std::string nameID, std::string file) {
       passKX = true;
       std::getline(MyReadFile, insideArrow, '<');
       std::cout << " KX: " << insideArrow;
-      animationDataArray[animID].angle[countframes].x = std::stof(insideArrow);
+      kx = std::stof(insideArrow);
+      animationDataArray[animID].angle[countframes].x = kx;
       std::getline(MyReadFile, insideArrow, '>');
     } else if (insideArrow == "ky") { // ky son los grados del angulo
       passKY = true;
       std::getline(MyReadFile, insideArrow, '<');
       std::cout << " KY: " << insideArrow;
-      animationDataArray[animID].angle[countframes].y = std::stof(insideArrow);
+      ky = std::stof(insideArrow);
+      animationDataArray[animID].angle[countframes].y = ky;
       std::getline(MyReadFile, insideArrow, '>');
     } else if (insideArrow == "sx") { // es la escala de la imagen
       passSX = true;
@@ -276,23 +282,11 @@ void readReanimFiles(std::string nameID, std::string file) {
       if(passSY == false){
         animationDataArray[animID].scale[countframes].y = animationDataArray[animID].scale[countframes-1].y;
       }
-      // arregla algunas animaciones y otras las rompe
+
       if(passKX == true && passKY == false){
-        if(animationDataArray[animID].angle.count(countframes-1) == 1){
-          printf("hay algo nada en KX\n");
-          animationDataArray[animID].angle[countframes].y = animationDataArray[animID].angle[countframes-1].y;
-        }else{
-          printf("no hay nada en KX\n");
-          animationDataArray[animID].angle[countframes].y = 0;
-        }
+        animationDataArray[animID].angle[countframes].y = ky;
       }else if(passKX == false && passKY == true){
-        if(animationDataArray[animID].angle.count(countframes-1) == 1){
-          printf("hay algo nada en KY\n");
-          animationDataArray[animID].angle[countframes].x = animationDataArray[animID].angle[countframes-1].x;
-        }else{
-          printf("no hay nada en KY\n");
-          animationDataArray[animID].angle[countframes].x = 0;
-        }
+        animationDataArray[animID].angle[countframes].x = kx;
       }
 
       countframes++;
