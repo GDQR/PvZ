@@ -276,10 +276,23 @@ void readReanimFiles(std::string nameID, std::string file) {
       if(passSY == false){
         animationDataArray[animID].scale[countframes].y = animationDataArray[animID].scale[countframes-1].y;
       }
+      // arregla algunas animaciones y otras las rompe
       if(passKX == true && passKY == false){
-        animationDataArray[animID].angle[countframes].y = animationDataArray[animID].angle[countframes].x;
+        if(animationDataArray[animID].angle.count(countframes-1) == 1){
+          printf("hay algo nada en KX\n");
+          animationDataArray[animID].angle[countframes].y = animationDataArray[animID].angle[countframes-1].y;
+        }else{
+          printf("no hay nada en KX\n");
+          animationDataArray[animID].angle[countframes].y = 0;
+        }
       }else if(passKX == false && passKY == true){
-        animationDataArray[animID].angle[countframes].x = animationDataArray[animID].angle[countframes].y;
+        if(animationDataArray[animID].angle.count(countframes-1) == 1){
+          printf("hay algo nada en KY\n");
+          animationDataArray[animID].angle[countframes].x = animationDataArray[animID].angle[countframes-1].x;
+        }else{
+          printf("no hay nada en KY\n");
+          animationDataArray[animID].angle[countframes].x = 0;
+        }
       }
 
       countframes++;
