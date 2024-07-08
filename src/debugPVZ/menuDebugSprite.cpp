@@ -171,7 +171,7 @@ void subMenuSprite(Tyra::Pad& pad, Tyra::Font& font, int& entitieID) {
       if (rotateMode == false && sizeMode == false) {
         posArray[entitieID].y -= padSpeed;
       } else if (sizeMode == false) {
-        *d_angle += padSpeed;
+        d_angle->y += padSpeed;
         rotationSprite[entitieID].angle = *d_angle;
       } else {
         originalSize[entitieID].y -= padSpeed;
@@ -190,7 +190,7 @@ void subMenuSprite(Tyra::Pad& pad, Tyra::Font& font, int& entitieID) {
       if (rotateMode == false && sizeMode == false) {
         posArray[entitieID].y += padSpeed;
       } else if (sizeMode == false) {
-        *d_angle -= padSpeed;
+        d_angle->y -= padSpeed;
         rotationSprite[entitieID].angle = *d_angle;
       } else {
         originalSize[entitieID].y += padSpeed;
@@ -213,7 +213,7 @@ void subMenuSprite(Tyra::Pad& pad, Tyra::Font& font, int& entitieID) {
       if (rotateMode == false && sizeMode == false) {
         posArray[entitieID].x -= padSpeed;
       } else if (sizeMode == false) {
-        *d_angle -= padSpeed;
+        d_angle->x -= padSpeed;
         rotationSprite[entitieID].angle = *d_angle;
       } else {
         originalSize[entitieID].x -= padSpeed;
@@ -229,7 +229,7 @@ void subMenuSprite(Tyra::Pad& pad, Tyra::Font& font, int& entitieID) {
       if (rotateMode == false && sizeMode == false) {
         posArray[entitieID].x += padSpeed;
       } else if (sizeMode == false) {
-        *d_angle += padSpeed;
+        d_angle->x += padSpeed;
         rotationSprite[entitieID].angle = *d_angle;
       } else {
         originalSize[entitieID].x += padSpeed;
