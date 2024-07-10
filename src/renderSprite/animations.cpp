@@ -37,10 +37,7 @@ void loadAnimationSprite(const int entityID, const int animID){
           // printf("frame %d\n", j);
           texture = texRepo->getByTextureId(animationDataArray[animID].texture[j]);
           texture->addLink(spriteID);
-          // spriteArray[entityID].size =
-          //     Vec2(texture->getWidth(), texture->getHeight());
           originalSize[entityID] = Vec2(texture->getWidth(), texture->getHeight());
-          spriteArray[entityID].size = originalSize[entityID] * animationDataArray[animID].scale[0];
           scaleTexture[entityID] =
               Vec2(originalSize[entityID].x / texture->getWidth(),
                    originalSize[entityID].y / texture->getHeight());
@@ -52,11 +49,13 @@ void loadAnimationSprite(const int entityID, const int animID){
         }
       }
 
-      if (animationDataArray[animID].scale.count(0) == 0) {
-        animationDataArray[animID].scale[0] = Vec2(1.0f,1.0f);
+      for (unsigned int j = 0; j < animationDataArray[animID].maxFrame; j++) {
+        if (animationDataArray[animID].scale.count(j) == 1) {
+          spriteArray[entityID].size = originalSize[entityID] * animationDataArray[animID].scale[j];
+          break;
+        }
       }
 
-      spriteArray[entityID].size = originalSize[entityID] * animationDataArray[animID].scale[0];
       // if (animationDataArray[animID].draw.count(0)) {
       // // setSprite(entityID, animID);
       // }
@@ -86,8 +85,6 @@ void loadAnimationSprite(const int entityID, const int animID){
           // printf("frame %d\n", j);
           texture = texRepo->getByTextureId(animationDataArray[animID].texture[j]);
           texture->addLink(spriteID);
-          // spritesRotate[entityID].size =
-          //     Vec2(texture->getWidth(), texture->getHeight());
           originalSize[entityID] = Vec2(texture->getWidth(), texture->getHeight());
           scaleTexture[entityID] =
               Vec2(originalSize[entityID].x / texture->getWidth(),
@@ -95,17 +92,17 @@ void loadAnimationSprite(const int entityID, const int animID){
           printf("name anim: %s\n", animationDataArray[animID].name.c_str());
           // printf("name Texture: %s\n", texture->name.c_str());
           // printf("size: %s\n", spritesRotate[entityID].size.getPrint().c_str());
-          printf("scale: %s\n", scaleTexture[entityID].getPrint().c_str());
+          // printf("scale: %s\n", scaleTexture[entityID].getPrint().c_str());
           break;
         }
       }
 
-      if (animationDataArray[animID].scale.count(0) == 0) {
-        animationDataArray[animID].scale[0] = Vec2(1.0f,1.0f);
+      for (unsigned int j = 0; j < animationDataArray[animID].maxFrame; j++) {
+        if (animationDataArray[animID].scale.count(j) == 1) {
+          rotationSprite[entityID].sprite.size = originalSize[entityID] * animationDataArray[animID].scale[j];
+          break;
+        }
       }
-
-      rotationSprite[entityID].sprite.size = originalSize[entityID] * animationDataArray[animID].scale[0];
-
     }
     
     printf("termine\n\n");
@@ -157,6 +154,7 @@ void readReanimFiles(std::string nameID, std::string file) {
   bool passKY=false;
   bool useAnim = true;
   bool textureFounded = false;
+  bool save = true;
   float kx = 0.0f;
   float ky = 0.0f;
   float sx = 1.0f;
@@ -201,9 +199,11 @@ void readReanimFiles(std::string nameID, std::string file) {
       std::getline(MyReadFile, insideArrow, '<');
       if(insideArrow == "-1"){
         printf(" NO DRAW");
+        save = false;
         animationDataArray[animID].draw[countframes] = false;
       }else{
         printf(" DRAW");
+        save = true;
         animationDataArray[animID].draw[countframes] = true;
       }  
       std::getline(MyReadFile, insideArrow, '>');
@@ -289,12 +289,16 @@ void readReanimFiles(std::string nameID, std::string file) {
       if(passY == false){
         animationDataArray[animID].position[countframes].y = animationDataArray[animID].position[countframes-1].y;
       }
-      if(passSX == false){
-        animationDataArray[animID].scale[countframes].x = sx;
+
+      if(save == true){
+        if(passSX == false){
+          animationDataArray[animID].scale[countframes].x = sx;
+        }
+        if(passSY == false){
+          animationDataArray[animID].scale[countframes].y = sy;
+        }
       }
-      if(passSY == false){
-        animationDataArray[animID].scale[countframes].y = sy;
-      }
+      
 
       if(passKX == true && passKY == false){
         animationDataArray[animID].angle[countframes].y = ky;
