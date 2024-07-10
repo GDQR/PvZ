@@ -21,6 +21,53 @@ void Plant::newPlant(Plant_State_enum newType) {
   createSpace();
 }
 
+void Plant::attack(){
+  std::vector<Zombie>::iterator it;
+
+  for (it = zombie.begin(); it < zombie.end(); it++) {
+    if(type == PeaShotter){
+      //  printf("vec plant %f,%f. vec zombi %f,%f,%f,%f\n",
+      //  pointColliderArray[*plant[i].body[0]].x,
+      //  pointColliderArray[*plant[i].body[0]].y,
+      //  boxColliderArray[*zombie[j].body[0]].x,
+      //  boxColliderArray[*zombie[j].body[0]].y,
+      //  boxColliderArray[*zombie[j].body[0]].x +
+      //  boxColliderArray[*zombie[j].body[0]].width,
+      //  boxColliderArray[*zombie[j].body[0]].y +
+      //  boxColliderArray[*zombie[j].body[0]].height)
+      if (pointColliderArray[father].x <
+              boxColliderArray[it->id[0]].x +
+                  boxColliderArray[it->id[0]].width &&
+          pointColliderArray[father].y >
+              boxColliderArray[it->id[0]].y &&
+          pointColliderArray[father].y <
+              boxColliderArray[it->id[0]].y +
+                  boxColliderArray[it->id[0]].height) {
+        // printf("hay un zombi en frente\n");
+        if (attackTimer >= 0) {
+          attackTimer--;
+        } else if (stopAnimation == false) {
+          // printf("disparar\n");
+          newProjectile(pointColliderArray[father]);
+          attackTimer = 60;
+        }
+        it = zombie.end();
+      }
+    } 
+  }
+     /*else if (plant[i].type == SunFlower) {
+      if (plant[i].attackTimer > 0) {
+        plant[i].attackTimer--;
+      } else {
+        printf("sunflower create sun\n");
+        sunManager.createSun(spriteArray[plant[i].id[0]].position, sunCost::normalSun,
+                   true);
+        plant[i].attackTimer = 60 * 6;
+      }
+    }*/
+  
+}
+
 void createPeashotter(int id, int row, int column, Tyra::Vec2 pos) {
   plant[id].newPlant(PeaShotter);
 

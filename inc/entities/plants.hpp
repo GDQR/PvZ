@@ -20,6 +20,7 @@ class Plant {
 
   int father;
   void newPlant(Plant_State_enum newType);
+  void attack();
   int attackTimer = 0;
   int row;
   int column;

@@ -155,6 +155,8 @@ extern std::vector<Sun> sun;
 extern std::vector<NaturalSun> naturalSun;
 extern std::vector<int> projectile;
 extern std::vector<Card> cards;
+extern Cursor cursor;
+extern DeckCursor deckCursor;
 
 extern bool zombieCreateRow[5];
 extern bool plantCreatedInMap[5][9];

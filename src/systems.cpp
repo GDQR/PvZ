@@ -8,6 +8,7 @@ ProjectileManager projectileManager;
 RendererSprites renderSprites;
 RendererDebugSpritesManager renderDebugSpritesManager;
 ZombiesManager zombiesManager;
+PlantsManager plantsManager;
 
 void AnimationManager::update() {
   std::map<int, Animation>::iterator it;
@@ -344,6 +345,29 @@ int ZombiesManager::collision() {
   }
 
   return 1;
+}
+
+void PlantsManager::create(){
+  if (engine->pad.getClicked().Cross && debugMode == false) {
+    if (zombieCreateRow[(int)cursor.cursorTile.x] == true) {
+      if (sunCounter >= cards[deckCursor.pos].cost &&
+          plantsCreated < maxPlants && cards[deckCursor.pos].seedTimer == 0) {
+        sunCounter -= cards[deckCursor.pos].cost;
+        cards[deckCursor.pos].seedTimer = 60 * 8;
+        spriteArray[cards[deckCursor.pos].seedShadowTimer].size.y = 70;
+        createPlant(cards[deckCursor.pos].plant, cursor.cursorTile.x,
+                    cursor.cursorTile.y);
+      } else {
+        printf("can't create plants now\n");
+      }
+    }
+  }
+}
+
+void PlantsManager::update() {
+  for(int i = 0; i < 45; i++){
+    plant[i].attack();
+  }
 }
 
 void ProjectileManager::update() {

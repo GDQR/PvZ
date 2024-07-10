@@ -31,6 +31,12 @@ class ZombiesManager {
   int collision();
 };
 
+class PlantsManager {
+  public:
+  void create();
+  void update();
+};
+
 class ProjectileManager {
  public:
   void update();
@@ -42,6 +48,7 @@ extern ProjectileManager projectileManager;
 extern RendererSprites renderSprites;
 extern RendererDebugSpritesManager renderDebugSpritesManager;
 extern ZombiesManager zombiesManager;
+extern PlantsManager plantsManager;
 
 void newProjectile(Tyra::Vec2 position);
 void newFatherID(int* fatherID, int* childID);

@@ -23,9 +23,6 @@ int map[5][9];
 int xMap = 9;
 int yMap = 5;
 
-Cursor cursor;
-DeckCursor deckCursor;
-
 int timerZombies = 0;
 int maxZombies = 5;
 
@@ -157,21 +154,7 @@ void Level1::update() {
   }
 
   // create plant
-
-  if (engine->pad.getClicked().Cross && debugMode == false) {
-    if (zombieCreateRow[(int)cursor.cursorTile.x] == true) {
-      if (sunCounter >= cards[deckCursor.pos].cost &&
-          plantsCreated < maxPlants && cards[deckCursor.pos].seedTimer == 0) {
-        sunCounter -= cards[deckCursor.pos].cost;
-        cards[deckCursor.pos].seedTimer = 60 * 8;
-        spriteArray[cards[deckCursor.pos].seedShadowTimer].size.y = 70;
-        createPlant(cards[deckCursor.pos].plant, cursor.cursorTile.x,
-                    cursor.cursorTile.y);
-      } else {
-        printf("max plants created\n");
-      }
-    }
-  }
+  plantsManager.create();
 
   if (stopAnimation == false) {
     projectileManager.update();
