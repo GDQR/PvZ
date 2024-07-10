@@ -159,6 +159,8 @@ void readReanimFiles(std::string nameID, std::string file) {
   bool textureFounded = false;
   float kx = 0.0f;
   float ky = 0.0f;
+  float sx = 1.0f;
+  float sy = 1.0f;
   Tyra::Texture* texture = nullptr;
   while (!MyReadFile.eof()) {
     // int length = MyReadFile.tellg();
@@ -178,6 +180,8 @@ void readReanimFiles(std::string nameID, std::string file) {
       std::cout << "Name: " << insideArrow << std::endl;
       ky = 0.0f;
       kx = 0.0f;
+      sx = 1.0f;
+      sy = 1.0f;
       if(useAnim == true){
         m_animID[nameID].push_back(maxAnimID);
         animID = maxAnimID;
@@ -257,13 +261,15 @@ void readReanimFiles(std::string nameID, std::string file) {
       passSX = true;
       std::getline(MyReadFile, insideArrow, '<');
       std::cout << " SX: " << insideArrow;
-      animationDataArray[animID].scale[countframes].x = std::stof(insideArrow);
+      sx = std::stof(insideArrow);
+      animationDataArray[animID].scale[countframes].x = sx;
       std::getline(MyReadFile, insideArrow, '>');
     } else if (insideArrow == "sy") { // es la escala de la imagen
       passSY = true;
       std::getline(MyReadFile, insideArrow, '<');
       std::cout << " SY: " << insideArrow;
-      animationDataArray[animID].scale[countframes].y = std::stof(insideArrow);
+      sy = std::stof(insideArrow);
+      animationDataArray[animID].scale[countframes].y = sy;
       std::getline(MyReadFile, insideArrow, '>');
     } else if (insideArrow == "a") {
       std::getline(MyReadFile, insideArrow, '<');
@@ -284,10 +290,10 @@ void readReanimFiles(std::string nameID, std::string file) {
         animationDataArray[animID].position[countframes].y = animationDataArray[animID].position[countframes-1].y;
       }
       if(passSX == false){
-        animationDataArray[animID].scale[countframes].x = animationDataArray[animID].scale[countframes-1].x;
+        animationDataArray[animID].scale[countframes].x = sx;
       }
       if(passSY == false){
-        animationDataArray[animID].scale[countframes].y = animationDataArray[animID].scale[countframes-1].y;
+        animationDataArray[animID].scale[countframes].y = sy;
       }
 
       if(passKX == true && passKY == false){
