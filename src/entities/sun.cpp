@@ -1,4 +1,5 @@
 #include "entities/sun.hpp"
+#include "renderSprite/animations.hpp"
 #include "components.hpp"
 #include "systems.hpp"
 
@@ -14,9 +15,8 @@ void SunManager::create(Tyra::Vec2 position, sunCost cost, bool createdByPlant) 
   sun[indexpos].father = Entities::newID();
   posArray[sun[indexpos].father] = position;
 
-  int entitieID;
-  bool hasAngle = false;
-  bool hasAlpha = false;
+  int entityID;
+  int animID;
 
   if (createdByPlant == false) {
     int naturalSunID = naturalSun.size();
@@ -27,83 +27,12 @@ void SunManager::create(Tyra::Vec2 position, sunCost cost, bool createdByPlant) 
   for (unsigned int i = 0; i < m_animID["Sun"].size(); i++) {
     sun[indexpos].id.push_back(Entities::newID());
 
-    entitieID = sun[indexpos].id[i];
+    entityID = sun[indexpos].id[i];
+    animID = m_animID["Sun"][i];
 
     newFatherID(&sun[indexpos].father, &sun[indexpos].id[i]);
+    loadAnimationSprite(entityID, animID);
 
-    for (unsigned int j = 0;
-         j < animationDataArray[m_animID["Sun"][i]].maxFrame; j++) {
-      if (animationDataArray[m_animID["Sun"][i]].alpha.count(j) == true) {
-        hasAlpha = true;
-      }
-      if (animationDataArray[m_animID["Sun"][i]].angle.count(j) == true) {
-        hasAngle = true;
-      }
-      if (hasAngle == true && hasAlpha == true) {
-        break;
-      }
-    }
-
-    texPosArray[entitieID] = animationDataArray[m_animID["Sun"][i]].position[0];
-
-    if (hasAngle == true) {
-      if (animationDataArray[m_animID["Sun"][i]].angle.count(0) == 0) {
-        animationDataArray[m_animID["Sun"][i]].angle[0] = Vec2(0.0f, 0.0f);
-      }
-      createSpriteRotate(entitieID, Tyra::MODE_STRETCH, Vec2(0.0f, 0.0f),
-                         Vec2(0, 0),
-                         animationDataArray[m_animID["Sun"][i]].angle[0]);
-
-      animationArray[entitieID] = Animation((enumAnimation)m_animID["Sun"][i]);
-      texRepo->getByTextureId(animationDataArray[m_animID["Sun"][i]].texture[0])->addLink(
-          rotationSprite[entitieID].sprite.id);
-
-      originalSize[entitieID] =
-          Vec2(texRepo->getByTextureId(animationDataArray[m_animID["Sun"][i]].texture[0])->getWidth(),
-               texRepo->getByTextureId(animationDataArray[m_animID["Sun"][i]].texture[0])->getHeight());
-
-      if (animationDataArray[m_animID["Sun"][i]].scale.count(0) == 0) {
-        animationDataArray[m_animID["Sun"][i]].scale[0] = Vec2(1.0f, 1.0f);
-      }
-
-      rotationSprite[entitieID].sprite.size =
-          originalSize[entitieID] *
-          animationDataArray[animationArray[entitieID].animID].scale[0];
-
-      if (hasAlpha == true) {
-        if (animationDataArray[m_animID["Sun"][i]].alpha.count(0) == 0) {
-          animationDataArray[m_animID["Sun"][i]].alpha[0] = 1.0f;
-        }
-        float alpha = animationDataArray[m_animID["Sun"][i]].alpha[0] * 128;
-        rotationSprite[entitieID].sprite.color.a = alpha;
-      }
-    } else {
-      createSprite(entitieID, Tyra::MODE_STRETCH, Vec2(0.0f, 0.0f), Vec2(0, 0));
-
-      animationArray[entitieID] = Animation((enumAnimation)m_animID["Sun"][i]);
-      texRepo->getByTextureId(animationDataArray[m_animID["Sun"][i]].texture[0])->addLink(
-          spriteArray[entitieID].id);
-
-      originalSize[entitieID] =
-          Vec2(texRepo->getByTextureId(animationDataArray[m_animID["Sun"][i]].texture[0])->getWidth(),
-               texRepo->getByTextureId(animationDataArray[m_animID["Sun"][i]].texture[0])->getHeight());
-
-      if (animationDataArray[m_animID["Sun"][i]].scale.count(0) == 0) {
-        animationDataArray[m_animID["Sun"][i]].scale[0] = Vec2(1.0f, 1.0f);
-      }
-
-      spriteArray[entitieID].size =
-          originalSize[entitieID] *
-          animationDataArray[animationArray[entitieID].animID].scale[0];
-
-      if (hasAlpha == true) {
-        float alpha = animationDataArray[m_animID["Sun"][i]].alpha[0] * 128;
-        spriteArray[entitieID].color.a = alpha;
-      }
-    }
-
-    hasAlpha = false;
-    hasAngle = false;
   }
 
   // rotationSprite[sun[indexpos].id[0]].sprite.size = Vec2(128.0f/2, 128.0f/2);
@@ -139,8 +68,8 @@ void SunManager::create(Tyra::Vec2 position, sunCost cost, bool createdByPlant) 
   // printf("sun hitbox id: %d\n", sun[indexpos].id[0]);
   // HitBox
   boxColliderArray[sun[indexpos].father] =
-      BoxCollider(position.x + texPosArray[entitieID].x,
-                  position.y + texPosArray[entitieID].y, 32, 32);
+      BoxCollider(position.x + texPosArray[entityID].x,
+                  position.y + texPosArray[entityID].y, 32, 32);
   createDebugBoxCollider(sun[indexpos].father, Tyra::MODE_STRETCH);
 
   sunsCreated++;
