@@ -81,12 +81,12 @@ class AnimationData {
  public:
   unsigned int maxFrame;
   std::string name;
-  std::map<unsigned int, int> texture;
-  std::map<unsigned int, Tyra::Vec2> position;
-  std::map<unsigned int, Tyra::Vec2> scale;
-  std::map<unsigned int, Tyra::Vec2> angle;
-  std::map<unsigned int, float> alpha;
-  std::map<unsigned int, bool> draw;
+  std::unordered_map<unsigned int, int> texture;
+  std::unordered_map<unsigned int, Tyra::Vec2> position;
+  std::unordered_map<unsigned int, Tyra::Vec2> scale;
+  std::unordered_map<unsigned int, Tyra::Vec2> angle;
+  std::unordered_map<unsigned int, float> alpha;
+  std::unordered_map<unsigned int, bool> draw;
 };
 
 class Time {
