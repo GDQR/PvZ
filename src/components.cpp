@@ -86,17 +86,6 @@ void deleteSprite(const int entitieID) {
   }
 }
 
-/*
- * @return True if collision exist
- */
-bool boxCollision(BoxCollider* col1, BoxCollider* col2) {
-  if (col1->x + col1->width >= col2->x && col2->x + col2->width >= col1->x &&
-      col1->y + col1->height >= col2->y && col2->y + col2->height >= col1->y) {
-    return true;
-  }
-  return false;
-}
-
 BoxCollider::BoxCollider() {}
 BoxCollider::BoxCollider(float x, float y, float width, float height) {
   this->x = x;
@@ -117,6 +106,17 @@ BoxCollider::BoxCollider(float x, float y, float width, float height,
 void BoxCollider::move(const int entityID) {
   x = offsetX + posArray[entityID].x;
   y = offsetY + posArray[entityID].y;
+}
+
+/*
+ * @return True if collision exist
+ */
+bool BoxCollider::collision(BoxCollider* box){
+  if (x + width >= box->x && box->x + box->width >= x &&
+      y + height >= box->y && box->y + box->height >= y) {
+    return true;
+  }
+  return false;
 }
 
 void Cursor::move() {

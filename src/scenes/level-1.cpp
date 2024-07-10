@@ -147,7 +147,7 @@ void Level1::update() {
 
   for (int i = 0; i < 5; i++) {
     for (int j = 0; j < 9; j++) {
-      if (boxCollision(&boxColliderArray[cursor.id], &mapCollider[i][j]) ==
+      if (boxColliderArray[cursor.id].collision(&mapCollider[i][j]) ==
           true) {
         cursor.cursorTile = Vec2(i, j);
         i = 5;

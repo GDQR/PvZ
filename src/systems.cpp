@@ -1,4 +1,6 @@
 #include "systems.hpp"
+#include "components.hpp"
+
 int projectilesCreated = 0;
 
 AnimationManager animManager;
@@ -311,8 +313,7 @@ int ZombiesManager::collision() {
         //  boxColliderArray[*zombie[j].body[0]].y +
         //  boxColliderArray[*zombie[j].body[0]].height);
 
-        if (boxCollision(&boxColliderArray[plant[i].id[0]],
-                         &boxColliderArray[it->id[0]]) == true) {
+        if (boxColliderArray[plant[i].id[0]].collision(&boxColliderArray[it->id[0]]) == true) {
           it->attack = true;
           animationArray[it->id[0]].animID = zombieNormalAttack;
           if (it->attackTimer > 0) {
@@ -370,8 +371,7 @@ void ProjectileManager::zombieCollision() {
   std::vector<Zombie>::iterator it2;
   for (it = projectile.begin(); it < projectile.end(); it++) {
     for (it2 = zombie.begin(); it2 < zombie.end(); it2++) {
-      if (boxCollision(&boxColliderArray[*it],
-                       &boxColliderArray[it2->id[0]])) {
+      if (boxColliderArray[*it].collision(&boxColliderArray[it2->id[0]]) == true) {
 
         // damage zombie
         lifeArray[it2->id[0]] -= damageArray[*it];

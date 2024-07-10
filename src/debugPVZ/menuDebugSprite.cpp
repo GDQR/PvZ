@@ -1,4 +1,5 @@
 #include "debugPVZ/menuDebugSprite.hpp"
+#include "components.hpp"
 #include "font/font.hpp"
 #include "systems.hpp"
 

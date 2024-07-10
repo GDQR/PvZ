@@ -1,4 +1,5 @@
 #include "entities/sun.hpp"
+#include "components.hpp"
 #include "systems.hpp"
 
 int sunsCreated = 0;
@@ -146,7 +147,7 @@ void SunManager::create(Tyra::Vec2 position, sunCost cost, bool createdByPlant) 
 }
 
 bool Sun::erase(const int cursorID) {
-  if (boxCollision(&boxColliderArray[cursorID], &boxColliderArray[father])) {
+  if (boxColliderArray[cursorID].collision(&boxColliderArray[father])) {
     printf("Deleting sun\n");
     sunCounter += cost;
 
