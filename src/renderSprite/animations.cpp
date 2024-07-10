@@ -338,49 +338,6 @@ void loadPeaShooterAnimation() {
 void loadZombieAnimation() {
   TYRA_LOG("Loading Zombie animation\n");
   readReanimFiles("Zombie",Tyra::FileUtils::fromCwd("reanim/Zombie.reanim"));
-  // animationDataArray[zombieWalk] = AnimationData();
-
-  // TYRA_LOG("Loading Zombie animation\n");
-
-  // std::string filepath;
-  // Tyra::Texture* texture;
-  // int frame = 0;
-  // filepath = "Animations/Zombie/normalZombie/Zombie_head.png";
-  // texture = loadTexture(filepath);
-  // animationDataArray[zombieWalk].texture[frame] = texture;
-
-  // // Read from the text file
-  // std::ifstream headPosFile("Animations/Zombie/normalZombie/headpos.txt");
-
-  // std::string index;
-  // while (headPosFile >> index) {
-  //   std::string pos;
-  //   std::string line;
-  //   std::string str_angle;
-  //   float x;
-  //   float y;
-  //   int angle;
-  //   headPosFile >> pos >> x >> line >> y >> str_angle >> angle;
-  //   // Output the text from the file
-  //   // std::cout << myText << " "<< pos <<'\n';
-
-  //   // std::cout << index << " " << pos << x << " " << line << " " << y << " "
-  //   //           << str_angle << angle << '\n';
-  //   std::cout << index << " " << x << " " << line << " " << y << '\n';
-  //   animationDataArray[zombieWalk].position[frame] = Tyra::Vec2(x, y);
-  //   animationDataArray[zombieWalk].angle[frame] = angle;
-  //   frame++;
-  // }
-
-  // for (int i = 0; i < frame; i++) {
-  //   printf("frame: %d pos: %f,%f\n", i,
-  //          animationDataArray[zombieWalk].position[i].x,
-  //          animationDataArray[zombieWalk].position[i].y);
-  // }
-  // animationDataArray[zombieWalk].maxFrame = frame;
-
-  // // Close the file
-  // headPosFile.close();
 }
 
 void loadSunAnimation() {
