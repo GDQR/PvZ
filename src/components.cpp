@@ -190,7 +190,7 @@ void Animation::update(const int entityID) {
     framesCounter = 0;
     currentFrame++;
 
-    if (currentFrame >= animationDataArray[animID].maxFrame) {
+    if (currentFrame >= lastFrame) {
       currentFrame = firstFrame;
     }
 

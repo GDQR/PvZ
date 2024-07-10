@@ -53,6 +53,10 @@ void createZombie(Vec2 pos) {
     // printf("animID: %d\n", animID);
     newFatherID(&zombie[id].father, &entityID);
     loadAnimationSprite(entityID, animID);
+    animationArray[entityID].firstFrame = 44;
+    animationArray[entityID].lastFrame = 91;
+    animationArray[entityID].currentFrame = 44;
+    animationArray[entityID].draw = true;
   }
 
   // HitBox

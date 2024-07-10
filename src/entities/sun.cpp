@@ -33,6 +33,7 @@ void SunManager::create(Tyra::Vec2 position, sunCost cost, bool createdByPlant) 
     newFatherID(&sun[indexpos].father, &sun[indexpos].id[i]);
     loadAnimationSprite(entityID, animID);
 
+    animationArray[entityID].lastFrame = animationDataArray[animID].maxFrame;
   }
 
   // rotationSprite[sun[indexpos].id[0]].sprite.size = Vec2(128.0f/2, 128.0f/2);

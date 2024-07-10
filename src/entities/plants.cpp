@@ -46,6 +46,7 @@ void createPeashotter(int id, int row, int column, Tyra::Vec2 pos) {
     newFatherID(&plant[id].father, &entityID);
     loadAnimationSprite(entityID, animID);
     animationArray[entityID].firstFrame = 79;
+    animationArray[entityID].lastFrame = 104;
     animationArray[entityID].currentFrame = 79;
     animationArray[entityID].draw = true;
     printf("draw: %d\n", animationArray[entityID].draw);
