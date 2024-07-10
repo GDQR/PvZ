@@ -6,7 +6,6 @@ enum Zombie_State_enum { NoneZombie, ZombieNormal };
 class Zombie {
  private:
   void createSpace();
-
  public:
   Zombie_State_enum type = NoneZombie;
 
@@ -19,6 +18,7 @@ class Zombie {
   std::vector<int> id;
   void newZombie(Zombie_State_enum newType);
   int move();
+  void animation(const int entityID, const int animID);
 };
 
 void createZombie(Tyra::Vec2 pos);

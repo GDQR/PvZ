@@ -16,6 +16,31 @@ void Zombie::createSpace() {
 
 void Zombie::newZombie(Zombie_State_enum newType) { type = newType; }
 
+void Zombie::animation(const int entityID, const int animID){
+  switch (type) {
+    case ZombieNormal:
+      if (animationDataArray[animID].name == "anim_bucket" ||
+            animationDataArray[animID].name == "anim_cone" ||
+            animationDataArray[animID].name == "anim_screendoor" ||
+            animationDataArray[animID].name == "Zombie_duckytube" || 
+            animationDataArray[animID].name == "Zombie_whitewater" ||
+            animationDataArray[animID].name == "Zombie_whitewater2" ||
+            animationDataArray[animID].name == "Zombie_outerarm_screendoor" ||
+            animationDataArray[animID].name == "Zombie_innerarm_screendoor_hand" ||
+            animationDataArray[animID].name == "Zombie_mustache" ||
+            animationDataArray[animID].name == "Zombie_innerarm_screendoor" ||
+            animationDataArray[animID].name == "Zombie_flaghand") {
+          setSprite(entityID,animID);
+          animationArray.erase(entityID);
+          animationIdStopRender.push_back(entityID);
+          printf("encontre anim_bucket o anim_cone\n");
+      }
+      break;
+    default:
+      break;
+  }
+}
+
 int Zombie::move() {
   if (debug == true) {
     return 1;
@@ -57,6 +82,7 @@ void createZombie(Vec2 pos) {
     animationArray[entityID].lastFrame = 91;
     animationArray[entityID].currentFrame = 44;
     animationArray[entityID].draw = true;
+    zombie[id].animation(entityID, animID);
   }
 
   // HitBox
