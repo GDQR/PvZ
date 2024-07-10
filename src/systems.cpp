@@ -403,7 +403,6 @@ void ProjectileManager::zombieCollision() {
         // delete zombie
         if(it2->erase() == true){
           it2 = zombie.erase(it2);
-          // zombiesCreated--;
         }else{
           it2++;
         }
