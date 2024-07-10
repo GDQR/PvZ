@@ -398,7 +398,7 @@ void ProjectileManager::zombieCollision() {
       if (boxColliderArray[*it].collision(&boxColliderArray[it2->id[0]]) == true) {
 
         // damage zombie
-        lifeArray[it2->id[0]] -= damageArray[*it];
+        it2->damage(*it);
         // printf("zombie id: %d\n",it2->id[0]);
         // delete zombie
         if(it2->erase() == true){

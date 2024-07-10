@@ -59,6 +59,10 @@ int Zombie::move() {
   return 0;
 }
 
+void Zombie::damage(const int entityID) {
+  lifeArray[id[0]] -= damageArray[entityID];
+}
+
 bool Zombie::erase() {
   if (lifeArray[id[0]] <= 0) {
     posArray.erase(father);
