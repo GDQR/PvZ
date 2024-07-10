@@ -351,23 +351,5 @@ void loadSunAnimation() {
 }
 
 void loadSunFlowerAnimation() {
-  // animationDataArray[SunFlowerHead] = AnimationData();
-
-  // std::string filepath;
-  // Tyra::Texture* texture;
-  // int frame = 0;
-  // animationDataArray[SunFlowerHead].position[frame] = Tyra::Vec2(0, 0);
-  // for (int i = 1; i <= 1; i++) {
-  //   if (i < 10) {
-  //     filepath = "Animations/sunflower/SunFlower_double_petals";
-  //   } else {
-  //     filepath = "Animations/sunflower/SunFlower_double_petals";
-  //   }
-
-  //   // filepath += std::to_string(i);
-  //   filepath += ".png";
-  //   texture = loadTexture(filepath);
-  //   animationDataArray[SunFlowerHead].texture[frame] = (texture);
-  //   frame++;
-  // }
+  readReanimFiles("SunFlower",Tyra::FileUtils::fromCwd("reanim/SunFlower.reanim"));
 }
