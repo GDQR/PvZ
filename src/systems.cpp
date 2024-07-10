@@ -394,30 +394,18 @@ void ProjectileManager::zombieCollision() {
   std::vector<int>::iterator it;
   std::vector<Zombie>::iterator it2;
   for (it = projectile.begin(); it < projectile.end(); it++) {
-    for (it2 = zombie.begin(); it2 < zombie.end(); it2++) {
+    for (it2 = zombie.begin(); it2 < zombie.end(); ) {
       if (boxColliderArray[*it].collision(&boxColliderArray[it2->id[0]]) == true) {
 
         // damage zombie
         lifeArray[it2->id[0]] -= damageArray[*it];
         // printf("zombie id: %d\n",it2->id[0]);
         // delete zombie
-        if (lifeArray[it2->id[0]] <= 0) {
-          posArray.erase(it2->father);
-          posArray.erase(it2->id[0]);
-          // posArray.erase(*it2->body[1]);
-
-          deleteFatherID(&it2->father, &it2->id[0]);
-          // deleteFatherID(*it2->father,*it2->id[1]);
-          deleteSprite(it2->id[0]);
-          animationArray.erase(it2->id[0]);
-          lifeArray.erase(it2->id[0]);
-          boxColliderArray.erase(it2->id[0]);
-          deleteDebugBoxCollider(it2->id[0]);
-          Entities::deleteID(it2->father);
-          Entities::deleteID(it2->id[0]);
+        if(it2->erase() == true){
           it2 = zombie.erase(it2);
-
           // zombiesCreated--;
+        }else{
+          it2++;
         }
 
         // delete projectile
@@ -438,6 +426,8 @@ void ProjectileManager::zombieCollision() {
         }
 
         projectilesCreated--;
+      }else{
+        it2++;
       }
     }
   }

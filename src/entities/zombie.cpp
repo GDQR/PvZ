@@ -59,6 +59,30 @@ int Zombie::move() {
   return 0;
 }
 
+bool Zombie::erase(){
+  if (lifeArray[id[0]] <= 0) {
+    posArray.erase(father);
+    
+    Entities::deleteID(father);
+    
+    for (unsigned int i = 0; i < m_animID["Zombie"].size(); i++) {
+      posArray.erase(id[i]);
+      deleteFatherID(&father, &id[i]);
+      deleteSprite(id[i]);
+      animationArray.erase(id[i]);
+      texPosArray.erase(id[i]);
+      Entities::deleteID(id[i]);
+    }
+    fatherIDArray.erase(father);
+    lifeArray.erase(id[0]);
+    damageArray.erase(id[0]);
+    boxColliderArray.erase(id[0]);
+    deleteDebugBoxCollider(id[0]);
+    
+    return true;
+  }
+  return false;
+}
 void createZombie(Vec2 pos) {
   zombie.push_back(Zombie());
   int id = zombie.size() - 1;
@@ -84,6 +108,12 @@ void createZombie(Vec2 pos) {
     animationArray[entityID].draw = true;
     zombie[id].animation(entityID, animID);
   }
+
+  // Life
+  lifeArray[zombie[id].id[0]] = 181;
+
+  // damage
+  damageArray[zombie[id].id[0]] = 100;
 
   // HitBox
   boxColliderArray[zombie[id].id[0]] = BoxCollider(pos.x, pos.y + 10, 28, 50);

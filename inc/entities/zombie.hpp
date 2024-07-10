@@ -19,6 +19,7 @@ class Zombie {
   void newZombie(Zombie_State_enum newType);
   int move();
   void animation(const int entityID, const int animID);
+  bool erase();
 };
 
 void createZombie(Tyra::Vec2 pos);

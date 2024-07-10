@@ -118,16 +118,16 @@ void Level1::init() {
   newDeckCursor(&deckCursor.id,
                 Vec2(posArray[cards[deckCursor.pos].seed].x - 3, -10));
 
-  // loadPeaShooterAnimation();
+  loadPeaShooterAnimation();
+  // createPlant(cards[deckCursor.pos].plant, 2,5);
   loadZombieAnimation();
+  createZombie(Vec2(mapCollider[2][8].x, mapCollider[2][8].y));
   loadProjectile();
-  // loadSunAnimation();
   loadSunFlowerAnimation();
   engine->font.loadFont(&myFont, "Fonts/roboto-Bold.ttf");
-  createZombie(Vec2(mapCollider[2][8].x, mapCollider[2][8].y));
-  // createPlant(5,9);
   // renderer->core.setFrameLimit(false);
-  // sunManager.createSun(Vec2(277, 77), sunCost::normalSun, false);
+  // loadSunAnimation();
+  // sunManager.create(Vec2(277, 77), sunCost::normalSun, false);
 }
 
 void Level1::update() {
@@ -174,11 +174,12 @@ void Level1::update() {
   // printf("FPS: %d\n",engine->info.getFps()) ;
   // printf("ram: %f\n",engine->info.getAvailableRAM());
   // zombiesManager.collision();
-  // projectileManager.zombieCollision();
+  projectileManager.zombieCollision();
   // printf("texture free space: %f\n",engine->renderer.core.gs.vram.getFreeSpaceInMB());
 
   // shoot zombies
-  std::vector<Zombie>::iterator it;
+  plantsManager.update();
+  // std::vector<Zombie>::iterator it;
 
   // for (int i = 0; i < 45; i++) {
   //   if (plant[i].type == PeaShotter) {
