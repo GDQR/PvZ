@@ -57,15 +57,10 @@ void loadAnimationSprite(const int entityID, const int animID){
       }
 
       spriteArray[entityID].size = originalSize[entityID] * animationDataArray[animID].scale[0];
+      // if (animationDataArray[animID].draw.count(0)) {
+      // // setSprite(entityID, animID);
+      // }
 
-      if (animationDataArray[animID].draw.count(0)) {
-        animationArray[entityID].draw = animationDataArray[animID].draw[0];
-        if (animationArray[entityID].draw == false) {
-          spritesNormalRender.erase(entityID);
-          spriteNormalIdStopRender.push_back(entityID);
-        }
-        // printf("plant draw: %d\n", animationArray[entityID].draw);
-      }
     }else{
       printf("entre en rotate\n");
       if (animationDataArray[animID].angle.count(0) == 0) {
@@ -111,17 +106,29 @@ void loadAnimationSprite(const int entityID, const int animID){
 
       rotationSprite[entityID].sprite.size = originalSize[entityID] * animationDataArray[animID].scale[0];
 
-      if (animationDataArray[animID].draw.count(0)) {
-        animationArray[entityID].draw = animationDataArray[animID].draw[0];
-        if (animationArray[entityID].draw == false) {
-          spritesRotateRender.erase(entityID);
-          spritesRotateIdStopRender.push_back(entityID);
-        }
-        printf("plant draw: %d\n", animationArray[entityID].draw);
-      }
     }
     
     printf("termine\n\n");
+}
+
+void setSprite(const int entityID, const int animID){
+    if(spriteArray.count(entityID)){
+      if (animationArray[entityID].draw == false) {
+        spritesNormalRender.erase(entityID);
+        spriteNormalIdStopRender.push_back(entityID);
+      }else {
+        spritesNormalRender[entityID] = &spriteArray[entityID];
+      }
+    }else{
+      animationArray[entityID].draw = animationDataArray[animID].draw[0];
+      if (animationArray[entityID].draw == false) {
+        spritesRotateRender.erase(entityID);
+        spritesRotateIdStopRender.push_back(entityID);
+      }else {
+        spritesRotateRender[entityID] = &rotationSprite[entityID];
+      }
+    }
+    // printf("plant draw: %d\n", animationArray[entityID].draw);
 }
 
 void readReanimFiles(std::string nameID, std::string file) {

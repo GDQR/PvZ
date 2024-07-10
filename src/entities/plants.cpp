@@ -45,6 +45,11 @@ void createPeashotter(int id, int row, int column, Tyra::Vec2 pos) {
     printf("animID: %d\n", animID);
     newFatherID(&plant[id].father, &entityID);
     loadAnimationSprite(entityID, animID);
+    animationArray[entityID].firstFrame = 79;
+    animationArray[entityID].currentFrame = 79;
+    animationArray[entityID].draw = true;
+    printf("draw: %d\n", animationArray[entityID].draw);
+    // setSprite(entityID, animID);
     if (animationDataArray[animID].name == "anim_blink" ||
           animationDataArray[animID].name == "idle_shoot_blink") {
         animationArray.erase(entityID);
@@ -52,10 +57,12 @@ void createPeashotter(int id, int row, int column, Tyra::Vec2 pos) {
 
         printf("encontre anim_blink\n");
     }
+    
     //   if(entityID == 63){
     //   createDebugSprite(entityID, Tyra::MODE_STRETCH);
     //   }
   }
+  
 
   // printf("plant[%d].id[0]: %d\n",id,plant[id].id[0]);
   // printf("plant[%d].id[1]: %d\n",id,plant[id].id[1]);

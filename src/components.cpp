@@ -191,7 +191,7 @@ void Animation::update(const int entityID) {
     currentFrame++;
 
     if (currentFrame >= animationDataArray[animID].maxFrame) {
-      currentFrame = 0;
+      currentFrame = firstFrame;
     }
 
     if (spriteArray.count(entityID) == 1) {

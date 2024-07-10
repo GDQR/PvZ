@@ -74,6 +74,7 @@ class Animation {
   unsigned int framesCounter = 0;
   unsigned int currentFrame = 0;
   unsigned int framesSpeed = 20;
+  unsigned int firstFrame = 0;
 };
 
 class AnimationData {
