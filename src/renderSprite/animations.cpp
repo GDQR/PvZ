@@ -129,7 +129,6 @@ void setSprite(const int entityID, const int animID){
         spritesNormalRender[entityID] = &spriteArray[entityID];
       }
     }else{
-      animationArray[entityID].draw = animationDataArray[animID].draw[0];
       if (animationArray[entityID].draw == false) {
         spritesRotateRender.erase(entityID);
         spritesRotateIdStopRender.push_back(entityID);
