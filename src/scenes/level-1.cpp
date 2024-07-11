@@ -98,6 +98,7 @@ void Level1::init() {
 
   createCard(PeaShotter, Vec2(120, 10));
   createCard(SunFlower, Vec2(180, 10));
+  createCard(CherryBomb, Vec2(240, 10));
 
   // loadTexture(&map[0][0],"asset_box.png"); // debug map
 
@@ -118,15 +119,16 @@ void Level1::init() {
   newDeckCursor(&deckCursor.id,
                 Vec2(posArray[cards[deckCursor.pos].seed].x - 3, -10));
 
-  loadPeaShooterAnimation();
-  // createPlant(cards[deckCursor.pos].plant, 2,5);
-  loadZombieAnimation();
-  createZombie(Vec2(mapCollider[2][8].x, mapCollider[2][8].y));
+  // loadAnimation("Sun");
+  // loadAnimation("PeaShooterSingle");
+  // loadAnimation("Zombie");
+  // loadAnimation("SunFlower");
+  // loadAnimation("CherryBomb");
+  // createPlant(cards[deckCursor.pos].plant, 2,7);
+  // createZombie(Vec2(mapCollider[2][8].x, mapCollider[2][8].y));
   loadProjectile();
-  loadSunFlowerAnimation();
   engine->font.loadFont(&myFont, "Fonts/roboto-Bold.ttf");
   // renderer->core.setFrameLimit(false);
-  // loadSunAnimation();
   // sunManager.create(Vec2(277, 77), sunCost::normalSun, false);
 }
 

@@ -375,20 +375,3 @@ void readReanimFiles(std::string nameID, std::string file) {
 void loadAnimation(std::string animName){
   readReanimFiles(animName,Tyra::FileUtils::fromCwd("reanim/"+animName+".reanim"));
 }
-
-void loadPeaShooterAnimation() {
-  readReanimFiles("PeaShooterSingle",Tyra::FileUtils::fromCwd("reanim/PeaShooterSingle.reanim"));
-}
-
-void loadZombieAnimation() {
-  TYRA_LOG("Loading Zombie animation\n");
-  readReanimFiles("Zombie",Tyra::FileUtils::fromCwd("reanim/Zombie.reanim"));
-}
-
-void loadSunAnimation() {
-  readReanimFiles("Sun",Tyra::FileUtils::fromCwd("reanim/Sun.reanim"));
-}
-
-void loadSunFlowerAnimation() {
-  readReanimFiles("SunFlower",Tyra::FileUtils::fromCwd("reanim/SunFlower.reanim"));
-}
