@@ -22,12 +22,11 @@ class Plant {
   void newPlant(Plant_State_enum newType);
   int attack();
   void ability();
+  void erase(const int entityID);
   int attackTimer = 0;
   int row;
   int column;
 };
 
-void deletePeashotter(const int pos);
-void deleteSunflower(const int pos);
 void createPlant(Plant_State_enum typePlant, const int row, const int column);
 int getPlantCost(Plant_State_enum typePlant);

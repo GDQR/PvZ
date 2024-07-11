@@ -5,6 +5,9 @@
 
 int plantsCreated = 0;
 
+void deletePeashotter(const int pos);
+void deleteSunflower(const int pos);
+
 void Plant::createSpace() {
   switch (type) {
     case PeaShotter:
@@ -72,6 +75,14 @@ void Plant::ability(){
                  true);
       attackTimer = 60 * 6;
     }
+  }
+}
+
+void Plant::erase(const int entityID){
+  if (type == PeaShotter) {
+    deletePeashotter(entityID);
+  } else if (type == SunFlower) {
+    deleteSunflower(entityID);
   }
 }
 
@@ -153,24 +164,20 @@ void deletePeashotter(const int pos) {
   plantCreatedInMap[plant[pos].row][plant[pos].column] = false;
 
   posArray.erase(plant[pos].father);
-  posArray.erase(plant[pos].id[0]);
-  posArray.erase(plant[pos].id[1]);
 
-  deleteFatherID(&plant[pos].father, &plant[pos].id[0]);
-  deleteFatherID(&plant[pos].father, &plant[pos].id[1]);
+  for (unsigned int i = 0; i < m_animID["PeaShooterSingle"].size(); i++) {
+    posArray.erase(plant[pos].id[i]);
+    deleteFatherID(&plant[pos].father, &plant[pos].id[i]);
+    animationArray.erase(plant[pos].id[i]);
+    deleteSprite(plant[pos].id[i]);
+    Entities::deleteID(plant[pos].id[i]);
+  }
 
-  animationArray.erase(plant[pos].id[0]);
+  lifeArray.erase(plant[pos].father);
 
-  deleteSprite(plant[pos].id[0]);
-  deleteSprite(plant[pos].id[1]);
-
-  lifeArray.erase(plant[pos].id[0]);
-
-  deleteDebugBoxCollider(plant[pos].id[0]);
-  deleteDebugPoint(plant[pos].id[0]);
+  deleteDebugBoxCollider(plant[pos].father);
+  deleteDebugPoint(plant[pos].father);
   Entities::deleteID(plant[pos].father);
-  Entities::deleteID(plant[pos].id[0]);
-  Entities::deleteID(plant[pos].id[1]);
   plantsCreated--;
 }
 
