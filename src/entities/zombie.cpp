@@ -60,6 +60,35 @@ int Zombie::move() {
   return 0;
 }
 
+int Zombie::attackPlant() {
+  for (int i = 0; i < 45; i++) {
+    if (plant[i].type == NonePlant) {
+      continue;
+    }
+    if (boxColliderArray[plant[i].father].collision(&boxColliderArray[id[0]]) == true) {
+      attack = true;
+      // animationArray[id[0]].animID = zombieNormalAttack;
+      if (attackTimer > 0) {
+        attackTimer--;
+      } else {
+        attackTimer = 80;
+        printf("comiendo planta\n");
+        lifeArray[plant[i].father] -= damageArray[id[0]];
+        if (lifeArray[plant[i].father] <= 0) {
+          printf("borre planta id: %d\n", plant[i].father);
+          plant[i].erase(i);
+          attack = false;
+          // animationArray[id[0]].animID = zombieWalk;
+        }
+      }
+    } else {
+      attack = false;
+      // animationArray[id[0]].animID = zombieWalk;
+    }
+  }
+  return 0;
+}
+
 void Zombie::damage(const int entityID) {
   lifeArray[id[0]] -= damageArray[entityID];
 }

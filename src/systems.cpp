@@ -281,71 +281,72 @@ void ZombiesManager::update() {
 
   for (it = zombie.begin(); it < zombie.end(); it++) {
     it->move();
+    it->attackPlant();
   }
 }
 
-int ZombiesManager::collision() {
-  std::vector<Zombie>::iterator it;
+// int ZombiesManager::collision() {
+//   std::vector<Zombie>::iterator it;
 
-  if (plantsCreated == 0) {
-    for (it = zombie.begin(); it < zombie.end(); it++) {
-      if (it->debug == true) {
-        continue;
-      }
-      it->attack = false;
-      animationArray[it->id[0]].animID = zombieWalk;
-    }
-    return 0;
-  }
+//   if (plantsCreated == 0) {
+//     for (it = zombie.begin(); it < zombie.end(); it++) {
+//       if (it->debug == true) {
+//         continue;
+//       }
+//       it->attack = false;
+//       animationArray[it->id[0]].animID = zombieWalk;
+//     }
+//     return 0;
+//   }
 
-  for (it = zombie.begin(); it < zombie.end(); it++) {
-    if (it->debug == true) {
-      continue;
-    }
-    for (int i = 0; i < 45; i++) {
-      if (plant[i].type != NonePlant) {
-        //  printf("vec plant %f,%f. vec zombi %f,%f,%f,%f\n",
-        //  pointColliderArray[*plant[i].body[0]].x,
-        //  pointColliderArray[*plant[i].body[0]].y,
-        //  boxColliderArray[*zombie[j].body[0]].x,
-        //  boxColliderArray[*zombie[j].body[0]].y,
-        //  boxColliderArray[*zombie[j].body[0]].x +
-        //  boxColliderArray[*zombie[j].body[0]].width,
-        //  boxColliderArray[*zombie[j].body[0]].y +
-        //  boxColliderArray[*zombie[j].body[0]].height);
+//   for (it = zombie.begin(); it < zombie.end(); it++) {
+//     if (it->debug == true) {
+//       continue;
+//     }
+//     for (int i = 0; i < 45; i++) {
+//       if (plant[i].type != NonePlant) {
+//         //  printf("vec plant %f,%f. vec zombi %f,%f,%f,%f\n",
+//         //  pointColliderArray[*plant[i].body[0]].x,
+//         //  pointColliderArray[*plant[i].body[0]].y,
+//         //  boxColliderArray[*zombie[j].body[0]].x,
+//         //  boxColliderArray[*zombie[j].body[0]].y,
+//         //  boxColliderArray[*zombie[j].body[0]].x +
+//         //  boxColliderArray[*zombie[j].body[0]].width,
+//         //  boxColliderArray[*zombie[j].body[0]].y +
+//         //  boxColliderArray[*zombie[j].body[0]].height);
 
-        if (boxColliderArray[plant[i].id[0]].collision(&boxColliderArray[it->id[0]]) == true) {
-          it->attack = true;
-          animationArray[it->id[0]].animID = zombieNormalAttack;
-          if (it->attackTimer > 0) {
-            it->attackTimer--;
-          } else {
-            it->attackTimer = 80;
-            printf("comiendo planta\n");
-            lifeArray[plant[i].id[0]] -= damageArray[it->id[0]];
+//         if (boxColliderArray[plant[i].id[0]].collision(&boxColliderArray[it->id[0]]) == true) {
+//           it->attack = true;
+//           animationArray[it->id[0]].animID = zombieNormalAttack;
+//           if (it->attackTimer > 0) {
+//             it->attackTimer--;
+//           } else {
+//             it->attackTimer = 80;
+//             printf("comiendo planta\n");
+//             lifeArray[plant[i].id[0]] -= damageArray[it->id[0]];
 
-            if (lifeArray[plant[i].id[0]] <= 0) {
-              printf("borre planta id: %d\n", plant[i].id[0]);
-              if (plant[i].type == PeaShotter) {
-                deletePeashotter(i);
-              } else if (plant[i].type == SunFlower) {
-                deleteSunflower(i);
-              }
+//             if (lifeArray[plant[i].id[0]] <= 0) {
+//               printf("borre planta id: %d\n", plant[i].id[0]);
+//               if (plant[i].type == PeaShotter) {
+//                 deletePeashotter(i);
+//               } else if (plant[i].type == SunFlower) {
+//                 deleteSunflower(i);
+//               }
 
-              it->attack = false;
-              animationArray[it->id[0]].animID = zombieWalk;
-            }
-          }
-        } else {
-          it->attack = false;
-          animationArray[it->id[0]].animID = zombieWalk;
-        }
-      }
-    }
-  }
+//               it->attack = false;
+//               animationArray[it->id[0]].animID = zombieWalk;
+//             }
+//           }
+//         } else {
+//           it->attack = false;
+//           animationArray[it->id[0]].animID = zombieWalk;
+//         }
+//       }
+//     }
+//   }
 
-  return 1;
-}
+//   return 1;
+// }
 
 void PlantsManager::create(){
   if (engine->pad.getClicked().Cross && debugMode == false) {

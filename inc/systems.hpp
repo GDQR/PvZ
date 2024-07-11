@@ -28,7 +28,6 @@ class ZombiesManager {
  public:
   int timer = 0;
   void update();
-  int collision();
 };
 
 class PlantsManager {
