@@ -117,7 +117,7 @@ void createPeashotter(int id, int row, int column, Tyra::Vec2 pos) {
     animationArray[entityID].draw = true;
     if (animationDataArray[animID].name == "anim_blink" ||
           animationDataArray[animID].name == "idle_shoot_blink") {
-        animationArray.erase(entityID);
+        deleteAnimation(entityID);
         animationIdStopRender.push_back(entityID);
         animationArray[entityID].draw = false;
         printf("encontre anim_blink\n");
@@ -169,7 +169,7 @@ void deletePeashotter(const int pos) {
   for (unsigned int i = 0; i < m_animID["PeaShooterSingle"].size(); i++) {
     posArray.erase(plant[pos].id[i]);
     deleteFatherID(&plant[pos].father, &plant[pos].id[i]);
-    animationArray.erase(plant[pos].id[i]);
+    deleteAnimation(plant[pos].id[i]);
     deleteSprite(plant[pos].id[i]);
     Entities::deleteID(plant[pos].id[i]);
   }
@@ -210,7 +210,7 @@ void createSunflower(const int id, int row, int col, Tyra::Vec2 pos) {
     animationArray[entityID].currentFrame = 4;
     // animationArray[entityID].draw = true;
     if (animationDataArray[animID].name == "anim_blink") {
-      animationArray.erase(entityID);
+      deleteAnimation(entityID);
       animationIdStopRender.push_back(entityID);
       animationArray[entityID].draw = false;
       // printf("encontre anim_blink\n");
@@ -243,7 +243,7 @@ void deleteSunflower(const int pos) {
   for (unsigned int i = 0; i < m_animID["SunFlower"].size(); i++) {
     posArray.erase(plant[pos].id[i]);
     deleteFatherID(&plant[pos].father, &plant[pos].id[i]);
-    animationArray.erase(plant[pos].id[i]);
+    deleteAnimation(plant[pos].id[i]);
     deleteSprite(plant[pos].id[i]);
     Entities::deleteID(plant[pos].id[i]);
   }

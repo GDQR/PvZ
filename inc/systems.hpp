@@ -58,4 +58,5 @@ void createSprite(int id, Tyra::SpriteMode mode, Tyra::Vec2 position,
 void createSpriteRotate(int id, Tyra::SpriteMode mode, Tyra::Vec2 position,
                         Tyra::Vec2 size, const Tyra::Vec2 angle);
 void deleteFatherID(int* fatherID, int* childID);
-void deleteSprite(const int entitieID);
+void deleteSprite(const int entityID);
+void deleteAnimation(const int entityID);
