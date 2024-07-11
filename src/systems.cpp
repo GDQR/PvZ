@@ -367,6 +367,7 @@ void PlantsManager::create(){
 void PlantsManager::update() {
   for(int i = 0; i < 45; i++){
     plant[i].attack();
+    plant[i].ability();
   }
 }
 

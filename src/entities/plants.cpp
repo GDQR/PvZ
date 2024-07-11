@@ -21,7 +21,11 @@ void Plant::newPlant(Plant_State_enum newType) {
   createSpace();
 }
 
-void Plant::attack(){
+int Plant::attack(){
+  if(type == NonePlant){
+    return 1;
+  }
+
   std::vector<Zombie>::iterator it;
 
   for (it = zombie.begin(); it < zombie.end(); it++) {
@@ -55,17 +59,20 @@ void Plant::attack(){
       }
     } 
   }
-     /*else if (plant[i].type == SunFlower) {
-      if (plant[i].attackTimer > 0) {
-        plant[i].attackTimer--;
-      } else {
-        printf("sunflower create sun\n");
-        sunManager.createSun(spriteArray[plant[i].id[0]].position, sunCost::normalSun,
-                   true);
-        plant[i].attackTimer = 60 * 6;
-      }
-    }*/
-  
+  return 0;
+}
+
+void Plant::ability(){
+  if (type == SunFlower) {
+    if (attackTimer > 0) {
+      attackTimer--;
+    } else {
+      printf("sunflower create sun\n");
+      sunManager.create(spriteArray[id[0]].position, sunCost::normalSun,
+                 true);
+      attackTimer = 60 * 6;
+    }
+  }
 }
 
 void createPeashotter(int id, int row, int column, Tyra::Vec2 pos) {

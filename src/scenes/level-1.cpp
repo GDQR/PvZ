@@ -179,53 +179,6 @@ void Level1::update() {
 
   // shoot zombies
   plantsManager.update();
-  // std::vector<Zombie>::iterator it;
-
-  // for (int i = 0; i < 45; i++) {
-  //   if (plant[i].type == PeaShotter) {
-  //     // printf("hay una planta en %d\n",i);
-
-  //     for (it = zombie.begin(); it < zombie.end(); it++) {
-  //       //  printf("vec plant %f,%f. vec zombi %f,%f,%f,%f\n",
-  //       //  pointColliderArray[*plant[i].body[0]].x,
-  //       //  pointColliderArray[*plant[i].body[0]].y,
-  //       //  boxColliderArray[*zombie[j].body[0]].x,
-  //       //  boxColliderArray[*zombie[j].body[0]].y,
-  //       //  boxColliderArray[*zombie[j].body[0]].x +
-  //       //  boxColliderArray[*zombie[j].body[0]].width,
-  //       //  boxColliderArray[*zombie[j].body[0]].y +
-  //       //  boxColliderArray[*zombie[j].body[0]].height);
-
-  //       if (pointColliderArray[plant[i].father].x <
-  //               boxColliderArray[*(it)->body[0]].x +
-  //                   boxColliderArray[*(it)->body[0]].width &&
-  //           pointColliderArray[plant[i].father].y >
-  //               boxColliderArray[*(it)->body[0]].y &&
-  //           pointColliderArray[plant[i].father].y <
-  //               boxColliderArray[*(it)->body[0]].y +
-  //                   boxColliderArray[*(it)->body[0]].height) {
-  //         // printf("hay un zombi en frente\n");
-  //         if (plant[i].attackTimer >= 0) {
-  //           plant[i].attackTimer--;
-  //         } else if (stopAnimation == false) {
-  //           // printf("disparar\n");
-  //           newProjectile(pointColliderArray[plant[i].father]);
-  //           plant[i].attackTimer = 60;
-  //         }
-  //         it = zombie.end();
-  //       }
-  //     }
-  //   } else if (plant[i].type == SunFlower) {
-  //     if (plant[i].attackTimer > 0) {
-  //       plant[i].attackTimer--;
-  //     } else {
-  //       printf("sunflower create sun\n");
-  //       sunManager.createSun(spriteArray[plant[i].id[0]].position, sunCost::normalSun,
-  //                  true);
-  //       plant[i].attackTimer = 60 * 6;
-  //     }
-  //   }
-  // }
 
   if (timerZombies > 0) {
     timerZombies--;
