@@ -35,6 +35,8 @@ std::vector<Sun> sun;
 std::vector<NaturalSun> naturalSun;
 std::vector<int> projectile;
 std::vector<Card> cards;
+Cursor cursor;
+DeckCursor deckCursor;
 
 bool zombieCreateRow[5];
 bool plantCreatedInMap[5][9];
@@ -86,17 +88,6 @@ void deleteSprite(const int entitieID) {
   }
 }
 
-/*
- * @return True if collision exist
- */
-bool boxCollision(BoxCollider* col1, BoxCollider* col2) {
-  if (col1->x + col1->width >= col2->x && col2->x + col2->width >= col1->x &&
-      col1->y + col1->height >= col2->y && col2->y + col2->height >= col1->y) {
-    return true;
-  }
-  return false;
-}
-
 BoxCollider::BoxCollider() {}
 BoxCollider::BoxCollider(float x, float y, float width, float height) {
   this->x = x;
@@ -117,6 +108,17 @@ BoxCollider::BoxCollider(float x, float y, float width, float height,
 void BoxCollider::move(const int entityID) {
   x = offsetX + posArray[entityID].x;
   y = offsetY + posArray[entityID].y;
+}
+
+/*
+ * @return True if collision exist
+ */
+bool BoxCollider::collision(BoxCollider* box){
+  if (x + width >= box->x && box->x + box->width >= x &&
+      y + height >= box->y && box->y + box->height >= y) {
+    return true;
+  }
+  return false;
 }
 
 void Cursor::move() {
@@ -190,8 +192,8 @@ void Animation::update(const int entityID) {
     framesCounter = 0;
     currentFrame++;
 
-    if (currentFrame >= animationDataArray[animID].maxFrame) {
-      currentFrame = 0;
+    if (currentFrame >= lastFrame) {
+      currentFrame = firstFrame;
     }
 
     if (spriteArray.count(entityID) == 1) {
@@ -240,8 +242,15 @@ void Animation::updateNormalSprites(const int entityID) {
     }
 
     // Link new Texture to the sprite entitie
-    animationDataArray[animID].texture[currentFrame]->addLink(
-        spriteArray[entityID].id);
+    texRepo->getByTextureId(animationDataArray[animID].texture[currentFrame])
+        ->addLink(spriteArray[entityID].id);
+    originalSize[entityID] = Vec2(
+        texRepo
+            ->getByTextureId(animationDataArray[animID].texture[currentFrame])
+            ->getWidth(),
+        texRepo
+            ->getByTextureId(animationDataArray[animID].texture[currentFrame])
+            ->getHeight());
   }
   if (animationDataArray[animID].alpha.count(currentFrame) == 1) {
     spriteArray[entityID].color.a =
@@ -254,7 +263,7 @@ void Animation::updateNormalSprites(const int entityID) {
 }
 
 void Animation::updateRotationSprites(const int entityID) {
-  if (animationDataArray[animID].texture[currentFrame] != nullptr) {
+  if (animationDataArray[animID].texture.count(currentFrame) == 1) {
     // Unlink Texture from the sprite entitie
     if (texRepo->getBySpriteId(rotationSprite[entityID].sprite.id) != nullptr) {
       // printf("unlink sprite id: %d\n", spriteArray[entityID].id);
@@ -263,8 +272,15 @@ void Animation::updateRotationSprites(const int entityID) {
     }
 
     // Link new Texture to the sprite entitie
-    animationDataArray[animID].texture[currentFrame]->addLink(
-        rotationSprite[entityID].sprite.id);
+    texRepo->getByTextureId(animationDataArray[animID].texture[currentFrame])
+        ->addLink(rotationSprite[entityID].sprite.id);
+    originalSize[entityID] = Vec2(
+        texRepo
+            ->getByTextureId(animationDataArray[animID].texture[currentFrame])
+            ->getWidth(),
+        texRepo
+            ->getByTextureId(animationDataArray[animID].texture[currentFrame])
+            ->getHeight());
   }
 
   if (animationDataArray[animID].scale.count(currentFrame) == 1) {

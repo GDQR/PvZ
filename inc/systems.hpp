@@ -1,5 +1,5 @@
 #pragma once
-#include "components.hpp"
+#include <tyra>
 
 class AnimationManager {
  private:
@@ -28,7 +28,12 @@ class ZombiesManager {
  public:
   int timer = 0;
   void update();
-  int collision();
+};
+
+class PlantsManager {
+  public:
+  void create();
+  void update();
 };
 
 class ProjectileManager {
@@ -42,8 +47,9 @@ extern ProjectileManager projectileManager;
 extern RendererSprites renderSprites;
 extern RendererDebugSpritesManager renderDebugSpritesManager;
 extern ZombiesManager zombiesManager;
+extern PlantsManager plantsManager;
 
-void newProjectile(Vec2 position);
+void newProjectile(Tyra::Vec2 position);
 void newFatherID(int* fatherID, int* childID);
 void newCursor(int* cursor, Tyra::Vec2 pos);
 void newDeckCursor(int* cursor, Tyra::Vec2 pos);
@@ -53,4 +59,3 @@ void createSpriteRotate(int id, Tyra::SpriteMode mode, Tyra::Vec2 position,
                         Tyra::Vec2 size, const Tyra::Vec2 angle);
 void deleteFatherID(int* fatherID, int* childID);
 void deleteSprite(const int entitieID);
-bool boxCollision(BoxCollider* col1, BoxCollider* col2);
