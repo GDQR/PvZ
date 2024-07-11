@@ -1,6 +1,7 @@
 // File for all plants data
 #include "entities/plants.hpp"
 #include "renderSprite/animations.hpp"
+#include "components.hpp"
 #include "systems.hpp"
 
 int plantsCreated = 0;
@@ -254,6 +255,48 @@ void deleteSunflower(const int pos) {
   plantsCreated--;
 }
 
+void createCherryBomb(const int id, int row, int col, Tyra::Vec2 pos){
+  plant[id].newPlant(CherryBomb);
+
+  plant[id].row = row;
+  plant[id].column = col;
+
+  plant[id].father = Entities::newID();
+
+  posArray[plant[id].father] = pos;
+
+  printf("size: %d\n", m_animID["CherryBomb"].size());
+
+  int entityID;
+  int animID;
+
+  for (unsigned int i = 0; i < m_animID["CherryBomb"].size(); i++) {
+    plant[id].id.push_back(Entities::newID());
+    entityID = plant[id].id[i];
+    animID = m_animID["CherryBomb"][i];
+    printf("plant ID: %d\n", entityID);
+    printf("animID: %d\n", animID);
+    newFatherID(&plant[id].father, &entityID);
+    loadAnimationSprite(entityID, animID);
+    animationArray[entityID].firstFrame = 0;
+    animationArray[entityID].lastFrame = 13;
+    animationArray[entityID].currentFrame = 0;
+  }
+
+  // Life
+
+  lifeArray[plant[id].father] = 300;
+
+  // time
+
+  plant[id].attackTimer = 30;
+
+  // HitBox
+  boxColliderArray[plant[id].father] =
+      BoxCollider(pos.x + 10, pos.y + 20, 28, 38);
+  createDebugBoxCollider(plant[id].father, Tyra::MODE_STRETCH);
+}
+
 void createPlant(Plant_State_enum typePlant, const int row, const int column) {
   if (plantCreatedInMap[row][column] == false) {
     plantCreatedInMap[row][column] = true;
@@ -272,7 +315,12 @@ void createPlant(Plant_State_enum typePlant, const int row, const int column) {
             plantsCreated, row, column,
             Vec2(mapCollider[row][column].x, mapCollider[row][column].y));
         break;
-
+      case CherryBomb:
+        printf("cherryBomb");
+        createCherryBomb(
+            plantsCreated, row, column,
+            Vec2(mapCollider[row][column].x, mapCollider[row][column].y));
+        break;
       default:
         break;
     }

@@ -1,9 +1,10 @@
 #include "renderSprite/animations.hpp"
 #include "renderSprite/textures.hpp"
+#include "components.hpp"
 #include "systems.hpp"
 #include <iostream>
 
-int maxAnimID = 20;
+int maxAnimID = 0;
 
 void loadAnimationSprite(const int entityID, const int animID){
     bool rotateSprite = false;
@@ -103,6 +104,17 @@ void loadAnimationSprite(const int entityID, const int animID){
           break;
         }
       }
+
+      for (unsigned int j = 0; j < animationDataArray[animID].maxFrame; j++) {
+        if (animationDataArray[animID].draw.count(j) == 1) {
+          animationArray[entityID].draw = animationDataArray[animID].draw[j];
+          setSprite(entityID, animID);
+          break;
+        }
+      }
+      // if (animationDataArray[animID].draw.count(0)) {
+      // // setSprite(entityID, animID);
+      // }
     }
     
     printf("termine\n\n");
@@ -152,6 +164,7 @@ void readReanimFiles(std::string nameID, std::string file) {
   bool passSY=false;
   bool passKX=false;
   bool passKY=false;
+  bool passAlpha=false;
   bool useAnim = true;
   bool textureFounded = false;
   bool save = true;
@@ -159,6 +172,9 @@ void readReanimFiles(std::string nameID, std::string file) {
   float ky = 0.0f;
   float sx = 1.0f;
   float sy = 1.0f;
+  float a = 1.0f;
+  bool beforeDraw = false;
+  bool draw = true;
   Tyra::Texture* texture = nullptr;
   while (!MyReadFile.eof()) {
     // int length = MyReadFile.tellg();
@@ -180,6 +196,9 @@ void readReanimFiles(std::string nameID, std::string file) {
       kx = 0.0f;
       sx = 1.0f;
       sy = 1.0f;
+      a = 1.0f;
+      beforeDraw = false;
+      draw = true;
       if(useAnim == true){
         m_animID[nameID].push_back(maxAnimID);
         animID = maxAnimID;
@@ -200,11 +219,11 @@ void readReanimFiles(std::string nameID, std::string file) {
       if(insideArrow == "-1"){
         printf(" NO DRAW");
         save = false;
-        animationDataArray[animID].draw[countframes] = false;
+        draw = false;
       }else{
         printf(" DRAW");
         save = true;
-        animationDataArray[animID].draw[countframes] = true;
+        draw = true;
       }  
       std::getline(MyReadFile, insideArrow, '>');
     } else if (insideArrow == "i") {
@@ -272,9 +291,11 @@ void readReanimFiles(std::string nameID, std::string file) {
       animationDataArray[animID].scale[countframes].y = sy;
       std::getline(MyReadFile, insideArrow, '>');
     } else if (insideArrow == "a") {
+      passAlpha = true;
       std::getline(MyReadFile, insideArrow, '<');
       std::cout << " a: " << insideArrow;
-      animationDataArray[animID].alpha[countframes] = std::stof(insideArrow);
+      a = std::stof(insideArrow);
+      animationDataArray[animID].alpha[countframes] = a;
       std::getline(MyReadFile, insideArrow, '>');
     } else if (insideArrow == "t") {
       std::cout << "Frame " << countframes << ":";
@@ -297,6 +318,16 @@ void readReanimFiles(std::string nameID, std::string file) {
         if(passSY == false){
           animationDataArray[animID].scale[countframes].y = sy;
         }
+        if(passAlpha == false){
+          animationDataArray[animID].alpha[countframes] = a;
+        }
+        // printf("alpha: %f\n",animationDataArray[animID].alpha[countframes]);
+      }
+
+      if(beforeDraw != draw){
+        beforeDraw = draw;
+        animationDataArray[animID].draw[countframes] = draw;
+        printf("draw: %d\n",animationDataArray[animID].draw[countframes]);
       }
       
 
@@ -313,6 +344,7 @@ void readReanimFiles(std::string nameID, std::string file) {
       passSY = false;
       passKX = false;
       passKY = false;
+      passAlpha = false;
     } else if (insideArrow == "track" && finishCountFrames == false) {
       int length = MyReadFile.tellg();
       // std::cout << "pos: "<<length << std::endl;
@@ -339,6 +371,10 @@ void readReanimFiles(std::string nameID, std::string file) {
   }
   // Close the file
   MyReadFile.close();
+}
+
+void loadAnimation(std::string animName){
+  readReanimFiles(animName,Tyra::FileUtils::fromCwd("reanim/"+animName+".reanim"));
 }
 
 void loadPeaShooterAnimation() {
