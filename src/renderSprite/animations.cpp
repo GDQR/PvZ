@@ -28,7 +28,7 @@ void loadAnimationSprite(const int entityID, const int animID){
 
       int spriteID = spriteArray[entityID].id;
       Tyra::Texture* texture;
-      animationArray[entityID] = Animation((enumAnimation)animID);
+      animationArray[entityID] = Animation(animID);
 
       // printf("sprite ID: %d\n", spriteID);
 
@@ -70,7 +70,7 @@ void loadAnimationSprite(const int entityID, const int animID){
 
       int spriteID = rotationSprite[entityID].sprite.id;
       Tyra::Texture* texture;
-      animationArray[entityID] = Animation((enumAnimation)animID);
+      animationArray[entityID] = Animation(animID);
 
       for (unsigned int j = 0; j < animationDataArray[animID].maxFrame; j++) {
         if (animationDataArray[animID].position.count(j) == 1) {

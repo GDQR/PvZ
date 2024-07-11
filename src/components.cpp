@@ -185,7 +185,7 @@ void Card::update() {
 
 Animation::Animation() {}
 
-Animation::Animation(enumAnimation anim) { animID = anim; }
+Animation::Animation(const int anim) { animID = anim; }
 
 void Animation::update(const int entityID) {
   if (framesCounter >= (60 / framesSpeed)) {
