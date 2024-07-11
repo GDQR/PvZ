@@ -117,13 +117,13 @@ void createPeashotter(int id, int row, int column, Tyra::Vec2 pos) {
     animationArray[entityID].draw = true;
     if (animationDataArray[animID].name == "anim_blink" ||
           animationDataArray[animID].name == "idle_shoot_blink") {
-        deleteAnimation(entityID);
-        animationIdStopRender.push_back(entityID);
-        animationArray[entityID].draw = false;
-        printf("encontre anim_blink\n");
-      setSprite(entityID, animID);
+      animationArray[entityID].draw = false;
+      setSprite(entityID, animID, animationArray[entityID].draw);
+      deleteAnimation(entityID);
+      animationIdStopRender.push_back(entityID);
+      printf("encontre anim_blink\n");
     }
-    printf("draw: %d\n", animationArray[entityID].draw);
+    // printf("draw: %d\n", animationArray[entityID].draw);
   }
   
 
@@ -214,7 +214,7 @@ void createSunflower(const int id, int row, int col, Tyra::Vec2 pos) {
       animationIdStopRender.push_back(entityID);
       animationArray[entityID].draw = false;
       // printf("encontre anim_blink\n");
-      setSprite(entityID, animID);
+      setSprite(entityID, animID, animationArray[entityID].draw);
     }
     // printf("draw: %d\n", animationArray[entityID].draw);
   }

@@ -33,7 +33,7 @@ void Zombie::animation(const int entityID, const int animID) {
           animationDataArray[animID].name == "Zombie_innerarm_screendoor" ||
           animationDataArray[animID].name == "Zombie_flaghand") {
         animationArray[entityID].draw = false;
-        setSprite(entityID, animID);
+        setSprite(entityID, animID,animationArray[entityID].draw);
         deleteAnimation(entityID);
         animationIdStopRender.push_back(entityID);
         printf("encontre anim_bucket o anim_cone\n");

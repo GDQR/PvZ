@@ -108,7 +108,7 @@ void loadAnimationSprite(const int entityID, const int animID){
       for (unsigned int j = 0; j < animationDataArray[animID].maxFrame; j++) {
         if (animationDataArray[animID].draw.count(j) == 1) {
           animationArray[entityID].draw = animationDataArray[animID].draw[j];
-          setSprite(entityID, animID);
+          setSprite(entityID, animID, animationArray[entityID].draw);
           break;
         }
       }
@@ -120,21 +120,23 @@ void loadAnimationSprite(const int entityID, const int animID){
     printf("termine\n\n");
 }
 
-void setSprite(const int entityID, const int animID){
+void setSprite(const int entityID, const int animID, const bool draw){
     if(spriteArray.count(entityID)){
-      if (animationArray[entityID].draw == false) {
+      if (draw == false) {
         spritesNormalRender.erase(entityID);
         spriteNormalIdStopRender.push_back(entityID);
       }else {
         spritesNormalRender[entityID] = &spriteArray[entityID];
       }
-    }else{
-      if (animationArray[entityID].draw == false) {
+    }else if(rotationSprite.count(entityID)){
+      if (draw == false) {
         spritesRotateRender.erase(entityID);
         spritesRotateIdStopRender.push_back(entityID);
       }else {
         spritesRotateRender[entityID] = &rotationSprite[entityID];
       }
+    }else{
+      TYRA_WARN("Sprite don't founded in setSprite");
     }
     // printf("plant draw: %d\n", animationArray[entityID].draw);
 }
