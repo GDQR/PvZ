@@ -96,19 +96,15 @@ void createPeashotter(int id, int row, int column, Tyra::Vec2 pos) {
     animationArray[entityID].lastFrame = 104;
     animationArray[entityID].currentFrame = 79;
     animationArray[entityID].draw = true;
-    printf("draw: %d\n", animationArray[entityID].draw);
-    // setSprite(entityID, animID);
     if (animationDataArray[animID].name == "anim_blink" ||
           animationDataArray[animID].name == "idle_shoot_blink") {
         animationArray.erase(entityID);
         animationIdStopRender.push_back(entityID);
-
+        animationArray[entityID].draw = false;
         printf("encontre anim_blink\n");
+      setSprite(entityID, animID);
     }
-    
-    //   if(entityID == 63){
-    //   createDebugSprite(entityID, Tyra::MODE_STRETCH);
-    //   }
+    printf("draw: %d\n", animationArray[entityID].draw);
   }
   
 
@@ -172,50 +168,54 @@ void deletePeashotter(const int pos) {
 }
 
 void createSunflower(const int id, int row, int col, Tyra::Vec2 pos) {
-  // plant[id].newPlant(SunFlower);
+  plant[id].newPlant(SunFlower);
 
-  // plant[id].row = row;
-  // plant[id].column = col;
+  plant[id].row = row;
+  plant[id].column = col;
 
-  // plant[id].id[0] = Entities::newID();
-  // plant[id].id[1] = Entities::newID();
-  // plant[id].id[2] = Entities::newID();
+  plant[id].father = Entities::newID();
 
-  // newFatherID(&plant[id].father, &plant[id].id[0]);
-  // newFatherID(&plant[id].father, &plant[id].id[1]);
+  posArray[plant[id].father] = pos;  // Vec2(row, column);
 
-  // posArray[plant[id].father] = pos;  // Vec2(row, column);
+  printf("size: %d\n", m_animID["SunFlower"].size());
 
-  // createSprite(plant[id].id[0], Tyra::MODE_STRETCH, Vec2(0, 5),
-  //              Vec2(128 / 1.6f, 64 / 1.6f));
-  // // createSprite(*plant[id].body[1], Tyra::MODE_STRETCH, Vec2(0, 5),
-  // //              Vec2(128 / 1.6f, 128 / 1.6f));
+  int entityID;
+  int animID;
 
-  // // printf("plant[%d].id[0] sprite id: %d\n", id,
-  // //        spriteArray[*plant[id].body[0]].id);
-  // // printf("plant[%d].id[1] sprite id:
-  // // %d\n",id,spriteArray[*plant[id].body[1]].id); printf("plant[%d].id[2]:
-  // // %d\n",id,plant[id].id[2]);
+  for (unsigned int i = 0; i < m_animID["SunFlower"].size(); i++) {
+    plant[id].id.push_back(Entities::newID());
+    entityID = plant[id].id[i];
+    animID = m_animID["SunFlower"][i];
+    printf("plant ID: %d\n", entityID);
+    printf("animID: %d\n", animID);
+    newFatherID(&plant[id].father, &entityID);
+    loadAnimationSprite(entityID, animID);
+    animationArray[entityID].firstFrame = 4;
+    animationArray[entityID].lastFrame = animationDataArray[animID].maxFrame;
+    animationArray[entityID].currentFrame = 4;
+    // animationArray[entityID].draw = true;
+    if (animationDataArray[animID].name == "anim_blink") {
+      animationArray.erase(entityID);
+      animationIdStopRender.push_back(entityID);
+      animationArray[entityID].draw = false;
+      // printf("encontre anim_blink\n");
+      setSprite(entityID, animID);
+    }
+    // printf("draw: %d\n", animationArray[entityID].draw);
+  }
 
-  // animationArray[plant[id].id[0]] = Animation(SunFlowerHead);
+  // Life
 
-  // animationDataArray[SunFlowerHead].texture[0]->addLink(
-  //     spriteArray[plant[id].id[0]].id);
-  // // animationDataArray[peaShooterBody].texture[0]->addLink(
-  // //     spriteArray[*plant[id].body[1]].id);
+  lifeArray[plant[id].father] = 300;
 
-  // // Life
+  // time
 
-  // lifeArray[plant[id].id[0]] = 300;
+  plant[id].attackTimer = 30;
 
-  // // time
-
-  // plant[id].attackTimer = 30;
-
-  // // HitBox
-  // boxColliderArray[plant[id].id[0]] =
-  //     BoxCollider(pos.x + 10, pos.y + 20, 28, 38);
-  // createDebugBoxCollider(plant[id].id[0], Tyra::MODE_STRETCH);
+  // HitBox
+  boxColliderArray[plant[id].father] =
+      BoxCollider(pos.x + 10, pos.y + 20, 28, 38);
+  createDebugBoxCollider(plant[id].father, Tyra::MODE_STRETCH);
 }
 
 void deleteSunflower(const int pos) {

@@ -31,6 +31,7 @@ void Zombie::animation(const int entityID, const int animID) {
           animationDataArray[animID].name == "Zombie_mustache" ||
           animationDataArray[animID].name == "Zombie_innerarm_screendoor" ||
           animationDataArray[animID].name == "Zombie_flaghand") {
+        animationArray[entityID].draw = false;
         setSprite(entityID, animID);
         animationArray.erase(entityID);
         animationIdStopRender.push_back(entityID);
