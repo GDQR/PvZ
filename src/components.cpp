@@ -68,26 +68,28 @@ void createSpriteRotate(int id, Tyra::SpriteMode mode, Tyra::Vec2 position,
   spritesRotateRender[id] = &rotationSprite[id];
 }
 
-void deleteSprite(const int entitieID) {
-  if (spriteArray.count(entitieID) == 1) {
+void deleteSprite(const int entityID) {
+  if (spriteArray.count(entityID) == 1) {
     engine->renderer.getTextureRepository()
-        .getBySpriteId(spriteArray[entitieID].id)
-        ->removeLinkById(spriteArray[entitieID].id);
-    spriteArray.erase(entitieID);
-    if (spritesNormalRender.count(entitieID)) {
-      spritesNormalRender.erase(entitieID);
+        .getBySpriteId(spriteArray[entityID].id)
+        ->removeLinkById(spriteArray[entityID].id);
+    spriteArray.erase(entityID);
+    if (spritesNormalRender.count(entityID)) {
+      spritesNormalRender.erase(entityID);
     }
   } else {
     engine->renderer.getTextureRepository()
-        .getBySpriteId(rotationSprite[entitieID].sprite.id)
-        ->removeLinkById(rotationSprite[entitieID].sprite.id);
-    rotationSprite.erase(entitieID);
-    if (spritesRotateRender.count(entitieID)) {
-      spritesRotateRender.erase(entitieID);
+        .getBySpriteId(rotationSprite[entityID].sprite.id)
+        ->removeLinkById(rotationSprite[entityID].sprite.id);
+    rotationSprite.erase(entityID);
+    if (spritesRotateRender.count(entityID)) {
+      spritesRotateRender.erase(entityID);
     }
   }
 }
-
+void deleteAnimation(const int entityID){
+  animationArray.erase(entityID);
+}
 BoxCollider::BoxCollider() {}
 BoxCollider::BoxCollider(float x, float y, float width, float height) {
   this->x = x;
@@ -185,7 +187,7 @@ void Card::update() {
 
 Animation::Animation() {}
 
-Animation::Animation(enumAnimation anim) { animID = anim; }
+Animation::Animation(const int anim) { animID = anim; }
 
 void Animation::update(const int entityID) {
   if (framesCounter >= (60 / framesSpeed)) {
@@ -295,6 +297,7 @@ void Animation::updateRotationSprites(const int entityID) {
   if (animationDataArray[animID].alpha.count(currentFrame) == 1) {
     rotationSprite[entityID].sprite.color.a =
         animationDataArray[animID].alpha[currentFrame] * 128;
+    // printf("key: %d, frame: %d, alpha: %f\n", entityID,currentFrame, animationDataArray[animID].alpha[currentFrame]);
   }
 }
 

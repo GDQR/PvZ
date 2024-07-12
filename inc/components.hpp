@@ -9,20 +9,10 @@
 #include "entities/zombie.hpp"
 #include "entities/sun.hpp"
 
-enum enumAnimation {
-  peaShooterHead,
-  peaShooterBody,
-  deb_zombieWalk,
-  deb_zombieNormalAttack,
-  zombieWalk,
-  zombieNormalAttack,
-  sunAnim,
-  sunAnim2,
-  Sun1,
-  Sun2,
-  Sun3,
-  SunFlowerHead
-};
+// enum enumAnimation {
+//   zombieWalk,
+//   zombieNormalAttack
+// };
 
 class FatherID {
  public:
@@ -61,7 +51,7 @@ class Card {
 class Animation {
  public:
   Animation();
-  Animation(enumAnimation anim);
+  Animation(const int anim);
   void update(const int entityID);
   void activeDrawNormalSprites(const int entityID);
   void updateNormalSprites(const int entityID);
