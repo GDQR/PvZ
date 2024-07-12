@@ -59,6 +59,7 @@ enum Plant_State_enum {
   GoldMagnet,
   Spikerock,
   CobCannon,
+  Imitator,
   enumMaxPlants
 };
 

@@ -4,7 +4,7 @@
 #include "components.hpp"
 #include "systems.hpp"
 
-std::vector<int> plantCost;
+int plantCost[enumMaxPlants];
 int plantsCreated = 0;
 
 void createPeashotter(int id, int row, int column, Tyra::Vec2 pos) {
@@ -355,7 +355,6 @@ void Plant::erase(const int entityID){
 }
 
 void loadPlantCost(){
-  plantCost.reserve(enumMaxPlants);
   plantCost[PeaShotter] = 100;
   plantCost[SunFlower] = 50;
   plantCost[CherryBomb] = 150;
@@ -404,6 +403,7 @@ void loadPlantCost(){
   plantCost[GoldMagnet] = 50;
   plantCost[Spikerock] = 125;
   plantCost[CobCannon] = 500;
+  plantCost[Imitator] = 0; // this needs to copy the cost of another plant 
 } 
 int getPlantCost(Plant_State_enum typePlant) {
   return plantCost[typePlant];
