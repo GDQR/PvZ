@@ -383,7 +383,7 @@ void ProjectileManager::update() {
       printf("borrando proyectil\n");
       deleteSprite(*it);
       boxColliderArray.erase(*it);
-      posArray.erase(*it);
+      deletePosArray(*it);
       deleteDebugBoxCollider(*it);
       Entities::deleteID(*it);
       it = projectile.erase(it);

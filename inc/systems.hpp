@@ -60,3 +60,5 @@ void createSpriteRotate(int id, Tyra::SpriteMode mode, Tyra::Vec2 position,
 void deleteFatherID(int* fatherID, int* childID);
 void deleteSprite(const int entityID);
 void deleteAnimation(const int entityID);
+void deletePosArray(const int entityID);
+void deleteTexPosArray(const int entityID);

@@ -90,6 +90,15 @@ void deleteSprite(const int entityID) {
 void deleteAnimation(const int entityID){
   animationArray.erase(entityID);
 }
+
+void deletePosArray(const int entityID){
+  posArray.erase(entityID);
+}
+
+void deleteTexPosArray(const int entityID){
+  texPosArray.erase(entityID);
+}
+
 BoxCollider::BoxCollider() {}
 BoxCollider::BoxCollider(float x, float y, float width, float height) {
   this->x = x;

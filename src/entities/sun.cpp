@@ -91,7 +91,7 @@ bool Sun::erase(const int cursorID) {
       deleteDebugSpritePivot(id[i]);
       deleteSprite(id[i]);
       deleteAnimation(id[i]);
-      texPosArray.erase(id[i]);
+      deleteTexPosArray(id[i]);
       Entities::deleteID(id[i]);
     }
 

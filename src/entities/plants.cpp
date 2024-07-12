@@ -6,87 +6,6 @@
 
 int plantsCreated = 0;
 
-void deletePeashotter(const int pos);
-void deleteSunflower(const int pos);
-
-void Plant::createSpace() {
-  switch (type) {
-    case PeaShotter:
-      break;
-    case SunFlower:
-      id.reserve(3);
-    default:
-      break;
-  }
-}
-
-void Plant::newPlant(Plant_State_enum newType) {
-  type = newType;
-  createSpace();
-}
-
-int Plant::attack(){
-  if(type == NonePlant){
-    return 1;
-  }
-
-  std::vector<Zombie>::iterator it;
-
-  for (it = zombie.begin(); it < zombie.end(); it++) {
-    if(type == PeaShotter){
-      //  printf("vec plant %f,%f. vec zombi %f,%f,%f,%f\n",
-      //  pointColliderArray[*plant[i].body[0]].x,
-      //  pointColliderArray[*plant[i].body[0]].y,
-      //  boxColliderArray[*zombie[j].body[0]].x,
-      //  boxColliderArray[*zombie[j].body[0]].y,
-      //  boxColliderArray[*zombie[j].body[0]].x +
-      //  boxColliderArray[*zombie[j].body[0]].width,
-      //  boxColliderArray[*zombie[j].body[0]].y +
-      //  boxColliderArray[*zombie[j].body[0]].height)
-      if (pointColliderArray[father].x <
-              boxColliderArray[it->id[0]].x +
-                  boxColliderArray[it->id[0]].width &&
-          pointColliderArray[father].y >
-              boxColliderArray[it->id[0]].y &&
-          pointColliderArray[father].y <
-              boxColliderArray[it->id[0]].y +
-                  boxColliderArray[it->id[0]].height) {
-        // printf("hay un zombi en frente\n");
-        if (attackTimer >= 0) {
-          attackTimer--;
-        } else if (stopAnimation == false) {
-          // printf("disparar\n");
-          newProjectile(pointColliderArray[father]);
-          attackTimer = 60;
-        }
-        it = zombie.end();
-      }
-    } 
-  }
-  return 0;
-}
-
-void Plant::ability(){
-  if (type == SunFlower) {
-    if (attackTimer > 0) {
-      attackTimer--;
-    } else {
-      printf("sunflower create sun\n");
-      sunManager.create(spriteArray[id[0]].position, sunCost::normalSun,
-                 true);
-      attackTimer = 60 * 6;
-    }
-  }
-}
-
-void Plant::erase(const int entityID){
-  if (type == PeaShotter) {
-    deletePeashotter(entityID);
-  } else if (type == SunFlower) {
-    deleteSunflower(entityID);
-  }
-}
-
 void createPeashotter(int id, int row, int column, Tyra::Vec2 pos) {
   plant[id].newPlant(PeaShotter);
 
@@ -164,10 +83,10 @@ void deletePeashotter(const int pos) {
 
   plantCreatedInMap[plant[pos].row][plant[pos].column] = false;
 
-  posArray.erase(plant[pos].father);
+  deletePosArray(plant[pos].father);
 
   for (unsigned int i = 0; i < m_animID["PeaShooterSingle"].size(); i++) {
-    posArray.erase(plant[pos].id[i]);
+    deletePosArray(plant[pos].id[i]);
     deleteFatherID(&plant[pos].father, &plant[pos].id[i]);
     deleteAnimation(plant[pos].id[i]);
     deleteSprite(plant[pos].id[i]);
@@ -238,10 +157,10 @@ void deleteSunflower(const int pos) {
 
   plantCreatedInMap[plant[pos].row][plant[pos].column] = false;
 
-  posArray.erase(plant[pos].father);
+  deletePosArray(plant[pos].father);
 
   for (unsigned int i = 0; i < m_animID["SunFlower"].size(); i++) {
-    posArray.erase(plant[pos].id[i]);
+    deletePosArray(plant[pos].id[i]);
     deleteFatherID(&plant[pos].father, &plant[pos].id[i]);
     deleteAnimation(plant[pos].id[i]);
     deleteSprite(plant[pos].id[i]);
@@ -297,6 +216,28 @@ void createCherryBomb(const int id, int row, int col, Tyra::Vec2 pos){
   createDebugBoxCollider(plant[id].father, Tyra::MODE_STRETCH);
 }
 
+void deleteCherryBomb(const int pos) {
+  plant[pos].type = NonePlant;
+
+  plantCreatedInMap[plant[pos].row][plant[pos].column] = false;
+
+  deletePosArray(plant[pos].father);
+
+  for (unsigned int i = 0; i < m_animID["CherryBomb"].size(); i++) {
+    deletePosArray(plant[pos].id[i]);
+    deleteFatherID(&plant[pos].father, &plant[pos].id[i]);
+    deleteAnimation(plant[pos].id[i]);
+    deleteSprite(plant[pos].id[i]);
+    Entities::deleteID(plant[pos].id[i]);
+  }
+
+  lifeArray.erase(plant[pos].father);
+
+  deleteDebugBoxCollider(plant[pos].father);
+  Entities::deleteID(plant[pos].father);
+  plantsCreated--;
+}
+
 void createPlant(Plant_State_enum typePlant, const int row, const int column) {
   if (plantCreatedInMap[row][column] == false) {
     plantCreatedInMap[row][column] = true;
@@ -329,6 +270,86 @@ void createPlant(Plant_State_enum typePlant, const int row, const int column) {
     // printf("plantas creadas: %d\n",plantsCreated);
   } else {
     printf("no se puede crear aqui, ya existe una planta\n");
+  }
+}
+
+void Plant::createSpace() {
+  switch (type) {
+    case PeaShotter:
+      break;
+    case SunFlower:
+      id.reserve(3);
+    default:
+      break;
+  }
+}
+
+void Plant::newPlant(Plant_State_enum newType) {
+  type = newType;
+  createSpace();
+}
+
+int Plant::attack(){
+  if(type == NonePlant){
+    return 1;
+  }
+
+  std::vector<Zombie>::iterator it;
+
+  for (it = zombie.begin(); it < zombie.end(); it++) {
+    if(type == PeaShotter){
+      //  printf("vec plant %f,%f. vec zombi %f,%f,%f,%f\n",
+      //  pointColliderArray[*plant[i].body[0]].x,
+      //  pointColliderArray[*plant[i].body[0]].y,
+      //  boxColliderArray[*zombie[j].body[0]].x,
+      //  boxColliderArray[*zombie[j].body[0]].y,
+      //  boxColliderArray[*zombie[j].body[0]].x +
+      //  boxColliderArray[*zombie[j].body[0]].width,
+      //  boxColliderArray[*zombie[j].body[0]].y +
+      //  boxColliderArray[*zombie[j].body[0]].height)
+      if (pointColliderArray[father].x <
+              boxColliderArray[it->id[0]].x +
+                  boxColliderArray[it->id[0]].width &&
+          pointColliderArray[father].y >
+              boxColliderArray[it->id[0]].y &&
+          pointColliderArray[father].y <
+              boxColliderArray[it->id[0]].y +
+                  boxColliderArray[it->id[0]].height) {
+        // printf("hay un zombi en frente\n");
+        if (attackTimer >= 0) {
+          attackTimer--;
+        } else if (stopAnimation == false) {
+          // printf("disparar\n");
+          newProjectile(pointColliderArray[father]);
+          attackTimer = 60;
+        }
+        it = zombie.end();
+      }
+    } 
+  }
+  return 0;
+}
+
+void Plant::ability(){
+  if (type == SunFlower) {
+    if (attackTimer > 0) {
+      attackTimer--;
+    } else {
+      printf("sunflower create sun\n");
+      sunManager.create(spriteArray[id[0]].position, sunCost::normalSun,
+                 true);
+      attackTimer = 60 * 6;
+    }
+  }
+}
+
+void Plant::erase(const int entityID){
+  if (type == PeaShotter) {
+    deletePeashotter(entityID);
+  } else if (type == SunFlower) {
+    deleteSunflower(entityID);
+  } else if (type == CherryBomb){
+    deleteCherryBomb(entityID);
   }
 }
 
