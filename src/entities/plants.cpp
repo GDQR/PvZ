@@ -4,6 +4,7 @@
 #include "components.hpp"
 #include "systems.hpp"
 
+std::vector<int> plantCost;
 int plantsCreated = 0;
 
 void createPeashotter(int id, int row, int column, Tyra::Vec2 pos) {
@@ -353,16 +354,57 @@ void Plant::erase(const int entityID){
   }
 }
 
+void loadPlantCost(){
+  plantCost.reserve(enumMaxPlants);
+  plantCost[PeaShotter] = 100;
+  plantCost[SunFlower] = 50;
+  plantCost[CherryBomb] = 150;
+  plantCost[Wall_Nut] = 50;
+  plantCost[PotatoMine] = 25;
+  plantCost[SnowPea] = 175;
+  plantCost[Chomper] = 150;
+  plantCost[Repeater] = 200;
+  plantCost[Puff_shroom] = 0;
+  plantCost[Sun_shroom] = 25;
+  plantCost[Fume_shroom] = 75;
+  plantCost[GraveBuster] = 75;
+  plantCost[Hypno_shroom] = 75;
+  plantCost[Scaredy_shroom] = 25;
+  plantCost[Ice_shroom] = 75;
+  plantCost[Doom_shroom] = 125;
+  plantCost[LilyPad] = 25;
+  plantCost[Squash] = 50;
+  plantCost[Threepeater] = 325;
+  plantCost[Tangle_Kelp] = 25;
+  plantCost[Jalapeno] = 125;
+  plantCost[Spikeweed] = 100;
+  plantCost[Torchwood] = 175;
+  plantCost[Tall_nut] = 125;
+  plantCost[Sea_shroom] = 0;
+  plantCost[Plantern] = 25;
+  plantCost[Cactus] = 125;
+  plantCost[Blover] = 100;
+  plantCost[SplitPea] = 125;
+  plantCost[Starfruit] = 125;
+  plantCost[Pumpkin] = 125;
+  plantCost[Magnet_shroom] = 100;
+  plantCost[Cabbage_pult] = 100;
+  plantCost[Flower_Pot] = 25;
+  plantCost[Kernel_pult] = 100;
+  plantCost[CoffeeBean] = 75;
+  plantCost[Garlic] = 50;
+  plantCost[UmbrellaLeaf] = 100;
+  plantCost[Marigold] = 50;
+  plantCost[Melon_pult] = 300;
+  plantCost[GatlingPea] = 250;
+  plantCost[TwinSunflower] = 150;
+  plantCost[Gloom_shroom] = 150;
+  plantCost[Cattail] = 225;
+  plantCost[WinterMelon] = 200;
+  plantCost[GoldMagnet] = 50;
+  plantCost[Spikerock] = 125;
+  plantCost[CobCannon] = 500;
+} 
 int getPlantCost(Plant_State_enum typePlant) {
-  switch (typePlant) {
-    case PeaShotter:
-      printf("peashooter\n");
-      return 100;
-    case SunFlower:
-      printf("sunflower\n");
-      return 50;
-    default:
-      break;
-  }
-  return 0;
+  return plantCost[typePlant];
 }

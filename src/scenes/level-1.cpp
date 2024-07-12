@@ -83,6 +83,7 @@ void createCard(Plant_State_enum typePlant, Vec2 pos) {
 
 void Level1::init() {
   srand(time(NULL));
+  loadPlantCost();
   loadDebugTextures();
   // load background
   createSprite(background, MODE_STRETCH, Vec2(-56, -1), Vec2(780, 524));

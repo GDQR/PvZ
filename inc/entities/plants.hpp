@@ -58,7 +58,8 @@ enum Plant_State_enum {
   WinterMelon,
   GoldMagnet,
   Spikerock,
-  CobCannon
+  CobCannon,
+  enumMaxPlants
 };
 
 class Plant {
@@ -80,4 +81,5 @@ class Plant {
 };
 
 void createPlant(Plant_State_enum typePlant, const int row, const int column);
+void loadPlantCost();
 int getPlantCost(Plant_State_enum typePlant);
