@@ -63,12 +63,13 @@ void loadAnimationSprite(const int entityID, const int animID){
 
     }else{
       printf("entre en rotate\n");
-      if (animationDataArray[animID].angle.count(0) == 0) {
-        animationDataArray[animID].angle[0] = Vec2(0.0f,0.0f);
+      for (unsigned int j = 0; j < animationDataArray[animID].maxFrame; j++) {
+        if (animationDataArray[animID].angle.count(j) == 1) {
+          createSpriteRotate(entityID, Tyra::MODE_STRETCH, Vec2(0, 0),
+                 Vec2(128 / 1.6f, 128 / 1.6f),animationDataArray[animID].angle[j]);
+        }
       }
-      createSpriteRotate(entityID, Tyra::MODE_STRETCH, Vec2(0, 0),
-                 Vec2(128 / 1.6f, 128 / 1.6f),animationDataArray[animID].angle[0]);
-
+      
       int spriteID = rotationSprite[entityID].sprite.id;
       Tyra::Texture* texture;
       animationArray[entityID] = Animation(animID);
@@ -141,6 +142,26 @@ void setSprite(const int entityID, const int animID, const bool draw){
     // printf("plant draw: %d\n", animationArray[entityID].draw);
 }
 
+void activeAnimation(const int entityID, const int animID, const int firstFrame, const int lastFrame){
+  animationArray[entityID].currentFrame = firstFrame;
+  animationArray[entityID].firstFrame = firstFrame;
+  animationArray[entityID].lastFrame = lastFrame;
+  bool draw = false;
+  if(animationDataArray[animID].alpha.count(firstFrame) == 1){
+    draw = true;
+  }else if(animationDataArray[animID].angle.count(firstFrame) == 1){
+    draw = true;
+  }else if(animationDataArray[animID].position.count(firstFrame) == 1){
+    draw = true;
+  }else if(animationDataArray[animID].scale.count(firstFrame) == 1){
+    draw = true;
+  }else if(animationDataArray[animID].texture.count(firstFrame) == 1){
+    draw = true;
+  }
+  animationArray[entityID].draw = draw;
+  setSprite(entityID, animID, draw);
+}
+
 void readReanimFiles(std::string nameID, std::string file) {
   std::string myText;
 
@@ -158,7 +179,6 @@ void readReanimFiles(std::string nameID, std::string file) {
   int animID = -1;
   std::string::size_type sz;
   // int length = MyReadFile.tellg();
-  bool finishCountFrames = false;
   bool passX=false;
   bool passY=false;
   bool passSX=false;
@@ -174,7 +194,7 @@ void readReanimFiles(std::string nameID, std::string file) {
   float sx = 1.0f;
   float sy = 1.0f;
   float a = 1.0f;
-  bool beforeDraw = false;
+  int beforeDraw = -2;
   bool draw = true;
   Tyra::Texture* texture = nullptr;
   while (!MyReadFile.eof()) {
@@ -198,8 +218,9 @@ void readReanimFiles(std::string nameID, std::string file) {
       sx = 1.0f;
       sy = 1.0f;
       a = 1.0f;
-      beforeDraw = false;
+      beforeDraw = -2;
       draw = true;
+      save = true;
       if(useAnim == true){
         m_animID[nameID].push_back(maxAnimID);
         animID = maxAnimID;
@@ -305,14 +326,15 @@ void readReanimFiles(std::string nameID, std::string file) {
       // std::getline(MyReadFile, insideArrow, '>');
       // std::cout << insideArrow << std::endl;
       std::cout << std::endl;
-      if(passX == false){
-        animationDataArray[animID].position[countframes].x = animationDataArray[animID].position[countframes-1].x;
-      }
-      if(passY == false){
-        animationDataArray[animID].position[countframes].y = animationDataArray[animID].position[countframes-1].y;
-      }
+      
 
       if(save == true){
+        if(passX == false){
+          animationDataArray[animID].position[countframes].x = animationDataArray[animID].position[countframes-1].x;
+        }
+        if(passY == false){
+          animationDataArray[animID].position[countframes].y = animationDataArray[animID].position[countframes-1].y;
+        }
         if(passSX == false){
           animationDataArray[animID].scale[countframes].x = sx;
         }
@@ -346,22 +368,6 @@ void readReanimFiles(std::string nameID, std::string file) {
       passKX = false;
       passKY = false;
       passAlpha = false;
-    } else if (insideArrow == "track" && finishCountFrames == false) {
-      int length = MyReadFile.tellg();
-      // std::cout << "pos: "<<length << std::endl;
-      // std::cout << "adentro del track" << std::endl;
-
-      while (insideArrow != "/track") {
-        std::getline(MyReadFile, insideArrow, '<');
-        std::getline(MyReadFile, insideArrow, '>');
-        if (insideArrow == "t") {
-          countframes++;
-        }
-      }
-      // std::cout << "Frames:" << countframes << std::endl;
-      countframes = 0;
-      finishCountFrames = true;
-      MyReadFile.seekg(length, std::ios_base::beg);
     } else if (insideArrow == "/track") {
       countTrack++;
       std::cout << "Total frames from track " << countTrack << ": "
