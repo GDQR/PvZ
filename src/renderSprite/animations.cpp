@@ -185,7 +185,6 @@ void readTag(std::ifstream& MyReadFile, std::string& string, char& state){
 void readInfo(std::ifstream& MyReadFile, std::string& insideArrow, bool& useAnim, int& animID,char& state){
   bool passSX=false;
   bool passSY=false;
-  bool passAlpha=false;
   bool textureFounded = false;
   bool save = true;
 
@@ -199,12 +198,12 @@ void readInfo(std::ifstream& MyReadFile, std::string& insideArrow, bool& useAnim
   float ky = 0.0f;
   float sx = 1.0f;
   float sy = 1.0f;
+  float beforeA = 2.0f;
   float a = 1.0f;
   int beforeDraw = -2;
   bool draw = true;
   Tyra::Texture* texture = nullptr;
   std::string fileName;
-  float floatValue;
   int countframes = 0;
 
   std::string::size_type sz;
@@ -259,12 +258,10 @@ void readInfo(std::ifstream& MyReadFile, std::string& insideArrow, bool& useAnim
       readTag(MyReadFile, insideArrow, state);
       std::cout << " KX: " << insideArrow;
       kx = std::stof(insideArrow);
-      animationDataArray[animID].angle[countframes].x = kx;
     } else if (insideArrow == "ky") { // ky son los grados del angulo
       readTag(MyReadFile, insideArrow, state);
       std::cout << " KY: " << insideArrow;
       ky = std::stof(insideArrow);
-      animationDataArray[animID].angle[countframes].y = ky;
     } else if (insideArrow == "sx") { // es la escala de la imagen
       passSX = true;
       readTag(MyReadFile, insideArrow, state);
@@ -278,12 +275,9 @@ void readInfo(std::ifstream& MyReadFile, std::string& insideArrow, bool& useAnim
       sy = std::stof(insideArrow);
       animationDataArray[animID].scale[countframes].y = sy;
     } else if (insideArrow == "a") {
-      passAlpha = true;
       readTag(MyReadFile, insideArrow, state);
       std::cout << " a: " << insideArrow;
       a = std::stof(insideArrow);
-      animationDataArray[animID].alpha[countframes] = a;
-      
     } else if (insideArrow == "t") {
       std::cout << "Frame " << countframes << ":";
     } else if (insideArrow == "/t") {
@@ -298,11 +292,14 @@ void readInfo(std::ifstream& MyReadFile, std::string& insideArrow, bool& useAnim
         if(passSY == false){
           animationDataArray[animID].scale[countframes].y = sy;
         }
-        if(passAlpha == false){
-          animationDataArray[animID].alpha[countframes] = a;
-        }
         // printf("alpha: %f\n",animationDataArray[animID].alpha[countframes]);
       }
+
+      if(beforeA != a){
+        beforeA = a;
+        animationDataArray[animID].alpha[countframes] = a;
+      }
+
       if(beforeX != x){
         beforeX = x;
         animationDataArray[animID].x[countframes] = x;
@@ -331,7 +328,6 @@ void readInfo(std::ifstream& MyReadFile, std::string& insideArrow, bool& useAnim
       countframes++;
       passSX = false;
       passSY = false;
-      passAlpha = false;
     } else if (insideArrow == "/track") {
       // countTrack++;
       // std::cout << "Total frames from track " << countTrack << ": "
