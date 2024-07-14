@@ -226,8 +226,11 @@ void Animation::update(const int entityID) {
 void Animation::position(const int entityID) {
   // finalPos += animPos
 
-  if (animationDataArray[animID].position.count(currentFrame)) {
-    texPosArray[entityID] = animationDataArray[animID].position[currentFrame];
+  if (animationDataArray[animID].x.count(currentFrame)) {
+    texPosArray[entityID].x = animationDataArray[animID].x[currentFrame];
+  }
+  if (animationDataArray[animID].y.count(currentFrame)) {
+    texPosArray[entityID].y = animationDataArray[animID].y[currentFrame];
   }
 }
 

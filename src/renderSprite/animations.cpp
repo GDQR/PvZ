@@ -75,8 +75,11 @@ void loadAnimationSprite(const int entityID, const int animID){
       animationArray[entityID] = Animation(animID);
 
       for (unsigned int j = 0; j < animationDataArray[animID].maxFrame; j++) {
-        if (animationDataArray[animID].position.count(j) == 1) {
-          texPosArray[entityID] = animationDataArray[animID].position[j];
+        if (animationDataArray[animID].x.count(j) == 1) {
+          texPosArray[entityID].x = animationDataArray[animID].x[j];
+        }
+        if (animationDataArray[animID].y.count(j) == 1) {
+          texPosArray[entityID].y = animationDataArray[animID].y[j];
         }
       }
 
@@ -151,7 +154,9 @@ void activeAnimation(const int entityID, const int animID, const int firstFrame,
     draw = true;
   }else if(animationDataArray[animID].angle.count(firstFrame) == 1){
     draw = true;
-  }else if(animationDataArray[animID].position.count(firstFrame) == 1){
+  }else if(animationDataArray[animID].x.count(firstFrame) == 1){
+    draw = true;
+  }else if(animationDataArray[animID].y.count(firstFrame) == 1){
     draw = true;
   }else if(animationDataArray[animID].scale.count(firstFrame) == 1){
     draw = true;
@@ -178,14 +183,14 @@ void readTag(std::ifstream& MyReadFile, std::string& string, char& state){
 }
 
 void readInfo(std::ifstream& MyReadFile, std::string& insideArrow, bool& useAnim, int& animID,char& state){
-  bool passX=false;
-  bool passY=false;
   bool passSX=false;
   bool passSY=false;
   bool passAlpha=false;
   bool textureFounded = false;
   bool save = true;
 
+  float beforeX = -400;
+  float beforeY = -400;
   float x = 0;
   float y = 0;
   float beforeKx = -400;
@@ -243,17 +248,13 @@ void readInfo(std::ifstream& MyReadFile, std::string& insideArrow, bool& useAnim
       useAnim = true;
       printf(" texture width: %d, height: %d\n",texture->getWidth(),texture->getHeight());
     } else if (insideArrow == "x") { // es la suma del x layer y el x del simbolo(?) igual con y
-      passX = true;
       readTag(MyReadFile, insideArrow, state);
       x = std::stof(insideArrow, &sz);
       std::cout << " X: " << x;
-      animationDataArray[animID].position[countframes].x = x;
     } else if (insideArrow == "y") {
-      passY = true;
       readTag(MyReadFile, insideArrow, state);
       y = std::stof(insideArrow);
       std::cout << " Y: " << y;
-      animationDataArray[animID].position[countframes].y = y;
     } else if (insideArrow == "kx") { // kx son los grados del angulo
       readTag(MyReadFile, insideArrow, state);
       std::cout << " KX: " << insideArrow;
@@ -291,12 +292,6 @@ void readInfo(std::ifstream& MyReadFile, std::string& insideArrow, bool& useAnim
 
 
       if(save == true){
-        if(passX == false){
-          animationDataArray[animID].position[countframes].x = animationDataArray[animID].position[countframes-1].x;
-        }
-        if(passY == false){
-          animationDataArray[animID].position[countframes].y = animationDataArray[animID].position[countframes-1].y;
-        }
         if(passSX == false){
           animationDataArray[animID].scale[countframes].x = sx;
         }
@@ -307,6 +302,15 @@ void readInfo(std::ifstream& MyReadFile, std::string& insideArrow, bool& useAnim
           animationDataArray[animID].alpha[countframes] = a;
         }
         // printf("alpha: %f\n",animationDataArray[animID].alpha[countframes]);
+      }
+      if(beforeX != x){
+        beforeX = x;
+        animationDataArray[animID].x[countframes] = x;
+      }
+
+      if(beforeY != y){
+        beforeY = y;
+        animationDataArray[animID].y[countframes] = y;
       }
 
       if(beforeDraw != draw){
@@ -325,8 +329,6 @@ void readInfo(std::ifstream& MyReadFile, std::string& insideArrow, bool& useAnim
       }
 
       countframes++;
-      passX = false;
-      passY = false;
       passSX = false;
       passSY = false;
       passAlpha = false;
@@ -379,7 +381,8 @@ void readReanimFiles(std::string nameID, std::string file) {
         useAnim = false;
       }else{
         animationDataArray[animID].draw.clear();
-        animationDataArray[animID].position.clear();
+        animationDataArray[animID].x.clear();
+        animationDataArray[animID].y.clear();
         printf("borre la memoria\n");
       }
       animationDataArray[animID].name = insideArrow;

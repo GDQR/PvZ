@@ -88,11 +88,12 @@ void getPrevFrame(int& entitieID) {
 }
 
 void subMenuSprite(Tyra::Pad& pad, Tyra::Font& font, int& entitieID) {
+  // TODO:FIX texPos
   if (animationFound == true &&
-      animationDataArray[animationArray[entitieID].animID].position.count(
+      animationDataArray[animationArray[entitieID].animID].x.count(
           animationArray[entitieID].currentFrame) == 1) {
-    texPos = &animationDataArray[animationArray[entitieID].animID]
-                  .position[animationArray[entitieID].currentFrame];
+    texPos->x = animationDataArray[animationArray[entitieID].animID]
+                  .x[animationArray[entitieID].currentFrame];
   } else if (texPos == NULL) {
     texPos = new Vec2(0.0f, 0.0f);
     printf("texpos created: %p\n", texPos);

@@ -60,11 +60,18 @@ int AnimationManager::debugAnim(const int entitieID) {
         ->addLink(rotationSprite[entitieID].sprite.id);
   }
 
-  if (animationDataArray[animationArray[entitieID].animID].position.count(
+  if (animationDataArray[animationArray[entitieID].animID].x.count(
           animationArray[entitieID].currentFrame) == 1) {
-    texPosArray[entitieID] =
+    texPosArray[entitieID].x =
         animationDataArray[animationArray[entitieID].animID]
-            .position[animationArray[entitieID].currentFrame];
+            .x[animationArray[entitieID].currentFrame];
+  }
+
+  if (animationDataArray[animationArray[entitieID].animID].y.count(
+          animationArray[entitieID].currentFrame) == 1) {
+    texPosArray[entitieID].y =
+        animationDataArray[animationArray[entitieID].animID]
+            .y[animationArray[entitieID].currentFrame];
   }
 
   if (animationDataArray[animationArray[entitieID].animID].alpha.count(
@@ -140,11 +147,18 @@ void AnimationManager::debugChangeFrame(const int entitieID, const int key) {
         .texture[animationArray[entitieID].currentFrame])->addLink(rotationSprite[entitieID].sprite.id);
   }
 
-  if (animationDataArray[animationArray[entitieID].animID].position.count(
+  if (animationDataArray[animationArray[entitieID].animID].x.count(
           animationArray[entitieID].currentFrame) == 1) {
-    texPosArray[entitieID] =
+    texPosArray[entitieID].x =
         animationDataArray[animationArray[entitieID].animID]
-            .position[animationArray[entitieID].currentFrame];
+            .x[animationArray[entitieID].currentFrame];
+  }
+
+  if (animationDataArray[animationArray[entitieID].animID].y.count(
+          animationArray[entitieID].currentFrame) == 1) {
+    texPosArray[entitieID].y =
+        animationDataArray[animationArray[entitieID].animID]
+            .y[animationArray[entitieID].currentFrame];
   }
 
   if (animationDataArray[animationArray[entitieID].animID].alpha.count(

@@ -73,7 +73,8 @@ class AnimationData {
   unsigned int maxFrame;
   std::string name;
   std::unordered_map<unsigned int, int> texture;
-  std::unordered_map<unsigned int, Tyra::Vec2> position;
+  std::unordered_map<unsigned int, float> x;
+  std::unordered_map<unsigned int, float> y;
   std::unordered_map<unsigned int, Tyra::Vec2> scale;
   std::unordered_map<unsigned int, Tyra::Vec2> angle;
   std::unordered_map<unsigned int, float> alpha;
