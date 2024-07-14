@@ -184,7 +184,6 @@ void readTag(std::ifstream& MyReadFile, std::string& string, char& state){
 
 void readInfo(std::ifstream& MyReadFile, std::string& insideArrow, bool& useAnim, int& animID,char& state){
   bool textureFounded = false;
-  bool save = true;
 
   float beforeX = -400;
   float beforeY = -400;
@@ -216,11 +215,9 @@ void readInfo(std::ifstream& MyReadFile, std::string& insideArrow, bool& useAnim
       readTag(MyReadFile, insideArrow, state);
       if(insideArrow == "-1"){
         printf(" NO DRAW");
-        save = false;
         draw = false;
       }else{
         printf(" DRAW");
-        save = true;
         draw = true;
       }
       
@@ -277,14 +274,7 @@ void readInfo(std::ifstream& MyReadFile, std::string& insideArrow, bool& useAnim
     } else if (insideArrow == "t") {
       std::cout << "Frame " << countframes << ":";
     } else if (insideArrow == "/t") {
-      // std::cout << insideArrow << std::endl;
       std::cout << std::endl;
-
-
-      if(save == true){
-        
-        // printf("alpha: %f\n",animationDataArray[animID].alpha[countframes]);
-      }
 
       if(beforeSx != sx){
         animationDataArray[animID].scale[countframes].x = sx;
