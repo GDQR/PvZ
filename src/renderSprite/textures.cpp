@@ -6,40 +6,49 @@ using Tyra::FileUtils;
 
 Tyra::Texture* projectilePea;
 
-void loadSprite(Sprite* sprite){
-    sprite->mode = Tyra::MODE_STRETCH;
-    sprite->position = Tyra::Vec2(0,0);
-    sprite->size = Tyra::Vec2(64,64);
+void loadSprite(Sprite* sprite) {
+  sprite->mode = Tyra::MODE_STRETCH;
+  sprite->position = Tyra::Vec2(0, 0);
+  sprite->size = Tyra::Vec2(64, 64);
 }
 
-void loadSprite(Sprite* sprite, Vec2 size){
-    sprite->mode = Tyra::MODE_STRETCH;
-    sprite->position = Tyra::Vec2(0,0);
-    sprite->size = size;
+void loadSprite(Sprite* sprite, Vec2 size) {
+  sprite->mode = Tyra::MODE_STRETCH;
+  sprite->position = Tyra::Vec2(0, 0);
+  sprite->size = size;
 }
 
-void loadSprite(Sprite* sprite,Tyra::SpriteMode mode, Vec2 position, Vec2 size){
-    sprite->mode = mode;
-    sprite->position = position;
-    sprite->size = size;
+void loadSprite(Sprite* sprite, Tyra::SpriteMode mode, Vec2 position,
+                Vec2 size) {
+  sprite->mode = mode;
+  sprite->position = position;
+  sprite->size = size;
 }
 
-void createTexture(int id, std::string fileImage) {
-  Tyra::Texture* texture = loadTexture(fileImage);
+int createTexture(int id, std::string fileImage) {
   TYRA_ASSERT(!(spriteArray.find(id) == spriteArray.end()), "Entitie id: ", id,
               "Is NULL, use <<CreateSprite>> function");
+  std::string findTexture = FileUtils::getFilenameFromPath(fileImage);
+
+  for (u32 i = 0; i < texRepo->getTexturesCount(); i++) {
+    if ((*texRepo->getAll())[i]->name == findTexture) {
+      (*texRepo->getAll())[i]->addLink(spriteArray[id].id);
+      return 1;
+    }
+  }
+  Tyra::Texture* texture = loadTexture(fileImage);
   texture->addLink(spriteArray[id].id);
+  return 0;
 }
 
 void createTextureRotate(int id, std::string fileImage) {
   Tyra::Texture* texture = loadTexture(fileImage);
-  TYRA_ASSERT(!(rotationSprite.find(id) == rotationSprite.end()), "Entitie id: ", id,
-              "Is NULL, use <<CreateSprite>> function");
+  TYRA_ASSERT(!(rotationSprite.find(id) == rotationSprite.end()),
+              "Entitie id: ", id, "Is NULL, use <<CreateSprite>> function");
   texture->addLink(rotationSprite[id].sprite.id);
 }
 
-void loadTexture(Sprite* sprite, std::string fileImage){
-
+void loadTexture(Sprite* sprite, std::string fileImage) {
   /**
    * TextureRepository is a repository of textures.
    * It is a singleton class, with all game textures.
@@ -80,8 +89,7 @@ void loadTexture(Sprite* sprite, std::string fileImage){
   TYRA_LOG("Texture loaded!");
 }
 
-void loadTexture(int spriteID, std::string fileImage){
-  
+void loadTexture(int spriteID, std::string fileImage) {
   auto& textureRepository = renderer->getTextureRepository();
 
   auto filepath = FileUtils::fromCwd(fileImage);
@@ -93,7 +101,7 @@ void loadTexture(int spriteID, std::string fileImage){
   TYRA_LOG("Texture loaded!");
 }
 
-Tyra::Texture* loadTexture(std::string fileImage){
+Tyra::Texture* loadTexture(std::string fileImage) {
   auto& textureRepository = renderer->getTextureRepository();
 
   auto filepath = FileUtils::fromCwd(fileImage);
@@ -103,8 +111,7 @@ Tyra::Texture* loadTexture(std::string fileImage){
   return texture;
 }
 
-void copyTexture(Sprite* sprite1, Sprite* sprite2){
-
+void copyTexture(Sprite* sprite1, Sprite* sprite2) {
   auto& textureRepository = renderer->getTextureRepository();
 
   auto* texture = textureRepository.getBySpriteId(sprite1->id);
@@ -115,6 +122,6 @@ void copyTexture(Sprite* sprite1, Sprite* sprite2){
   TYRA_LOG("Texture loaded!");
 }
 
-void loadProjectile(){
-    projectilePea = loadTexture("particles/ProjectilePea.png");
+void loadProjectile() {
+  projectilePea = loadTexture("particles/ProjectilePea.png");
 }
