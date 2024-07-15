@@ -31,10 +31,8 @@ void createPeashotter(int id, int row, int column, Tyra::Vec2 pos) {
     printf("animID: %d\n", animID);
     newFatherID(&plant[id].father, &entityID);
     loadAnimationSprite(entityID, animID);
-    animationArray[entityID].firstFrame = 79;
-    animationArray[entityID].lastFrame = 104;
-    animationArray[entityID].currentFrame = 79;
-    animationArray[entityID].draw = true;
+    activeAnimation(entityID,animID,79,104);
+    // printf("draw: %d\n", animationArray[entityID].draw);
     if (animationDataArray[animID].name == "anim_blink" ||
           animationDataArray[animID].name == "idle_shoot_blink") {
       animationArray[entityID].draw = false;
@@ -43,7 +41,6 @@ void createPeashotter(int id, int row, int column, Tyra::Vec2 pos) {
       animationIdStopRender.push_back(entityID);
       printf("encontre anim_blink\n");
     }
-    // printf("draw: %d\n", animationArray[entityID].draw);
   }
   
 
@@ -125,10 +122,7 @@ void createSunflower(const int id, int row, int col, Tyra::Vec2 pos) {
     printf("animID: %d\n", animID);
     newFatherID(&plant[id].father, &entityID);
     loadAnimationSprite(entityID, animID);
-    animationArray[entityID].firstFrame = 4;
-    animationArray[entityID].lastFrame = animationDataArray[animID].maxFrame;
-    animationArray[entityID].currentFrame = 4;
-    // animationArray[entityID].draw = true;
+    activeAnimation(entityID,animID,4,animationDataArray[animID].maxFrame);
     if (animationDataArray[animID].name == "anim_blink") {
       deleteAnimation(entityID);
       animationIdStopRender.push_back(entityID);
@@ -198,9 +192,7 @@ void createCherryBomb(const int id, int row, int col, Tyra::Vec2 pos){
     printf("animID: %d\n", animID);
     newFatherID(&plant[id].father, &entityID);
     loadAnimationSprite(entityID, animID);
-    animationArray[entityID].firstFrame = 0;
-    animationArray[entityID].lastFrame = 13;
-    animationArray[entityID].currentFrame = 0;
+    activeAnimation(entityID,animID,0,13);
   }
 
   // Life
