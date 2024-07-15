@@ -76,7 +76,8 @@ class AnimationData {
   std::unordered_map<unsigned int, float> x;
   std::unordered_map<unsigned int, float> y;
   std::unordered_map<unsigned int, Tyra::Vec2> scale;
-  std::unordered_map<unsigned int, Tyra::Vec2> angle;
+  std::unordered_map<unsigned int, float> angleX;
+  std::unordered_map<unsigned int, float> angleY;
   std::unordered_map<unsigned int, float> alpha;
   std::unordered_map<unsigned int, bool> draw;
 };

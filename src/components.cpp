@@ -302,10 +302,16 @@ void Animation::updateRotationSprites(const int entityID) {
         originalSize[entityID] * animationDataArray[animID].scale[currentFrame];
   }
 
-  if (animationDataArray[animID].angle.count(currentFrame) == 1) {
-    rotationSprite[entityID].angle =
-        animationDataArray[animID].angle[currentFrame];
+  if (animationDataArray[animID].angleX.count(currentFrame) == 1) {
+    rotationSprite[entityID].angle.x =
+        animationDataArray[animID].angleX[currentFrame];
   }
+
+  if (animationDataArray[animID].angleY.count(currentFrame) == 1) {
+    rotationSprite[entityID].angle.y =
+        animationDataArray[animID].angleY[currentFrame];
+  }
+
   if (animationDataArray[animID].alpha.count(currentFrame) == 1) {
     rotationSprite[entityID].sprite.color.a =
         animationDataArray[animID].alpha[currentFrame] * 128;

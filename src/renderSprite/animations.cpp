@@ -14,7 +14,10 @@ void loadAnimationSprite(const int entityID, const int animID){
       if (animationDataArray[animID].alpha.count(j) == true) {
         hasAlpha = true;
       }
-      if (animationDataArray[animID].angle.count(j) == true) {
+      if (animationDataArray[animID].angleX.count(j) == true) {
+        rotateSprite = true;
+      }
+      if (animationDataArray[animID].angleY.count(j) == true) {
         rotateSprite = true;
       }
       if (rotateSprite == true && hasAlpha == true) {
@@ -63,12 +66,22 @@ void loadAnimationSprite(const int entityID, const int animID){
 
     }else{
       printf("entre en rotate\n");
+      Tyra::Vec2 angle;
       for (unsigned int j = 0; j < animationDataArray[animID].maxFrame; j++) {
-        if (animationDataArray[animID].angle.count(j) == 1) {
-          createSpriteRotate(entityID, Tyra::MODE_STRETCH, Vec2(0, 0),
-                 Vec2(128 / 1.6f, 128 / 1.6f),animationDataArray[animID].angle[j]);
+        if (animationDataArray[animID].angleX.count(j) == 1) {
+          angle.x = animationDataArray[animID].angleX[j];
+          break;
         }
       }
+
+      for (unsigned int j = 0; j < animationDataArray[animID].maxFrame; j++) {
+        if (animationDataArray[animID].angleY.count(j) == 1) {
+          angle.y = animationDataArray[animID].angleY[j];
+          break;
+        }
+      }
+      createSpriteRotate(entityID, Tyra::MODE_STRETCH, Vec2(0, 0),
+                 Vec2(128 / 1.6f, 128 / 1.6f),angle);
 
       int spriteID = rotationSprite[entityID].sprite.id;
       Tyra::Texture* texture;
@@ -152,7 +165,9 @@ void activeAnimation(const int entityID, const int animID, const int firstFrame,
   bool draw = false;
   if(animationDataArray[animID].alpha.count(firstFrame) == 1){
     draw = true;
-  }else if(animationDataArray[animID].angle.count(firstFrame) == 1){
+  }else if(animationDataArray[animID].angleX.count(firstFrame) == 1){
+    draw = true;
+  }else if(animationDataArray[animID].angleY.count(firstFrame) == 1){
     draw = true;
   }else if(animationDataArray[animID].x.count(firstFrame) == 1){
     draw = true;
@@ -307,12 +322,12 @@ void readInfo(std::ifstream& MyReadFile, std::string& insideArrow, bool& useAnim
 
       if(beforeKx != kx){
         beforeKx = kx;
-        animationDataArray[animID].angle[countframes].x = kx;
+        animationDataArray[animID].angleX[countframes] = kx;
       }
 
       if(beforeKY != ky){
         beforeKY = ky;
-        animationDataArray[animID].angle[countframes].y = ky;
+        animationDataArray[animID].angleY[countframes] = ky;
       }
 
       countframes++;

@@ -97,10 +97,15 @@ int AnimationManager::debugAnim(const int entitieID) {
     }
   }
 
-  if (animationDataArray[animationArray[entitieID].animID].angle.count(
+  if (animationDataArray[animationArray[entitieID].animID].angleX.count(
           animationArray[entitieID].currentFrame) == 1) {
-    rotationSprite[entitieID].angle = animationDataArray[animationArray[entitieID].animID]
-                            .angle[animationArray[entitieID].currentFrame];
+    rotationSprite[entitieID].angle.x = animationDataArray[animationArray[entitieID].animID]
+                            .angleX[animationArray[entitieID].currentFrame];
+  }
+  if (animationDataArray[animationArray[entitieID].animID].angleY.count(
+          animationArray[entitieID].currentFrame) == 1) {
+    rotationSprite[entitieID].angle.y = animationDataArray[animationArray[entitieID].animID]
+                            .angleY[animationArray[entitieID].currentFrame];
   }
 
   return 0;
@@ -184,10 +189,16 @@ void AnimationManager::debugChangeFrame(const int entitieID, const int key) {
     }
   }
 
-  if (animationDataArray[animationArray[entitieID].animID].angle.count(
+  if (animationDataArray[animationArray[entitieID].animID].angleX.count(
           animationArray[entitieID].currentFrame) == 1) {
-    rotationSprite[entitieID].angle = animationDataArray[animationArray[entitieID].animID]
-                            .angle[animationArray[entitieID].currentFrame];
+    rotationSprite[entitieID].angle.x = animationDataArray[animationArray[entitieID].animID]
+                            .angleX[animationArray[entitieID].currentFrame];
+  }
+
+  if (animationDataArray[animationArray[entitieID].animID].angleY.count(
+          animationArray[entitieID].currentFrame) == 1) {
+    rotationSprite[entitieID].angle.y = animationDataArray[animationArray[entitieID].animID]
+                            .angleY[animationArray[entitieID].currentFrame];
   }
 }
 

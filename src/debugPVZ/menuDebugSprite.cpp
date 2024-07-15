@@ -99,17 +99,18 @@ void subMenuSprite(Tyra::Pad& pad, Tyra::Font& font, int& entitieID) {
     printf("texpos created: %p\n", texPos);
   }
 
-  if (rotateFound == true &&
-      animationDataArray[animationArray[entitieID].animID].angle.count(
-          animationArray[entitieID].currentFrame) == 1) {
-    d_angle = &animationDataArray[animationArray[entitieID].animID]
-                   .angle[animationArray[entitieID].currentFrame];
-    // printf("angle from frame %d,
-    // angle:%f\n",animationArray[entitieID].currentFrame,*d_angle);
-  } else if (rotateFound == true && d_angle == NULL) {
-    d_angle = new Vec2(0.0f,0.0f);
-    printf("angle created: %p\n", texPos);
-  }
+  // TODO: fix this
+  // if (rotateFound == true &&
+  //     animationDataArray[animationArray[entitieID].animID].angle.count(
+  //         animationArray[entitieID].currentFrame) == 1) {
+  //   d_angle = &animationDataArray[animationArray[entitieID].animID]
+  //                  .angle[animationArray[entitieID].currentFrame];
+  //   // printf("angle from frame %d,
+  //   // angle:%f\n",animationArray[entitieID].currentFrame,*d_angle);
+  // } else if (rotateFound == true && d_angle == NULL) {
+  //   d_angle = new Vec2(0.0f,0.0f);
+  //   printf("angle created: %p\n", texPos);
+  // }
 
   if (pad.getClicked().Circle) {
     isMainMenuActive = true;
