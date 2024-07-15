@@ -51,8 +51,8 @@ extern PlantsManager plantsManager;
 
 void newProjectile(Tyra::Vec2 position);
 void newFatherID(int* fatherID, int* childID);
-void newCursor(int* cursor, Tyra::Vec2 pos);
-void newDeckCursor(int* cursor, Tyra::Vec2 pos);
+void newCursor(int* player, Tyra::Vec2 pos);
+void newDeckCursor(int* player, Tyra::Vec2 pos);
 void createSprite(int id, Tyra::SpriteMode mode, Tyra::Vec2 position,
                   Tyra::Vec2 size);
 void createSpriteRotate(int id, Tyra::SpriteMode mode, Tyra::Vec2 position,

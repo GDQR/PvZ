@@ -35,8 +35,9 @@ std::vector<Sun> sun;
 std::vector<NaturalSun> naturalSun;
 std::vector<int> projectile;
 std::vector<Card> cards;
-Cursor cursor;
-DeckCursor deckCursor;
+int player;
+std::map<int, Cursor> cursor;
+std::map<int, DeckCursor> deckCursor;
 
 bool zombieCreateRow[5];
 bool plantCreatedInMap[5][9];

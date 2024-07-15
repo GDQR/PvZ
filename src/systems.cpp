@@ -397,14 +397,14 @@ void ZombiesManager::update() {
 
 void PlantsManager::create(){
   if (engine->pad.getClicked().Cross && debugMode == false) {
-    if (zombieCreateRow[(int)cursor.cursorTile.x] == true) {
-      if (sunCounter >= cards[deckCursor.pos].cost &&
-          plantsCreated < maxPlants && cards[deckCursor.pos].seedTimer == 0) {
-        sunCounter -= cards[deckCursor.pos].cost;
-        cards[deckCursor.pos].seedTimer = 60 * 8;
-        spriteArray[cards[deckCursor.pos].seedShadowTimer].size.y = 70;
-        createPlant(cards[deckCursor.pos].plant, cursor.cursorTile.x,
-                    cursor.cursorTile.y);
+    if (zombieCreateRow[(int)cursor[player].cursorTile.x] == true) {
+      if (sunCounter >= cards[deckCursor[player].pos].cost &&
+          plantsCreated < maxPlants && cards[deckCursor[player].pos].seedTimer == 0) {
+        sunCounter -= cards[deckCursor[player].pos].cost;
+        cards[deckCursor[player].pos].seedTimer = 60 * 8;
+        spriteArray[cards[deckCursor[player].pos].seedShadowTimer].size.y = 70;
+        createPlant(cards[deckCursor[player].pos].plant, cursor[player].cursorTile.x,
+                    cursor[player].cursorTile.y);
       } else {
         printf("can't create plants now\n");
       }
@@ -513,25 +513,27 @@ void deleteFatherID(int* fatherID, int* childID) {
   fatherIDArray[*fatherID].id.erase(it);
 }
 
-void newCursor(int* cursor, Tyra::Vec2 pos) {
-  *cursor = Entities::newID();
-  printf("cursor id: %d\n", *cursor);
-  createSprite(*cursor, Tyra::MODE_STRETCH, pos, Vec2(56, 48));
-  createTexture(*cursor, "cursor6.png");
-  boxColliderArray[*cursor] = BoxCollider(pos.x, pos.y, 24, 24, 28 / 2, 24 / 2);
-  texPosArray[*cursor] = Vec2(0.0f, 0.0f);
-  scaleTexture[*cursor] = Vec2(1.0f, 1.0f);
-  createDebugBoxCollider(*cursor, Tyra::MODE_STRETCH);
+void newCursor(int* player, Tyra::Vec2 pos) {
+  // *cursor = Entities::newID();
+  cursor[*player].id = Entities::newID();
+  printf("cursor id: %d\n", cursor[*player].id);
+  createSprite(cursor[*player].id, Tyra::MODE_STRETCH, pos, Vec2(56, 48));
+  createTexture(cursor[*player].id, "cursor6.png");
+  boxColliderArray[cursor[*player].id] = BoxCollider(pos.x, pos.y, 24, 24, 28 / 2, 24 / 2);
+  texPosArray[cursor[*player].id] = Vec2(0.0f, 0.0f);
+  scaleTexture[cursor[*player].id] = Vec2(1.0f, 1.0f);
+  createDebugBoxCollider(cursor[*player].id, Tyra::MODE_STRETCH);
 }
 
-void newDeckCursor(int* cursor, Tyra::Vec2 pos) {
-  *cursor = Entities::newID();
-  printf("deck cursor id: %d\n", *cursor);
-  createSprite(*cursor, Tyra::MODE_STRETCH, pos, Vec2(56, 48));
-  createTexture(*cursor, "cursor6.png");
-  texPosArray[*cursor] = Vec2(0.0f, 0.0f);
-  scaleTexture[*cursor] = Vec2(1.0f, 1.0f);
-  // boxColliderArray[*cursor] = BoxCollider(
+void newDeckCursor(int* player, Tyra::Vec2 pos) {
+  // *cursor = Entities::newID();
+  deckCursor[*player].id = Entities::newID();
+  printf("deck cursor id: %d\n", deckCursor[*player].id);
+  createSprite(deckCursor[*player].id, Tyra::MODE_STRETCH, pos, Vec2(56, 48));
+  createTexture(deckCursor[*player].id, "cursor6.png");
+  texPosArray[deckCursor[*player].id] = Vec2(0.0f, 0.0f);
+  scaleTexture[deckCursor[*player].id] = Vec2(1.0f, 1.0f);
+  // boxColliderArray[deckCursor[*player].id] = BoxCollider(
   //     pos.x, pos.y, 24, 24, 28 / 2, 24 / 2);
-  // createDebugBoxCollider(*cursor, Tyra::MODE_STRETCH);
+  // createDebugBoxCollider(deckCursor[*player].id, Tyra::MODE_STRETCH);
 }
