@@ -3,6 +3,7 @@
 
 int projectilesCreated = 0;
 
+PlayerControl playerControl;
 AnimationManager animManager;
 ProjectileManager projectileManager;
 RendererSprites renderSprites;
@@ -10,6 +11,13 @@ RendererDebugSpritesManager renderDebugSpritesManager;
 ZombiesManager zombiesManager;
 PlantsManager plantsManager;
 
+void PlayerControl::update(){
+  std::map<int, Controller>::iterator it;
+
+  for(it = controller.begin(); it != controller.end(); it++){
+    it->second.update(it->first);
+  }
+}
 void AnimationManager::update() {
   std::map<int, Animation>::iterator it;
 
@@ -396,7 +404,7 @@ void ZombiesManager::update() {
 // }
 
 void PlantsManager::create(){
-  if (engine->pad.getClicked().Cross && debugMode == false) {
+  if (debugMode == false) {
     if (zombieCreateRow[(int)cursor[player].cursorTile.x] == true) {
       if (sunCounter >= cards[deckCursor[player].pos].cost &&
           plantsCreated < maxPlants && cards[deckCursor[player].pos].seedTimer == 0) {
@@ -479,6 +487,13 @@ void ProjectileManager::zombieCollision() {
       }
     }
   }
+}
+
+void newPlayer(int* player){
+  static int countPlayer = 0;
+  *player = Entities::newID();
+  controller[*player].index = countPlayer;
+  countPlayer++;
 }
 
 void newProjectile(Vec2 position) {

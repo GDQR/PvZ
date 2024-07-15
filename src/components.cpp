@@ -28,6 +28,7 @@ std::map<int, BoxCollider> boxColliderArray;
 std::map<int, int> damageArray;
 std::map<int, int> lifeArray;
 std::map<int, Tyra::Vec2> pivot;
+std::map<int, Controller> controller;
 
 Plant plant[maxPlants];
 std::vector<Zombie> zombie;
@@ -100,6 +101,20 @@ void deleteTexPosArray(const int entityID){
   texPosArray.erase(entityID);
 }
 
+void Controller::update(const int entityID){
+  if(engine->pad.getClicked().Cross){
+    // create plant
+    plantsManager.create();
+  }
+  if(engine->pad.getClicked().Circle){
+  }
+  if(engine->pad.getClicked().DpadLeft) {
+    deckCursor[entityID].moveLeft();
+  }
+  if(engine->pad.getClicked().DpadRight) {
+    deckCursor[entityID].moveRight();
+  }
+}
 BoxCollider::BoxCollider() {}
 BoxCollider::BoxCollider(float x, float y, float width, float height) {
   this->x = x;
@@ -168,20 +183,20 @@ void Cursor::move() {
   }
 }
 
-void DeckCursor::move() {
-  if (engine->pad.getClicked().DpadLeft) {
-    pos--;
-    if (pos < 0) {
-      pos = cards.size() - 1;
-    }
-    posArray[id].x = posArray[cards[pos].seed].x - 3;
-  } else if (engine->pad.getClicked().DpadRight) {
-    pos++;
-    if (pos >= (int)cards.size()) {
-      pos = 0;
-    }
-    posArray[id].x = posArray[cards[pos].seed].x - 3;
+void DeckCursor::moveLeft(){
+  pos--;
+  if (pos < 0) {
+    pos = cards.size() - 1;
   }
+  posArray[id].x = posArray[cards[pos].seed].x - 3;  
+}
+
+void DeckCursor::moveRight(){
+  pos++;
+  if (pos >= (int)cards.size()) {
+    pos = 0;
+  }
+  posArray[id].x = posArray[cards[pos].seed].x - 3;
 }
 
 void Card::update() {

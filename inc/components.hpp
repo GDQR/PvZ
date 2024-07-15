@@ -13,6 +13,16 @@
 //   zombieWalk,
 //   zombieNormalAttack
 // };
+// enum enumCommands {
+//   level1,
+//   debug
+// };
+
+class Controller{
+ public:
+ unsigned int index;
+ void update(const int entityID);
+};
 
 class FatherID {
  public:
@@ -34,7 +44,8 @@ class DeckCursor {
  public:
   int id = -1;
   int pos = 0;
-  void move();
+  void moveLeft();
+  void moveRight();
 };
 
 class Card {
@@ -111,6 +122,12 @@ class RotationSprite {
   void update(const int entityID);
 };
 
+class PlantsManager {
+  public:
+  void create();
+  void update();
+};
+
 extern Tyra::Engine* engine;
 extern Tyra::Renderer* renderer;
 extern const Tyra::PadJoy* leftJoy;
@@ -140,6 +157,7 @@ extern std::map<int, BoxCollider> boxColliderArray;
 extern std::map<int, int> damageArray;
 extern std::map<int, int> lifeArray;
 extern std::map<int, Tyra::Vec2> pivot;
+extern std::map<int, Controller> controller;
 
 const int maxPlants = 5 * 9;
 extern Plant plant[maxPlants];
@@ -155,3 +173,5 @@ extern std::map<int, DeckCursor> deckCursor;
 extern bool zombieCreateRow[5];
 extern bool plantCreatedInMap[5][9];
 extern BoxCollider mapCollider[5][9];
+
+extern PlantsManager plantsManager;

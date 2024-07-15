@@ -83,7 +83,7 @@ void createCard(Plant_State_enum typePlant, Vec2 pos) {
 
 void Level1::init() {
   srand(time(NULL));
-  player = Entities::newID();
+  newPlayer(&player);
   loadPlantCost();
   loadDebugTextures();
   // load background
@@ -135,10 +135,11 @@ void Level1::init() {
 
 void Level1::update() {
   // plantMovement();
+  playerControl.update();
+
   if (player != -1 && debugMode == false) {
     cursor[player].move();
     boxColliderArray[cursor[player].id].move(cursor[player].id);
-    deckCursor[player].move();
   }
 
   for (unsigned int i = 0; i < cards.size(); i++) {
@@ -156,8 +157,6 @@ void Level1::update() {
     }
   }
 
-  // create plant
-  plantsManager.create();
 
   if (stopAnimation == false) {
     projectileManager.update();
@@ -176,8 +175,7 @@ void Level1::update() {
 
   // printf("FPS: %d\n",engine->info.getFps()) ;
   // printf("ram: %f\n",engine->info.getAvailableRAM());
-  // zombiesManager.collision();
-  projectileManager.zombieCollision();
+  // projectileManager.zombieCollision();
   // printf("texture free space: %f\n",engine->renderer.core.gs.vram.getFreeSpaceInMB());
 
   // shoot zombies

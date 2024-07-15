@@ -1,6 +1,11 @@
 #pragma once
 #include <tyra>
 
+class PlayerControl{
+  public:
+  void update();
+};
+
 class AnimationManager {
  private:
   unsigned int framesSpeed = 20;
@@ -30,25 +35,20 @@ class ZombiesManager {
   void update();
 };
 
-class PlantsManager {
-  public:
-  void create();
-  void update();
-};
-
 class ProjectileManager {
  public:
   void update();
   void zombieCollision();
 };
 
+extern PlayerControl playerControl;
 extern AnimationManager animManager;
 extern ProjectileManager projectileManager;
 extern RendererSprites renderSprites;
 extern RendererDebugSpritesManager renderDebugSpritesManager;
 extern ZombiesManager zombiesManager;
-extern PlantsManager plantsManager;
 
+void newPlayer(int* player);
 void newProjectile(Tyra::Vec2 position);
 void newFatherID(int* fatherID, int* childID);
 void newCursor(int* player, Tyra::Vec2 pos);
