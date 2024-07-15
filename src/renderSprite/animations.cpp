@@ -205,7 +205,7 @@ void activeAnimation(const int entityID, const int animID, const int firstFrame,
     draw = true;
     scale.y = animationDataArray[animID].scaleY[firstFrame];
   }
-  
+
   if(spriteArray.count(entityID) == 1){
     spriteArray[entityID].size = originalSize[entityID] * scale;
   }else{
@@ -384,7 +384,7 @@ void readReanimFiles(std::string nameID, std::string file) {
   TYRA_ASSERT(MyReadFile.is_open(), "The next file could not be found:", file);
 
   std::string insideArrow;
-  int countTrack = 0;
+  // int countTrack = 0;
 
   int intValue;
   int animID = -1;
@@ -392,10 +392,7 @@ void readReanimFiles(std::string nameID, std::string file) {
   char state = '0';
 
   while (!MyReadFile.eof()) {
-    // int length = MyReadFile.tellg();
-    //     std::cout << "pos: "<<length << std::endl;
     readTag(MyReadFile, insideArrow, state);
-    // std::cout <<"test: " << insideArrow << std::endl;
     if (insideArrow == "fps") {
       readTag(MyReadFile, insideArrow, state);
 
@@ -413,6 +410,11 @@ void readReanimFiles(std::string nameID, std::string file) {
         useAnim = false;
       }else{
         animationDataArray[animID].draw.clear();
+        animationDataArray[animID].angleX.clear();
+        animationDataArray[animID].angleY.clear();
+        animationDataArray[animID].scaleX.clear();
+        animationDataArray[animID].scaleY.clear();
+        animationDataArray[animID].alpha.clear();
         animationDataArray[animID].x.clear();
         animationDataArray[animID].y.clear();
         printf("borre la memoria\n");
