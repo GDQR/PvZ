@@ -9,6 +9,7 @@ int maxAnimID = 0;
 void loadAnimationSprite(const int entityID, const int animID){
     bool rotateSprite = false;
     bool hasAlpha = false;
+    Tyra::Vec2 scale;
 
     for (unsigned int j = 0; j < animationDataArray[animID].maxFrame; j++) {
       if (animationDataArray[animID].alpha.count(j) == true) {
@@ -54,11 +55,19 @@ void loadAnimationSprite(const int entityID, const int animID){
       }
 
       for (unsigned int j = 0; j < animationDataArray[animID].maxFrame; j++) {
-        if (animationDataArray[animID].scale.count(j) == 1) {
-          spriteArray[entityID].size = originalSize[entityID] * animationDataArray[animID].scale[j];
+        if (animationDataArray[animID].scaleX.count(j) == 1) {
+          scale.x = animationDataArray[animID].scaleX[j];
           break;
         }
       }
+
+      for (unsigned int j = 0; j < animationDataArray[animID].maxFrame; j++) {
+        if (animationDataArray[animID].scaleY.count(j) == 1) {
+          scale.y = animationDataArray[animID].scaleY[j];
+          break;
+        }
+      }
+      spriteArray[entityID].size = originalSize[entityID] * scale;
 
       // if (animationDataArray[animID].draw.count(0)) {
       // // setSprite(entityID, animID);
@@ -116,11 +125,20 @@ void loadAnimationSprite(const int entityID, const int animID){
       }
 
       for (unsigned int j = 0; j < animationDataArray[animID].maxFrame; j++) {
-        if (animationDataArray[animID].scale.count(j) == 1) {
-          rotationSprite[entityID].sprite.size = originalSize[entityID] * animationDataArray[animID].scale[j];
+        if (animationDataArray[animID].scaleX.count(j) == 1) {
+          scale.x = animationDataArray[animID].scaleX[j];
           break;
         }
       }
+
+      for (unsigned int j = 0; j < animationDataArray[animID].maxFrame; j++) {
+        if (animationDataArray[animID].scaleY.count(j) == 1) {
+          scale.y = animationDataArray[animID].scaleY[j];
+          break;
+        }
+      }
+
+      rotationSprite[entityID].sprite.size = originalSize[entityID] * scale;
 
       for (unsigned int j = 0; j < animationDataArray[animID].maxFrame; j++) {
         if (animationDataArray[animID].draw.count(j) == 1) {
@@ -173,7 +191,9 @@ void activeAnimation(const int entityID, const int animID, const int firstFrame,
     draw = true;
   }else if(animationDataArray[animID].y.count(firstFrame) == 1){
     draw = true;
-  }else if(animationDataArray[animID].scale.count(firstFrame) == 1){
+  }else if(animationDataArray[animID].scaleX.count(firstFrame) == 1){
+    draw = true;
+  }else if(animationDataArray[animID].scaleY.count(firstFrame) == 1){
     draw = true;
   }else if(animationDataArray[animID].texture.count(firstFrame) == 1){
     draw = true;
@@ -292,11 +312,11 @@ void readInfo(std::ifstream& MyReadFile, std::string& insideArrow, bool& useAnim
       std::cout << std::endl;
 
       if(beforeSx != sx){
-        animationDataArray[animID].scale[countframes].x = sx;
+        animationDataArray[animID].scaleX[countframes] = sx;
       }
 
       if(beforeSY != sy){
-        animationDataArray[animID].scale[countframes].y = sy;
+        animationDataArray[animID].scaleY[countframes] = sy;
       }
 
       if(beforeA != a){

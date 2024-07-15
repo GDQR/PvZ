@@ -270,9 +270,13 @@ void Animation::updateNormalSprites(const int entityID) {
     spriteArray[entityID].color.a =
         animationDataArray[animID].alpha[currentFrame] * 128;
   }
-  if (animationDataArray[animID].scale.count(currentFrame) == 1) {
-    spriteArray[entityID].size =
-        originalSize[entityID] * animationDataArray[animID].scale[currentFrame];
+  if (animationDataArray[animID].scaleX.count(currentFrame) == 1) {
+    spriteArray[entityID].size.x =
+        originalSize[entityID].x * animationDataArray[animID].scaleX[currentFrame];
+  }
+  if (animationDataArray[animID].scaleY.count(currentFrame) == 1) {
+    spriteArray[entityID].size.y =
+        originalSize[entityID].y * animationDataArray[animID].scaleY[currentFrame];
   }
 }
 
@@ -297,9 +301,14 @@ void Animation::updateRotationSprites(const int entityID) {
             ->getHeight());
   }
 
-  if (animationDataArray[animID].scale.count(currentFrame) == 1) {
-    rotationSprite[entityID].sprite.size =
-        originalSize[entityID] * animationDataArray[animID].scale[currentFrame];
+  if (animationDataArray[animID].scaleX.count(currentFrame) == 1) {
+    rotationSprite[entityID].sprite.size.x =
+        originalSize[entityID].x * animationDataArray[animID].scaleX[currentFrame];
+  }
+  
+  if (animationDataArray[animID].scaleY.count(currentFrame) == 1) {
+    rotationSprite[entityID].sprite.size.y =
+        originalSize[entityID].y * animationDataArray[animID].scaleY[currentFrame];
   }
 
   if (animationDataArray[animID].angleX.count(currentFrame) == 1) {

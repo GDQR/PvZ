@@ -86,14 +86,25 @@ int AnimationManager::debugAnim(const int entitieID) {
     }
   }
 
-  if (animationDataArray[animationArray[entitieID].animID].scale.count(
+  if (animationDataArray[animationArray[entitieID].animID].scaleX.count(
           animationArray[entitieID].currentFrame) == 1) {
     if (spriteArray.count(entitieID) == 1) {
-      spriteArray[entitieID].size = originalSize[entitieID] * animationDataArray[animationArray[entitieID].animID]
-              .scale[animationArray[entitieID].currentFrame];
+      spriteArray[entitieID].size.x = originalSize[entitieID].x * animationDataArray[animationArray[entitieID].animID]
+              .scaleX[animationArray[entitieID].currentFrame];
     } else {
-      rotationSprite[entitieID].sprite.size = originalSize[entitieID] * animationDataArray[animationArray[entitieID].animID]
-              .scale[animationArray[entitieID].currentFrame];
+      rotationSprite[entitieID].sprite.size.x = originalSize[entitieID].x * animationDataArray[animationArray[entitieID].animID]
+              .scaleX[animationArray[entitieID].currentFrame];
+    }
+  }
+
+  if (animationDataArray[animationArray[entitieID].animID].scaleY.count(
+          animationArray[entitieID].currentFrame) == 1) {
+    if (spriteArray.count(entitieID) == 1) {
+      spriteArray[entitieID].size.y = originalSize[entitieID].y * animationDataArray[animationArray[entitieID].animID]
+              .scaleY[animationArray[entitieID].currentFrame];
+    } else {
+      rotationSprite[entitieID].sprite.size.y = originalSize[entitieID].y * animationDataArray[animationArray[entitieID].animID]
+              .scaleY[animationArray[entitieID].currentFrame];
     }
   }
 
@@ -178,14 +189,25 @@ void AnimationManager::debugChangeFrame(const int entitieID, const int key) {
     }
   }
 
-  if (animationDataArray[animationArray[entitieID].animID].scale.count(
+  if (animationDataArray[animationArray[entitieID].animID].scaleX.count(
           animationArray[entitieID].currentFrame) == 1) {
     if (spriteArray.count(entitieID) == 1) {
-      spriteArray[entitieID].size = originalSize[entitieID] * animationDataArray[animationArray[entitieID].animID]
-              .scale[animationArray[entitieID].currentFrame];
+      spriteArray[entitieID].size.x = originalSize[entitieID].x * animationDataArray[animationArray[entitieID].animID]
+              .scaleX[animationArray[entitieID].currentFrame];
     } else {
-      rotationSprite[entitieID].sprite.size = originalSize[entitieID] * animationDataArray[animationArray[entitieID].animID]
-              .scale[animationArray[entitieID].currentFrame];
+      rotationSprite[entitieID].sprite.size.x = originalSize[entitieID].x * animationDataArray[animationArray[entitieID].animID]
+              .scaleX[animationArray[entitieID].currentFrame];
+    }
+  }
+
+  if (animationDataArray[animationArray[entitieID].animID].scaleY.count(
+          animationArray[entitieID].currentFrame) == 1) {
+    if (spriteArray.count(entitieID) == 1) {
+      spriteArray[entitieID].size.y = originalSize[entitieID].y * animationDataArray[animationArray[entitieID].animID]
+              .scaleY[animationArray[entitieID].currentFrame];
+    } else {
+      rotationSprite[entitieID].sprite.size.y = originalSize[entitieID].y * animationDataArray[animationArray[entitieID].animID]
+              .scaleY[animationArray[entitieID].currentFrame];
     }
   }
 
