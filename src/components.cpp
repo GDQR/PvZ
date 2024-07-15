@@ -305,7 +305,7 @@ void Animation::updateRotationSprites(const int entityID) {
     rotationSprite[entityID].sprite.size.x =
         originalSize[entityID].x * animationDataArray[animID].scaleX[currentFrame];
   }
-  
+
   if (animationDataArray[animID].scaleY.count(currentFrame) == 1) {
     rotationSprite[entityID].sprite.size.y =
         originalSize[entityID].y * animationDataArray[animID].scaleY[currentFrame];

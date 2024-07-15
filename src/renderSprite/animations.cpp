@@ -180,6 +180,7 @@ void activeAnimation(const int entityID, const int animID, const int firstFrame,
   animationArray[entityID].currentFrame = firstFrame;
   animationArray[entityID].firstFrame = firstFrame;
   animationArray[entityID].lastFrame = lastFrame;
+  Tyra::Vec2 scale(1.0f,1.0f);
   bool draw = false;
   if(animationDataArray[animID].alpha.count(firstFrame) == 1){
     draw = true;
@@ -191,12 +192,24 @@ void activeAnimation(const int entityID, const int animID, const int firstFrame,
     draw = true;
   }else if(animationDataArray[animID].y.count(firstFrame) == 1){
     draw = true;
-  }else if(animationDataArray[animID].scaleX.count(firstFrame) == 1){
-    draw = true;
-  }else if(animationDataArray[animID].scaleY.count(firstFrame) == 1){
-    draw = true;
   }else if(animationDataArray[animID].texture.count(firstFrame) == 1){
     draw = true;
+  }
+
+  if(animationDataArray[animID].scaleX.count(firstFrame) == 1){
+    draw = true;
+    scale.x = animationDataArray[animID].scaleX[firstFrame];
+  }
+  
+  if(animationDataArray[animID].scaleY.count(firstFrame) == 1){
+    draw = true;
+    scale.y = animationDataArray[animID].scaleY[firstFrame];
+  }
+  
+  if(spriteArray.count(entityID) == 1){
+    spriteArray[entityID].size = originalSize[entityID] * scale;
+  }else{
+    rotationSprite[entityID].sprite.size = originalSize[entityID] * scale;
   }
   animationArray[entityID].draw = draw;
   setSprite(entityID, animID, draw);
