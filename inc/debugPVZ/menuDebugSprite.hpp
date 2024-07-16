@@ -4,4 +4,15 @@
 
 extern bool startSpriteDebug;
 
-void menuDebugSprite(Tyra::Pad& pad, Tyra::Font& font, int& entitieID);
+class DebugSpriteMode{
+ public:
+ std::string name;
+ void menu();
+ void drawMenu();
+ void firstMenu();
+ void drawFirstMenu();
+ void secondMenu();
+ void drawSecondMenu();
+};
+
+extern DebugSpriteMode debugSpriteMode;
