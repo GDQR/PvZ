@@ -330,10 +330,12 @@ void readInfo(std::ifstream& MyReadFile, std::string& insideArrow, bool& useAnim
       std::cout << std::endl;
 
       if(beforeSx != sx){
+        beforeSx = sx;
         animationDataArray[animID].scaleX[countframes] = sx;
       }
 
       if(beforeSY != sy){
+        beforeSY = sy;
         animationDataArray[animID].scaleY[countframes] = sy;
       }
 
