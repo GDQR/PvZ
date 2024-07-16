@@ -3,6 +3,7 @@
 
 int projectilesCreated = 0;
 
+PlayerControl playerControl;
 AnimationManager animManager;
 ProjectileManager projectileManager;
 RendererSprites renderSprites;
@@ -10,6 +11,13 @@ RendererDebugSpritesManager renderDebugSpritesManager;
 ZombiesManager zombiesManager;
 PlantsManager plantsManager;
 
+void PlayerControl::update(){
+  std::map<int, Controller>::iterator it;
+
+  for(it = controller.begin(); it != controller.end(); it++){
+    it->second.update(it->first);
+  }
+}
 void AnimationManager::update() {
   std::map<int, Animation>::iterator it;
 
@@ -60,11 +68,18 @@ int AnimationManager::debugAnim(const int entitieID) {
         ->addLink(rotationSprite[entitieID].sprite.id);
   }
 
-  if (animationDataArray[animationArray[entitieID].animID].position.count(
+  if (animationDataArray[animationArray[entitieID].animID].x.count(
           animationArray[entitieID].currentFrame) == 1) {
-    texPosArray[entitieID] =
+    texPosArray[entitieID].x =
         animationDataArray[animationArray[entitieID].animID]
-            .position[animationArray[entitieID].currentFrame];
+            .x[animationArray[entitieID].currentFrame];
+  }
+
+  if (animationDataArray[animationArray[entitieID].animID].y.count(
+          animationArray[entitieID].currentFrame) == 1) {
+    texPosArray[entitieID].y =
+        animationDataArray[animationArray[entitieID].animID]
+            .y[animationArray[entitieID].currentFrame];
   }
 
   if (animationDataArray[animationArray[entitieID].animID].alpha.count(
@@ -79,21 +94,37 @@ int AnimationManager::debugAnim(const int entitieID) {
     }
   }
 
-  if (animationDataArray[animationArray[entitieID].animID].scale.count(
+  if (animationDataArray[animationArray[entitieID].animID].scaleX.count(
           animationArray[entitieID].currentFrame) == 1) {
     if (spriteArray.count(entitieID) == 1) {
-      spriteArray[entitieID].size = originalSize[entitieID] * animationDataArray[animationArray[entitieID].animID]
-              .scale[animationArray[entitieID].currentFrame];
+      spriteArray[entitieID].size.x = originalSize[entitieID].x * animationDataArray[animationArray[entitieID].animID]
+              .scaleX[animationArray[entitieID].currentFrame];
     } else {
-      rotationSprite[entitieID].sprite.size = originalSize[entitieID] * animationDataArray[animationArray[entitieID].animID]
-              .scale[animationArray[entitieID].currentFrame];
+      rotationSprite[entitieID].sprite.size.x = originalSize[entitieID].x * animationDataArray[animationArray[entitieID].animID]
+              .scaleX[animationArray[entitieID].currentFrame];
     }
   }
 
-  if (animationDataArray[animationArray[entitieID].animID].angle.count(
+  if (animationDataArray[animationArray[entitieID].animID].scaleY.count(
           animationArray[entitieID].currentFrame) == 1) {
-    rotationSprite[entitieID].angle = animationDataArray[animationArray[entitieID].animID]
-                            .angle[animationArray[entitieID].currentFrame];
+    if (spriteArray.count(entitieID) == 1) {
+      spriteArray[entitieID].size.y = originalSize[entitieID].y * animationDataArray[animationArray[entitieID].animID]
+              .scaleY[animationArray[entitieID].currentFrame];
+    } else {
+      rotationSprite[entitieID].sprite.size.y = originalSize[entitieID].y * animationDataArray[animationArray[entitieID].animID]
+              .scaleY[animationArray[entitieID].currentFrame];
+    }
+  }
+
+  if (animationDataArray[animationArray[entitieID].animID].angleX.count(
+          animationArray[entitieID].currentFrame) == 1) {
+    rotationSprite[entitieID].angle.x = animationDataArray[animationArray[entitieID].animID]
+                            .angleX[animationArray[entitieID].currentFrame];
+  }
+  if (animationDataArray[animationArray[entitieID].animID].angleY.count(
+          animationArray[entitieID].currentFrame) == 1) {
+    rotationSprite[entitieID].angle.y = animationDataArray[animationArray[entitieID].animID]
+                            .angleY[animationArray[entitieID].currentFrame];
   }
 
   return 0;
@@ -140,11 +171,18 @@ void AnimationManager::debugChangeFrame(const int entitieID, const int key) {
         .texture[animationArray[entitieID].currentFrame])->addLink(rotationSprite[entitieID].sprite.id);
   }
 
-  if (animationDataArray[animationArray[entitieID].animID].position.count(
+  if (animationDataArray[animationArray[entitieID].animID].x.count(
           animationArray[entitieID].currentFrame) == 1) {
-    texPosArray[entitieID] =
+    texPosArray[entitieID].x =
         animationDataArray[animationArray[entitieID].animID]
-            .position[animationArray[entitieID].currentFrame];
+            .x[animationArray[entitieID].currentFrame];
+  }
+
+  if (animationDataArray[animationArray[entitieID].animID].y.count(
+          animationArray[entitieID].currentFrame) == 1) {
+    texPosArray[entitieID].y =
+        animationDataArray[animationArray[entitieID].animID]
+            .y[animationArray[entitieID].currentFrame];
   }
 
   if (animationDataArray[animationArray[entitieID].animID].alpha.count(
@@ -159,21 +197,38 @@ void AnimationManager::debugChangeFrame(const int entitieID, const int key) {
     }
   }
 
-  if (animationDataArray[animationArray[entitieID].animID].scale.count(
+  if (animationDataArray[animationArray[entitieID].animID].scaleX.count(
           animationArray[entitieID].currentFrame) == 1) {
     if (spriteArray.count(entitieID) == 1) {
-      spriteArray[entitieID].size = originalSize[entitieID] * animationDataArray[animationArray[entitieID].animID]
-              .scale[animationArray[entitieID].currentFrame];
+      spriteArray[entitieID].size.x = originalSize[entitieID].x * animationDataArray[animationArray[entitieID].animID]
+              .scaleX[animationArray[entitieID].currentFrame];
     } else {
-      rotationSprite[entitieID].sprite.size = originalSize[entitieID] * animationDataArray[animationArray[entitieID].animID]
-              .scale[animationArray[entitieID].currentFrame];
+      rotationSprite[entitieID].sprite.size.x = originalSize[entitieID].x * animationDataArray[animationArray[entitieID].animID]
+              .scaleX[animationArray[entitieID].currentFrame];
     }
   }
 
-  if (animationDataArray[animationArray[entitieID].animID].angle.count(
+  if (animationDataArray[animationArray[entitieID].animID].scaleY.count(
           animationArray[entitieID].currentFrame) == 1) {
-    rotationSprite[entitieID].angle = animationDataArray[animationArray[entitieID].animID]
-                            .angle[animationArray[entitieID].currentFrame];
+    if (spriteArray.count(entitieID) == 1) {
+      spriteArray[entitieID].size.y = originalSize[entitieID].y * animationDataArray[animationArray[entitieID].animID]
+              .scaleY[animationArray[entitieID].currentFrame];
+    } else {
+      rotationSprite[entitieID].sprite.size.y = originalSize[entitieID].y * animationDataArray[animationArray[entitieID].animID]
+              .scaleY[animationArray[entitieID].currentFrame];
+    }
+  }
+
+  if (animationDataArray[animationArray[entitieID].animID].angleX.count(
+          animationArray[entitieID].currentFrame) == 1) {
+    rotationSprite[entitieID].angle.x = animationDataArray[animationArray[entitieID].animID]
+                            .angleX[animationArray[entitieID].currentFrame];
+  }
+
+  if (animationDataArray[animationArray[entitieID].animID].angleY.count(
+          animationArray[entitieID].currentFrame) == 1) {
+    rotationSprite[entitieID].angle.y = animationDataArray[animationArray[entitieID].animID]
+                            .angleY[animationArray[entitieID].currentFrame];
   }
 }
 
@@ -349,15 +404,15 @@ void ZombiesManager::update() {
 // }
 
 void PlantsManager::create(){
-  if (engine->pad.getClicked().Cross && debugMode == false) {
-    if (zombieCreateRow[(int)cursor.cursorTile.x] == true) {
-      if (sunCounter >= cards[deckCursor.pos].cost &&
-          plantsCreated < maxPlants && cards[deckCursor.pos].seedTimer == 0) {
-        sunCounter -= cards[deckCursor.pos].cost;
-        cards[deckCursor.pos].seedTimer = 60 * 8;
-        spriteArray[cards[deckCursor.pos].seedShadowTimer].size.y = 70;
-        createPlant(cards[deckCursor.pos].plant, cursor.cursorTile.x,
-                    cursor.cursorTile.y);
+  if (debugMode == false) {
+    if (zombieCreateRow[(int)cursor[player].cursorTile.x] == true) {
+      if (sunCounter >= cards[deckCursor[player].pos].cost &&
+          plantsCreated < maxPlants && cards[deckCursor[player].pos].seedTimer == 0) {
+        sunCounter -= cards[deckCursor[player].pos].cost;
+        cards[deckCursor[player].pos].seedTimer = 60 * 8;
+        spriteArray[cards[deckCursor[player].pos].seedShadowTimer].size.y = 70;
+        createPlant(cards[deckCursor[player].pos].plant, cursor[player].cursorTile.x,
+                    cursor[player].cursorTile.y);
       } else {
         printf("can't create plants now\n");
       }
@@ -383,7 +438,7 @@ void ProjectileManager::update() {
       printf("borrando proyectil\n");
       deleteSprite(*it);
       boxColliderArray.erase(*it);
-      posArray.erase(*it);
+      deletePosArray(*it);
       deleteDebugBoxCollider(*it);
       Entities::deleteID(*it);
       it = projectile.erase(it);
@@ -434,6 +489,13 @@ void ProjectileManager::zombieCollision() {
   }
 }
 
+void newPlayer(int* player){
+  static int countPlayer = 0;
+  *player = Entities::newID();
+  controller[*player].index = countPlayer;
+  countPlayer++;
+}
+
 void newProjectile(Vec2 position) {
   if (projectilesCreated < 100) {
     projectile.insert(projectile.begin() + projectilesCreated,
@@ -466,25 +528,27 @@ void deleteFatherID(int* fatherID, int* childID) {
   fatherIDArray[*fatherID].id.erase(it);
 }
 
-void newCursor(int* cursor, Tyra::Vec2 pos) {
-  *cursor = Entities::newID();
-  printf("cursor id: %d\n", *cursor);
-  createSprite(*cursor, Tyra::MODE_STRETCH, pos, Vec2(56, 48));
-  createTexture(*cursor, "cursor6.png");
-  boxColliderArray[*cursor] = BoxCollider(pos.x, pos.y, 24, 24, 28 / 2, 24 / 2);
-  texPosArray[*cursor] = Vec2(0.0f, 0.0f);
-  scaleTexture[*cursor] = Vec2(1.0f, 1.0f);
-  createDebugBoxCollider(*cursor, Tyra::MODE_STRETCH);
+void newCursor(int* player, Tyra::Vec2 pos) {
+  // *cursor = Entities::newID();
+  cursor[*player].id = Entities::newID();
+  printf("cursor id: %d\n", cursor[*player].id);
+  createSprite(cursor[*player].id, Tyra::MODE_STRETCH, pos, Vec2(56, 48));
+  createTexture(cursor[*player].id, "cursor6.png");
+  boxColliderArray[cursor[*player].id] = BoxCollider(pos.x, pos.y, 24, 24, 28 / 2, 24 / 2);
+  texPosArray[cursor[*player].id] = Vec2(0.0f, 0.0f);
+  scaleTexture[cursor[*player].id] = Vec2(1.0f, 1.0f);
+  createDebugBoxCollider(cursor[*player].id, Tyra::MODE_STRETCH);
 }
 
-void newDeckCursor(int* cursor, Tyra::Vec2 pos) {
-  *cursor = Entities::newID();
-  printf("deck cursor id: %d\n", *cursor);
-  createSprite(*cursor, Tyra::MODE_STRETCH, pos, Vec2(56, 48));
-  createTexture(*cursor, "cursor6.png");
-  texPosArray[*cursor] = Vec2(0.0f, 0.0f);
-  scaleTexture[*cursor] = Vec2(1.0f, 1.0f);
-  // boxColliderArray[*cursor] = BoxCollider(
+void newDeckCursor(int* player, Tyra::Vec2 pos) {
+  // *cursor = Entities::newID();
+  deckCursor[*player].id = Entities::newID();
+  printf("deck cursor id: %d\n", deckCursor[*player].id);
+  createSprite(deckCursor[*player].id, Tyra::MODE_STRETCH, pos, Vec2(56, 48));
+  createTexture(deckCursor[*player].id, "cursor6.png");
+  texPosArray[deckCursor[*player].id] = Vec2(0.0f, 0.0f);
+  scaleTexture[deckCursor[*player].id] = Vec2(1.0f, 1.0f);
+  // boxColliderArray[deckCursor[*player].id] = BoxCollider(
   //     pos.x, pos.y, 24, 24, 28 / 2, 24 / 2);
-  // createDebugBoxCollider(*cursor, Tyra::MODE_STRETCH);
+  // createDebugBoxCollider(deckCursor[*player].id, Tyra::MODE_STRETCH);
 }

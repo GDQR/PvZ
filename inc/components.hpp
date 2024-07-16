@@ -13,6 +13,16 @@
 //   zombieWalk,
 //   zombieNormalAttack
 // };
+// enum enumCommands {
+//   level1,
+//   debug
+// };
+
+class Controller{
+ public:
+ unsigned int index;
+ void update(const int entityID);
+};
 
 class FatherID {
  public:
@@ -34,7 +44,8 @@ class DeckCursor {
  public:
   int id = -1;
   int pos = 0;
-  void move();
+  void moveLeft();
+  void moveRight();
 };
 
 class Card {
@@ -73,9 +84,12 @@ class AnimationData {
   unsigned int maxFrame;
   std::string name;
   std::unordered_map<unsigned int, int> texture;
-  std::unordered_map<unsigned int, Tyra::Vec2> position;
-  std::unordered_map<unsigned int, Tyra::Vec2> scale;
-  std::unordered_map<unsigned int, Tyra::Vec2> angle;
+  std::unordered_map<unsigned int, float> x;
+  std::unordered_map<unsigned int, float> y;
+  std::unordered_map<unsigned int, float> scaleX;
+  std::unordered_map<unsigned int, float> scaleY;
+  std::unordered_map<unsigned int, float> angleX;
+  std::unordered_map<unsigned int, float> angleY;
   std::unordered_map<unsigned int, float> alpha;
   std::unordered_map<unsigned int, bool> draw;
 };
@@ -108,6 +122,12 @@ class RotationSprite {
   void update(const int entityID);
 };
 
+class PlantsManager {
+  public:
+  void create();
+  void update();
+};
+
 extern Tyra::Engine* engine;
 extern Tyra::Renderer* renderer;
 extern const Tyra::PadJoy* leftJoy;
@@ -137,6 +157,7 @@ extern std::map<int, BoxCollider> boxColliderArray;
 extern std::map<int, int> damageArray;
 extern std::map<int, int> lifeArray;
 extern std::map<int, Tyra::Vec2> pivot;
+extern std::map<int, Controller> controller;
 
 const int maxPlants = 5 * 9;
 extern Plant plant[maxPlants];
@@ -145,9 +166,12 @@ extern std::vector<Sun> sun;
 extern std::vector<NaturalSun> naturalSun;
 extern std::vector<int> projectile;
 extern std::vector<Card> cards;
-extern Cursor cursor;
-extern DeckCursor deckCursor;
+extern int player;
+extern std::map<int, Cursor> cursor;
+extern std::map<int, DeckCursor> deckCursor;
 
 extern bool zombieCreateRow[5];
 extern bool plantCreatedInMap[5][9];
 extern BoxCollider mapCollider[5][9];
+
+extern PlantsManager plantsManager;

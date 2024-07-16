@@ -7,8 +7,10 @@ bool isMainMenuAnimationActive = true;
 bool startAnimationDebug = true;
 
 void subMenu(Tyra::Pad& pad, Tyra::Font& font, int& entitieID) {
-  Vec2* texPos = &animationDataArray[animationArray[entitieID].animID]
-                     .position[animationArray[entitieID].currentFrame];
+  // TODO: Fix this texpos
+  Tyra::Vec2* texPos;
+  texPos->x = animationDataArray[animationArray[entitieID].animID]
+                     .x[animationArray[entitieID].currentFrame];
 
   if (pad.getClicked().L1) {
     if (animationArray[entitieID].currentFrame > 0) {

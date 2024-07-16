@@ -9,12 +9,16 @@ int maxAnimID = 0;
 void loadAnimationSprite(const int entityID, const int animID){
     bool rotateSprite = false;
     bool hasAlpha = false;
-  
+    Tyra::Vec2 scale;
+
     for (unsigned int j = 0; j < animationDataArray[animID].maxFrame; j++) {
       if (animationDataArray[animID].alpha.count(j) == true) {
         hasAlpha = true;
       }
-      if (animationDataArray[animID].angle.count(j) == true) {
+      if (animationDataArray[animID].angleX.count(j) == true) {
+        rotateSprite = true;
+      }
+      if (animationDataArray[animID].angleY.count(j) == true) {
         rotateSprite = true;
       }
       if (rotateSprite == true && hasAlpha == true) {
@@ -51,11 +55,19 @@ void loadAnimationSprite(const int entityID, const int animID){
       }
 
       for (unsigned int j = 0; j < animationDataArray[animID].maxFrame; j++) {
-        if (animationDataArray[animID].scale.count(j) == 1) {
-          spriteArray[entityID].size = originalSize[entityID] * animationDataArray[animID].scale[j];
+        if (animationDataArray[animID].scaleX.count(j) == 1) {
+          scale.x = animationDataArray[animID].scaleX[j];
           break;
         }
       }
+
+      for (unsigned int j = 0; j < animationDataArray[animID].maxFrame; j++) {
+        if (animationDataArray[animID].scaleY.count(j) == 1) {
+          scale.y = animationDataArray[animID].scaleY[j];
+          break;
+        }
+      }
+      spriteArray[entityID].size = originalSize[entityID] * scale;
 
       // if (animationDataArray[animID].draw.count(0)) {
       // // setSprite(entityID, animID);
@@ -63,19 +75,33 @@ void loadAnimationSprite(const int entityID, const int animID){
 
     }else{
       printf("entre en rotate\n");
-      if (animationDataArray[animID].angle.count(0) == 0) {
-        animationDataArray[animID].angle[0] = Vec2(0.0f,0.0f);
+      Tyra::Vec2 angle;
+      for (unsigned int j = 0; j < animationDataArray[animID].maxFrame; j++) {
+        if (animationDataArray[animID].angleX.count(j) == 1) {
+          angle.x = animationDataArray[animID].angleX[j];
+          break;
+        }
+      }
+
+      for (unsigned int j = 0; j < animationDataArray[animID].maxFrame; j++) {
+        if (animationDataArray[animID].angleY.count(j) == 1) {
+          angle.y = animationDataArray[animID].angleY[j];
+          break;
+        }
       }
       createSpriteRotate(entityID, Tyra::MODE_STRETCH, Vec2(0, 0),
-                 Vec2(128 / 1.6f, 128 / 1.6f),animationDataArray[animID].angle[0]);
+                 Vec2(128 / 1.6f, 128 / 1.6f),angle);
 
       int spriteID = rotationSprite[entityID].sprite.id;
       Tyra::Texture* texture;
       animationArray[entityID] = Animation(animID);
 
       for (unsigned int j = 0; j < animationDataArray[animID].maxFrame; j++) {
-        if (animationDataArray[animID].position.count(j) == 1) {
-          texPosArray[entityID] = animationDataArray[animID].position[j];
+        if (animationDataArray[animID].x.count(j) == 1) {
+          texPosArray[entityID].x = animationDataArray[animID].x[j];
+        }
+        if (animationDataArray[animID].y.count(j) == 1) {
+          texPosArray[entityID].y = animationDataArray[animID].y[j];
         }
       }
 
@@ -99,11 +125,20 @@ void loadAnimationSprite(const int entityID, const int animID){
       }
 
       for (unsigned int j = 0; j < animationDataArray[animID].maxFrame; j++) {
-        if (animationDataArray[animID].scale.count(j) == 1) {
-          rotationSprite[entityID].sprite.size = originalSize[entityID] * animationDataArray[animID].scale[j];
+        if (animationDataArray[animID].scaleX.count(j) == 1) {
+          scale.x = animationDataArray[animID].scaleX[j];
           break;
         }
       }
+
+      for (unsigned int j = 0; j < animationDataArray[animID].maxFrame; j++) {
+        if (animationDataArray[animID].scaleY.count(j) == 1) {
+          scale.y = animationDataArray[animID].scaleY[j];
+          break;
+        }
+      }
+
+      rotationSprite[entityID].sprite.size = originalSize[entityID] * scale;
 
       for (unsigned int j = 0; j < animationDataArray[animID].maxFrame; j++) {
         if (animationDataArray[animID].draw.count(j) == 1) {
@@ -116,7 +151,7 @@ void loadAnimationSprite(const int entityID, const int animID){
       // // setSprite(entityID, animID);
       // }
     }
-    
+
     printf("termine\n\n");
 }
 
@@ -141,94 +176,101 @@ void setSprite(const int entityID, const int animID, const bool draw){
     // printf("plant draw: %d\n", animationArray[entityID].draw);
 }
 
-void readReanimFiles(std::string nameID, std::string file) {
-  std::string myText;
+void activeAnimation(const int entityID, const int animID, const int firstFrame, const int lastFrame){
+  animationArray[entityID].currentFrame = firstFrame;
+  animationArray[entityID].firstFrame = firstFrame;
+  animationArray[entityID].lastFrame = lastFrame;
+  Tyra::Vec2 scale(1.0f,1.0f);
+  bool draw = false;
+  if(animationDataArray[animID].alpha.count(firstFrame) == 1){
+    draw = true;
+  }else if(animationDataArray[animID].angleX.count(firstFrame) == 1){
+    draw = true;
+  }else if(animationDataArray[animID].angleY.count(firstFrame) == 1){
+    draw = true;
+  }else if(animationDataArray[animID].x.count(firstFrame) == 1){
+    draw = true;
+  }else if(animationDataArray[animID].y.count(firstFrame) == 1){
+    draw = true;
+  }else if(animationDataArray[animID].texture.count(firstFrame) == 1){
+    draw = true;
+  }
 
-  // Read from the text file
-  std::ifstream MyReadFile(file, std::ios::binary);
+  if(animationDataArray[animID].scaleX.count(firstFrame) == 1){
+    draw = true;
+    scale.x = animationDataArray[animID].scaleX[firstFrame];
+  }
+  
+  if(animationDataArray[animID].scaleY.count(firstFrame) == 1){
+    draw = true;
+    scale.y = animationDataArray[animID].scaleY[firstFrame];
+  }
 
-  TYRA_ASSERT(MyReadFile.is_open(), "The next file could not be found:", file);
+  if(spriteArray.count(entityID) == 1){
+    spriteArray[entityID].size = originalSize[entityID] * scale;
+  }else{
+    rotationSprite[entityID].sprite.size = originalSize[entityID] * scale;
+  }
+  animationArray[entityID].draw = draw;
+  setSprite(entityID, animID, draw);
+}
 
-  std::string insideArrow;
-  std::string fileName;
-  int countTrack = 0;
-  int countframes = 0;
-  float floatValue;
-  int intValue;
-  int animID = -1;
-  std::string::size_type sz;
-  // int length = MyReadFile.tellg();
-  bool finishCountFrames = false;
-  bool passX=false;
-  bool passY=false;
-  bool passSX=false;
-  bool passSY=false;
-  bool passKX=false;
-  bool passKY=false;
-  bool passAlpha=false;
-  bool useAnim = true;
+void readTag(std::ifstream& MyReadFile, std::string& string, char& state){
+  if(state != '<' && state != '>'){
+    // printf("error char: %c\n", state);
+    state = MyReadFile.get();
+  }
+  // printf("char: %c\n", state);
+  if(state == '<'){
+    std::getline(MyReadFile, string, '>');
+    state = '>';
+  }else if(state == '>'){
+    std::getline(MyReadFile, string, '<');
+    state = '<';
+  }
+}
+
+void readInfo(std::ifstream& MyReadFile, std::string& insideArrow, bool& useAnim, int& animID,char& state){
   bool textureFounded = false;
-  bool save = true;
+
+  float beforeX = -400;
+  float beforeY = -400;
+  float x = 0;
+  float y = 0;
+  float beforeKx = -400;
+  float beforeKY = -400;
   float kx = 0.0f;
   float ky = 0.0f;
+  float beforeSx = -400;
+  float beforeSY = -400;
   float sx = 1.0f;
   float sy = 1.0f;
+  float beforeA = 2.0f;
   float a = 1.0f;
-  bool beforeDraw = false;
+  int beforeDraw = -2;
   bool draw = true;
   Tyra::Texture* texture = nullptr;
-  while (!MyReadFile.eof()) {
-    // int length = MyReadFile.tellg();
-    //     std::cout << "pos: "<<length << std::endl;
-    std::getline(MyReadFile, insideArrow, '<');
-    std::getline(MyReadFile, insideArrow, '>');
-    // std::cout <<"test: " << insideArrow << std::endl;
-    if (insideArrow == "fps") {
-      std::getline(MyReadFile, insideArrow, '<');
+  std::string fileName;
+  int countframes = 0;
 
-      intValue = std::stoi(insideArrow);
-      std::cout << "Los FPS son: " << intValue << std::endl;
+  std::string::size_type sz;
+  bool finish = false;
 
-      std::getline(MyReadFile, insideArrow, '>');
-    } else if (insideArrow == "name") {
-      std::getline(MyReadFile, insideArrow, '<');
-      std::cout << "Name: " << insideArrow << std::endl;
-      ky = 0.0f;
-      kx = 0.0f;
-      sx = 1.0f;
-      sy = 1.0f;
-      a = 1.0f;
-      beforeDraw = false;
-      draw = true;
-      if(useAnim == true){
-        m_animID[nameID].push_back(maxAnimID);
-        animID = maxAnimID;
-        animationDataArray[animID] = AnimationData();
-        maxAnimID++;
-        useAnim = false;
-      }else{
-        animationDataArray[animID].draw.clear();
-        animationDataArray[animID].position.clear();
-        printf("borre la memoria\n");
-      }
-      animationDataArray[animID].name = insideArrow;
-
-      std::cout << " animID: " << animID << std::endl;
-      std::getline(MyReadFile, insideArrow, '>');
-    } else if (insideArrow == "f"){
-      std::getline(MyReadFile, insideArrow, '<');
+  while (finish == false)
+  {
+    readTag(MyReadFile, insideArrow, state);
+    if (insideArrow == "f"){
+      readTag(MyReadFile, insideArrow, state);
       if(insideArrow == "-1"){
         printf(" NO DRAW");
-        save = false;
         draw = false;
       }else{
         printf(" DRAW");
-        save = true;
         draw = true;
-      }  
-      std::getline(MyReadFile, insideArrow, '>');
+      }
+      
     } else if (insideArrow == "i") {
-      std::getline(MyReadFile, insideArrow, '<');
+      readTag(MyReadFile, insideArrow, state);
       std::cout << " i: " << insideArrow;
       insideArrow.erase(0,13); // delete "IMAGE_REANIM_" from string
       insideArrow += ".png";
@@ -245,84 +287,64 @@ void readReanimFiles(std::string nameID, std::string file) {
         texture = loadTexture(fileName);
 
         animationDataArray[animID].texture[countframes] = texture->id;
+        printf(" texture width: %d, height: %d\n",texture->getWidth(),texture->getHeight());
       }
       textureFounded = false;
       useAnim = true;
-      printf(" texture width: %d, height: %d\n",texture->getWidth(),texture->getHeight());
-      std::getline(MyReadFile, insideArrow, '>');
-    } else if (insideArrow == "x") { // es la suma del x layer y el x del simbolo(?) igual con y 
-      passX = true;
-      std::getline(MyReadFile, insideArrow, '<');
-      floatValue = std::stof(insideArrow, &sz);
-      std::cout << " X: " << floatValue;
-      animationDataArray[animID].position[countframes].x = std::stof(insideArrow);
-      std::getline(MyReadFile, insideArrow, '>');
+    } else if (insideArrow == "x") { // es la suma del x layer y el x del simbolo(?) igual con y
+      readTag(MyReadFile, insideArrow, state);
+      x = std::stof(insideArrow, &sz);
+      std::cout << " X: " << x;
     } else if (insideArrow == "y") {
-      passY = true;
-      std::getline(MyReadFile, insideArrow, '<');
-      std::cout << " Y: " << insideArrow;
-      animationDataArray[animID].position[countframes].y = std::stof(insideArrow);
-      std::getline(MyReadFile, insideArrow, '>');
+      readTag(MyReadFile, insideArrow, state);
+      y = std::stof(insideArrow);
+      std::cout << " Y: " << y;
     } else if (insideArrow == "kx") { // kx son los grados del angulo
-      passKX = true;
-      std::getline(MyReadFile, insideArrow, '<');
+      readTag(MyReadFile, insideArrow, state);
       std::cout << " KX: " << insideArrow;
       kx = std::stof(insideArrow);
-      animationDataArray[animID].angle[countframes].x = kx;
-      std::getline(MyReadFile, insideArrow, '>');
     } else if (insideArrow == "ky") { // ky son los grados del angulo
-      passKY = true;
-      std::getline(MyReadFile, insideArrow, '<');
+      readTag(MyReadFile, insideArrow, state);
       std::cout << " KY: " << insideArrow;
       ky = std::stof(insideArrow);
-      animationDataArray[animID].angle[countframes].y = ky;
-      std::getline(MyReadFile, insideArrow, '>');
     } else if (insideArrow == "sx") { // es la escala de la imagen
-      passSX = true;
-      std::getline(MyReadFile, insideArrow, '<');
+      readTag(MyReadFile, insideArrow, state);
       std::cout << " SX: " << insideArrow;
       sx = std::stof(insideArrow);
-      animationDataArray[animID].scale[countframes].x = sx;
-      std::getline(MyReadFile, insideArrow, '>');
     } else if (insideArrow == "sy") { // es la escala de la imagen
-      passSY = true;
-      std::getline(MyReadFile, insideArrow, '<');
+      readTag(MyReadFile, insideArrow, state);
       std::cout << " SY: " << insideArrow;
       sy = std::stof(insideArrow);
-      animationDataArray[animID].scale[countframes].y = sy;
-      std::getline(MyReadFile, insideArrow, '>');
     } else if (insideArrow == "a") {
-      passAlpha = true;
-      std::getline(MyReadFile, insideArrow, '<');
+      readTag(MyReadFile, insideArrow, state);
       std::cout << " a: " << insideArrow;
       a = std::stof(insideArrow);
-      animationDataArray[animID].alpha[countframes] = a;
-      std::getline(MyReadFile, insideArrow, '>');
     } else if (insideArrow == "t") {
       std::cout << "Frame " << countframes << ":";
     } else if (insideArrow == "/t") {
-      // std::getline(MyReadFile, insideArrow, '<');
-      // std::getline(MyReadFile, insideArrow, '>');
-      // std::cout << insideArrow << std::endl;
       std::cout << std::endl;
-      if(passX == false){
-        animationDataArray[animID].position[countframes].x = animationDataArray[animID].position[countframes-1].x;
-      }
-      if(passY == false){
-        animationDataArray[animID].position[countframes].y = animationDataArray[animID].position[countframes-1].y;
+
+      if(beforeSx != sx){
+        animationDataArray[animID].scaleX[countframes] = sx;
       }
 
-      if(save == true){
-        if(passSX == false){
-          animationDataArray[animID].scale[countframes].x = sx;
-        }
-        if(passSY == false){
-          animationDataArray[animID].scale[countframes].y = sy;
-        }
-        if(passAlpha == false){
-          animationDataArray[animID].alpha[countframes] = a;
-        }
-        // printf("alpha: %f\n",animationDataArray[animID].alpha[countframes]);
+      if(beforeSY != sy){
+        animationDataArray[animID].scaleY[countframes] = sy;
+      }
+
+      if(beforeA != a){
+        beforeA = a;
+        animationDataArray[animID].alpha[countframes] = a;
+      }
+
+      if(beforeX != x){
+        beforeX = x;
+        animationDataArray[animID].x[countframes] = x;
+      }
+
+      if(beforeY != y){
+        beforeY = y;
+        animationDataArray[animID].y[countframes] = y;
       }
 
       if(beforeDraw != draw){
@@ -330,44 +352,77 @@ void readReanimFiles(std::string nameID, std::string file) {
         animationDataArray[animID].draw[countframes] = draw;
         printf("draw: %d\n",animationDataArray[animID].draw[countframes]);
       }
-      
 
-      if(passKX == true && passKY == false){
-        animationDataArray[animID].angle[countframes].y = ky;
-      }else if(passKX == false && passKY == true){
-        animationDataArray[animID].angle[countframes].x = kx;
+      if(beforeKx != kx){
+        beforeKx = kx;
+        animationDataArray[animID].angleX[countframes] = kx;
+      }
+
+      if(beforeKY != ky){
+        beforeKY = ky;
+        animationDataArray[animID].angleY[countframes] = ky;
       }
 
       countframes++;
-      passX = false;
-      passY = false;
-      passSX = false;
-      passSY = false;
-      passKX = false;
-      passKY = false;
-      passAlpha = false;
-    } else if (insideArrow == "track" && finishCountFrames == false) {
-      int length = MyReadFile.tellg();
-      // std::cout << "pos: "<<length << std::endl;
-      // std::cout << "adentro del track" << std::endl;
-
-      while (insideArrow != "/track") {
-        std::getline(MyReadFile, insideArrow, '<');
-        std::getline(MyReadFile, insideArrow, '>');
-        if (insideArrow == "t") {
-          countframes++;
-        }
-      }
-      // std::cout << "Frames:" << countframes << std::endl;
-      countframes = 0;
-      finishCountFrames = true;
-      MyReadFile.seekg(length, std::ios_base::beg);
     } else if (insideArrow == "/track") {
-      countTrack++;
-      std::cout << "Total frames from track " << countTrack << ": "
-                << countframes << std::endl;
+      // countTrack++;
+      // std::cout << "Total frames from track " << countTrack << ": "
+      //           << countframes << std::endl;
       animationDataArray[animID].maxFrame = countframes;
       countframes = 0;
+      finish = true;
+    }
+  }
+}
+
+void readReanimFiles(std::string nameID, std::string file) {
+  std::string myText;
+
+  // Read from the text file
+  std::ifstream MyReadFile(file, std::ios::binary);
+
+  TYRA_ASSERT(MyReadFile.is_open(), "The next file could not be found:", file);
+
+  std::string insideArrow;
+  // int countTrack = 0;
+
+  int intValue;
+  int animID = -1;
+  bool useAnim = true;
+  char state = '0';
+
+  while (!MyReadFile.eof()) {
+    readTag(MyReadFile, insideArrow, state);
+    if (insideArrow == "fps") {
+      readTag(MyReadFile, insideArrow, state);
+
+      intValue = std::stoi(insideArrow);
+      std::cout << "Los FPS son: " << intValue << std::endl;
+
+    } else if (insideArrow == "name") {
+      readTag(MyReadFile, insideArrow, state);
+      std::cout << "Name: " << insideArrow << std::endl;
+      if(useAnim == true){
+        m_animID[nameID].push_back(maxAnimID);
+        animID = maxAnimID;
+        animationDataArray[animID] = AnimationData();
+        maxAnimID++;
+        useAnim = false;
+      }else{
+        animationDataArray[animID].draw.clear();
+        animationDataArray[animID].angleX.clear();
+        animationDataArray[animID].angleY.clear();
+        animationDataArray[animID].scaleX.clear();
+        animationDataArray[animID].scaleY.clear();
+        animationDataArray[animID].alpha.clear();
+        animationDataArray[animID].x.clear();
+        animationDataArray[animID].y.clear();
+        printf("borre la memoria\n");
+      }
+      animationDataArray[animID].name = insideArrow;
+
+      std::cout << "animID: " << animID << std::endl;
+      readInfo(MyReadFile, insideArrow, useAnim, animID, state);
     }
   }
   // Close the file

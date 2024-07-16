@@ -83,6 +83,8 @@ void createCard(Plant_State_enum typePlant, Vec2 pos) {
 
 void Level1::init() {
   srand(time(NULL));
+  newPlayer(&player);
+  loadPlantCost();
   loadDebugTextures();
   // load background
   createSprite(background, MODE_STRETCH, Vec2(-56, -1), Vec2(780, 524));
@@ -115,10 +117,9 @@ void Level1::init() {
 
   printf("pase una vez 1\n");
   zombieCreateRow[2] = true;
-  newCursor(&cursor.id, Vec2(mapCollider[0][0].x, mapCollider[0][0].y + 30));
-  newDeckCursor(&deckCursor.id,
-                Vec2(posArray[cards[deckCursor.pos].seed].x - 3, -10));
-
+  newCursor(&player, Vec2(mapCollider[0][0].x, mapCollider[0][0].y + 30));
+  newDeckCursor(&player,
+                Vec2(posArray[cards[deckCursor[player].pos].seed].x - 3, -10));  
   // loadAnimation("Sun");
   // loadAnimation("PeaShooterSingle");
   // loadAnimation("Zombie");
@@ -134,10 +135,11 @@ void Level1::init() {
 
 void Level1::update() {
   // plantMovement();
-  if (cursor.id != -1 && debugMode == false) {
-    cursor.move();
-    boxColliderArray[cursor.id].move(cursor.id);
-    deckCursor.move();
+  playerControl.update();
+
+  if (player != -1 && debugMode == false) {
+    cursor[player].move();
+    boxColliderArray[cursor[player].id].move(cursor[player].id);
   }
 
   for (unsigned int i = 0; i < cards.size(); i++) {
@@ -146,17 +148,15 @@ void Level1::update() {
 
   for (int i = 0; i < 5; i++) {
     for (int j = 0; j < 9; j++) {
-      if (boxColliderArray[cursor.id].collision(&mapCollider[i][j]) ==
+      if (boxColliderArray[cursor[player].id].collision(&mapCollider[i][j]) ==
           true) {
-        cursor.cursorTile = Vec2(i, j);
+        cursor[player].cursorTile = Vec2(i, j);
         i = 5;
         j = 9;
       }
     }
   }
 
-  // create plant
-  plantsManager.create();
 
   if (stopAnimation == false) {
     projectileManager.update();
@@ -175,8 +175,7 @@ void Level1::update() {
 
   // printf("FPS: %d\n",engine->info.getFps()) ;
   // printf("ram: %f\n",engine->info.getAvailableRAM());
-  // zombiesManager.collision();
-  projectileManager.zombieCollision();
+  // projectileManager.zombieCollision();
   // printf("texture free space: %f\n",engine->renderer.core.gs.vram.getFreeSpaceInMB());
 
   // shoot zombies

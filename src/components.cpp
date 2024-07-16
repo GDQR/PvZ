@@ -28,6 +28,7 @@ std::map<int, BoxCollider> boxColliderArray;
 std::map<int, int> damageArray;
 std::map<int, int> lifeArray;
 std::map<int, Tyra::Vec2> pivot;
+std::map<int, Controller> controller;
 
 Plant plant[maxPlants];
 std::vector<Zombie> zombie;
@@ -35,8 +36,9 @@ std::vector<Sun> sun;
 std::vector<NaturalSun> naturalSun;
 std::vector<int> projectile;
 std::vector<Card> cards;
-Cursor cursor;
-DeckCursor deckCursor;
+int player;
+std::map<int, Cursor> cursor;
+std::map<int, DeckCursor> deckCursor;
 
 bool zombieCreateRow[5];
 bool plantCreatedInMap[5][9];
@@ -89,6 +91,29 @@ void deleteSprite(const int entityID) {
 }
 void deleteAnimation(const int entityID){
   animationArray.erase(entityID);
+}
+
+void deletePosArray(const int entityID){
+  posArray.erase(entityID);
+}
+
+void deleteTexPosArray(const int entityID){
+  texPosArray.erase(entityID);
+}
+
+void Controller::update(const int entityID){
+  if(engine->pad.getClicked().Cross){
+    // create plant
+    plantsManager.create();
+  }
+  if(engine->pad.getClicked().Circle){
+  }
+  if(engine->pad.getClicked().DpadLeft) {
+    deckCursor[entityID].moveLeft();
+  }
+  if(engine->pad.getClicked().DpadRight) {
+    deckCursor[entityID].moveRight();
+  }
 }
 BoxCollider::BoxCollider() {}
 BoxCollider::BoxCollider(float x, float y, float width, float height) {
@@ -158,20 +183,20 @@ void Cursor::move() {
   }
 }
 
-void DeckCursor::move() {
-  if (engine->pad.getClicked().DpadLeft) {
-    pos--;
-    if (pos < 0) {
-      pos = cards.size() - 1;
-    }
-    posArray[id].x = posArray[cards[pos].seed].x - 3;
-  } else if (engine->pad.getClicked().DpadRight) {
-    pos++;
-    if (pos >= (int)cards.size()) {
-      pos = 0;
-    }
-    posArray[id].x = posArray[cards[pos].seed].x - 3;
+void DeckCursor::moveLeft(){
+  pos--;
+  if (pos < 0) {
+    pos = cards.size() - 1;
   }
+  posArray[id].x = posArray[cards[pos].seed].x - 3;  
+}
+
+void DeckCursor::moveRight(){
+  pos++;
+  if (pos >= (int)cards.size()) {
+    pos = 0;
+  }
+  posArray[id].x = posArray[cards[pos].seed].x - 3;
 }
 
 void Card::update() {
@@ -217,8 +242,11 @@ void Animation::update(const int entityID) {
 void Animation::position(const int entityID) {
   // finalPos += animPos
 
-  if (animationDataArray[animID].position.count(currentFrame)) {
-    texPosArray[entityID] = animationDataArray[animID].position[currentFrame];
+  if (animationDataArray[animID].x.count(currentFrame)) {
+    texPosArray[entityID].x = animationDataArray[animID].x[currentFrame];
+  }
+  if (animationDataArray[animID].y.count(currentFrame)) {
+    texPosArray[entityID].y = animationDataArray[animID].y[currentFrame];
   }
 }
 
@@ -258,9 +286,13 @@ void Animation::updateNormalSprites(const int entityID) {
     spriteArray[entityID].color.a =
         animationDataArray[animID].alpha[currentFrame] * 128;
   }
-  if (animationDataArray[animID].scale.count(currentFrame) == 1) {
-    spriteArray[entityID].size =
-        originalSize[entityID] * animationDataArray[animID].scale[currentFrame];
+  if (animationDataArray[animID].scaleX.count(currentFrame) == 1) {
+    spriteArray[entityID].size.x =
+        originalSize[entityID].x * animationDataArray[animID].scaleX[currentFrame];
+  }
+  if (animationDataArray[animID].scaleY.count(currentFrame) == 1) {
+    spriteArray[entityID].size.y =
+        originalSize[entityID].y * animationDataArray[animID].scaleY[currentFrame];
   }
 }
 
@@ -285,15 +317,26 @@ void Animation::updateRotationSprites(const int entityID) {
             ->getHeight());
   }
 
-  if (animationDataArray[animID].scale.count(currentFrame) == 1) {
-    rotationSprite[entityID].sprite.size =
-        originalSize[entityID] * animationDataArray[animID].scale[currentFrame];
+  if (animationDataArray[animID].scaleX.count(currentFrame) == 1) {
+    rotationSprite[entityID].sprite.size.x =
+        originalSize[entityID].x * animationDataArray[animID].scaleX[currentFrame];
   }
 
-  if (animationDataArray[animID].angle.count(currentFrame) == 1) {
-    rotationSprite[entityID].angle =
-        animationDataArray[animID].angle[currentFrame];
+  if (animationDataArray[animID].scaleY.count(currentFrame) == 1) {
+    rotationSprite[entityID].sprite.size.y =
+        originalSize[entityID].y * animationDataArray[animID].scaleY[currentFrame];
   }
+
+  if (animationDataArray[animID].angleX.count(currentFrame) == 1) {
+    rotationSprite[entityID].angle.x =
+        animationDataArray[animID].angleX[currentFrame];
+  }
+
+  if (animationDataArray[animID].angleY.count(currentFrame) == 1) {
+    rotationSprite[entityID].angle.y =
+        animationDataArray[animID].angleY[currentFrame];
+  }
+
   if (animationDataArray[animID].alpha.count(currentFrame) == 1) {
     rotationSprite[entityID].sprite.color.a =
         animationDataArray[animID].alpha[currentFrame] * 128;

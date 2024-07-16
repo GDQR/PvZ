@@ -96,16 +96,16 @@ void Zombie::damage(const int entityID) {
 
 bool Zombie::erase() {
   if (lifeArray[id[0]] <= 0) {
-    posArray.erase(father);
+    deletePosArray(father);
 
     Entities::deleteID(father);
 
     for (unsigned int i = 0; i < m_animID["Zombie"].size(); i++) {
-      posArray.erase(id[i]);
+      deletePosArray(id[i]);
       deleteFatherID(&father, &id[i]);
       deleteSprite(id[i]);
       deleteAnimation(id[i]);
-      texPosArray.erase(id[i]);
+      deleteTexPosArray(id[i]);
       Entities::deleteID(id[i]);
     }
     fatherIDArray.erase(father);
