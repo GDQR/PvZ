@@ -289,6 +289,68 @@ void deleteWallNut(const int pos) {
   plantsCreated--;
 }
 
+void createPotatoMine(const int id, int row, int col, Tyra::Vec2 pos){
+  plant[id].newPlant(PotatoMine);
+
+  plant[id].row = row;
+  plant[id].column = col;
+
+  plant[id].father = Entities::newID();
+
+  posArray[plant[id].father] = pos;
+
+  printf("size: %d\n", m_animID["PotatoMine"].size());
+
+  int entityID;
+  int animID;
+
+  for (unsigned int i = 0; i < m_animID["PotatoMine"].size(); i++) {
+    plant[id].id.push_back(Entities::newID());
+    entityID = plant[id].id[i];
+    animID = m_animID["PotatoMine"][i];
+    printf("plant ID: %d\n", entityID);
+    printf("animID: %d\n", animID);
+    newFatherID(&plant[id].father, &entityID);
+    loadAnimationSprite(entityID, animID);
+    activeAnimation(entityID,animID,0,1);
+  }
+
+  // Life
+
+  lifeArray[plant[id].father] = 300;
+
+  // time
+
+  plant[id].attackTimer = 30; // TODO: change this
+
+  // HitBox
+  boxColliderArray[plant[id].father] =
+      BoxCollider(pos.x + 10, pos.y + 20, 28, 38);
+  createDebugBoxCollider(plant[id].father, Tyra::MODE_STRETCH);
+}
+
+void deletePotatoMine(const int pos) {
+  plant[pos].type = NonePlant;
+
+  plantCreatedInMap[plant[pos].row][plant[pos].column] = false;
+
+  deletePosArray(plant[pos].father);
+
+  for (unsigned int i = 0; i < m_animID["PotatoMine"].size(); i++) {
+    deletePosArray(plant[pos].id[i]);
+    deleteFatherID(&plant[pos].father, &plant[pos].id[i]);
+    deleteAnimation(plant[pos].id[i]);
+    deleteSprite(plant[pos].id[i]);
+    Entities::deleteID(plant[pos].id[i]);
+  }
+
+  lifeArray.erase(plant[pos].father);
+
+  deleteDebugBoxCollider(plant[pos].father);
+  Entities::deleteID(plant[pos].father);
+  plantsCreated--;
+}
+
 void createPlant(Plant_State_enum typePlant, const int row, const int column) {
   if (plantCreatedInMap[row][column] == false) {
     plantCreatedInMap[row][column] = true;
@@ -316,6 +378,11 @@ void createPlant(Plant_State_enum typePlant, const int row, const int column) {
       case Wallnut:
         printf("wallNut");
         createWallnut(plantsCreated, row, column,
+            Vec2(mapCollider[row][column].x, mapCollider[row][column].y));
+        break;
+      case PotatoMine:
+        printf("potatoMine");
+        createPotatoMine(plantsCreated, row, column,
             Vec2(mapCollider[row][column].x, mapCollider[row][column].y));
         break;
       default:
