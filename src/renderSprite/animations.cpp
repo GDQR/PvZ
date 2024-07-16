@@ -182,7 +182,11 @@ void activeAnimation(const int entityID, const int animID, const int firstFrame,
   animationArray[entityID].lastFrame = lastFrame;
   Tyra::Vec2 scale(1.0f,1.0f);
   bool draw = false;
-  if(animationDataArray[animID].alpha.count(firstFrame) == 1){
+  bool existDraw = false;
+  if(animationDataArray[animID].draw.count(firstFrame) == 1){
+    draw = animationDataArray[animID].draw[firstFrame];
+    existDraw = true;
+  }else if(animationDataArray[animID].alpha.count(firstFrame) == 1){
     draw = true;
   }else if(animationDataArray[animID].angleX.count(firstFrame) == 1){
     draw = true;
@@ -197,12 +201,12 @@ void activeAnimation(const int entityID, const int animID, const int firstFrame,
   }
 
   if(animationDataArray[animID].scaleX.count(firstFrame) == 1){
-    draw = true;
+    if(existDraw == false){ draw = true; }
     scale.x = animationDataArray[animID].scaleX[firstFrame];
   }
   
   if(animationDataArray[animID].scaleY.count(firstFrame) == 1){
-    draw = true;
+    if(existDraw == false){ draw = true; }
     scale.y = animationDataArray[animID].scaleY[firstFrame];
   }
 
@@ -212,6 +216,7 @@ void activeAnimation(const int entityID, const int animID, const int firstFrame,
     rotationSprite[entityID].sprite.size = originalSize[entityID] * scale;
   }
   animationArray[entityID].draw = draw;
+  printf("anim draw: %d\n", draw);
   setSprite(entityID, animID, draw);
 }
 

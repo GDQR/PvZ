@@ -17,6 +17,7 @@ extern Vec2* texPos;
 extern float* d_scale;
 extern Vec2* d_angle;
 extern bool d_hasScale;
+extern int debugEntityId;
 
 extern std::map<int, Tyra::Sprite> dm_SpritePointCollider;
 extern std::map<int, Tyra::Sprite> dm_SpriteBoxCollider;
@@ -34,12 +35,19 @@ extern Tyra::Texture* debugBoxTexture;
 extern Tyra::Texture* debugFillBoxTexture;
 extern Tyra::Texture* debugPointTexture;
 
-void menuDebugMode(Tyra::Pad& pad);
+class DebugMode {
+ public:
+ bool startDebug = true;
+ void mainMenu();
+ int spriteModeMenu();
+ void drawMainMenu();
+ int drawSpriteModeMenu();
+};
+
+extern DebugMode debugModeClass;
 void activeDebugMode();
 void deactiveDebugMode();
 int startDebugAnimationMode(Tyra::Pad& pad, Tyra::Font& font);
-int startDebugSpriteMode(Tyra::Pad& pad, Tyra::Font& font);
-
 void loadDebugTextures();
 
 void createDebugSprite(const int id, Tyra::SpriteMode mode);

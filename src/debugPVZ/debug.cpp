@@ -13,7 +13,7 @@ bool debugAnimation = false;
 bool stopAnimation = false;
 bool debugSprite = false;
 float debugAlphaColor;
-int debugEntitieId;
+int debugEntityId;
 Vec2* texPos = NULL;
 float* d_scale = NULL;
 Vec2* d_angle = NULL;
@@ -26,6 +26,8 @@ std::vector<int> debugStopRenderNormalSprites;
 Tyra::Texture* debugBoxTexture;
 Tyra::Texture* debugFillBoxTexture;
 Tyra::Texture* debugPointTexture;
+
+DebugMode debugModeClass;
 
 void activeDebugMode() {
   switch (debugOption) {
@@ -61,36 +63,50 @@ void deactiveDebugMode() {
   }
 }
 
-void menuDebugMode(Tyra::Pad& pad) {
-  if (padTimer > 0) {
-    padTimer--;
-  } else if (menuUpOptionLeftJoy(pad)) {
-    if (debugOption == 0) {
-      debugOption = debugModesSize - 1;
-    } else {
-      debugOption--;
+void DebugMode::mainMenu(){
+  if (debugAnimation) {
+    startDebugAnimationMode(engine->pad, engine->font);
+    // animManager.debug();
+  } else if (debugSprite) {
+    // startDebugSpriteMode(engine->pad, engine->font);
+    spriteModeMenu();
+  } else {
+    if (padTimer <= 0) {  
+      if (engine->pad.getPressed().DpadUp || leftJoy->v <= 100) {
+        padTimer = 10;
+        if (debugOption == 0) {
+          debugOption = debugModesSize - 1;
+        } else {
+          debugOption--;
+        }
+      } else if (engine->pad.getPressed().DpadDown || leftJoy->v >= 200) {
+        padTimer = 10;
+        if (debugOption == debugModesSize - 1) {
+          debugOption = 0;
+        } else {
+          debugOption++;
+        }
+      }
+    }else{
+      padTimer--;
     }
-  } else if (menuDownOptionLeftJoy(pad)) {
-    if (debugOption == debugModesSize - 1) {
-      debugOption = 0;
-    } else {
-      debugOption++;
+
+    if (engine->pad.getClicked().Cross) {
+      activeDebugMode();
+      // debugMenu = false;
+    } else if (engine->pad.getClicked().Circle) {
+      deactiveDebugMode();
+      debugMode = false;
+      debugMenu = false;
+      if (debugSpritesType.empty() == false) {
+        debugSpritesType.clear();
+      }
+      printf("\nDEBUG MODE DEACTIVE\n");
     }
   }
+}
 
-  if (menuCrossClickedOption(pad, true)) {
-    activeDebugMode();
-    // debugMenu = false;
-  } else if (menuCircleClickedOption(pad, true)) {
-    deactiveDebugMode();
-    debugMode = false;
-    debugMenu = false;
-    if (debugSpritesType.empty() == false) {
-      debugSpritesType.clear();
-    }
-    printf("\nDEBUG MODE DEACTIVE\n");
-  }
-
+void DebugMode::drawMainMenu() {
   Tyra::Color colorMenu;
   int textPos = 100;
   for (unsigned int i = 0; i < debugModesSize; i++) {
@@ -123,41 +139,14 @@ void menuDebugMode(Tyra::Pad& pad) {
   engine->font.drawText(&myFont, "PRESS O FOR DESACTIVE", 30, 420, 16, black);
 }
 
-int startDebugAnimationMode(Tyra::Pad& pad, Tyra::Font& font) {
-  if (animationArray.size() == 0) {
+int DebugMode::spriteModeMenu(){
+  if (spriteArray.size() == 0 && rotationSprite.size() == 0) {
     // ERROR MENU
     if (engine->pad.getClicked().Circle) {
       debugAnimation = false;
     }
-    engine->font.drawText(&myFont, "Animations not found", 30, 80, 16, black);
-    engine->font.drawText(&myFont, "PRESS O FOR GO BACK", 30, 320, 16, black);
     return 1;
   }
-
-  if (startAnimationDebug == true) {
-    printf("start debug animation\n");
-    startAnimationDebug = false;
-    std::map<int, Animation>::iterator it;
-    it = animationArray.begin();
-    printf("base id: %d\n", it->first);
-    debugEntitieId = it->first;
-  }
-
-  menuDebugAnimation(pad, font, debugEntitieId);
-  return 0;
-}
-
-int startDebugSpriteMode(Tyra::Pad& pad, Tyra::Font& font) {
-  if (spriteArray.size() == 0) {
-    // ERROR MENU
-    if (engine->pad.getClicked().Circle) {
-      debugAnimation = false;
-    }
-    engine->font.drawText(&myFont, "Sprites not found", 30, 80, 16, black);
-    engine->font.drawText(&myFont, "PRESS O FOR GO BACK", 30, 320, 16, black);
-    return 1;
-  }
-
   if (startSpriteDebug == true) {
     printf("start debug sprite\n");
     startSpriteDebug = false;
@@ -173,12 +162,47 @@ int startDebugSpriteMode(Tyra::Pad& pad, Tyra::Font& font) {
       debugSpritesType[it2->first] = &it2->second.sprite;
     }
 
-    debugEntitieId = debugSpritesType.begin()->first;
+    debugEntityId = debugSpritesType.begin()->first;
     debugAlphaColor = debugSpritesType.begin()->second->color.a;
-    printf("base id: %d\n", debugEntitieId);
+    printf("base id: %d\n", debugEntityId);
   }
+  debugSpriteMode.menu();
+  return 0;
+}
+int DebugMode::drawSpriteModeMenu(){
+  if (spriteArray.size() == 0 && rotationSprite.size() == 0) {
+    // ERROR MENU
+    engine->font.drawText(&myFont, "Sprites not found", 30, 80, 16, black);
+    engine->font.drawText(&myFont, "PRESS O FOR GO BACK", 30, 320, 16, black);
+    return 1;
+  }
+  if (startSpriteDebug == false) {
+    debugSpriteMode.drawMenu();
+  }
+  return 0;
+}
 
-  menuDebugSprite(pad, font, debugEntitieId);
+int startDebugAnimationMode(Tyra::Pad& pad, Tyra::Font& font) {
+  // if (animationArray.size() == 0) {
+  //   // ERROR MENU
+  //   if (engine->pad.getClicked().Circle) {
+  //     debugAnimation = false;
+  //   }
+  //   engine->font.drawText(&myFont, "Animations not found", 30, 80, 16, black);
+  //   engine->font.drawText(&myFont, "PRESS O FOR GO BACK", 30, 320, 16, black);
+  //   return 1;
+  // }
+
+  // if (startAnimationDebug == true) {
+  //   printf("start debug animation\n");
+  //   startAnimationDebug = false;
+  //   std::map<int, Animation>::iterator it;
+  //   it = animationArray.begin();
+  //   printf("base id: %d\n", it->first);
+  //   debugEntityId = it->first;
+  // }
+
+  menuDebugAnimation(pad, font, debugEntityId);
   return 0;
 }
 

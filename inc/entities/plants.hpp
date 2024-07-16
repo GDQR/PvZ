@@ -14,7 +14,7 @@ enum Plant_State_enum {
   PeaShotter,
   SunFlower,
   CherryBomb,
-  Wall_Nut,
+  Wallnut,
   PotatoMine,
   SnowPea,
   Chomper,

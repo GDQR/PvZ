@@ -219,20 +219,14 @@ void Level1::update() {
   engine->font.drawText(&myFont, std::to_string(sunCounter), 30, 30, 16,
                         Color(255, 255, 255, 128));
 
-  if (engine->pad.getClicked().R1 && debugMode == false) {
-    debugMode = true;
-    debugMenu = true;
-    printf("\nDEBUG MODE ACTIVE\n");
-  }
-
   if (debugMenu == true) {
     if (debugAnimation) {
       startDebugAnimationMode(engine->pad, engine->font);
       animManager.debug();
     } else if (debugSprite) {
-      startDebugSpriteMode(engine->pad, engine->font);
+      debugModeClass.drawSpriteModeMenu();
     } else {
-      menuDebugMode(engine->pad);
+      debugModeClass.drawMainMenu();
       if (stopAnimation == true) {
         animManager.debug();
       }
