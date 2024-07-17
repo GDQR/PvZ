@@ -203,11 +203,25 @@ void activeAnimation(const int entityID, const int animID, const int firstFrame,
   if(animationDataArray[animID].scaleX.count(firstFrame) == 1){
     if(existDraw == false){ draw = true; }
     scale.x = animationDataArray[animID].scaleX[firstFrame];
+  }else{
+    for(int i=firstFrame-1; i>0; i--){
+      if(animationDataArray[animID].scaleX.count(i) == 1){
+        scale.x = animationDataArray[animID].scaleX[i];
+        break;
+      }
+    }
   }
   
   if(animationDataArray[animID].scaleY.count(firstFrame) == 1){
     if(existDraw == false){ draw = true; }
     scale.y = animationDataArray[animID].scaleY[firstFrame];
+  }else{
+    for(int i=firstFrame-1; i>0; i--){
+      if(animationDataArray[animID].scaleY.count(i) == 1){
+        scale.y = animationDataArray[animID].scaleY[i];
+        break;
+      }
+    }
   }
 
   if(spriteArray.count(entityID) == 1){
