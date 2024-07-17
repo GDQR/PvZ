@@ -351,6 +351,70 @@ void deletePotatoMine(const int pos) {
   plantsCreated--;
 }
 
+void createSnowPea(int id, int row, int column, Tyra::Vec2 pos) {
+  plant[id].newPlant(SnowPea);
+
+  plant[id].row = row;
+  plant[id].column = column;
+
+  plant[id].father = Entities::newID();
+
+  posArray[plant[id].father] = pos;  // Vec2(row, column);
+
+  printf("size: %d\n", m_animID["SnowPea"].size());
+
+  int entityID;
+  int animID;
+  // int spriteID;
+
+  for (unsigned int i = 0; i < m_animID["SnowPea"].size(); i++) {
+    plant[id].id.push_back(Entities::newID());
+    entityID = plant[id].id[i];
+    animID = m_animID["SnowPea"][i];
+    printf("plant ID: %d\n", entityID);
+    printf("animID: %d\n", animID);
+    newFatherID(&plant[id].father, &entityID);
+    loadAnimationSprite(entityID, animID);
+    activeAnimation(entityID,animID,79,104);
+  }
+
+  // Life
+
+  lifeArray[plant[id].father] = 300;
+
+  // HitBox
+  boxColliderArray[plant[id].father] =
+      BoxCollider(pos.x + 10, pos.y + 20, 28, 38);
+  createDebugBoxCollider(plant[id].father, Tyra::MODE_STRETCH);
+
+  // proyectile
+  pointColliderArray[plant[id].father] = Vec2(pos.x + 40, pos.y + 25);
+  createDebugPoint(plant[id].father, Tyra::MODE_STRETCH);
+}
+
+void deleteSnowPea(const int pos) {
+  plant[pos].type = NonePlant;
+
+  plantCreatedInMap[plant[pos].row][plant[pos].column] = false;
+
+  deletePosArray(plant[pos].father);
+
+  for (unsigned int i = 0; i < m_animID["SnowPea"].size(); i++) {
+    deletePosArray(plant[pos].id[i]);
+    deleteFatherID(&plant[pos].father, &plant[pos].id[i]);
+    deleteAnimation(plant[pos].id[i]);
+    deleteSprite(plant[pos].id[i]);
+    Entities::deleteID(plant[pos].id[i]);
+  }
+
+  lifeArray.erase(plant[pos].father);
+
+  deleteDebugBoxCollider(plant[pos].father);
+  deleteDebugPoint(plant[pos].father);
+  Entities::deleteID(plant[pos].father);
+  plantsCreated--;
+}
+
 void createPlant(Plant_State_enum typePlant, const int row, const int column) {
   if (plantCreatedInMap[row][column] == false) {
     plantCreatedInMap[row][column] = true;
@@ -383,6 +447,11 @@ void createPlant(Plant_State_enum typePlant, const int row, const int column) {
       case PotatoMine:
         printf("potatoMine");
         createPotatoMine(plantsCreated, row, column,
+            Vec2(mapCollider[row][column].x, mapCollider[row][column].y));
+        break;
+      case SnowPea:
+        printf("SnowPea");
+        createSnowPea(plantsCreated, row, column,
             Vec2(mapCollider[row][column].x, mapCollider[row][column].y));
         break;
       default:
@@ -475,6 +544,8 @@ void Plant::erase(const int entityID){
     deleteCherryBomb(entityID);
   } else if (type == Wallnut){
     deleteWallNut(entityID);
+  } else if (type == SnowPea){
+    deleteSnowPea(entityID);
   }
 }
 
