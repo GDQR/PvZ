@@ -4,6 +4,7 @@
 #include "components.hpp"
 #include "systems.hpp"
 
+std::string plantsAnim[enumMaxPlants];
 int plantCost[enumMaxPlants];
 int plantsCreated = 0;
 
@@ -31,10 +32,10 @@ void createPeashotter(int id, int row, int column, Tyra::Vec2 pos) {
     printf("animID: %d\n", animID);
     newFatherID(&plant[id].father, &entityID);
     loadAnimationSprite(entityID, animID);
-    activeAnimation(entityID,animID,79,104);
+    activeAnimation(entityID, animID, 79, 104);
     // printf("draw: %d\n", animationArray[entityID].draw);
     if (animationDataArray[animID].name == "anim_blink" ||
-          animationDataArray[animID].name == "idle_shoot_blink") {
+        animationDataArray[animID].name == "idle_shoot_blink") {
       animationArray[entityID].draw = false;
       setSprite(entityID, animID, animationArray[entityID].draw);
       deleteAnimation(entityID);
@@ -42,7 +43,6 @@ void createPeashotter(int id, int row, int column, Tyra::Vec2 pos) {
       printf("encontre anim_blink\n");
     }
   }
-  
 
   // printf("plant[%d].id[0]: %d\n",id,plant[id].id[0]);
   // printf("plant[%d].id[1]: %d\n",id,plant[id].id[1]);
@@ -122,7 +122,7 @@ void createSunflower(const int id, int row, int col, Tyra::Vec2 pos) {
     printf("animID: %d\n", animID);
     newFatherID(&plant[id].father, &entityID);
     loadAnimationSprite(entityID, animID);
-    activeAnimation(entityID,animID,4,animationDataArray[animID].maxFrame);
+    activeAnimation(entityID, animID, 4, animationDataArray[animID].maxFrame);
     if (animationDataArray[animID].name == "anim_blink") {
       deleteAnimation(entityID);
       animationIdStopRender.push_back(entityID);
@@ -169,7 +169,7 @@ void deleteSunflower(const int pos) {
   plantsCreated--;
 }
 
-void createCherryBomb(const int id, int row, int col, Tyra::Vec2 pos){
+void createCherryBomb(const int id, int row, int col, Tyra::Vec2 pos) {
   plant[id].newPlant(CherryBomb);
 
   plant[id].row = row;
@@ -192,7 +192,7 @@ void createCherryBomb(const int id, int row, int col, Tyra::Vec2 pos){
     printf("animID: %d\n", animID);
     newFatherID(&plant[id].father, &entityID);
     loadAnimationSprite(entityID, animID);
-    activeAnimation(entityID,animID,0,13);
+    activeAnimation(entityID, animID, 0, 13);
   }
 
   // Life
@@ -231,7 +231,7 @@ void deleteCherryBomb(const int pos) {
   plantsCreated--;
 }
 
-void createWallnut(const int id, int row, int col, Tyra::Vec2 pos){
+void createWallnut(const int id, int row, int col, Tyra::Vec2 pos) {
   plant[id].newPlant(Wallnut);
 
   plant[id].row = row;
@@ -254,7 +254,7 @@ void createWallnut(const int id, int row, int col, Tyra::Vec2 pos){
     printf("animID: %d\n", animID);
     newFatherID(&plant[id].father, &entityID);
     loadAnimationSprite(entityID, animID);
-    activeAnimation(entityID,animID,0,17);
+    activeAnimation(entityID, animID, 0, 17);
   }
 
   // Life
@@ -289,7 +289,7 @@ void deleteWallNut(const int pos) {
   plantsCreated--;
 }
 
-void createPotatoMine(const int id, int row, int col, Tyra::Vec2 pos){
+void createPotatoMine(const int id, int row, int col, Tyra::Vec2 pos) {
   plant[id].newPlant(PotatoMine);
 
   plant[id].row = row;
@@ -312,7 +312,7 @@ void createPotatoMine(const int id, int row, int col, Tyra::Vec2 pos){
     printf("animID: %d\n", animID);
     newFatherID(&plant[id].father, &entityID);
     loadAnimationSprite(entityID, animID);
-    activeAnimation(entityID,animID,0,1);
+    activeAnimation(entityID, animID, 0, 1);
   }
 
   // Life
@@ -321,7 +321,7 @@ void createPotatoMine(const int id, int row, int col, Tyra::Vec2 pos){
 
   // time
 
-  plant[id].attackTimer = 30; // TODO: change this
+  plant[id].attackTimer = 30;  // TODO: change this
 
   // HitBox
   boxColliderArray[plant[id].father] =
@@ -375,7 +375,7 @@ void createSnowPea(int id, int row, int column, Tyra::Vec2 pos) {
     printf("animID: %d\n", animID);
     newFatherID(&plant[id].father, &entityID);
     loadAnimationSprite(entityID, animID);
-    activeAnimation(entityID,animID,79,104);
+    activeAnimation(entityID, animID, 79, 104);
   }
 
   // Life
@@ -439,7 +439,7 @@ void createChomper(int id, int row, int column, Tyra::Vec2 pos) {
     printf("animID: %d\n", animID);
     newFatherID(&plant[id].father, &entityID);
     loadAnimationSprite(entityID, animID);
-    activeAnimation(entityID,animID,0,25);
+    activeAnimation(entityID, animID, 0, 25);
   }
 
   // Life
@@ -498,7 +498,7 @@ void createRepeater(int id, int row, int column, Tyra::Vec2 pos) {
     printf("animID: %d\n", animID);
     newFatherID(&plant[id].father, &entityID);
     loadAnimationSprite(entityID, animID);
-    activeAnimation(entityID,animID,79,104);
+    activeAnimation(entityID, animID, 79, 104);
   }
 
   // Life
@@ -564,26 +564,31 @@ void createPlant(Plant_State_enum typePlant, const int row, const int column) {
         break;
       case Wallnut:
         printf("wallNut");
-        createWallnut(plantsCreated, row, column,
+        createWallnut(
+            plantsCreated, row, column,
             Vec2(mapCollider[row][column].x, mapCollider[row][column].y));
         break;
       case PotatoMine:
         printf("potatoMine");
-        createPotatoMine(plantsCreated, row, column,
+        createPotatoMine(
+            plantsCreated, row, column,
             Vec2(mapCollider[row][column].x, mapCollider[row][column].y));
         break;
       case SnowPea:
         printf("SnowPea");
-        createSnowPea(plantsCreated, row, column,
+        createSnowPea(
+            plantsCreated, row, column,
             Vec2(mapCollider[row][column].x, mapCollider[row][column].y));
         break;
       case Chomper:
         printf("Chomper");
-        createChomper(plantsCreated, row, column,
+        createChomper(
+            plantsCreated, row, column,
             Vec2(mapCollider[row][column].x, mapCollider[row][column].y));
       case Repeater:
         printf("Repeater");
-        createRepeater(plantsCreated, row, column,
+        createRepeater(
+            plantsCreated, row, column,
             Vec2(mapCollider[row][column].x, mapCollider[row][column].y));
       default:
         break;
@@ -612,15 +617,15 @@ void Plant::newPlant(Plant_State_enum newType) {
   createSpace();
 }
 
-int Plant::attack(){
-  if(type == NonePlant){
+int Plant::attack() {
+  if (type == NonePlant) {
     return 1;
   }
 
   std::vector<Zombie>::iterator it;
 
   for (it = zombie.begin(); it < zombie.end(); it++) {
-    if(type == PeaShotter){
+    if (type == PeaShotter) {
       //  printf("vec plant %f,%f. vec zombi %f,%f,%f,%f\n",
       //  pointColliderArray[*plant[i].body[0]].x,
       //  pointColliderArray[*plant[i].body[0]].y,
@@ -633,8 +638,7 @@ int Plant::attack(){
       if (pointColliderArray[father].x <
               boxColliderArray[it->id[0]].x +
                   boxColliderArray[it->id[0]].width &&
-          pointColliderArray[father].y >
-              boxColliderArray[it->id[0]].y &&
+          pointColliderArray[father].y > boxColliderArray[it->id[0]].y &&
           pointColliderArray[father].y <
               boxColliderArray[it->id[0]].y +
                   boxColliderArray[it->id[0]].height) {
@@ -648,43 +652,42 @@ int Plant::attack(){
         }
         it = zombie.end();
       }
-    } 
+    }
   }
   return 0;
 }
 
-void Plant::ability(){
+void Plant::ability() {
   if (type == SunFlower) {
     if (attackTimer > 0) {
       attackTimer--;
     } else {
       printf("sunflower create sun\n");
-      sunManager.create(spriteArray[id[0]].position, sunCost::normalSun,
-                 true);
+      sunManager.create(spriteArray[id[0]].position, sunCost::normalSun, true);
       attackTimer = 60 * 6;
     }
   }
 }
 
-void Plant::erase(const int entityID){
+void Plant::erase(const int entityID) {
   if (type == PeaShotter) {
     deletePeashotter(entityID);
   } else if (type == SunFlower) {
     deleteSunflower(entityID);
-  } else if (type == CherryBomb){
+  } else if (type == CherryBomb) {
     deleteCherryBomb(entityID);
-  } else if (type == Wallnut){
+  } else if (type == Wallnut) {
     deleteWallNut(entityID);
-  } else if (type == SnowPea){
+  } else if (type == SnowPea) {
     deleteSnowPea(entityID);
-  } else if (type == Chomper){
+  } else if (type == Chomper) {
     deleteChomper(entityID);
-  } else if (type == Repeater){
+  } else if (type == Repeater) {
     deleteRepeater(entityID);
   }
 }
 
-void loadPlantCost(){
+void loadPlantCost() {
   plantCost[PeaShotter] = 100;
   plantCost[SunFlower] = 50;
   plantCost[CherryBomb] = 150;
@@ -693,48 +696,98 @@ void loadPlantCost(){
   plantCost[SnowPea] = 175;
   plantCost[Chomper] = 150;
   plantCost[Repeater] = 200;
-  plantCost[Puff_shroom] = 0;
-  plantCost[Sun_shroom] = 25;
-  plantCost[Fume_shroom] = 75;
+  plantCost[PuffShroom] = 0;
+  plantCost[SunShroom] = 25;
+  plantCost[FumeShroom] = 75;
   plantCost[GraveBuster] = 75;
-  plantCost[Hypno_shroom] = 75;
-  plantCost[Scaredy_shroom] = 25;
-  plantCost[Ice_shroom] = 75;
-  plantCost[Doom_shroom] = 125;
+  plantCost[HypnoShroom] = 75;
+  plantCost[ScaredyShroom] = 25;
+  plantCost[IceShroom] = 75;
+  plantCost[DoomShroom] = 125;
   plantCost[LilyPad] = 25;
   plantCost[Squash] = 50;
   plantCost[Threepeater] = 325;
-  plantCost[Tangle_Kelp] = 25;
+  plantCost[Tanglekelp] = 25;
   plantCost[Jalapeno] = 125;
   plantCost[Spikeweed] = 100;
   plantCost[Torchwood] = 175;
-  plantCost[Tall_nut] = 125;
-  plantCost[Sea_shroom] = 0;
+  plantCost[Tallnut] = 125;
+  plantCost[SeaShroom] = 0;
   plantCost[Plantern] = 25;
   plantCost[Cactus] = 125;
   plantCost[Blover] = 100;
   plantCost[SplitPea] = 125;
   plantCost[Starfruit] = 125;
   plantCost[Pumpkin] = 125;
-  plantCost[Magnet_shroom] = 100;
-  plantCost[Cabbage_pult] = 100;
-  plantCost[Flower_Pot] = 25;
-  plantCost[Kernel_pult] = 100;
+  plantCost[Magnetshroom] = 100;
+  plantCost[Cabbagepult] = 100;
+  plantCost[FlowerPot] = 25;
+  plantCost[Kernelpult] = 100;
   plantCost[CoffeeBean] = 75;
   plantCost[Garlic] = 50;
   plantCost[UmbrellaLeaf] = 100;
   plantCost[Marigold] = 50;
-  plantCost[Melon_pult] = 300;
+  plantCost[Melonpult] = 300;
   plantCost[GatlingPea] = 250;
   plantCost[TwinSunflower] = 150;
-  plantCost[Gloom_shroom] = 150;
+  plantCost[GloomShroom] = 150;
   plantCost[Cattail] = 225;
   plantCost[WinterMelon] = 200;
   plantCost[GoldMagnet] = 50;
   plantCost[Spikerock] = 125;
   plantCost[CobCannon] = 500;
-  plantCost[Imitator] = 0; // this needs to copy the cost of another plant 
-} 
-int getPlantCost(Plant_State_enum typePlant) {
-  return plantCost[typePlant];
+  plantCost[Imitator] = 0;  // this needs to copy the cost of another plant
 }
+
+void loadPlantAnimString() {
+  plantsAnim[PeaShotter] = "PeaShooterSingle";
+  plantsAnim[SunFlower] = "SunFlower";
+  plantsAnim[CherryBomb] = "CherryBomb";
+  plantsAnim[Wallnut] = "Wallnut";
+  plantsAnim[PotatoMine] = "PotatoMine";
+  plantsAnim[SnowPea] = "SnowPea";
+  plantsAnim[Chomper] = "Chomper";
+  plantsAnim[Repeater] = "PeaShooter";
+  plantsAnim[PuffShroom] = "PuffShroom";
+  plantsAnim[SunShroom] = "SunShroom";
+  plantsAnim[FumeShroom] = "FumeShroom";
+  plantsAnim[GraveBuster] = "Gravebuster";
+  plantsAnim[HypnoShroom] = "HypnoShroom";
+  plantsAnim[ScaredyShroom] = "ScaredyShroom";
+  plantsAnim[IceShroom] = "IceShroom";
+  plantsAnim[DoomShroom] = "DoomShroom";
+  plantsAnim[LilyPad] = "LilyPad";
+  plantsAnim[Squash] = "Squash";
+  plantsAnim[Threepeater] = "ThreePeater";
+  plantsAnim[Tanglekelp] = "Tanglekelp";
+  plantsAnim[Jalapeno] = "Jalapeno";
+  plantsAnim[Spikeweed] = "Caltrop";
+  plantsAnim[Torchwood] = "Torchwood";
+  plantsAnim[Tallnut] = "Tallnut";
+  plantsAnim[SeaShroom] = "SeaShroom";
+  plantsAnim[Plantern] = "Plantern";
+  plantsAnim[Cactus] = "Cactus";
+  plantsAnim[Blover] = "Blover";
+  plantsAnim[SplitPea] = "SplitPea";
+  plantsAnim[Starfruit] = "Starfruit";
+  plantsAnim[Pumpkin] = "Pumpkin";
+  plantsAnim[Magnetshroom] = "Magnetshroom";
+  plantsAnim[Cabbagepult] = "Cabbagepult";
+  plantsAnim[FlowerPot] = "Pot";
+  plantsAnim[Kernelpult] = "Cornpult";
+  plantsAnim[CoffeeBean] = "Coffeebean";
+  plantsAnim[Garlic] = "Garlic";
+  plantsAnim[UmbrellaLeaf] = "Umbrellaleaf";
+  plantsAnim[Marigold] = "Marigold";
+  plantsAnim[Melonpult] = "Melonpult";
+  plantsAnim[GatlingPea] = "GatlingPea";
+  plantsAnim[TwinSunflower] = "TwinSunflower";
+  plantsAnim[GloomShroom] = "GloomShroom";
+  plantsAnim[Cattail] = "Cattail";
+  plantsAnim[WinterMelon] = "WinterMelon";
+  plantsAnim[GoldMagnet] = "GoldMagnet";
+  plantsAnim[Spikerock] = "SpikeRock";
+  plantsAnim[CobCannon] = "CobCannon";
+  plantsAnim[Imitator] = "Imitater";
+}
+int getPlantCost(Plant_State_enum typePlant) { return plantCost[typePlant]; }
