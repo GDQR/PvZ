@@ -175,3 +175,5 @@ extern bool plantCreatedInMap[5][9];
 extern BoxCollider mapCollider[5][9];
 
 extern PlantsManager plantsManager;
+
+void createCard(Plant_State_enum typePlant, Vec2 pos);

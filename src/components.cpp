@@ -388,3 +388,37 @@ void RotationSprite::update(const int entityID) {
   renderer->renderer2D.renderRotate(sprite, angle);
   finalPosArray[entityID] = Vec2(0.0f, 0.0f);
 }
+
+void createCard(Plant_State_enum typePlant, Vec2 pos) {
+  Card card;
+  card.seed = Entities::newID();
+  card.seedShadow = Entities::newID();
+  card.seedShadowTimer = Entities::newID();
+  card.seedTimer = Entities::newID();
+
+  createSprite(card.seed, Tyra::MODE_REPEAT, pos, Vec2(50, 70));
+  createTexture(card.seed, "UI/Seeds.png");
+  spriteArray[card.seed].offset.x = 100;
+  texPosArray[card.seed] = Vec2(0.0f, 0.0f);
+  scaleTexture[card.seed] = Vec2(1.0f, 1.0f);
+
+  createSprite(card.seedShadow, Tyra::MODE_REPEAT, pos, Vec2(50, 70));
+  createTexture(card.seedShadow, "UI/Seeds.png");
+  spriteArray[card.seedShadow].color = Tyra::Color(0.0F, 0.0F, 0.0F, 60.0F);
+  texPosArray[card.seedShadow] = Vec2(0.0f, 0.0f);
+  scaleTexture[card.seedShadow] = Vec2(1.0f, 1.0f);
+
+  createSprite(card.seedShadowTimer, Tyra::MODE_REPEAT, pos, Vec2(50, 70));
+  createTexture(card.seedShadowTimer, "UI/Seeds.png");
+  spriteArray[card.seedShadowTimer].color = Tyra::Color(0.0F, 0.0F, 0.0F, 60.0F);
+  texPosArray[card.seedShadowTimer] = Vec2(0.0f, 0.0f);
+  scaleTexture[card.seedShadowTimer] = Vec2(1.0f, 1.0f);
+
+  card.seedTimer = 60 * 8;
+
+  card.plant = typePlant;
+
+  card.cost = getPlantCost(typePlant);
+
+  cards.push_back(card);
+}
