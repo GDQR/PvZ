@@ -137,9 +137,9 @@ void createZombie(Vec2 pos) {
     // printf("animID: %d\n", animID);
     newFatherID(&zombie[id].father, &entityID);
     loadAnimationSprite(entityID, animID);
-    animationArray[entityID].firstFrame = 44;
+    animationArray[entityID].firstFrame = 45;
     animationArray[entityID].lastFrame = 91;
-    animationArray[entityID].currentFrame = 44;
+    animationArray[entityID].currentFrame = 45;
     animationArray[entityID].draw = true;
     zombie[id].animation(entityID, animID);
   }
