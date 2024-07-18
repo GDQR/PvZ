@@ -227,7 +227,7 @@ void Animation::update(const int entityID) {
     framesCounter = 0;
     currentFrame++;
 
-    if (currentFrame >= lastFrame) {
+    if (currentFrame > lastFrame) {
       currentFrame = firstFrame;
     }
 
