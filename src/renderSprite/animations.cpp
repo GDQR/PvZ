@@ -11,15 +11,21 @@ void loadAnimationSprite(const int entityID, const int animID){
     bool hasAlpha = false;
     Tyra::Vec2 scale;
 
-    for (unsigned int j = 0; j < animationDataArray[animID].maxFrame; j++) {
+    for (unsigned int j = 1; j < animationDataArray[animID].maxFrame; j++) {
       if (animationDataArray[animID].alpha.count(j) == true) {
-        hasAlpha = true;
+        if(animationDataArray[animID].alpha[j] != 1){
+          hasAlpha = true;
+        }
       }
       if (animationDataArray[animID].angleX.count(j) == true) {
-        rotateSprite = true;
+        if(animationDataArray[animID].angleX[j] != 0){
+          rotateSprite = true;
+        }
       }
       if (animationDataArray[animID].angleY.count(j) == true) {
-        rotateSprite = true;
+        if(animationDataArray[animID].angleY[j] != 0){
+          rotateSprite = true;
+        }
       }
       if (rotateSprite == true && hasAlpha == true) {
         break;
@@ -37,7 +43,7 @@ void loadAnimationSprite(const int entityID, const int animID){
 
       // printf("sprite ID: %d\n", spriteID);
 
-      for (unsigned int j = 0; j < animationDataArray[animID].maxFrame; j++) {
+      for (unsigned int j = 1; j < animationDataArray[animID].maxFrame; j++) {
         if (animationDataArray[animID].texture.count(j) == 1) {
           // printf("frame %d\n", j);
           texture = texRepo->getByTextureId(animationDataArray[animID].texture[j]);
@@ -54,14 +60,14 @@ void loadAnimationSprite(const int entityID, const int animID){
         }
       }
 
-      for (unsigned int j = 0; j < animationDataArray[animID].maxFrame; j++) {
+      for (unsigned int j = 1; j < animationDataArray[animID].maxFrame; j++) {
         if (animationDataArray[animID].scaleX.count(j) == 1) {
           scale.x = animationDataArray[animID].scaleX[j];
           break;
         }
       }
 
-      for (unsigned int j = 0; j < animationDataArray[animID].maxFrame; j++) {
+      for (unsigned int j = 1; j < animationDataArray[animID].maxFrame; j++) {
         if (animationDataArray[animID].scaleY.count(j) == 1) {
           scale.y = animationDataArray[animID].scaleY[j];
           break;
@@ -76,14 +82,14 @@ void loadAnimationSprite(const int entityID, const int animID){
     }else{
       printf("entre en rotate\n");
       Tyra::Vec2 angle;
-      for (unsigned int j = 0; j < animationDataArray[animID].maxFrame; j++) {
+      for (unsigned int j = 1; j < animationDataArray[animID].maxFrame; j++) {
         if (animationDataArray[animID].angleX.count(j) == 1) {
           angle.x = animationDataArray[animID].angleX[j];
           break;
         }
       }
 
-      for (unsigned int j = 0; j < animationDataArray[animID].maxFrame; j++) {
+      for (unsigned int j = 1; j < animationDataArray[animID].maxFrame; j++) {
         if (animationDataArray[animID].angleY.count(j) == 1) {
           angle.y = animationDataArray[animID].angleY[j];
           break;
@@ -96,7 +102,7 @@ void loadAnimationSprite(const int entityID, const int animID){
       Tyra::Texture* texture;
       animationArray[entityID] = Animation(animID);
 
-      for (unsigned int j = 0; j < animationDataArray[animID].maxFrame; j++) {
+      for (unsigned int j = 1; j < animationDataArray[animID].maxFrame; j++) {
         if (animationDataArray[animID].x.count(j) == 1) {
           texPosArray[entityID].x = animationDataArray[animID].x[j];
         }
@@ -107,7 +113,7 @@ void loadAnimationSprite(const int entityID, const int animID){
 
       // printf("sprite ID: %d\n", spriteID);
 
-      for (unsigned int j = 0; j < animationDataArray[animID].maxFrame; j++) {
+      for (unsigned int j = 1; j < animationDataArray[animID].maxFrame; j++) {
         if (animationDataArray[animID].texture.count(j) == 1) {
           // printf("frame %d\n", j);
           texture = texRepo->getByTextureId(animationDataArray[animID].texture[j]);
@@ -124,14 +130,14 @@ void loadAnimationSprite(const int entityID, const int animID){
         }
       }
 
-      for (unsigned int j = 0; j < animationDataArray[animID].maxFrame; j++) {
+      for (unsigned int j = 1; j < animationDataArray[animID].maxFrame; j++) {
         if (animationDataArray[animID].scaleX.count(j) == 1) {
           scale.x = animationDataArray[animID].scaleX[j];
           break;
         }
       }
 
-      for (unsigned int j = 0; j < animationDataArray[animID].maxFrame; j++) {
+      for (unsigned int j = 1; j < animationDataArray[animID].maxFrame; j++) {
         if (animationDataArray[animID].scaleY.count(j) == 1) {
           scale.y = animationDataArray[animID].scaleY[j];
           break;
@@ -140,7 +146,7 @@ void loadAnimationSprite(const int entityID, const int animID){
 
       rotationSprite[entityID].sprite.size = originalSize[entityID] * scale;
 
-      for (unsigned int j = 0; j < animationDataArray[animID].maxFrame; j++) {
+      for (unsigned int j = 1; j < animationDataArray[animID].maxFrame; j++) {
         if (animationDataArray[animID].draw.count(j) == 1) {
           animationArray[entityID].draw = animationDataArray[animID].draw[j];
           setSprite(entityID, animID, animationArray[entityID].draw);
@@ -270,7 +276,7 @@ void readInfo(std::ifstream& MyReadFile, std::string& insideArrow, bool& useAnim
   bool draw = true;
   Tyra::Texture* texture = nullptr;
   std::string fileName;
-  int countframes = 0;
+  int countframes = 1;
 
   std::string::size_type sz;
   bool finish = false;
@@ -389,8 +395,8 @@ void readInfo(std::ifstream& MyReadFile, std::string& insideArrow, bool& useAnim
       // countTrack++;
       // std::cout << "Total frames from track " << countTrack << ": "
       //           << countframes << std::endl;
-      animationDataArray[animID].maxFrame = countframes;
-      countframes = 0;
+      animationDataArray[animID].maxFrame = countframes-1;
+      countframes = 1;
       finish = true;
     }
   }

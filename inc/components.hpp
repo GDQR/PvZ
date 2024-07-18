@@ -73,10 +73,10 @@ class Animation {
   int animID = -1;
   bool draw = true;
   unsigned int framesCounter = 0;
-  unsigned int currentFrame = 0;
+  unsigned int currentFrame = 1;
   unsigned int framesSpeed = 20;
-  unsigned int firstFrame = 0;
-  unsigned int lastFrame = 0;
+  unsigned int firstFrame = 1;
+  unsigned int lastFrame = 1;
 };
 
 class AnimationData {

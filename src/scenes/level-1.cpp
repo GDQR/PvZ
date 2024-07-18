@@ -51,6 +51,7 @@ void Level1::init() {
   srand(time(NULL));
   newPlayer(&player);
   loadPlantCost();
+  loadPlantAnimString();
   loadDebugTextures();
   // load background
   createSprite(background, MODE_STRETCH, Vec2(-56, -1), Vec2(780, 524));
