@@ -42,6 +42,14 @@ void loadAnimationSprite(const int entityID, const int animID){
       animationArray[entityID] = Animation(animID);
 
       // printf("sprite ID: %d\n", spriteID);
+      for (unsigned int j = 1; j < animationDataArray[animID].maxFrame; j++) {
+        if (animationDataArray[animID].x.count(j) == 1) {
+          texPosArray[entityID].x = animationDataArray[animID].x[j];
+        }
+        if (animationDataArray[animID].y.count(j) == 1) {
+          texPosArray[entityID].y = animationDataArray[animID].y[j];
+        }
+      }
 
       for (unsigned int j = 1; j < animationDataArray[animID].maxFrame; j++) {
         if (animationDataArray[animID].texture.count(j) == 1) {
