@@ -52,6 +52,7 @@ void Level1::init() {
   newPlayer(&player);
   loadPlantCost();
   loadPlantAnimString();
+  loadAnimationStates();
   loadDebugTextures();
   // load background
   createSprite(background, MODE_STRETCH, Vec2(-56, -1), Vec2(780, 524));
@@ -187,16 +188,18 @@ void Level1::update() {
                         Color(255, 255, 255, 128));
 
   if (debugMenu == true) {
-    if (debugAnimation) {
-      startDebugAnimationMode(engine->pad, engine->font);
-      animManager.debug();
-    } else if (debugSprite) {
-      debugModeClass.drawSpriteModeMenu();
-    } else {
+    if (debugState == debugMain) {
       debugModeClass.drawMainMenu();
       if (stopAnimation == true) {
         animManager.debug();
       }
+    }
+
+    if (debugAnimation) {
+      startDebugAnimationMode(engine->pad, engine->font);
+      animManager.debug();
+    } else if (debugState == SpriteDebug) {
+      debugModeClass.drawSpriteModeMenu();
     }
   }
 
