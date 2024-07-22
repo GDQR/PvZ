@@ -4,7 +4,69 @@
 #include "systems.hpp"
 #include <iostream>
 
+AnimationState::AnimationState(){};
+AnimationState::AnimationState(const unsigned int firstFrame,const unsigned int lastFrame){
+  this->firstFrame = firstFrame;
+  this->lastFrame = lastFrame;
+}
+
+AnimationState animationStateVector[enumMaxAnimationState];
 int maxAnimID = 0;
+
+void loadAnimationStates(){
+  animationStateVector[normalZombieWalk] = AnimationState(45,91);
+  animationStateVector[normalZombieAttack] = AnimationState(139,178);
+}
+
+void setAnimationState(const int entityID, enumAnimationState animationState){
+  animationArray[entityID].currentFrame = animationStateVector[animationState].firstFrame;
+  animationArray[entityID].firstFrame = animationStateVector[animationState].firstFrame;
+  animationArray[entityID].lastFrame = animationStateVector[animationState].lastFrame;
+
+  // Tyra::Vec2 scale(1.0f,1.0f);
+  // bool draw = false;
+  // bool existDraw = false;
+  // if(animationDataArray[animID].draw.count(firstFrame) == 1){
+  //   draw = animationDataArray[animID].draw[firstFrame];
+  //   existDraw = true;
+  // }else if(animationDataArray[animID].alpha.count(firstFrame) == 1){
+  //   draw = true;
+  // }else if(animationDataArray[animID].angleX.count(firstFrame) == 1){
+  //   draw = true;
+  // }else if(animationDataArray[animID].angleY.count(firstFrame) == 1){
+  //   draw = true;
+  // }else if(animationDataArray[animID].x.count(firstFrame) == 1){
+  //   draw = true;
+  // }else if(animationDataArray[animID].y.count(firstFrame) == 1){
+  //   draw = true;
+  // }else if(animationDataArray[animID].texture.count(firstFrame) == 1){
+  //   draw = true;
+  // }
+
+  // if(animationDataArray[animID].scaleX.count(firstFrame) == 1){
+  //   if(existDraw == false){ draw = true; }
+  //   scale.x = animationDataArray[animID].scaleX[firstFrame];
+  // }else{
+  //   for(int i=firstFrame-1; i>0; i--){
+  //     if(animationDataArray[animID].scaleX.count(i) == 1){
+  //       scale.x = animationDataArray[animID].scaleX[i];
+  //       break;
+  //     }
+  //   }
+  // }
+  
+  // if(animationDataArray[animID].scaleY.count(firstFrame) == 1){
+  //   if(existDraw == false){ draw = true; }
+  //   scale.y = animationDataArray[animID].scaleY[firstFrame];
+  // }else{
+  //   for(int i=firstFrame-1; i>0; i--){
+  //     if(animationDataArray[animID].scaleY.count(i) == 1){
+  //       scale.y = animationDataArray[animID].scaleY[i];
+  //       break;
+  //     }
+  //   }
+  // }
+}
 
 void loadAnimationSprite(const int entityID, const int animID){
     bool rotateSprite = false;

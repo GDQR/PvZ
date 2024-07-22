@@ -3,8 +3,9 @@
 #include <stdio.h>
 #include "../renderSprite/textures.hpp"
 
-enum debugModes { AnimationDebug, SpriteDebug, testDebug, debugModesSize };
+enum debugModes {AnimationDebug, SpriteDebug, testDebug, debugModesSize, debugMain};
 
+extern unsigned int debugState;
 extern unsigned int debugOption;
 
 extern bool debugMode;
@@ -13,10 +14,19 @@ extern bool debugAnimation;
 extern bool stopAnimation;
 extern bool debugSprite;
 extern float debugAlphaColor;
-extern Vec2* texPos;
+extern float d_texPosXNull;
+extern float* d_texPosX;
+extern float d_texPosYNull;
+extern float* d_texPosY;
 extern float* d_scale;
-extern Vec2* d_angle;
+extern float d_angleXNull;
+extern float* d_angleX ;
+extern float d_angleYNull;
+extern float* d_angleY;
 extern bool d_hasScale;
+extern int d_framesCounter;
+extern bool d_saveFramesCounter;
+extern std::string d_name;
 extern int debugEntityId;
 
 extern std::map<int, Tyra::Sprite> dm_SpritePointCollider;
@@ -39,7 +49,7 @@ class DebugMode {
  public:
  bool startDebug = true;
  void mainMenu();
- int spriteModeMenu();
+ void spriteModeMenu();
  void drawMainMenu();
  int drawSpriteModeMenu();
 };

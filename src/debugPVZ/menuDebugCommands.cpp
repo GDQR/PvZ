@@ -1,4 +1,5 @@
 #include "debugPVZ/menuDebugCommands.hpp"
+#include "components.hpp"
 
 int padTimer = 0;
 int padPressTimer = 0;
@@ -6,6 +7,7 @@ int padSpeed = 1;
 bool hideText = false;
 bool playAnimation = false;
 float colorSprite = -2;
+bool crossOption = true;
 
 bool menuUpOptionLeftJoy(Tyra::Pad& pad) {
   if (pad.getPressed().DpadUp || leftJoy->v <= 100) {
@@ -71,8 +73,9 @@ bool menuRightOptionRightJoy(Tyra::Pad& pad) {
   return false;
 }
 
-bool menuCrossClickedOption(Tyra::Pad& pad, const bool isActive) {
-  if (pad.getClicked().Cross && isActive == true) {
+bool menuCrossClickedOption() {
+  if (engine->pad.getClicked().Cross && crossOption == true) {
+    crossOption = false;
     return true;
   }
   return false;

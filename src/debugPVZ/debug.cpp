@@ -6,6 +6,7 @@
 #include <iostream>
 #include <iterator>
 
+unsigned int debugState = debugMain;
 unsigned int debugOption = 0;
 bool debugMode = false;
 bool debugMenu = false;
@@ -14,10 +15,20 @@ bool stopAnimation = false;
 bool debugSprite = false;
 float debugAlphaColor;
 int debugEntityId;
-Vec2* texPos = NULL;
+float d_texPosXNull;
+float* d_texPosX = &d_texPosXNull;
+float d_texPosYNull;
+float* d_texPosY = &d_texPosYNull;
+Vec2 d_texPosNull;
 float* d_scale = NULL;
-Vec2* d_angle = NULL;
+float d_angleXNull;
+float* d_angleX = &d_angleXNull;
+float d_angleYNull;
+float* d_angleY = &d_angleYNull;
+int d_framesCounter;
+bool d_saveFramesCounter = true;
 bool d_hasScale = false;
+std::string d_name;
 
 std::map<int, Tyra::Sprite*> debugSpritesType;  // Normal or rotated sprites
 std::vector<int> debugStopRenderRotateSprites;
@@ -30,6 +41,7 @@ Tyra::Texture* debugPointTexture;
 DebugMode debugModeClass;
 
 void activeDebugMode() {
+  debugState = debugOption;
   switch (debugOption) {
     case AnimationDebug:
       debugAnimation = true;
@@ -64,13 +76,8 @@ void deactiveDebugMode() {
 }
 
 void DebugMode::mainMenu(){
-  if (debugAnimation) {
-    startDebugAnimationMode(engine->pad, engine->font);
-    // animManager.debug();
-  } else if (debugSprite) {
-    // startDebugSpriteMode(engine->pad, engine->font);
-    spriteModeMenu();
-  } else {
+  crossOption = true;
+  if(debugState == debugMain){
     if (padTimer <= 0) {  
       if (engine->pad.getPressed().DpadUp || leftJoy->v <= 100) {
         padTimer = 10;
@@ -91,7 +98,7 @@ void DebugMode::mainMenu(){
       padTimer--;
     }
 
-    if (engine->pad.getClicked().Cross) {
+    if (menuCrossClickedOption()) {
       activeDebugMode();
       // debugMenu = false;
     } else if (engine->pad.getClicked().Circle) {
@@ -104,6 +111,12 @@ void DebugMode::mainMenu(){
       printf("\nDEBUG MODE DEACTIVE\n");
     }
   }
+  if (debugState == AnimationDebug) {
+    startDebugAnimationMode(engine->pad, engine->font);
+    // animManager.debug();
+  } else if (debugState == SpriteDebug) {
+    spriteModeMenu();
+  } 
 }
 
 void DebugMode::drawMainMenu() {
@@ -139,35 +152,9 @@ void DebugMode::drawMainMenu() {
   engine->font.drawText(&myFont, "PRESS O FOR DESACTIVE", 30, 420, 16, black);
 }
 
-int DebugMode::spriteModeMenu(){
-  if (spriteArray.size() == 0 && rotationSprite.size() == 0) {
-    // ERROR MENU
-    if (engine->pad.getClicked().Circle) {
-      debugAnimation = false;
-    }
-    return 1;
-  }
-  if (startSpriteDebug == true) {
-    printf("start debug sprite\n");
-    startSpriteDebug = false;
-
-    // Get all normal and rotated sprites
-    std::map<int, Sprite>::iterator it;
-    for (it = spriteArray.begin(); it != spriteArray.end(); it++) {
-      debugSpritesType[it->first] = &it->second;
-    }
-
-    std::map<int, RotationSprite>::iterator it2;
-    for (it2 = rotationSprite.begin(); it2 != rotationSprite.end(); it2++) {
-      debugSpritesType[it2->first] = &it2->second.sprite;
-    }
-
-    debugEntityId = debugSpritesType.begin()->first;
-    debugAlphaColor = debugSpritesType.begin()->second->color.a;
-    printf("base id: %d\n", debugEntityId);
-  }
+void DebugMode::spriteModeMenu(){
+  debugSpriteMode.init();
   debugSpriteMode.menu();
-  return 0;
 }
 int DebugMode::drawSpriteModeMenu(){
   if (spriteArray.size() == 0 && rotationSprite.size() == 0) {
@@ -176,9 +163,7 @@ int DebugMode::drawSpriteModeMenu(){
     engine->font.drawText(&myFont, "PRESS O FOR GO BACK", 30, 320, 16, black);
     return 1;
   }
-  if (startSpriteDebug == false) {
-    debugSpriteMode.drawMenu();
-  }
+  debugSpriteMode.drawMenu();
   return 0;
 }
 

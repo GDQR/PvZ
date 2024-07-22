@@ -364,6 +364,99 @@ void Animation::activeDrawRotationSprites(const int entityID) {
   }
 }
 
+int Animation::debugAnim(const int entitieID){
+    if (framesCounter < (60 / framesSpeed)) {
+    framesCounter++;
+    return 1;
+  }
+
+  currentFrame++;
+  framesCounter = 0;
+
+  if (currentFrame > lastFrame) {
+    currentFrame = firstFrame;
+  }
+
+  if (spriteArray.count(entitieID) == 1 &&
+      animationDataArray[animID].texture.count(currentFrame) == 1) {
+    texRepo->getBySpriteId(spriteArray[entitieID].id)
+        ->removeLinkById(spriteArray[entitieID].id);
+
+    texRepo->getByTextureId(animationDataArray[animID]
+        .texture[currentFrame])
+        ->addLink(spriteArray[entitieID].id);
+  } else if (animationDataArray[animID].texture.count(
+                 currentFrame) == 1) {
+    texRepo->getBySpriteId(rotationSprite[entitieID].sprite.id)
+        ->removeLinkById(rotationSprite[entitieID].sprite.id);
+
+    texRepo->getByTextureId(animationDataArray[animID]
+        .texture[currentFrame])
+        ->addLink(rotationSprite[entitieID].sprite.id);
+  }
+
+  if (animationDataArray[animID].x.count(
+          currentFrame) == 1) {
+    texPosArray[entitieID].x =
+        animationDataArray[animID]
+            .x[currentFrame];
+  }
+
+  if (animationDataArray[animID].y.count(
+          currentFrame) == 1) {
+    texPosArray[entitieID].y =
+        animationDataArray[animID]
+            .y[currentFrame];
+  }
+
+  if (animationDataArray[animID].alpha.count(
+          currentFrame) == 1) {
+    float alpha = animationDataArray[animID]
+                      .alpha[currentFrame] *
+                  128;
+    if (spriteArray.count(entitieID) == 1) {
+      spriteArray[entitieID].color.a = alpha;
+    } else {
+      rotationSprite[entitieID].sprite.color.a = alpha;
+    }
+  }
+
+  if (animationDataArray[animID].scaleX.count(
+          currentFrame) == 1) {
+    if (spriteArray.count(entitieID) == 1) {
+      spriteArray[entitieID].size.x = originalSize[entitieID].x * animationDataArray[animID]
+              .scaleX[currentFrame];
+    } else {
+      rotationSprite[entitieID].sprite.size.x = originalSize[entitieID].x * animationDataArray[animID]
+              .scaleX[currentFrame];
+    }
+  }
+
+  if (animationDataArray[animID].scaleY.count(
+          currentFrame) == 1) {
+    if (spriteArray.count(entitieID) == 1) {
+      spriteArray[entitieID].size.y = originalSize[entitieID].y * animationDataArray[animID]
+              .scaleY[currentFrame];
+    } else {
+      rotationSprite[entitieID].sprite.size.y = originalSize[entitieID].y * animationDataArray[animID]
+              .scaleY[currentFrame];
+    }
+  }
+
+  if (animationDataArray[animID].angleX.count(
+          currentFrame) == 1) {
+    rotationSprite[entitieID].angle.x = animationDataArray[animID]
+                            .angleX[currentFrame];
+  }
+  if (animationDataArray[animID].angleY.count(
+          currentFrame) == 1) {
+    rotationSprite[entitieID].angle.y = animationDataArray[animID]
+                            .angleY[currentFrame];
+  }
+
+  return 0;
+}
+
 void FatherID::update(const int entityID) {
   for (unsigned int i = 0; i < id.size(); i++) {
     // finalPos += fatherPos

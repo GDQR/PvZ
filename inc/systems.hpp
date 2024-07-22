@@ -13,7 +13,6 @@ class AnimationManager {
  public:
   void update();
   void debug();
-  int debugAnim(const int entitieID);
   void debugChangeFrame(const int entitieID, const int key);
 };
 

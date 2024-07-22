@@ -54,7 +54,7 @@ void subMenu(Tyra::Pad& pad, Tyra::Font& font, int& entitieID) {
   }
 
   if (playAnimation == true) {
-    animManager.debugAnim(entitieID);
+    animationArray[entitieID].debugAnim(entitieID);
   }
 
   if (hideText == false) {

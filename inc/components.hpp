@@ -69,6 +69,7 @@ class Animation {
   void activeDrawRotationSprites(const int entityID);
   void updateRotationSprites(const int entityID);
   void position(const int entityID);
+  int debugAnim(const int entitieID);
 
   int animID = -1;
   bool draw = true;
