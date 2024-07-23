@@ -33,7 +33,7 @@ void Zombie::animation(const int entityID, const int animID) {
           animationDataArray[animID].name == "Zombie_innerarm_screendoor" ||
           animationDataArray[animID].name == "Zombie_flaghand") {
         animationArray[entityID].draw = false;
-        setSprite(entityID, animID,animationArray[entityID].draw);
+        setSprite(entityID,animationArray[entityID].draw);
         deleteAnimation(entityID);
         animationIdStopRender.push_back(entityID);
         printf("encontre anim_bucket o anim_cone\n");
@@ -137,10 +137,8 @@ void createZombie(Vec2 pos) {
     // printf("animID: %d\n", animID);
     newFatherID(&zombie[id].father, &entityID);
     loadAnimationSprite(entityID, animID);
-    animationArray[entityID].firstFrame = 45;
-    animationArray[entityID].lastFrame = 91;
-    animationArray[entityID].currentFrame = 45;
-    animationArray[entityID].draw = true;
+    setAnimationState(entityID,animID,normalZombieWalk);
+    // animationArray[entityID].draw = true;
     zombie[id].animation(entityID, animID);
   }
 
