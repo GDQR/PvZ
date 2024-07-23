@@ -218,19 +218,7 @@ void activeAnimation(const int entityID, const int animID, const int firstFrame,
       }
     }
   }
-    /*else if(animationDataArray[animID].alpha.count(firstFrame) == 1){
-    draw = true;
-  }else if(animationDataArray[animID].angleX.count(firstFrame) == 1){
-    draw = true;
-  }else if(animationDataArray[animID].angleY.count(firstFrame) == 1){
-    draw = true;
-  }else if(animationDataArray[animID].x.count(firstFrame) == 1){
-    draw = true;
-  }else if(animationDataArray[animID].y.count(firstFrame) == 1){
-    draw = true;
-  }else if(animationDataArray[animID].texture.count(firstFrame) == 1){
-    draw = true;
-  }*/
+
   if(animationDataArray[animID].texture.count(firstFrame) == 1){
     if(spriteArray.count(entityID) == 1){
       if (texRepo->getBySpriteId(spriteArray[entityID].id) != nullptr) {
@@ -358,6 +346,29 @@ void activeAnimation(const int entityID, const int animID, const int firstFrame,
       if(animationDataArray[animID].scaleY.count(i) == 1){
         scale.y = animationDataArray[animID].scaleY[i];
         break;
+      }
+    }
+  }
+
+  if(rotationSprite.count(entityID) == 1){
+    if(animationDataArray[animID].angleX.count(firstFrame) == 1){
+      rotationSprite[entityID].angle.x = animationDataArray[animID].angleX[firstFrame];
+    }else{
+      for(int i=firstFrame-1; i>0; i--){
+        if(animationDataArray[animID].angleX.count(i) == 1){
+          rotationSprite[entityID].angle.x = animationDataArray[animID].angleX[i];
+          break;
+        }
+      }
+    }
+    if(animationDataArray[animID].angleY.count(firstFrame) == 1){
+      rotationSprite[entityID].angle.y = animationDataArray[animID].angleY[firstFrame];
+    }else{
+      for(int i=firstFrame-1; i>0; i--){
+        if(animationDataArray[animID].angleY.count(i) == 1){
+          rotationSprite[entityID].angle.y = animationDataArray[animID].angleY[i];
+          break;
+        }
       }
     }
   }

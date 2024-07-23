@@ -469,6 +469,7 @@ void RotationSprite::update(const int entityID) {
   // finalPos += texPosArray
   // finalPos += entitiePos
 
+  // finalPosArray[entityID] += texPosArray[entityID] * scaleTexture[entityID];
 
   // finalPosArray[entityID] += posArray[entityID];
 
