@@ -473,10 +473,10 @@ void RotationSprite::update(const int entityID) {
 
   finalPosArray[entityID] += posArray[entityID];
 
-  if (finalPosArray[entityID].x != sprite.position.x ||
-      finalPosArray[entityID].y != sprite.position.y) {
+  // if (finalPosArray[entityID].x != sprite.position.x ||
+  //     finalPosArray[entityID].y != sprite.position.y) {
     sprite.position = finalPosArray[entityID];
-  }
+  // }
 
   renderer->renderer2D.renderRotate(sprite, angle);
   finalPosArray[entityID] = Vec2(0.0f, 0.0f);

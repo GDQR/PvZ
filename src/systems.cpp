@@ -216,10 +216,10 @@ void RendererSprites::update() {
 
     finalPosArray[it->first] += posArray[it->first];
 
-    if (finalPosArray[it->first].x != it->second->position.x ||
-        finalPosArray[it->first].y != it->second->position.y) {
+    // if (finalPosArray[it->first].x != it->second->position.x ||
+    //     finalPosArray[it->first].y != it->second->position.y) {
       it->second->position = finalPosArray[it->first];
-    }
+    // }
 
     renderer->renderer2D.render(it->second);
     finalPosArray[it->first] = Vec2(0.0f, 0.0f);
