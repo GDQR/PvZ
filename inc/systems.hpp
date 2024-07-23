@@ -24,6 +24,7 @@ class RendererDebugSpritesManager {
 class RendererSprites {
  public:
   void updateChildPos();
+  void updateTexture();
   void update();
   void updateRotate();
 };

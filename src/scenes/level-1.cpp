@@ -57,14 +57,10 @@ void Level1::init() {
   // load background
   createSprite(background, MODE_STRETCH, Vec2(-56, -1), Vec2(780, 524));
   createTexture(background, "Backgrounds/DAY Unsodded.png");
-  texPosArray[background] = Vec2(0.0f, 0.0f);
-  scaleTexture[background] = Vec2(1.0f, 1.0f);
   // TODO: Fix size seedBank
   createSprite(seedBank, MODE_STRETCH, Vec2(63, 10),
                Vec2(512 / 1.5f, 128 / 1.5f));
   createTexture(seedBank, "UI/SeedBank.png");
-  texPosArray[seedBank] = Vec2(0.0f, 0.0f);
-  scaleTexture[seedBank] = Vec2(1.0f, 1.0f);
 
   createCard(PeaShotter, Vec2(120, 10));
   createCard(SunFlower, Vec2(180, 10));
@@ -180,6 +176,7 @@ void Level1::update() {
   // renderer->core.renderer2D.pixelTest(&atest,&dtest,ZTEST_METHOD_GREATER);
 
   renderSprites.updateChildPos();
+  renderSprites.updateTexture();
   renderSprites.update();
   renderSprites.updateRotate();
 

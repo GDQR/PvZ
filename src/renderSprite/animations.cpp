@@ -208,14 +208,12 @@ void activeAnimation(const int entityID, const int animID, const int firstFrame,
   animationArray[entityID].lastFrame = lastFrame;
   Tyra::Vec2 scale(1.0f,1.0f);
   bool draw = false;
-  bool existDraw = false;
   if(animationDataArray[animID].draw.count(firstFrame) == 1){
     draw = animationDataArray[animID].draw[firstFrame];
-    existDraw = true;
   }else{
     for(int i=firstFrame-1; i>0; i--){
-      if(animationDataArray[animID].x.count(i) == 1){
-        draw = animationDataArray[animID].x[i];
+      if(animationDataArray[animID].draw.count(i) == 1){
+        draw = animationDataArray[animID].draw[i];
         break;
       }
     }
@@ -311,47 +309,38 @@ void activeAnimation(const int entityID, const int animID, const int firstFrame,
     }
   }
 
-  if(animationDataArray[animID].x.count(firstFrame) == 1){
-    if(spriteArray.count(entityID) == 1){
-      spriteArray[entityID].position.x = animationDataArray[animID].x[entityID];
-    }else{
-      rotationSprite[entityID].sprite.position.x = animationDataArray[animID].x[entityID];
+  for (unsigned int j = 1; j < animationDataArray[animID].maxFrame; j++) {
+    if (animationDataArray[animID].x.count(j) == 1) {
+      texPosArray[entityID].x = animationDataArray[animID].x[j];
     }
-  }else {
+    if (animationDataArray[animID].y.count(j) == 1) {
+      texPosArray[entityID].y = animationDataArray[animID].y[j];
+    }
+  }
+
+  if(animationDataArray[animID].x.count(firstFrame) == 1){
+    texPosArray[entityID].x = animationDataArray[animID].x[firstFrame];
+  }else{
     for(int i=firstFrame-1; i>0; i--){
       if(animationDataArray[animID].x.count(i) == 1){
-        if(spriteArray.count(entityID) == 1){
-          spriteArray[entityID].position.x = animationDataArray[animID].x[i];
-        }else{
-          rotationSprite[entityID].sprite.position.x = animationDataArray[animID].x[i];
-        }
+        texPosArray[entityID].x = animationDataArray[animID].x[i];
         break;
       }
     }
   }
 
-  
   if(animationDataArray[animID].y.count(firstFrame) == 1){
-    if(spriteArray.count(entityID) == 1){
-      spriteArray[entityID].position.y = animationDataArray[animID].y[entityID];
-    }else{
-      rotationSprite[entityID].sprite.position.y = animationDataArray[animID].y[entityID];
-    }
-  }else {
+    texPosArray[entityID].y = animationDataArray[animID].y[firstFrame];
+  }else{
     for(int i=firstFrame-1; i>0; i--){
       if(animationDataArray[animID].y.count(i) == 1){
-        if(spriteArray.count(entityID) == 1){
-          spriteArray[entityID].position.y = animationDataArray[animID].y[i];
-        }else{
-          rotationSprite[entityID].sprite.position.y = animationDataArray[animID].y[i];
-        }
+        texPosArray[entityID].y = animationDataArray[animID].y[i];
         break;
       }
     }
   }
 
   if(animationDataArray[animID].scaleX.count(firstFrame) == 1){
-    if(existDraw == false){ draw = true; }
     scale.x = animationDataArray[animID].scaleX[firstFrame];
   }else{
     for(int i=firstFrame-1; i>0; i--){
@@ -363,7 +352,6 @@ void activeAnimation(const int entityID, const int animID, const int firstFrame,
   }
   
   if(animationDataArray[animID].scaleY.count(firstFrame) == 1){
-    if(existDraw == false){ draw = true; }
     scale.y = animationDataArray[animID].scaleY[firstFrame];
   }else{
     for(int i=firstFrame-1; i>0; i--){

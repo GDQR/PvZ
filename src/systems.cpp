@@ -204,15 +204,20 @@ void RendererSprites::updateChildPos() {
   }
 }
 
+void RendererSprites::updateTexture(){
+  std::map<int, Vec2>::iterator it;
+  for (it = texPosArray.begin(); it != texPosArray.end();
+       it++) {
+      finalPosArray[it->first] +=
+      texPosArray.at(it->first) * scaleTexture.at(it->first);
+  } 
+}
 void RendererSprites::update() {
   std::map<int, Sprite*>::iterator it;
   for (it = spritesNormalRender.begin(); it != spritesNormalRender.end();
        it++) {
 
     // finalPos += entitiePos
-
-    finalPosArray[it->first] +=
-        texPosArray[it->first] * scaleTexture[it->first];
 
     finalPosArray[it->first] += posArray[it->first];
 
@@ -439,8 +444,6 @@ void newCursor(int* player, Tyra::Vec2 pos) {
   createSprite(cursor[*player].id, Tyra::MODE_STRETCH, pos, Vec2(56, 48));
   createTexture(cursor[*player].id, "cursor6.png");
   boxColliderArray[cursor[*player].id] = BoxCollider(pos.x, pos.y, 24, 24, 28 / 2, 24 / 2);
-  texPosArray[cursor[*player].id] = Vec2(0.0f, 0.0f);
-  scaleTexture[cursor[*player].id] = Vec2(1.0f, 1.0f);
   createDebugBoxCollider(cursor[*player].id, Tyra::MODE_STRETCH);
 }
 
@@ -450,8 +453,6 @@ void newDeckCursor(int* player, Tyra::Vec2 pos) {
   printf("deck cursor id: %d\n", deckCursor[*player].id);
   createSprite(deckCursor[*player].id, Tyra::MODE_STRETCH, pos, Vec2(56, 48));
   createTexture(deckCursor[*player].id, "cursor6.png");
-  texPosArray[deckCursor[*player].id] = Vec2(0.0f, 0.0f);
-  scaleTexture[deckCursor[*player].id] = Vec2(1.0f, 1.0f);
   // boxColliderArray[deckCursor[*player].id] = BoxCollider(
   //     pos.x, pos.y, 24, 24, 28 / 2, 24 / 2);
   // createDebugBoxCollider(deckCursor[*player].id, Tyra::MODE_STRETCH);
