@@ -409,7 +409,7 @@ void newPlayer(int* player){
   countPlayer++;
 }
 
-void newProjectile(Vec2 position, bool normalPea) {
+void newProjectile(Vec2 position, const int damage, bool normalPea) {
   if (projectilesCreated < 100) {
     Proyectile projectileData;
     projectileData.id = Entities::newID();
@@ -431,7 +431,7 @@ void newProjectile(Vec2 position, bool normalPea) {
     }
 
     // damage
-    damageArray[*id] = 20;
+    damageArray[*id] = damage;
     // hitbox
     boxColliderArray[*id] =
         BoxCollider(posArray[*id].x, posArray[*id].y, spriteArray[*id].size.x,

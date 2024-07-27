@@ -27,6 +27,7 @@ std::map<int, Tyra::Vec2> originalSize;
 std::map<int, Tyra::Vec2> scaleTexture;
 std::map<int, Tyra::Vec2> pointColliderArray;
 std::map<int, BoxCollider> boxColliderArray;
+std::map<int, PS2Timer> timerArray;
 std::map<int, float> speedArray;
 std::map<int, int> damageArray;
 std::map<int, int> lifeArray;
@@ -490,6 +491,11 @@ PS2Timer::PS2Timer(){
 }
 void PS2Timer::setLastTime(){
   lastTime = actualTime;
+}
+
+void PS2Timer::resetCounter(){
+  setLastTime();
+  counterMS = 0;
 }
 u64 PS2Timer::getTimeInMS(){
   actualTime = GetTimerSystemTime() / (kBUSCLK / CLOCKS_PER_SEC);

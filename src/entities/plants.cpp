@@ -67,6 +67,8 @@ void createPeashotter(int id, int row, int column, Tyra::Vec2 pos) {
 
   lifeArray[plant[id].father] = 300;
 
+  timerArray[plant[id].father].maxMS = 1500;
+
   // HitBox
   boxColliderArray[plant[id].father] =
       BoxCollider(pos.x + 10, pos.y + 20, 28, 38);
@@ -93,6 +95,8 @@ void deletePeashotter(const int pos) {
   }
 
   lifeArray.erase(plant[pos].father);
+
+  timerArray.erase(plant[pos].father);
 
   deleteDebugBoxCollider(plant[pos].father);
   deleteDebugPoint(plant[pos].father);
@@ -140,7 +144,7 @@ void createSunflower(const int id, int row, int col, Tyra::Vec2 pos) {
 
   // time
 
-  plant[id].attackTimer = 30;
+  timerArray[plant[id].father].maxMS = 7000;
 
   // HitBox
   boxColliderArray[plant[id].father] =
@@ -164,6 +168,8 @@ void deleteSunflower(const int pos) {
   }
 
   lifeArray.erase(plant[pos].father);
+
+  timerArray.erase(plant[pos].father);
 
   deleteDebugBoxCollider(plant[pos].father);
   Entities::deleteID(plant[pos].father);
@@ -379,6 +385,8 @@ void createSnowPea(int id, int row, int column, Tyra::Vec2 pos) {
 
   lifeArray[plant[id].father] = 300;
 
+  timerArray[plant[id].father].maxMS = 1500;
+
   // HitBox
   boxColliderArray[plant[id].father] =
       BoxCollider(pos.x + 10, pos.y + 20, 28, 38);
@@ -505,9 +513,6 @@ void createRepeater(int id, int row, int column, Tyra::Vec2 pos) {
   // proyectile
   pointColliderArray[plant[id].father] = Vec2(pos.x + 40, pos.y + 25);
   createDebugPoint(plant[id].father, Tyra::MODE_STRETCH);
-
-  // count proyectile;
-  lifeArray[plant[id].id[0]] = 0;
 
   // HitBox
   boxColliderArray[plant[id].father] =
@@ -643,24 +648,24 @@ int Plant::attack() {
               boxColliderArray[it->id[0]].y +
                   boxColliderArray[it->id[0]].height) {
         // printf("hay un zombi en frente\n");
-        if (attackTimer >= 0) {
-          attackTimer--;
-        } else if (stopAnimation == false) {
-          // printf("disparar\n");
+        if (timerArray[father].counterMS < timerArray[father].maxMS) {
+          printf("counter: %lld\n",timerArray[father].counterMS);
+          timerArray[father].setLastTime();
+          timerArray[father].getTimeInMS();
+        }else if (stopAnimation == false){
+          timerArray[father].resetCounter();
           if (type == PeaShotter) {
-            newProjectile(pointColliderArray[father], true);
-            attackTimer = 60;
+            newProjectile(pointColliderArray[father], 20, true);
           } else if (type == SnowPea) {
-            newProjectile(pointColliderArray[father], false);
-            attackTimer = 60;
+            newProjectile(pointColliderArray[father], 20, false);
           } else if (type == Repeater){
-            newProjectile(pointColliderArray[father], true);
-            lifeArray[id[0]]++;
-            if(lifeArray[id[0]] < 2){
-              attackTimer = 30;
+            newProjectile(pointColliderArray[father], 40, true);
+            attackTimer++; // is used like a counter
+            if(attackTimer < 2){
+              timerArray[father].maxMS = 1000;
             }else{
-              attackTimer = 60;
-              lifeArray[id[0]] = 0;
+              timerArray[father].maxMS = 1500;
+              attackTimer = 0;
             }
           }
         }
@@ -673,12 +678,14 @@ int Plant::attack() {
 
 void Plant::ability() {
   if (type == SunFlower) {
-    if (attackTimer > 0) {
-      attackTimer--;
+    if (timerArray[father].counterMS < timerArray[father].maxMS) {
+      timerArray[father].setLastTime();
+      timerArray[father].getTimeInMS();
     } else {
       printf("sunflower create sun\n");
+      timerArray[father].maxMS = 24000;
+      timerArray[father].resetCounter();
       sunManager.create(spriteArray[id[0]].position, sunCost::normalSun, true);
-      attackTimer = 60 * 6;
     }
   } else if (type == CherryBomb) {
     if (animationArray[id[0]].currentFrame == animationArray[id[0]].lastFrame) {
