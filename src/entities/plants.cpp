@@ -666,6 +666,11 @@ void Plant::ability() {
       sunManager.create(spriteArray[id[0]].position, sunCost::normalSun, true);
       attackTimer = 60 * 6;
     }
+  } else if (type == CherryBomb) {
+    if(animationArray[id[0]].currentFrame == animationArray[id[0]].lastFrame){
+      printf("explode\n");
+    }
+    
   }
 }
 
