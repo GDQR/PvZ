@@ -35,7 +35,7 @@ Plant plant[maxPlants];
 std::vector<Zombie> zombie;
 std::vector<Sun> sun;
 std::vector<NaturalSun> naturalSun;
-std::vector<int> projectile;
+std::vector<Proyectile> projectile;
 std::vector<Card> cards;
 int player;
 std::map<int, Cursor> cursor;

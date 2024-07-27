@@ -7,6 +7,7 @@
 using Tyra::Sprite;
 
 extern Tyra::Texture* projectilePea;
+extern Tyra::Texture* projectileSnowPea;
 extern int plantsCreated;
 
 enum Plant_State_enum {

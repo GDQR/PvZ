@@ -199,10 +199,6 @@ void createCherryBomb(const int id, int row, int col, Tyra::Vec2 pos) {
 
   lifeArray[plant[id].father] = 300;
 
-  // time
-
-  plant[id].attackTimer = 30;
-
   // HitBox
   boxColliderArray[plant[id].father] =
       BoxCollider(pos.x + 10, pos.y + 20, 28, 38);
@@ -259,7 +255,7 @@ void createWallnut(const int id, int row, int col, Tyra::Vec2 pos) {
 
   // Life
 
-  lifeArray[plant[id].father] = 300;
+  lifeArray[plant[id].father] = 4000;
 
   // HitBox
   boxColliderArray[plant[id].father] =
@@ -625,7 +621,7 @@ int Plant::attack() {
   std::vector<Zombie>::iterator it;
 
   for (it = zombie.begin(); it < zombie.end(); it++) {
-    if (type == PeaShotter) {
+    if (type == PeaShotter || type == SnowPea) {
       //  printf("vec plant %f,%f. vec zombi %f,%f,%f,%f\n",
       //  pointColliderArray[*plant[i].body[0]].x,
       //  pointColliderArray[*plant[i].body[0]].y,
@@ -647,7 +643,11 @@ int Plant::attack() {
           attackTimer--;
         } else if (stopAnimation == false) {
           // printf("disparar\n");
-          newProjectile(pointColliderArray[father]);
+          if (type == PeaShotter) {
+            newProjectile(pointColliderArray[father], true);
+          } else if (type == SnowPea) {
+            newProjectile(pointColliderArray[father], false);
+          }
           attackTimer = 60;
         }
         it = zombie.end();
@@ -667,10 +667,15 @@ void Plant::ability() {
       attackTimer = 60 * 6;
     }
   } else if (type == CherryBomb) {
-    if(animationArray[id[0]].currentFrame == animationArray[id[0]].lastFrame){
+    if (animationArray[id[0]].currentFrame == animationArray[id[0]].lastFrame) {
       printf("explode\n");
     }
-    
+  } else if (type == Wallnut) {
+    if (lifeArray[father] <= 2667) {
+      printf("change animation\n");
+    } else if (lifeArray[father] <= 1333) {
+      printf("change animation\n");
+    }
   }
 }
 

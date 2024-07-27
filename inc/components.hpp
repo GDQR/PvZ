@@ -124,9 +124,17 @@ class RotationSprite {
 };
 
 class PlantsManager {
-  public:
+ public:
   void create();
   void update();
+};
+
+enum enumProyectile { normal, snow };
+
+class Proyectile {
+ public:
+  int id;
+  enumProyectile type; 
 };
 
 extern Tyra::Engine* engine;
@@ -165,7 +173,7 @@ extern Plant plant[maxPlants];
 extern std::vector<Zombie> zombie;
 extern std::vector<Sun> sun;
 extern std::vector<NaturalSun> naturalSun;
-extern std::vector<int> projectile;
+extern std::vector<Proyectile> projectile;
 extern std::vector<Card> cards;
 extern int player;
 extern std::map<int, Cursor> cursor;

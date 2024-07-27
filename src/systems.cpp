@@ -337,19 +337,19 @@ void PlantsManager::update() {
 }
 
 void ProjectileManager::update() {
-  std::vector<int>::iterator it;
+  std::vector<Proyectile>::iterator it;
 
   for (it = projectile.begin(); it < projectile.end(); it++) {
-    posArray[*it].x++;
-    boxColliderArray[*it].x = posArray[*it].x;
-    if (posArray[*it].x >= 580) {
+    posArray[it->id].x++;
+    boxColliderArray[it->id].x = posArray[it->id].x;
+    if (posArray[it->id].x >= 580) {
       // delete projectile
       printf("borrando proyectil\n");
-      deleteSprite(*it);
-      boxColliderArray.erase(*it);
-      deletePosArray(*it);
-      deleteDebugBoxCollider(*it);
-      Entities::deleteID(*it);
+      deleteSprite(it->id);
+      boxColliderArray.erase(it->id);
+      deletePosArray(it->id);
+      deleteDebugBoxCollider(it->id);
+      Entities::deleteID(it->id);
       it = projectile.erase(it);
       projectilesCreated--;
     }
@@ -357,14 +357,14 @@ void ProjectileManager::update() {
 }
 
 void ProjectileManager::zombieCollision() {
-  std::vector<int>::iterator it;
+  std::vector<Proyectile>::iterator it;
   std::vector<Zombie>::iterator it2;
   for (it = projectile.begin(); it < projectile.end(); it++) {
     for (it2 = zombie.begin(); it2 < zombie.end(); ) {
-      if (boxColliderArray[*it].collision(&boxColliderArray[it2->id[0]]) == true) {
+      if (boxColliderArray[it->id].collision(&boxColliderArray[it2->id[0]]) == true) {
 
         // damage zombie
-        it2->damage(*it);
+        it2->damage(it->id);
         // printf("zombie id: %d\n",it2->id[0]);
         // delete zombie
         if(it2->erase() == true){
@@ -376,13 +376,13 @@ void ProjectileManager::zombieCollision() {
         // delete projectile
 
         Tyra::Texture* text =
-            texRepo->getBySpriteId(spriteArray[*it].id);
+            texRepo->getBySpriteId(spriteArray[it->id].id);
         TYRA_ASSERT(text,
-                    "No se encontro la textura del proyectil with id: ", *it);
-        deleteSprite(*it);
-        boxColliderArray.erase(*it);
-        deleteDebugBoxCollider(*it);
-        Entities::deleteID(*it);
+                    "No se encontro la textura del proyectil with id: ", it->id);
+        deleteSprite(it->id);
+        boxColliderArray.erase(it->id);
+        deleteDebugBoxCollider(it->id);
+        Entities::deleteID(it->id);
         it = projectile.erase(it);
 
         // Break projectile loop if exist another zombie
@@ -405,15 +405,26 @@ void newPlayer(int* player){
   countPlayer++;
 }
 
-void newProjectile(Vec2 position) {
+void newProjectile(Vec2 position, bool normalPea) {
   if (projectilesCreated < 100) {
-    projectile.insert(projectile.begin() + projectilesCreated,
-                      Entities::newID());
-    int* id = &projectile[projectilesCreated];
+    Proyectile projectileData;
+    projectileData.id = Entities::newID();
+    if(normalPea == true){
+      projectileData.type = enumProyectile::normal;
+    }else{
+      projectileData.type = enumProyectile::snow;
+    }
+    
+    projectile.insert(projectile.begin() + projectilesCreated, projectileData);
+    int* id = &projectile[projectilesCreated].id;
 
     position.y -= 15.0f;
     createSprite(*id, Tyra::MODE_STRETCH, position, Vec2(31 / 1.6f, 31 / 1.6f));
-    projectilePea->addLink(spriteArray[*id].id);
+    if(normalPea == true) { 
+      projectilePea->addLink(spriteArray[*id].id); 
+    }else{
+      projectileSnowPea->addLink(spriteArray[*id].id);
+    }
 
     // damage
     damageArray[*id] = 20;
