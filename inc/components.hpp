@@ -137,6 +137,15 @@ class Proyectile {
   enumProyectile type; 
 };
 
+class PS2Timer{
+  public:
+  PS2Timer();
+  u64 lastTime;
+  u64 actualTime;
+  void setLastTime();
+  u64 getTimeInMS();
+};
+
 extern Tyra::Engine* engine;
 extern Tyra::Renderer* renderer;
 extern const Tyra::PadJoy* leftJoy;

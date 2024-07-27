@@ -12,7 +12,6 @@
 #include "debugPVZ/debug.hpp"
 #include "debugPVZ/menuDebugCommands.hpp"
 #include <stdlib.h>
-#include <time.h>
 using namespace Tyra;
 
 int background = Entities::newID();

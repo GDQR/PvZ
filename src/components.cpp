@@ -483,6 +483,18 @@ void RotationSprite::update(const int entityID) {
   finalPosArray[entityID] = Vec2(0.0f, 0.0f);
 }
 
+PS2Timer::PS2Timer(){
+  lastTime = GetTimerSystemTime() / (kBUSCLK / CLOCKS_PER_SEC);
+  actualTime = lastTime;
+}
+void PS2Timer::setLastTime(){
+  lastTime = actualTime;
+}
+u64 PS2Timer::getTimeInMS(){
+  actualTime = GetTimerSystemTime() / (kBUSCLK / CLOCKS_PER_SEC);
+  return actualTime - lastTime;
+}
+
 void createCard(Plant_State_enum typePlant, Vec2 pos) {
   Card card;
   card.seed = Entities::newID();
