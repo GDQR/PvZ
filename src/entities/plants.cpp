@@ -505,6 +505,9 @@ void createRepeater(int id, int row, int column, Tyra::Vec2 pos) {
   pointColliderArray[plant[id].father] = Vec2(pos.x + 40, pos.y + 25);
   createDebugPoint(plant[id].father, Tyra::MODE_STRETCH);
 
+  // count proyectile;
+  lifeArray[plant[id].id[0]] = 0;
+
   // HitBox
   boxColliderArray[plant[id].father] =
       BoxCollider(pos.x + 10, pos.y + 20, 28, 38);
@@ -621,7 +624,7 @@ int Plant::attack() {
   std::vector<Zombie>::iterator it;
 
   for (it = zombie.begin(); it < zombie.end(); it++) {
-    if (type == PeaShotter || type == SnowPea) {
+    if (type == PeaShotter || type == SnowPea || type == Repeater) {
       //  printf("vec plant %f,%f. vec zombi %f,%f,%f,%f\n",
       //  pointColliderArray[*plant[i].body[0]].x,
       //  pointColliderArray[*plant[i].body[0]].y,
@@ -645,10 +648,20 @@ int Plant::attack() {
           // printf("disparar\n");
           if (type == PeaShotter) {
             newProjectile(pointColliderArray[father], true);
+            attackTimer = 60;
           } else if (type == SnowPea) {
             newProjectile(pointColliderArray[father], false);
+            attackTimer = 60;
+          } else if (type == Repeater){
+            newProjectile(pointColliderArray[father], true);
+            lifeArray[id[0]]++;
+            if(lifeArray[id[0]] < 2){
+              attackTimer = 30;
+            }else{
+              attackTimer = 60;
+              lifeArray[id[0]] = 0;
+            }
           }
-          attackTimer = 60;
         }
         it = zombie.end();
       }
