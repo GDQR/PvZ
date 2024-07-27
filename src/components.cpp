@@ -499,6 +499,7 @@ void PS2Timer::resetCounter(){
 }
 u64 PS2Timer::getTimeInMS(){
   actualTime = GetTimerSystemTime() / (kBUSCLK / CLOCKS_PER_SEC);
+  counterMS += actualTime - lastTime;
   return actualTime - lastTime;
 }
 
