@@ -1,3 +1,4 @@
+#include "entities/entities.hpp"
 #include "systems.hpp"
 #include "components.hpp"
 

@@ -1,3 +1,4 @@
+#include "entities/entities.hpp"
 #include "entities/sun.hpp"
 #include "renderSprite/animations.hpp"
 #include "components.hpp"

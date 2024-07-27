@@ -1,4 +1,5 @@
 // File for all plants data
+#include "entities/entities.hpp"
 #include "entities/plants.hpp"
 #include "renderSprite/animations.hpp"
 #include "components.hpp"

@@ -1,4 +1,5 @@
 #include "debugPVZ/menuDebugCommands.hpp"
+#include "entities/entities.hpp"
 #include "components.hpp"
 #include <iostream>
 

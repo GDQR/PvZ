@@ -3,7 +3,6 @@
 #include <vector>
 #include <map>
 #include "debugPVZ/debug.hpp"
-#include "entities/entities.hpp"
 #include "renderSprite/textures.hpp"
 #include "entities/plants.hpp"
 #include "entities/zombie.hpp"
