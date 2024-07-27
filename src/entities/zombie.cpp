@@ -52,7 +52,7 @@ int Zombie::move() {
     timer--;
   } else if (attack == false) {
     timer = 12;
-    posArray[father].x--;
+    posArray[father].x -= speedArray[id[0]];
 
     boxColliderArray[id[0]].x = posArray[father].x + posArray[id[0]].x + 60;
     // printf("box: %f,%f\n",
@@ -147,6 +147,9 @@ void createZombie(Vec2 pos) {
 
   // damage
   damageArray[zombie[id].id[0]] = 100;
+
+  // speed
+  speedArray[zombie[id].id[0]] = 1;
 
   // HitBox
   boxColliderArray[zombie[id].id[0]] = BoxCollider(pos.x, pos.y + 10, 28, 50);

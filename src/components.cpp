@@ -26,6 +26,7 @@ std::map<int, Tyra::Vec2> originalSize;
 std::map<int, Tyra::Vec2> scaleTexture;
 std::map<int, Tyra::Vec2> pointColliderArray;
 std::map<int, BoxCollider> boxColliderArray;
+std::map<int, float> speedArray;
 std::map<int, int> damageArray;
 std::map<int, int> lifeArray;
 std::map<int, Tyra::Vec2> pivot;

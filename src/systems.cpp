@@ -365,6 +365,9 @@ void ProjectileManager::zombieCollision() {
 
         // damage zombie
         it2->damage(it->id);
+        if(it->type == enumProyectile::snow){
+          speedArray[it2->id[0]] = 0.5f;
+        }
         // printf("zombie id: %d\n",it2->id[0]);
         // delete zombie
         if(it2->erase() == true){
