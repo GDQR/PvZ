@@ -650,8 +650,7 @@ int Plant::attack() {
         // printf("hay un zombi en frente\n");
         if (timerArray[father].counterMS < timerArray[father].maxMS) {
           printf("counter: %lld\n",timerArray[father].counterMS);
-          timerArray[father].setLastTime();
-          timerArray[father].getTimeInMS();
+          timerArray[father].addMSinCounter();
         }else if (stopAnimation == false){
           timerArray[father].resetCounter();
           if (type == PeaShotter) {
@@ -679,8 +678,7 @@ int Plant::attack() {
 void Plant::ability() {
   if (type == SunFlower) {
     if (timerArray[father].counterMS < timerArray[father].maxMS) {
-      timerArray[father].setLastTime();
-      timerArray[father].getTimeInMS();
+      timerArray[father].addMSinCounter();
     } else {
       printf("sunflower create sun\n");
       timerArray[father].maxMS = 24000;

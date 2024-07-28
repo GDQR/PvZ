@@ -211,13 +211,15 @@ void DeckCursor::moveRight(){
 }
 
 void Card::update() {
-  if (seedTimer > 0) {
-    seedTimer--;
+  if (timerArray[seedShadowTimer].counterMS < timerArray[seedShadowTimer].maxMS) {
+    timerArray[seedShadowTimer].addMSinCounter();
+    
     spriteArray[seedShadow].size = Vec2(50, 70);
-    spriteArray[seedShadowTimer].size.y -=
-        (70.0f / 8.0f / 60.0f);  // el size Y es 70
+    spriteArray[seedShadowTimer].size.x = 50;
+    spriteArray[seedShadowTimer].size.y -= (70.0f * timerArray[seedShadowTimer].getTimeInMS() / timerArray[seedShadowTimer].maxMS);
   } else if (sunCounter >= cost) {
     spriteArray[seedShadow].size = Vec2(0, 0);
+    spriteArray[seedShadowTimer].size = Vec2(0, 0);
   }
 }
 
@@ -486,21 +488,27 @@ void RotationSprite::update(const int entityID) {
 }
 
 PS2Timer::PS2Timer(){
-  lastTime = GetTimerSystemTime() / (kBUSCLK / CLOCKS_PER_SEC);
-  actualTime = lastTime;
+  resetCounter();
 }
 void PS2Timer::setLastTime(){
   lastTime = actualTime;
 }
 
-void PS2Timer::resetCounter(){
-  setLastTime();
-  counterMS = 0;
-}
 u64 PS2Timer::getTimeInMS(){
   actualTime = GetTimerSystemTime() / (kBUSCLK / CLOCKS_PER_SEC);
-  counterMS += actualTime - lastTime;
+  printf("actualTime - lastTime: %lld - %lld=%lld\n",actualTime, lastTime, actualTime - lastTime);
   return actualTime - lastTime;
+}
+
+void PS2Timer::resetCounter(){
+  lastTime = GetTimerSystemTime() / (kBUSCLK / CLOCKS_PER_SEC);
+  actualTime = lastTime;
+  counterMS = 0;
+}
+
+void PS2Timer::addMSinCounter(){
+  setLastTime();
+  counterMS += getTimeInMS();
 }
 
 void createCard(Plant_State_enum typePlant, Vec2 pos) {
@@ -508,7 +516,6 @@ void createCard(Plant_State_enum typePlant, Vec2 pos) {
   card.seed = Entities::newID();
   card.seedShadow = Entities::newID();
   card.seedShadowTimer = Entities::newID();
-  card.seedTimer = Entities::newID();
 
   createSprite(card.seed, Tyra::MODE_REPEAT, pos, Vec2(50, 70));
   createTexture(card.seed, "UI/Seeds.png");
@@ -522,7 +529,7 @@ void createCard(Plant_State_enum typePlant, Vec2 pos) {
   createTexture(card.seedShadowTimer, "UI/Seeds.png");
   spriteArray[card.seedShadowTimer].color = Tyra::Color(0.0F, 0.0F, 0.0F, 60.0F);
 
-  card.seedTimer = 60 * 8;
+  timerArray[card.seedShadowTimer].maxMS = 8000;
 
   card.plant = typePlant;
 

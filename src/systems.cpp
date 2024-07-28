@@ -317,9 +317,9 @@ void PlantsManager::create(){
   if (debugMode == false) {
     if (zombieCreateRow[(int)cursor[player].cursorTile.x] == true) {
       if (sunCounter >= cards[deckCursor[player].pos].cost &&
-          plantsCreated < maxPlants && cards[deckCursor[player].pos].seedTimer == 0) {
+          plantsCreated < maxPlants && timerArray[cards[deckCursor[player].pos].seedShadowTimer].counterMS >= timerArray[cards[deckCursor[player].pos].seedShadowTimer].maxMS) {
         sunCounter -= cards[deckCursor[player].pos].cost;
-        cards[deckCursor[player].pos].seedTimer = 60 * 8;
+        timerArray[cards[deckCursor[player].pos].seedShadowTimer].resetCounter();
         spriteArray[cards[deckCursor[player].pos].seedShadowTimer].size.y = 70;
         createPlant(cards[deckCursor[player].pos].plant, cursor[player].cursorTile.x,
                     cursor[player].cursorTile.y);

@@ -52,7 +52,6 @@ class Card {
   int seed;
   int seedShadow;
   int seedShadowTimer;
-  int seedTimer;
   Plant_State_enum plant;
   int cost;
   void update();
@@ -141,11 +140,12 @@ class PS2Timer{
   PS2Timer();
   u64 lastTime;
   u64 actualTime;
-  u64 counterMS;
+  u64 counterMS = 0;
   u64 maxMS = 1000;
   void setLastTime();
-  void resetCounter();
   u64 getTimeInMS();
+  void resetCounter();
+  void addMSinCounter();
 };
 
 extern Tyra::Engine* engine;
