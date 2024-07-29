@@ -7,7 +7,15 @@
 
 std::string plantsAnim[enumMaxPlants];
 int plantCost[enumMaxPlants];
+int plantRechargeTime[enumMaxRecharge];
 int plantsCreated = 0;
+
+void loadPlantRechargeTime() {
+  // values in milliseconds, is more easy for compare with the PS2Timer
+  plantRechargeTime[fast] = 7500;       // 7.5 seconds
+  plantRechargeTime[slow] = 30000;      // 30 seconds
+  plantRechargeTime[verySlow] = 50000;  // 50 seconds
+}
 
 void createPeashotter(int id, int row, int column, Tyra::Vec2 pos) {
   plant[id].newPlant(PeaShotter);
@@ -649,20 +657,20 @@ int Plant::attack() {
                   boxColliderArray[it->id[0]].height) {
         // printf("hay un zombi en frente\n");
         if (timerArray[father].counterMS < timerArray[father].maxMS) {
-          printf("counter: %lld\n",timerArray[father].counterMS);
+          printf("counter: %lld\n", timerArray[father].counterMS);
           timerArray[father].addMSinCounter();
-        }else if (stopAnimation == false){
+        } else if (stopAnimation == false) {
           timerArray[father].resetCounter();
           if (type == PeaShotter) {
             newProjectile(pointColliderArray[father], 20, true);
           } else if (type == SnowPea) {
             newProjectile(pointColliderArray[father], 20, false);
-          } else if (type == Repeater){
+          } else if (type == Repeater) {
             newProjectile(pointColliderArray[father], 40, true);
-            attackTimer++; // is used like a counter
-            if(attackTimer < 2){
+            attackTimer++;  // is used like a counter
+            if (attackTimer < 2) {
               timerArray[father].maxMS = 1000;
-            }else{
+            } else {
               timerArray[father].maxMS = 1500;
               attackTimer = 0;
             }
@@ -820,3 +828,67 @@ void loadPlantAnimString() {
   plantsAnim[Imitator] = "Imitater";
 }
 int getPlantCost(Plant_State_enum typePlant) { return plantCost[typePlant]; }
+
+int getPlantRechargeTime(Plant_State_enum typePlant, bool isVersusMode) {
+  switch (typePlant) {
+    case PeaShotter:
+    case SunFlower:
+    case SnowPea:
+    case Chomper:
+    case Repeater:
+    case PuffShroom:
+    case SunShroom:
+    case FumeShroom:
+    case ScaredyShroom:
+    case LilyPad:
+    case Spikeweed:
+    case Torchwood:
+    case Cactus:
+    case Blover:
+    case Starfruit:
+    case Magnetshroom:
+    case Cabbagepult:
+    case FlowerPot:
+    case Kernelpult:
+    case CoffeeBean:
+    case UmbrellaLeaf:
+      return plantRechargeTime[fast];
+    case Wallnut:
+    case PotatoMine:
+    case HypnoShroom:
+    case Squash:
+    case Tanglekelp:
+    case Tallnut:
+    case SeaShroom:
+    case Plantern:
+    case Pumpkin:
+    case Marigold:
+      return plantRechargeTime[slow];
+    case CherryBomb:
+    case IceShroom:
+    case DoomShroom:
+    case Jalapeno:
+    case GatlingPea:
+    case TwinSunflower:
+    case GloomShroom:
+    case Cattail:
+    case WinterMelon:
+    case GoldMagnet:
+    case Spikerock:
+    case CobCannon:
+      return plantRechargeTime[verySlow];
+    case GraveBuster:
+    case Threepeater:
+    case SplitPea:
+    case Garlic:
+    case Melonpult:
+      if (isVersusMode == false) {
+        return plantRechargeTime[fast];
+      }
+      return plantRechargeTime[verySlow];
+    default:
+      TYRA_ASSERT(!(true == true), "ERROR: PLANT RECHARGE TIME DON'T FOUNDED");
+      break;
+  }
+  return 1;
+}

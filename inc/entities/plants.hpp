@@ -10,6 +10,15 @@ extern Tyra::Texture* projectilePea;
 extern Tyra::Texture* projectileSnowPea;
 extern int plantsCreated;
 
+enum Plant_Recharge_Time_enum {
+  fast,
+  slow,
+  verySlow,
+  enumMaxRecharge
+};
+
+extern int plantRechargeTime[enumMaxRecharge];
+
 enum Plant_State_enum {
   PeaShotter,
   SunFlower,
@@ -87,4 +96,6 @@ class Plant {
 void createPlant(Plant_State_enum typePlant, const int row, const int column);
 void loadPlantCost();
 void loadPlantAnimString();
+void loadPlantRechargeTime();
 int getPlantCost(Plant_State_enum typePlant);
+int getPlantRechargeTime(Plant_State_enum typePlant, bool isVersusMode);

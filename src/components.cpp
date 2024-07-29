@@ -511,7 +511,7 @@ void PS2Timer::addMSinCounter(){
   counterMS += getTimeInMS();
 }
 
-void createCard(Plant_State_enum typePlant, Vec2 pos) {
+void createCard(Plant_State_enum typePlant, Vec2 pos, bool isVersusMode) {
   Card card;
   card.seed = Entities::newID();
   card.seedShadow = Entities::newID();
@@ -529,7 +529,7 @@ void createCard(Plant_State_enum typePlant, Vec2 pos) {
   createTexture(card.seedShadowTimer, "UI/Seeds.png");
   spriteArray[card.seedShadowTimer].color = Tyra::Color(0.0F, 0.0F, 0.0F, 60.0F);
 
-  timerArray[card.seedShadowTimer].maxMS = 8000;
+  timerArray[card.seedShadowTimer].maxMS = getPlantRechargeTime(typePlant, isVersusMode);
 
   card.plant = typePlant;
 

@@ -51,6 +51,7 @@ void Level1::init() {
   newPlayer(&player);
   loadPlantCost();
   loadPlantAnimString();
+  loadPlantRechargeTime();
   loadAnimationStates();
   loadDebugTextures();
   // load background
@@ -61,10 +62,10 @@ void Level1::init() {
                Vec2(512 / 1.5f, 128 / 1.5f));
   createTexture(seedBank, "UI/SeedBank.png");
 
-  createCard(PeaShotter, Vec2(120, 10));
-  createCard(SunFlower, Vec2(180, 10));
-  createCard(CherryBomb, Vec2(240, 10));
-
+  bool isVersusMode = false;
+  createCard(PeaShotter, Vec2(120, 10), isVersusMode);
+  createCard(SunFlower, Vec2(180, 10), isVersusMode);
+  createCard(CherryBomb, Vec2(240, 10), isVersusMode);
   // loadTexture(&map[0][0],"asset_box.png"); // debug map
 
   for (int i = 0; i < 5; i++) {
