@@ -99,3 +99,4 @@ void loadPlantAnimString();
 void loadPlantRechargeTime();
 int getPlantCost(Plant_State_enum typePlant);
 int getPlantRechargeTime(Plant_State_enum typePlant, bool isVersusMode);
+bool startWithoutWait(Plant_State_enum typePlant, bool isVersusMode);

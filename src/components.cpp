@@ -530,7 +530,10 @@ void createCard(Plant_State_enum typePlant, Vec2 pos, bool isVersusMode) {
   spriteArray[card.seedShadowTimer].color = Tyra::Color(0.0F, 0.0F, 0.0F, 60.0F);
 
   timerArray[card.seedShadowTimer].maxMS = getPlantRechargeTime(typePlant, isVersusMode);
-
+  if(startWithoutWait(typePlant, isVersusMode) == true){
+    timerArray[card.seedShadowTimer].counterMS = timerArray[card.seedShadowTimer].maxMS;
+  }
+  
   card.plant = typePlant;
 
   card.cost = getPlantCost(typePlant);

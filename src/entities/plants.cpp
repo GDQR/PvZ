@@ -892,3 +892,50 @@ int getPlantRechargeTime(Plant_State_enum typePlant, bool isVersusMode) {
   }
   return 1;
 }
+
+bool startWithoutWait(Plant_State_enum typePlant, bool isVersusMode) {
+  // Imitator is the same for the plant as it imitates.
+  switch (typePlant) {
+    case PeaShotter:
+    case SunFlower:
+    case PuffShroom:
+    case SunShroom:
+    case FumeShroom:
+    case ScaredyShroom:
+    case LilyPad:
+    case Blover:
+    case Magnetshroom:
+    case Cabbagepult:
+    case FlowerPot:
+      return true;
+    case PotatoMine:
+    case Wallnut:
+    case Tallnut:
+      // start fast in versus mode
+      // slow in other mode
+      return isVersusMode;
+    case SnowPea:
+    case Chomper:
+    case Repeater:
+    case GraveBuster:
+    case Threepeater:
+    case Spikeweed:
+    case Torchwood:
+    case Cactus:
+    case Starfruit:
+    case Kernelpult:
+    case CoffeeBean:
+    case Garlic:
+    case UmbrellaLeaf:
+    case Melonpult:
+      // start slow in versus mode
+      // fast in other mode
+      if (isVersusMode == true) {
+        return false;
+      }
+      return true;
+    default:
+      break;
+  }
+  return false;
+}
