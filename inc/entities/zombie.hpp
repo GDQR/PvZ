@@ -27,4 +27,3 @@ class Zombie {
 };
 
 void createZombie(Tyra::Vec2 pos);
-void createDebugZombie(Tyra::Vec2 pos);

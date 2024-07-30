@@ -31,7 +31,7 @@ void SunManager::create(Tyra::Vec2 position, sunCost cost, bool createdByPlant) 
     animID = m_animID["Sun"][i];
 
     newFatherID(&sun[indexpos].father, &sun[indexpos].id[i]);
-    animationDataArray[animID].loadAnimation(entityID, animID);
+    animationDataArray[animID].loadAnimation(entityID, animID, 1, 1);
 
     animationArray[entityID].lastFrame = animationDataArray[animID].maxFrame;
   }

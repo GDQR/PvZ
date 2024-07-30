@@ -195,7 +195,7 @@ void createZombie(Vec2 pos) {
     // printf("Zombie ID: %d\n", entityID);
     // printf("animID: %d\n", animID);
     newFatherID(&zombie[id].father, &entityID);
-    animationDataArray[animID].loadAnimation(entityID, animID);
+    animationDataArray[animID].loadAnimation(entityID, animID, normalZombieWalk);
     animationDataArray[animID].setAnimationState(entityID, normalZombieWalk);
     // animationArray[entityID].draw = true;
     zombie[id].animation(entityID, animID);

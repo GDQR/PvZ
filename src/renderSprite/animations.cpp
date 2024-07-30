@@ -4,183 +4,6 @@
 #include "systems.hpp"
 #include <iostream>
 
-AnimationState::AnimationState(){};
-AnimationState::AnimationState(const unsigned int firstFrame,const unsigned int lastFrame){
-  this->firstFrame = firstFrame;
-  this->lastFrame = lastFrame;
-}
-
-AnimationState animationStateVector[enumMaxAnimationState];
-int maxAnimID = 0;
-
-void loadAnimationStates(){
-  animationStateVector[normalZombieWalk] = AnimationState(45,91);
-  animationStateVector[normalZombieAttack] = AnimationState(139,178);
-}
-
-void AnimationData::loadAnimation(const int entityID, const int animID){
-  bool rotateSprite = false;
-  bool hasAlpha = false;
-  Tyra::Vec2 scale;
-
-  for (unsigned int j = 1; j < maxFrame; j++) {
-    if (alpha.count(j) == true) {
-      if(alpha[j] != 1){
-        hasAlpha = true;
-      }
-    }
-    if (angleX.count(j) == true) {
-      if(angleX[j] != 0){
-        rotateSprite = true;
-      }
-    }
-    if (angleY.count(j) == true) {
-      if(angleY[j] != 0){
-        rotateSprite = true;
-      }
-    }
-    if (rotateSprite == true && hasAlpha == true) {
-      break;
-    }
-  }
-
-  if(rotateSprite == false){
-    printf("entre en normal\n");
-    createSprite(entityID, Tyra::MODE_STRETCH, Vec2(0, 0),
-                Vec2(128 / 1.6f, 128 / 1.6f));
-
-    int spriteID = spriteArray[entityID].id;
-    Tyra::Texture* newTexture;
-    animationArray[entityID] = Animation(animID);
-
-    // printf("sprite ID: %d\n", spriteID);
-    for (unsigned int j = 1; j < maxFrame; j++) {
-      if (x.count(j) == 1) {
-        texPosArray[entityID].x = x[j];
-      }
-      if (y.count(j) == 1) {
-        texPosArray[entityID].y = y[j];
-      }
-    }
-
-    for (unsigned int j = 1; j < maxFrame; j++) {
-      if (texture.count(j) == 1) {
-        // printf("frame %d\n", j);
-        newTexture = texRepo->getByTextureId(texture[j]);
-        newTexture->addLink(spriteID);
-        originalSize[entityID] = Vec2(newTexture->getWidth(), newTexture->getHeight());
-        scaleTexture[entityID] =
-            Vec2(originalSize[entityID].x / newTexture->getWidth(),
-                 originalSize[entityID].y / newTexture->getHeight());
-        // printf("name anim: %s\n", name.c_str());
-        // printf("name Texture: %s\n", newTexture->name.c_str());
-        // printf("size: %s\n", spriteArray[entityID].size.getPrint().c_str());
-        // printf("scale: %s\n", scaleTexture[entityID].getPrint().c_str());
-        break;
-      }
-    }
-
-    for (unsigned int j = 1; j < maxFrame; j++) {
-      if (scaleX.count(j) == 1) {
-        scale.x = scaleX[j];
-        break;
-      }
-    }
-
-    for (unsigned int j = 1; j < maxFrame; j++) {
-      if (scaleY.count(j) == 1) {
-        scale.y = scaleY[j];
-        break;
-      }
-    }
-    spriteArray[entityID].size = originalSize[entityID] * scale;
-
-    // if (draw.count(0)) {
-    // // setSprite(entityID, animID);
-    // }
-
-  }else{
-    printf("entre en rotate\n");
-    Tyra::Vec2 angle;
-    for (unsigned int j = 1; j < maxFrame; j++) {
-      if (angleX.count(j) == 1) {
-        angle.x = angleX[j];
-        break;
-      }
-    }
-
-    for (unsigned int j = 1; j < maxFrame; j++) {
-      if (angleY.count(j) == 1) {
-        angle.y = angleY[j];
-        break;
-      }
-    }
-    createSpriteRotate(entityID, Tyra::MODE_STRETCH, Vec2(0, 0),
-                Vec2(128 / 1.6f, 128 / 1.6f),angle);
-
-    int spriteID = rotationSprite[entityID].sprite.id;
-    Tyra::Texture* newTexture;
-    animationArray[entityID] = Animation(animID);
-
-    for (unsigned int j = 1; j < maxFrame; j++) {
-      if (x.count(j) == 1) {
-        texPosArray[entityID].x = x[j];
-      }
-      if (y.count(j) == 1) {
-        texPosArray[entityID].y = y[j];
-      }
-    }
-
-    // printf("sprite ID: %d\n", spriteID);
-
-    for (unsigned int j = 1; j < maxFrame; j++) {
-      if (texture.count(j) == 1) {
-        // printf("frame %d\n", j);
-        newTexture = texRepo->getByTextureId(texture[j]);
-        newTexture->addLink(spriteID);
-        originalSize[entityID] = Vec2(newTexture->getWidth(), newTexture->getHeight());
-        scaleTexture[entityID] =
-            Vec2(originalSize[entityID].x / newTexture->getWidth(),
-                 originalSize[entityID].y / newTexture->getHeight());
-        printf("name anim: %s\n", name.c_str());
-        // printf("name Texture: %s\n", newTexture->name.c_str());
-        // printf("size: %s\n", spritesRotate[entityID].size.getPrint().c_str());
-        // printf("scale: %s\n", scaleTexture[entityID].getPrint().c_str());
-        break;
-      }
-    }
-
-    for (unsigned int j = 1; j < maxFrame; j++) {
-      if (scaleX.count(j) == 1) {
-        scale.x = scaleX[j];
-        break;
-      }
-    }
-
-    for (unsigned int j = 1; j < maxFrame; j++) {
-      if (scaleY.count(j) == 1) {
-        scale.y = scaleY[j];
-        break;
-      }
-    }
-
-    rotationSprite[entityID].sprite.size = originalSize[entityID] * scale;
-
-    for (unsigned int j = 1; j < maxFrame; j++) {
-      if (draw.count(j) == 1) {
-        animationArray[entityID].draw = draw[j];
-        setSprite(entityID, animationArray[entityID].draw);
-        break;
-      }
-    }
-    // if (draw.count(0)) {
-    // // setSprite(entityID, animID);
-    // }
-  }
-
-  printf("termine\n\n");
-}
-
 void setSprite(const int entityID, const bool draw){
     if(spriteArray.count(entityID)){
       if (draw == false) {
@@ -200,6 +23,70 @@ void setSprite(const int entityID, const bool draw){
       TYRA_WARN("Sprite don't founded in setSprite");
     }
     // printf("plant draw: %d\n", animationArray[entityID].draw);
+}
+
+AnimationState::AnimationState(){};
+AnimationState::AnimationState(const unsigned int firstFrame,const unsigned int lastFrame){
+  this->firstFrame = firstFrame;
+  this->lastFrame = lastFrame;
+}
+
+AnimationState animationStateVector[enumMaxAnimationState];
+int maxAnimID = 0;
+
+void loadAnimationStates(){
+  animationStateVector[normalZombieWalk] = AnimationState(45,91);
+  animationStateVector[normalZombieAttack] = AnimationState(139,178);
+}
+
+void AnimationData::loadAnimation(const int entityID, const int animID, enumAnimationState animationState){
+  loadAnimation(entityID, animID, animationStateVector[animationState].firstFrame, animationStateVector[animationState].lastFrame);
+}
+
+void AnimationData::loadAnimation(const int entityID, const int animID, const int firstFrame, const int lastFrame){
+  bool rotateSprite = false;
+  int spriteID;
+  for (unsigned int j = 1; j < maxFrame; j++) {
+    if (angleX.count(j) == true || angleY.count(j) == true) {
+      rotateSprite = true;
+      createSpriteRotate(entityID, Tyra::MODE_STRETCH, Vec2(0, 0),
+                Vec2(128 / 1.6f, 128 / 1.6f),Vec2(0.0f,0.0f));
+      spriteID = rotationSprite[entityID].sprite.id;
+      printf("rotationSprite id: %d\n",rotationSprite[entityID].sprite.id);
+      break;
+    }
+  }
+
+  if(rotateSprite == false){
+    createSprite(entityID, Tyra::MODE_STRETCH, Vec2(0, 0),
+                Vec2(128 / 1.6f, 128 / 1.6f));
+    spriteID = spriteArray[entityID].id;
+    printf("sprite id: %d\n",spriteArray[entityID].id);
+  }
+
+  Tyra::Texture* newTexture;
+  animationArray[entityID] = Animation(animID);
+
+  for (unsigned int j = 1; j < maxFrame; j++) {
+      if (texture.count(j) == 1) {
+        // printf("frame %d\n", j);
+        newTexture = texRepo->getByTextureId(texture[j]);
+        newTexture->addLink(spriteID);
+        originalSize[entityID] = Vec2(newTexture->getWidth(), newTexture->getHeight());
+        scaleTexture[entityID] =
+            Vec2(originalSize[entityID].x / newTexture->getWidth(),
+                 originalSize[entityID].y / newTexture->getHeight());
+        // printf("name anim: %s\n", name.c_str());
+        // printf("name Texture: %s\n", newTexture->name.c_str());
+        // printf("size: %s\n", spriteArray[entityID].size.getPrint().c_str());
+        printf("scale: %s\n", scaleTexture[entityID].getPrint().c_str());
+        break;
+      }
+    }
+
+  activeAnimation(entityID, firstFrame, lastFrame);
+  
+  printf("termine\n\n");
 }
 
 void AnimationData::activeAnimation(const int entityID, const int firstFrame, const int lastFrame){
