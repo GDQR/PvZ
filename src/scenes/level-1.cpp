@@ -1,6 +1,5 @@
 #include "font/font.hpp"
 #include "renderSprite/textures.hpp"
-#include "renderSprite/animations.hpp"
 #include "states.hpp"
 #include "scenes.hpp"
 #include "scenes/level-1.hpp"

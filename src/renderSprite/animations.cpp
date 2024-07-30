@@ -18,167 +18,167 @@ void loadAnimationStates(){
   animationStateVector[normalZombieAttack] = AnimationState(139,178);
 }
 
-void loadAnimationSprite(const int entityID, const int animID){
-    bool rotateSprite = false;
-    bool hasAlpha = false;
-    Tyra::Vec2 scale;
+void AnimationData::loadAnimation(const int entityID, const int animID){
+  bool rotateSprite = false;
+  bool hasAlpha = false;
+  Tyra::Vec2 scale;
 
-    for (unsigned int j = 1; j < animationDataArray[animID].maxFrame; j++) {
-      if (animationDataArray[animID].alpha.count(j) == true) {
-        if(animationDataArray[animID].alpha[j] != 1){
-          hasAlpha = true;
-        }
+  for (unsigned int j = 1; j < maxFrame; j++) {
+    if (alpha.count(j) == true) {
+      if(alpha[j] != 1){
+        hasAlpha = true;
       }
-      if (animationDataArray[animID].angleX.count(j) == true) {
-        if(animationDataArray[animID].angleX[j] != 0){
-          rotateSprite = true;
-        }
+    }
+    if (angleX.count(j) == true) {
+      if(angleX[j] != 0){
+        rotateSprite = true;
       }
-      if (animationDataArray[animID].angleY.count(j) == true) {
-        if(animationDataArray[animID].angleY[j] != 0){
-          rotateSprite = true;
-        }
+    }
+    if (angleY.count(j) == true) {
+      if(angleY[j] != 0){
+        rotateSprite = true;
       }
-      if (rotateSprite == true && hasAlpha == true) {
+    }
+    if (rotateSprite == true && hasAlpha == true) {
+      break;
+    }
+  }
+
+  if(rotateSprite == false){
+    printf("entre en normal\n");
+    createSprite(entityID, Tyra::MODE_STRETCH, Vec2(0, 0),
+                Vec2(128 / 1.6f, 128 / 1.6f));
+
+    int spriteID = spriteArray[entityID].id;
+    Tyra::Texture* newTexture;
+    animationArray[entityID] = Animation(animID);
+
+    // printf("sprite ID: %d\n", spriteID);
+    for (unsigned int j = 1; j < maxFrame; j++) {
+      if (x.count(j) == 1) {
+        texPosArray[entityID].x = x[j];
+      }
+      if (y.count(j) == 1) {
+        texPosArray[entityID].y = y[j];
+      }
+    }
+
+    for (unsigned int j = 1; j < maxFrame; j++) {
+      if (texture.count(j) == 1) {
+        // printf("frame %d\n", j);
+        newTexture = texRepo->getByTextureId(texture[j]);
+        newTexture->addLink(spriteID);
+        originalSize[entityID] = Vec2(newTexture->getWidth(), newTexture->getHeight());
+        scaleTexture[entityID] =
+            Vec2(originalSize[entityID].x / newTexture->getWidth(),
+                 originalSize[entityID].y / newTexture->getHeight());
+        // printf("name anim: %s\n", name.c_str());
+        // printf("name Texture: %s\n", newTexture->name.c_str());
+        // printf("size: %s\n", spriteArray[entityID].size.getPrint().c_str());
+        // printf("scale: %s\n", scaleTexture[entityID].getPrint().c_str());
         break;
       }
     }
 
-    if(rotateSprite == false){
-      printf("entre en normal\n");
-      createSprite(entityID, Tyra::MODE_STRETCH, Vec2(0, 0),
-                 Vec2(128 / 1.6f, 128 / 1.6f));
-
-      int spriteID = spriteArray[entityID].id;
-      Tyra::Texture* texture;
-      animationArray[entityID] = Animation(animID);
-
-      // printf("sprite ID: %d\n", spriteID);
-      for (unsigned int j = 1; j < animationDataArray[animID].maxFrame; j++) {
-        if (animationDataArray[animID].x.count(j) == 1) {
-          texPosArray[entityID].x = animationDataArray[animID].x[j];
-        }
-        if (animationDataArray[animID].y.count(j) == 1) {
-          texPosArray[entityID].y = animationDataArray[animID].y[j];
-        }
+    for (unsigned int j = 1; j < maxFrame; j++) {
+      if (scaleX.count(j) == 1) {
+        scale.x = scaleX[j];
+        break;
       }
-
-      for (unsigned int j = 1; j < animationDataArray[animID].maxFrame; j++) {
-        if (animationDataArray[animID].texture.count(j) == 1) {
-          // printf("frame %d\n", j);
-          texture = texRepo->getByTextureId(animationDataArray[animID].texture[j]);
-          texture->addLink(spriteID);
-          originalSize[entityID] = Vec2(texture->getWidth(), texture->getHeight());
-          scaleTexture[entityID] =
-              Vec2(originalSize[entityID].x / texture->getWidth(),
-                   originalSize[entityID].y / texture->getHeight());
-          // printf("name anim: %s\n", animationDataArray[animID].name.c_str());
-          // printf("name Texture: %s\n", texture->name.c_str());
-          // printf("size: %s\n", spriteArray[entityID].size.getPrint().c_str());
-          // printf("scale: %s\n", scaleTexture[entityID].getPrint().c_str());
-          break;
-        }
-      }
-
-      for (unsigned int j = 1; j < animationDataArray[animID].maxFrame; j++) {
-        if (animationDataArray[animID].scaleX.count(j) == 1) {
-          scale.x = animationDataArray[animID].scaleX[j];
-          break;
-        }
-      }
-
-      for (unsigned int j = 1; j < animationDataArray[animID].maxFrame; j++) {
-        if (animationDataArray[animID].scaleY.count(j) == 1) {
-          scale.y = animationDataArray[animID].scaleY[j];
-          break;
-        }
-      }
-      spriteArray[entityID].size = originalSize[entityID] * scale;
-
-      // if (animationDataArray[animID].draw.count(0)) {
-      // // setSprite(entityID, animID);
-      // }
-
-    }else{
-      printf("entre en rotate\n");
-      Tyra::Vec2 angle;
-      for (unsigned int j = 1; j < animationDataArray[animID].maxFrame; j++) {
-        if (animationDataArray[animID].angleX.count(j) == 1) {
-          angle.x = animationDataArray[animID].angleX[j];
-          break;
-        }
-      }
-
-      for (unsigned int j = 1; j < animationDataArray[animID].maxFrame; j++) {
-        if (animationDataArray[animID].angleY.count(j) == 1) {
-          angle.y = animationDataArray[animID].angleY[j];
-          break;
-        }
-      }
-      createSpriteRotate(entityID, Tyra::MODE_STRETCH, Vec2(0, 0),
-                 Vec2(128 / 1.6f, 128 / 1.6f),angle);
-
-      int spriteID = rotationSprite[entityID].sprite.id;
-      Tyra::Texture* texture;
-      animationArray[entityID] = Animation(animID);
-
-      for (unsigned int j = 1; j < animationDataArray[animID].maxFrame; j++) {
-        if (animationDataArray[animID].x.count(j) == 1) {
-          texPosArray[entityID].x = animationDataArray[animID].x[j];
-        }
-        if (animationDataArray[animID].y.count(j) == 1) {
-          texPosArray[entityID].y = animationDataArray[animID].y[j];
-        }
-      }
-
-      // printf("sprite ID: %d\n", spriteID);
-
-      for (unsigned int j = 1; j < animationDataArray[animID].maxFrame; j++) {
-        if (animationDataArray[animID].texture.count(j) == 1) {
-          // printf("frame %d\n", j);
-          texture = texRepo->getByTextureId(animationDataArray[animID].texture[j]);
-          texture->addLink(spriteID);
-          originalSize[entityID] = Vec2(texture->getWidth(), texture->getHeight());
-          scaleTexture[entityID] =
-              Vec2(originalSize[entityID].x / texture->getWidth(),
-                   originalSize[entityID].y / texture->getHeight());
-          printf("name anim: %s\n", animationDataArray[animID].name.c_str());
-          // printf("name Texture: %s\n", texture->name.c_str());
-          // printf("size: %s\n", spritesRotate[entityID].size.getPrint().c_str());
-          // printf("scale: %s\n", scaleTexture[entityID].getPrint().c_str());
-          break;
-        }
-      }
-
-      for (unsigned int j = 1; j < animationDataArray[animID].maxFrame; j++) {
-        if (animationDataArray[animID].scaleX.count(j) == 1) {
-          scale.x = animationDataArray[animID].scaleX[j];
-          break;
-        }
-      }
-
-      for (unsigned int j = 1; j < animationDataArray[animID].maxFrame; j++) {
-        if (animationDataArray[animID].scaleY.count(j) == 1) {
-          scale.y = animationDataArray[animID].scaleY[j];
-          break;
-        }
-      }
-
-      rotationSprite[entityID].sprite.size = originalSize[entityID] * scale;
-
-      for (unsigned int j = 1; j < animationDataArray[animID].maxFrame; j++) {
-        if (animationDataArray[animID].draw.count(j) == 1) {
-          animationArray[entityID].draw = animationDataArray[animID].draw[j];
-          setSprite(entityID, animationArray[entityID].draw);
-          break;
-        }
-      }
-      // if (animationDataArray[animID].draw.count(0)) {
-      // // setSprite(entityID, animID);
-      // }
     }
 
-    printf("termine\n\n");
+    for (unsigned int j = 1; j < maxFrame; j++) {
+      if (scaleY.count(j) == 1) {
+        scale.y = scaleY[j];
+        break;
+      }
+    }
+    spriteArray[entityID].size = originalSize[entityID] * scale;
+
+    // if (draw.count(0)) {
+    // // setSprite(entityID, animID);
+    // }
+
+  }else{
+    printf("entre en rotate\n");
+    Tyra::Vec2 angle;
+    for (unsigned int j = 1; j < maxFrame; j++) {
+      if (angleX.count(j) == 1) {
+        angle.x = angleX[j];
+        break;
+      }
+    }
+
+    for (unsigned int j = 1; j < maxFrame; j++) {
+      if (angleY.count(j) == 1) {
+        angle.y = angleY[j];
+        break;
+      }
+    }
+    createSpriteRotate(entityID, Tyra::MODE_STRETCH, Vec2(0, 0),
+                Vec2(128 / 1.6f, 128 / 1.6f),angle);
+
+    int spriteID = rotationSprite[entityID].sprite.id;
+    Tyra::Texture* newTexture;
+    animationArray[entityID] = Animation(animID);
+
+    for (unsigned int j = 1; j < maxFrame; j++) {
+      if (x.count(j) == 1) {
+        texPosArray[entityID].x = x[j];
+      }
+      if (y.count(j) == 1) {
+        texPosArray[entityID].y = y[j];
+      }
+    }
+
+    // printf("sprite ID: %d\n", spriteID);
+
+    for (unsigned int j = 1; j < maxFrame; j++) {
+      if (texture.count(j) == 1) {
+        // printf("frame %d\n", j);
+        newTexture = texRepo->getByTextureId(texture[j]);
+        newTexture->addLink(spriteID);
+        originalSize[entityID] = Vec2(newTexture->getWidth(), newTexture->getHeight());
+        scaleTexture[entityID] =
+            Vec2(originalSize[entityID].x / newTexture->getWidth(),
+                 originalSize[entityID].y / newTexture->getHeight());
+        printf("name anim: %s\n", name.c_str());
+        // printf("name Texture: %s\n", newTexture->name.c_str());
+        // printf("size: %s\n", spritesRotate[entityID].size.getPrint().c_str());
+        // printf("scale: %s\n", scaleTexture[entityID].getPrint().c_str());
+        break;
+      }
+    }
+
+    for (unsigned int j = 1; j < maxFrame; j++) {
+      if (scaleX.count(j) == 1) {
+        scale.x = scaleX[j];
+        break;
+      }
+    }
+
+    for (unsigned int j = 1; j < maxFrame; j++) {
+      if (scaleY.count(j) == 1) {
+        scale.y = scaleY[j];
+        break;
+      }
+    }
+
+    rotationSprite[entityID].sprite.size = originalSize[entityID] * scale;
+
+    for (unsigned int j = 1; j < maxFrame; j++) {
+      if (draw.count(j) == 1) {
+        animationArray[entityID].draw = draw[j];
+        setSprite(entityID, animationArray[entityID].draw);
+        break;
+      }
+    }
+    // if (draw.count(0)) {
+    // // setSprite(entityID, animID);
+    // }
+  }
+
+  printf("termine\n\n");
 }
 
 void setSprite(const int entityID, const bool draw){
@@ -528,7 +528,6 @@ void readInfo(std::ifstream& MyReadFile, std::string& insideArrow, bool& useAnim
       if(beforeDraw != draw){
         beforeDraw = draw;
         animationDataArray[animID].draw[countframes] = draw;
-        printf("draw: %d\n",animationDataArray[animID].draw[countframes]);
       }
 
       if(beforeKx != kx){

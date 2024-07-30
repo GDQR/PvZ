@@ -1,6 +1,5 @@
 #include "entities/entities.hpp"
 #include "entities/zombie.hpp"
-#include "renderSprite/animations.hpp"
 #include "components.hpp"
 #include "systems.hpp"
 
@@ -196,7 +195,7 @@ void createZombie(Vec2 pos) {
     // printf("Zombie ID: %d\n", entityID);
     // printf("animID: %d\n", animID);
     newFatherID(&zombie[id].father, &entityID);
-    loadAnimationSprite(entityID, animID);
+    animationDataArray[animID].loadAnimation(entityID, animID);
     setAnimationState(entityID, animID, normalZombieWalk);
     // animationArray[entityID].draw = true;
     zombie[id].animation(entityID, animID);
