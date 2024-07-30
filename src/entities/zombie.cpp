@@ -34,7 +34,7 @@ void Zombie::animation(const int entityID, const int animID) {
           animationDataArray[animID].name == "Zombie_innerarm_screendoor" ||
           animationDataArray[animID].name == "Zombie_flaghand") {
         animationArray[entityID].draw = false;
-        setSprite(entityID,animationArray[entityID].draw);
+        setSprite(entityID, animationArray[entityID].draw);
         deleteAnimation(entityID);
         animationIdStopRender.push_back(entityID);
         printf("encontre anim_bucket o anim_cone\n");
@@ -67,17 +67,18 @@ int Zombie::attackPlant() {
     if (plant[i].type == NonePlant) {
       continue;
     }
-    if (boxColliderArray[plant[i].father].collision(&boxColliderArray[id[0]]) == true) {
-      if(attack==false) {
+    if (boxColliderArray[plant[i].father].collision(&boxColliderArray[id[0]]) ==
+        true) {
+      if (attack == false) {
         attack = true;
         for (unsigned int j = 0; j < id.size(); j++) {
-          if(animationArray.count(id[j]) == 1){
+          if (animationArray.count(id[j]) == 1) {
             // printf("anim attack id: %d\n",m_animID["Zombie"][j]);
-            setAnimationState(id[j],m_animID["Zombie"][j],normalZombieAttack);
+            setAnimationState(id[j], m_animID["Zombie"][j], normalZombieAttack);
           }
         }
       }
-      
+
       if (attackTimer > 0) {
         attackTimer--;
       } else {
@@ -89,16 +90,16 @@ int Zombie::attackPlant() {
           plant[i].erase(i);
           attack = false;
           for (unsigned int j = 0; j < id.size(); j++) {
-            if(animationArray.count(id[j]) == 1){
+            if (animationArray.count(id[j]) == 1) {
               // printf("anim attack id: %d\n",id[j]);
-              setAnimationState(id[j],m_animID["Zombie"][j],normalZombieWalk);
+              setAnimationState(id[j], m_animID["Zombie"][j], normalZombieWalk);
             }
           }
           // animationArray[id[0]].animID = zombieWalk;
         }
       }
       break;
-    } else if(attack == true){
+    } else if (attack == true) {
       attack = false;
       // animationArray[id[0]].animID = zombieWalk;
     }
@@ -107,7 +108,50 @@ int Zombie::attackPlant() {
 }
 
 void Zombie::damage(const int entityID) {
+  damaged = true;
   lifeArray[id[0]] -= damageArray[entityID];
+  printf("dano zombie\n");
+  for (unsigned int j = 0; j < id.size(); j++) {
+    if (animationArray.count(id[j]) == 1) {
+      // printf("anim attack id: %d\n",m_animID["Zombie"][j]);
+      if (spriteArray.count(id[j]) == 1) {
+        spriteArray[id[j]].color = Tyra::Color(255, 255, 255, 128);
+      } else {
+        rotationSprite[id[j]].sprite.color = Tyra::Color(255, 255, 255, 128);
+      }
+    }
+  }
+}
+
+// this maybe can be better
+int Zombie::normalColor() {
+  if (damaged == false) {
+    return 1;
+  }
+  for (unsigned int j = 0; j < id.size(); j++) {
+    if (animationArray.count(id[j]) == 1) {
+      if (spriteArray.count(id[j]) == 1) {
+        if (spriteArray[id[j]].color.r > 128.0f &&
+            spriteArray[id[j]].color.g > 128.0f &&
+            spriteArray[id[j]].color.b > 128.0f) {
+          spriteArray[id[j]].color -= 5;
+          spriteArray[id[j]].color.a = 128;
+        } else {
+          damaged = false;
+        }
+      } else {
+        if (rotationSprite[id[j]].sprite.color.r > 128.0f &&
+            rotationSprite[id[j]].sprite.color.g > 128.0f &&
+            rotationSprite[id[j]].sprite.color.b > 128.0f) {
+          rotationSprite[id[j]].sprite.color -= 5;
+          rotationSprite[id[j]].sprite.color.a = 128;
+        } else {
+          damaged = false;
+        }
+      }
+    }
+  }
+  return 0;
 }
 
 bool Zombie::erase() {
@@ -153,7 +197,7 @@ void createZombie(Vec2 pos) {
     // printf("animID: %d\n", animID);
     newFatherID(&zombie[id].father, &entityID);
     loadAnimationSprite(entityID, animID);
-    setAnimationState(entityID,animID,normalZombieWalk);
+    setAnimationState(entityID, animID, normalZombieWalk);
     // animationArray[entityID].draw = true;
     zombie[id].animation(entityID, animID);
   }

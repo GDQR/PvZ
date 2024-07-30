@@ -247,6 +247,7 @@ void ZombiesManager::update() {
   for (it = zombie.begin(); it < zombie.end(); it++) {
     it->move();
     it->attackPlant();
+    it->normalColor();
   }
 }
 
