@@ -53,13 +53,12 @@ class AnimationData {
   std::unordered_map<unsigned int, bool> draw;
 
   void loadAnimation(const int entityID, const int animID);
+  void activeAnimation(const int entityID, const int firstFrame, const int lastFrame);
+  void setAnimationState(const int entityID, enumAnimationState animationState);
 };
 
 extern AnimationState animationStateVector[enumMaxAnimationState];
 
 void setSprite(const int entityID, const bool draw);
-void setAnimationState(const int entityID, const int animID, enumAnimationState animationState);
-void activeAnimation(const int entityID, const int animID, const int firstFrame, const int lastFrame);
 void loadAnimationStates();
-void loadAnimationSprite(const int entityID, const int animID);
 void loadAnimation(std::string animName);

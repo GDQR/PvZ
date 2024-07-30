@@ -73,7 +73,7 @@ int Zombie::attackPlant() {
         for (unsigned int j = 0; j < id.size(); j++) {
           if (animationArray.count(id[j]) == 1) {
             // printf("anim attack id: %d\n",m_animID["Zombie"][j]);
-            setAnimationState(id[j], m_animID["Zombie"][j], normalZombieAttack);
+            animationDataArray[m_animID["Zombie"][j]].setAnimationState(id[j], normalZombieAttack);
           }
         }
       }
@@ -91,7 +91,7 @@ int Zombie::attackPlant() {
           for (unsigned int j = 0; j < id.size(); j++) {
             if (animationArray.count(id[j]) == 1) {
               // printf("anim attack id: %d\n",id[j]);
-              setAnimationState(id[j], m_animID["Zombie"][j], normalZombieWalk);
+              animationDataArray[m_animID["Zombie"][j]].setAnimationState(id[j], normalZombieWalk);
             }
           }
           // animationArray[id[0]].animID = zombieWalk;
@@ -196,7 +196,7 @@ void createZombie(Vec2 pos) {
     // printf("animID: %d\n", animID);
     newFatherID(&zombie[id].father, &entityID);
     animationDataArray[animID].loadAnimation(entityID, animID);
-    setAnimationState(entityID, animID, normalZombieWalk);
+    animationDataArray[animID].setAnimationState(entityID, normalZombieWalk);
     // animationArray[entityID].draw = true;
     zombie[id].animation(entityID, animID);
   }
