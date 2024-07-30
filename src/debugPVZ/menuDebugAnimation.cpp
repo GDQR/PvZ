@@ -54,7 +54,7 @@ void subMenu(Tyra::Pad& pad, Tyra::Font& font, int& entitieID) {
   }
 
   if (playAnimation == true) {
-    animManager.debugAnim(entitieID);
+    animationArray[entitieID].debugAnim(entitieID);
   }
 
   if (hideText == false) {
@@ -101,14 +101,14 @@ void menuDebugAnimation(Tyra::Pad& pad, Tyra::Font& font, int& entitieID) {
       colorSprite = -2;
     }
 
-    if (menuCrossClickedOption(pad, isMainMenuAnimationActive)) {
-      isMainMenuAnimationActive = false;
-      spriteArray[entitieID].color.a = 128.0f;
-    } else if (menuCircleClickedOption(pad, isMainMenuAnimationActive)) {
-      debugAnimation = false;
-      startAnimationDebug = true;
-      spriteArray[entitieID].color.a = 128.0f;
-    }
+    // if (menuCrossClickedOption(pad, isMainMenuAnimationActive)) {
+    //   isMainMenuAnimationActive = false;
+    //   spriteArray[entitieID].color.a = 128.0f;
+    // } else if (menuCircleClickedOption(pad, isMainMenuAnimationActive)) {
+    //   debugAnimation = false;
+    //   startAnimationDebug = true;
+    //   spriteArray[entitieID].color.a = 128.0f;
+    // }
 
     if (padTimer > 0) {
       padTimer--;

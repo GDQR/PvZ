@@ -1,8 +1,8 @@
 #pragma once
 #include <tyra>
 
-class PlayerControl{
-  public:
+class PlayerControl {
+ public:
   void update();
 };
 
@@ -13,7 +13,6 @@ class AnimationManager {
  public:
   void update();
   void debug();
-  int debugAnim(const int entitieID);
   void debugChangeFrame(const int entitieID, const int key);
 };
 
@@ -25,6 +24,7 @@ class RendererDebugSpritesManager {
 class RendererSprites {
  public:
   void updateChildPos();
+  void updateTexture();
   void update();
   void updateRotate();
 };
@@ -49,7 +49,7 @@ extern RendererDebugSpritesManager renderDebugSpritesManager;
 extern ZombiesManager zombiesManager;
 
 void newPlayer(int* player);
-void newProjectile(Tyra::Vec2 position);
+void newProjectile(Tyra::Vec2 position, const int damage, bool normalPea);
 void newFatherID(int* fatherID, int* childID);
 void newCursor(int* player, Tyra::Vec2 pos);
 void newDeckCursor(int* player, Tyra::Vec2 pos);

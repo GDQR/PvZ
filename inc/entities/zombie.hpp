@@ -11,11 +11,11 @@ class Zombie {
 
   int timer = 0;
   int attackTimer = 0;
-  bool attack = false;
-  bool debug = false;
 
   int father;
   std::vector<int> id;
+  bool attack = false;
+  bool debug = false;
   void newZombie(Zombie_State_enum newType);
   int move();
   void animation(const int entityID, const int animID);

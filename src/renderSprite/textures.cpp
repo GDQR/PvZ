@@ -5,6 +5,7 @@
 using Tyra::FileUtils;
 
 Tyra::Texture* projectilePea;
+Tyra::Texture* projectileSnowPea;
 
 void loadSprite(Sprite* sprite) {
   sprite->mode = Tyra::MODE_STRETCH;
@@ -123,5 +124,6 @@ void copyTexture(Sprite* sprite1, Sprite* sprite2) {
 }
 
 void loadProjectile() {
-  projectilePea = loadTexture("particles/ProjectilePea.png");
+  projectilePea = loadTexture("images/ProjectilePea.png");
+  projectileSnowPea = loadTexture("images/ProjectileSnowPea.png");
 }

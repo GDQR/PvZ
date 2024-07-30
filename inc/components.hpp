@@ -3,7 +3,6 @@
 #include <vector>
 #include <map>
 #include "debugPVZ/debug.hpp"
-#include "entities/entities.hpp"
 #include "renderSprite/textures.hpp"
 #include "entities/plants.hpp"
 #include "entities/zombie.hpp"
@@ -53,7 +52,6 @@ class Card {
   int seed;
   int seedShadow;
   int seedShadowTimer;
-  int seedTimer;
   Plant_State_enum plant;
   int cost;
   void update();
@@ -69,14 +67,15 @@ class Animation {
   void activeDrawRotationSprites(const int entityID);
   void updateRotationSprites(const int entityID);
   void position(const int entityID);
+  int debugAnim(const int entitieID);
 
   int animID = -1;
   bool draw = true;
   unsigned int framesCounter = 0;
-  unsigned int currentFrame = 0;
+  unsigned int currentFrame = 1;
   unsigned int framesSpeed = 20;
-  unsigned int firstFrame = 0;
-  unsigned int lastFrame = 0;
+  unsigned int firstFrame = 1;
+  unsigned int lastFrame = 1;
 };
 
 class AnimationData {
@@ -123,9 +122,30 @@ class RotationSprite {
 };
 
 class PlantsManager {
-  public:
+ public:
   void create();
   void update();
+};
+
+enum enumProyectile { normal, snow };
+
+class Proyectile {
+ public:
+  int id;
+  enumProyectile type; 
+};
+
+class PS2Timer{
+  public:
+  PS2Timer();
+  u64 lastTime;
+  u64 actualTime;
+  u64 counterMS = 0;
+  u64 maxMS = 1000;
+  void setLastTime();
+  u64 getTimeInMS();
+  void resetCounter();
+  void addMSinCounter();
 };
 
 extern Tyra::Engine* engine;
@@ -154,6 +174,8 @@ extern std::map<int, Tyra::Vec2> originalSize;
 extern std::map<int, Tyra::Vec2> scaleTexture;
 extern std::map<int, Tyra::Vec2> pointColliderArray;
 extern std::map<int, BoxCollider> boxColliderArray;
+extern std::map<int, PS2Timer> timerArray;
+extern std::map<int, float> speedArray;
 extern std::map<int, int> damageArray;
 extern std::map<int, int> lifeArray;
 extern std::map<int, Tyra::Vec2> pivot;
@@ -164,7 +186,7 @@ extern Plant plant[maxPlants];
 extern std::vector<Zombie> zombie;
 extern std::vector<Sun> sun;
 extern std::vector<NaturalSun> naturalSun;
-extern std::vector<int> projectile;
+extern std::vector<Proyectile> projectile;
 extern std::vector<Card> cards;
 extern int player;
 extern std::map<int, Cursor> cursor;
@@ -175,3 +197,5 @@ extern bool plantCreatedInMap[5][9];
 extern BoxCollider mapCollider[5][9];
 
 extern PlantsManager plantsManager;
+
+void createCard(Plant_State_enum typePlant, Vec2 pos, bool isVersusMode);

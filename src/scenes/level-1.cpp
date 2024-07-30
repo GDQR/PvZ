@@ -12,7 +12,6 @@
 #include "debugPVZ/debug.hpp"
 #include "debugPVZ/menuDebugCommands.hpp"
 #include <stdlib.h>
-#include <time.h>
 using namespace Tyra;
 
 int background = Entities::newID();
@@ -47,61 +46,26 @@ void plantMovement() {
   }
 }
 
-void createCard(Plant_State_enum typePlant, Vec2 pos) {
-  Card card;
-  card.seed = Entities::newID();
-  card.seedShadow = Entities::newID();
-  card.seedShadowTimer = Entities::newID();
-  card.seedTimer = Entities::newID();
-
-  createSprite(card.seed, MODE_REPEAT, pos, Vec2(50, 70));
-  createTexture(card.seed, "UI/Seeds.png");
-  spriteArray[card.seed].offset.x = 100;
-  texPosArray[card.seed] = Vec2(0.0f, 0.0f);
-  scaleTexture[card.seed] = Vec2(1.0f, 1.0f);
-
-  createSprite(card.seedShadow, MODE_REPEAT, pos, Vec2(50, 70));
-  createTexture(card.seedShadow, "UI/Seeds.png");
-  spriteArray[card.seedShadow].color = Color(0.0F, 0.0F, 0.0F, 60.0F);
-  texPosArray[card.seedShadow] = Vec2(0.0f, 0.0f);
-  scaleTexture[card.seedShadow] = Vec2(1.0f, 1.0f);
-
-  createSprite(card.seedShadowTimer, MODE_REPEAT, pos, Vec2(50, 70));
-  createTexture(card.seedShadowTimer, "UI/Seeds.png");
-  spriteArray[card.seedShadowTimer].color = Color(0.0F, 0.0F, 0.0F, 60.0F);
-  texPosArray[card.seedShadowTimer] = Vec2(0.0f, 0.0f);
-  scaleTexture[card.seedShadowTimer] = Vec2(1.0f, 1.0f);
-
-  card.seedTimer = 60 * 8;
-
-  card.plant = typePlant;
-
-  card.cost = getPlantCost(typePlant);
-
-  cards.push_back(card);
-}
-
 void Level1::init() {
   srand(time(NULL));
   newPlayer(&player);
   loadPlantCost();
+  loadPlantAnimString();
+  loadPlantRechargeTime();
+  loadAnimationStates();
   loadDebugTextures();
   // load background
   createSprite(background, MODE_STRETCH, Vec2(-56, -1), Vec2(780, 524));
   createTexture(background, "Backgrounds/DAY Unsodded.png");
-  texPosArray[background] = Vec2(0.0f, 0.0f);
-  scaleTexture[background] = Vec2(1.0f, 1.0f);
   // TODO: Fix size seedBank
   createSprite(seedBank, MODE_STRETCH, Vec2(63, 10),
                Vec2(512 / 1.5f, 128 / 1.5f));
   createTexture(seedBank, "UI/SeedBank.png");
-  texPosArray[seedBank] = Vec2(0.0f, 0.0f);
-  scaleTexture[seedBank] = Vec2(1.0f, 1.0f);
 
-  createCard(PeaShotter, Vec2(120, 10));
-  createCard(SunFlower, Vec2(180, 10));
-  createCard(CherryBomb, Vec2(240, 10));
-
+  bool isVersusMode = false;
+  createCard(PeaShotter, Vec2(120, 10), isVersusMode);
+  createCard(SunFlower, Vec2(180, 10), isVersusMode);
+  createCard(CherryBomb, Vec2(240, 10), isVersusMode);
   // loadTexture(&map[0][0],"asset_box.png"); // debug map
 
   for (int i = 0; i < 5; i++) {
@@ -212,6 +176,7 @@ void Level1::update() {
   // renderer->core.renderer2D.pixelTest(&atest,&dtest,ZTEST_METHOD_GREATER);
 
   renderSprites.updateChildPos();
+  renderSprites.updateTexture();
   renderSprites.update();
   renderSprites.updateRotate();
 
@@ -220,16 +185,18 @@ void Level1::update() {
                         Color(255, 255, 255, 128));
 
   if (debugMenu == true) {
-    if (debugAnimation) {
-      startDebugAnimationMode(engine->pad, engine->font);
-      animManager.debug();
-    } else if (debugSprite) {
-      debugModeClass.drawSpriteModeMenu();
-    } else {
+    if (debugState == debugMain) {
       debugModeClass.drawMainMenu();
       if (stopAnimation == true) {
         animManager.debug();
       }
+    }
+
+    if (debugAnimation) {
+      startDebugAnimationMode(engine->pad, engine->font);
+      animManager.debug();
+    } else if (debugState == SpriteDebug) {
+      debugModeClass.drawSpriteModeMenu();
     }
   }
 

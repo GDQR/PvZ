@@ -2,11 +2,13 @@
 #include <tyra>
 #include "debugPVZ/menuDebugCommands.hpp"
 
+enum enumDebugSpriteMode {firstMenu, secondMenu };
 extern bool startSpriteDebug;
 
 class DebugSpriteMode{
  public:
- std::string name;
+ enumDebugSpriteMode drawState = enumDebugSpriteMode::firstMenu; 
+ int init();
  void menu();
  void drawMenu();
  void firstMenu();

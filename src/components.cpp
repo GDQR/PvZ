@@ -1,4 +1,5 @@
 #include "debugPVZ/menuDebugCommands.hpp"
+#include "entities/entities.hpp"
 #include "components.hpp"
 #include <iostream>
 
@@ -26,6 +27,8 @@ std::map<int, Tyra::Vec2> originalSize;
 std::map<int, Tyra::Vec2> scaleTexture;
 std::map<int, Tyra::Vec2> pointColliderArray;
 std::map<int, BoxCollider> boxColliderArray;
+std::map<int, PS2Timer> timerArray;
+std::map<int, float> speedArray;
 std::map<int, int> damageArray;
 std::map<int, int> lifeArray;
 std::map<int, Tyra::Vec2> pivot;
@@ -35,7 +38,7 @@ Plant plant[maxPlants];
 std::vector<Zombie> zombie;
 std::vector<Sun> sun;
 std::vector<NaturalSun> naturalSun;
-std::vector<int> projectile;
+std::vector<Proyectile> projectile;
 std::vector<Card> cards;
 int player;
 std::map<int, Cursor> cursor;
@@ -208,13 +211,15 @@ void DeckCursor::moveRight(){
 }
 
 void Card::update() {
-  if (seedTimer > 0) {
-    seedTimer--;
+  if (timerArray[seedShadowTimer].counterMS < timerArray[seedShadowTimer].maxMS) {
+    timerArray[seedShadowTimer].addMSinCounter();
+    
     spriteArray[seedShadow].size = Vec2(50, 70);
-    spriteArray[seedShadowTimer].size.y -=
-        (70.0f / 8.0f / 60.0f);  // el size Y es 70
+    spriteArray[seedShadowTimer].size.x = 50;
+    spriteArray[seedShadowTimer].size.y -= (70.0f * timerArray[seedShadowTimer].getTimeInMS() / timerArray[seedShadowTimer].maxMS);
   } else if (sunCounter >= cost) {
     spriteArray[seedShadow].size = Vec2(0, 0);
+    spriteArray[seedShadowTimer].size = Vec2(0, 0);
   }
 }
 
@@ -227,7 +232,7 @@ void Animation::update(const int entityID) {
     framesCounter = 0;
     currentFrame++;
 
-    if (currentFrame >= lastFrame) {
+    if (currentFrame > lastFrame) {
       currentFrame = firstFrame;
     }
 
@@ -364,6 +369,99 @@ void Animation::activeDrawRotationSprites(const int entityID) {
   }
 }
 
+int Animation::debugAnim(const int entitieID){
+    if (framesCounter < (60 / framesSpeed)) {
+    framesCounter++;
+    return 1;
+  }
+
+  currentFrame++;
+  framesCounter = 0;
+
+  if (currentFrame > lastFrame) {
+    currentFrame = firstFrame;
+  }
+
+  if (spriteArray.count(entitieID) == 1 &&
+      animationDataArray[animID].texture.count(currentFrame) == 1) {
+    texRepo->getBySpriteId(spriteArray[entitieID].id)
+        ->removeLinkById(spriteArray[entitieID].id);
+
+    texRepo->getByTextureId(animationDataArray[animID]
+        .texture[currentFrame])
+        ->addLink(spriteArray[entitieID].id);
+  } else if (animationDataArray[animID].texture.count(
+                 currentFrame) == 1) {
+    texRepo->getBySpriteId(rotationSprite[entitieID].sprite.id)
+        ->removeLinkById(rotationSprite[entitieID].sprite.id);
+
+    texRepo->getByTextureId(animationDataArray[animID]
+        .texture[currentFrame])
+        ->addLink(rotationSprite[entitieID].sprite.id);
+  }
+
+  if (animationDataArray[animID].x.count(
+          currentFrame) == 1) {
+    texPosArray[entitieID].x =
+        animationDataArray[animID]
+            .x[currentFrame];
+  }
+
+  if (animationDataArray[animID].y.count(
+          currentFrame) == 1) {
+    texPosArray[entitieID].y =
+        animationDataArray[animID]
+            .y[currentFrame];
+  }
+
+  if (animationDataArray[animID].alpha.count(
+          currentFrame) == 1) {
+    float alpha = animationDataArray[animID]
+                      .alpha[currentFrame] *
+                  128;
+    if (spriteArray.count(entitieID) == 1) {
+      spriteArray[entitieID].color.a = alpha;
+    } else {
+      rotationSprite[entitieID].sprite.color.a = alpha;
+    }
+  }
+
+  if (animationDataArray[animID].scaleX.count(
+          currentFrame) == 1) {
+    if (spriteArray.count(entitieID) == 1) {
+      spriteArray[entitieID].size.x = originalSize[entitieID].x * animationDataArray[animID]
+              .scaleX[currentFrame];
+    } else {
+      rotationSprite[entitieID].sprite.size.x = originalSize[entitieID].x * animationDataArray[animID]
+              .scaleX[currentFrame];
+    }
+  }
+
+  if (animationDataArray[animID].scaleY.count(
+          currentFrame) == 1) {
+    if (spriteArray.count(entitieID) == 1) {
+      spriteArray[entitieID].size.y = originalSize[entitieID].y * animationDataArray[animID]
+              .scaleY[currentFrame];
+    } else {
+      rotationSprite[entitieID].sprite.size.y = originalSize[entitieID].y * animationDataArray[animID]
+              .scaleY[currentFrame];
+    }
+  }
+
+  if (animationDataArray[animID].angleX.count(
+          currentFrame) == 1) {
+    rotationSprite[entitieID].angle.x = animationDataArray[animID]
+                            .angleX[currentFrame];
+  }
+  if (animationDataArray[animID].angleY.count(
+          currentFrame) == 1) {
+    rotationSprite[entitieID].angle.y = animationDataArray[animID]
+                            .angleY[currentFrame];
+  }
+
+  return 0;
+}
+
 void FatherID::update(const int entityID) {
   for (unsigned int i = 0; i < id.size(); i++) {
     // finalPos += fatherPos
@@ -376,15 +474,69 @@ void RotationSprite::update(const int entityID) {
   // finalPos += texPosArray
   // finalPos += entitiePos
 
-  finalPosArray[entityID] += texPosArray[entityID] * scaleTexture[entityID];
+  // finalPosArray[entityID] += texPosArray[entityID] * scaleTexture[entityID];
 
-  finalPosArray[entityID] += posArray[entityID];
+  // finalPosArray[entityID] += posArray[entityID];
 
-  if (finalPosArray[entityID].x != sprite.position.x ||
-      finalPosArray[entityID].y != sprite.position.y) {
+  // if (finalPosArray[entityID].x != sprite.position.x ||
+  //     finalPosArray[entityID].y != sprite.position.y) {
     sprite.position = finalPosArray[entityID];
-  }
+  // }
 
   renderer->renderer2D.renderRotate(sprite, angle);
   finalPosArray[entityID] = Vec2(0.0f, 0.0f);
+}
+
+PS2Timer::PS2Timer(){
+  resetCounter();
+}
+void PS2Timer::setLastTime(){
+  lastTime = actualTime;
+}
+
+u64 PS2Timer::getTimeInMS(){
+  actualTime = GetTimerSystemTime() / (kBUSCLK / CLOCKS_PER_SEC);
+  printf("actualTime - lastTime: %lld - %lld=%lld\n",actualTime, lastTime, actualTime - lastTime);
+  return actualTime - lastTime;
+}
+
+void PS2Timer::resetCounter(){
+  lastTime = GetTimerSystemTime() / (kBUSCLK / CLOCKS_PER_SEC);
+  actualTime = lastTime;
+  counterMS = 0;
+}
+
+void PS2Timer::addMSinCounter(){
+  setLastTime();
+  counterMS += getTimeInMS();
+}
+
+void createCard(Plant_State_enum typePlant, Vec2 pos, bool isVersusMode) {
+  Card card;
+  card.seed = Entities::newID();
+  card.seedShadow = Entities::newID();
+  card.seedShadowTimer = Entities::newID();
+
+  createSprite(card.seed, Tyra::MODE_REPEAT, pos, Vec2(50, 70));
+  createTexture(card.seed, "UI/Seeds.png");
+  spriteArray[card.seed].offset.x = 100;
+
+  createSprite(card.seedShadow, Tyra::MODE_REPEAT, pos, Vec2(50, 70));
+  createTexture(card.seedShadow, "UI/Seeds.png");
+  spriteArray[card.seedShadow].color = Tyra::Color(0.0F, 0.0F, 0.0F, 60.0F);
+
+  createSprite(card.seedShadowTimer, Tyra::MODE_REPEAT, pos, Vec2(50, 70));
+  createTexture(card.seedShadowTimer, "UI/Seeds.png");
+  spriteArray[card.seedShadowTimer].color = Tyra::Color(0.0F, 0.0F, 0.0F, 60.0F);
+
+  timerArray[card.seedShadowTimer].maxMS = getPlantRechargeTime(typePlant, isVersusMode);
+  if(startWithoutWait(typePlant, isVersusMode) == true){
+    timerArray[card.seedShadowTimer].counterMS = timerArray[card.seedShadowTimer].maxMS;
+  }
+  
+  card.plant = typePlant;
+
+  card.cost = getPlantCost(typePlant);
+
+  cards.push_back(card);
 }

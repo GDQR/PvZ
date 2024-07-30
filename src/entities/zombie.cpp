@@ -1,3 +1,4 @@
+#include "entities/entities.hpp"
 #include "entities/zombie.hpp"
 #include "renderSprite/animations.hpp"
 #include "components.hpp"
@@ -33,7 +34,7 @@ void Zombie::animation(const int entityID, const int animID) {
           animationDataArray[animID].name == "Zombie_innerarm_screendoor" ||
           animationDataArray[animID].name == "Zombie_flaghand") {
         animationArray[entityID].draw = false;
-        setSprite(entityID, animID,animationArray[entityID].draw);
+        setSprite(entityID,animationArray[entityID].draw);
         deleteAnimation(entityID);
         animationIdStopRender.push_back(entityID);
         printf("encontre anim_bucket o anim_cone\n");
@@ -52,7 +53,7 @@ int Zombie::move() {
     timer--;
   } else if (attack == false) {
     timer = 12;
-    posArray[father].x--;
+    posArray[father].x -= speedArray[id[0]];
 
     boxColliderArray[id[0]].x = posArray[father].x + posArray[id[0]].x + 60;
     // printf("box: %f,%f\n",
@@ -67,8 +68,16 @@ int Zombie::attackPlant() {
       continue;
     }
     if (boxColliderArray[plant[i].father].collision(&boxColliderArray[id[0]]) == true) {
-      attack = true;
-      // animationArray[id[0]].animID = zombieNormalAttack;
+      if(attack==false) {
+        attack = true;
+        for (unsigned int j = 0; j < id.size(); j++) {
+          if(animationArray.count(id[j]) == 1){
+            // printf("anim attack id: %d\n",m_animID["Zombie"][j]);
+            setAnimationState(id[j],m_animID["Zombie"][j],normalZombieAttack);
+          }
+        }
+      }
+      
       if (attackTimer > 0) {
         attackTimer--;
       } else {
@@ -79,10 +88,17 @@ int Zombie::attackPlant() {
           printf("borre planta id: %d\n", plant[i].father);
           plant[i].erase(i);
           attack = false;
+          for (unsigned int j = 0; j < id.size(); j++) {
+            if(animationArray.count(id[j]) == 1){
+              // printf("anim attack id: %d\n",id[j]);
+              setAnimationState(id[j],m_animID["Zombie"][j],normalZombieWalk);
+            }
+          }
           // animationArray[id[0]].animID = zombieWalk;
         }
       }
-    } else {
+      break;
+    } else if(attack == true){
       attack = false;
       // animationArray[id[0]].animID = zombieWalk;
     }
@@ -137,10 +153,8 @@ void createZombie(Vec2 pos) {
     // printf("animID: %d\n", animID);
     newFatherID(&zombie[id].father, &entityID);
     loadAnimationSprite(entityID, animID);
-    animationArray[entityID].firstFrame = 44;
-    animationArray[entityID].lastFrame = 91;
-    animationArray[entityID].currentFrame = 44;
-    animationArray[entityID].draw = true;
+    setAnimationState(entityID,animID,normalZombieWalk);
+    // animationArray[entityID].draw = true;
     zombie[id].animation(entityID, animID);
   }
 
@@ -149,6 +163,9 @@ void createZombie(Vec2 pos) {
 
   // damage
   damageArray[zombie[id].id[0]] = 100;
+
+  // speed
+  speedArray[zombie[id].id[0]] = 1;
 
   // HitBox
   boxColliderArray[zombie[id].id[0]] = BoxCollider(pos.x, pos.y + 10, 28, 50);

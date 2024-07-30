@@ -7,10 +7,19 @@
 using Tyra::Sprite;
 
 extern Tyra::Texture* projectilePea;
+extern Tyra::Texture* projectileSnowPea;
 extern int plantsCreated;
 
+enum Plant_Recharge_Time_enum {
+  fast,
+  slow,
+  verySlow,
+  enumMaxRecharge
+};
+
+extern int plantRechargeTime[enumMaxRecharge];
+
 enum Plant_State_enum {
-  NonePlant,
   PeaShotter,
   SunFlower,
   CherryBomb,
@@ -19,49 +28,52 @@ enum Plant_State_enum {
   SnowPea,
   Chomper,
   Repeater,
-  Puff_shroom,
-  Sun_shroom,
-  Fume_shroom,
+  PuffShroom,
+  SunShroom,
+  FumeShroom,
   GraveBuster,
-  Hypno_shroom,
-  Scaredy_shroom,
-  Ice_shroom,
-  Doom_shroom,
+  HypnoShroom,
+  ScaredyShroom,
+  IceShroom,
+  DoomShroom,
   LilyPad,
   Squash,
   Threepeater,
-  Tangle_Kelp,
+  Tanglekelp,
   Jalapeno,
   Spikeweed,
   Torchwood,
-  Tall_nut,
-  Sea_shroom,
+  Tallnut,
+  SeaShroom,
   Plantern,
   Cactus,
   Blover,
   SplitPea,
   Starfruit,
   Pumpkin,
-  Magnet_shroom,
-  Cabbage_pult,
-  Flower_Pot,
-  Kernel_pult,
+  Magnetshroom,
+  Cabbagepult,
+  FlowerPot,
+  Kernelpult,
   CoffeeBean,
   Garlic,
   UmbrellaLeaf,
   Marigold,
-  Melon_pult,
+  Melonpult,
   GatlingPea,
   TwinSunflower,
-  Gloom_shroom,
+  GloomShroom,
   Cattail,
   WinterMelon,
   GoldMagnet,
   Spikerock,
   CobCannon,
   Imitator,
-  enumMaxPlants
+  enumMaxPlants,
+  NonePlant
 };
+
+extern std::string plantsAnim[enumMaxPlants];
 
 class Plant {
   void createSpace();
@@ -83,4 +95,8 @@ class Plant {
 
 void createPlant(Plant_State_enum typePlant, const int row, const int column);
 void loadPlantCost();
+void loadPlantAnimString();
+void loadPlantRechargeTime();
 int getPlantCost(Plant_State_enum typePlant);
+int getPlantRechargeTime(Plant_State_enum typePlant, bool isVersusMode);
+bool startWithoutWait(Plant_State_enum typePlant, bool isVersusMode);

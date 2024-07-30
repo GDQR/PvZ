@@ -6,10 +6,6 @@ int actualState;
 States states;
 Scene scene;
 
-Manager::Manager(Engine* t_engine) : engine(t_engine) {}
-
-Manager::~Manager() {}
-
 void Manager::init(){
     for(int i= level1; i < lastGameState; i++){
         states.id.push_back(i);

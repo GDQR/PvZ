@@ -1,3 +1,4 @@
+#include "entities/entities.hpp"
 #include "systems.hpp"
 #include "components.hpp"
 
@@ -32,102 +33,6 @@ void AnimationManager::debug() {
   for (it = animationArray.begin(); it != animationArray.end(); it++) {
     it->second.position(it->first);
   }
-}
-
-int AnimationManager::debugAnim(const int entitieID) {
-
-  if (animationArray[entitieID].framesCounter < (60 / framesSpeed)) {
-    animationArray[entitieID].framesCounter++;
-    return 1;
-  }
-
-  animationArray[entitieID].currentFrame++;
-  animationArray[entitieID].framesCounter = 0;
-
-  if (animationArray[entitieID].currentFrame >=
-      animationDataArray[animationArray[entitieID].animID].maxFrame) {
-    animationArray[entitieID].currentFrame = 0;
-  }
-
-  if (spriteArray.count(entitieID) == 1 &&
-      animationDataArray[animationArray[entitieID].animID].texture.count(
-          animationArray[entitieID].currentFrame) == 1) {
-    texRepo->getBySpriteId(spriteArray[entitieID].id)
-        ->removeLinkById(spriteArray[entitieID].id);
-
-    texRepo->getByTextureId(animationDataArray[animationArray[entitieID].animID]
-        .texture[animationArray[entitieID].currentFrame])
-        ->addLink(spriteArray[entitieID].id);
-  } else if (animationDataArray[animationArray[entitieID].animID].texture.count(
-                 animationArray[entitieID].currentFrame) == 1) {
-    texRepo->getBySpriteId(rotationSprite[entitieID].sprite.id)
-        ->removeLinkById(rotationSprite[entitieID].sprite.id);
-
-    texRepo->getByTextureId(animationDataArray[animationArray[entitieID].animID]
-        .texture[animationArray[entitieID].currentFrame])
-        ->addLink(rotationSprite[entitieID].sprite.id);
-  }
-
-  if (animationDataArray[animationArray[entitieID].animID].x.count(
-          animationArray[entitieID].currentFrame) == 1) {
-    texPosArray[entitieID].x =
-        animationDataArray[animationArray[entitieID].animID]
-            .x[animationArray[entitieID].currentFrame];
-  }
-
-  if (animationDataArray[animationArray[entitieID].animID].y.count(
-          animationArray[entitieID].currentFrame) == 1) {
-    texPosArray[entitieID].y =
-        animationDataArray[animationArray[entitieID].animID]
-            .y[animationArray[entitieID].currentFrame];
-  }
-
-  if (animationDataArray[animationArray[entitieID].animID].alpha.count(
-          animationArray[entitieID].currentFrame) == 1) {
-    float alpha = animationDataArray[animationArray[entitieID].animID]
-                      .alpha[animationArray[entitieID].currentFrame] *
-                  128;
-    if (spriteArray.count(entitieID) == 1) {
-      spriteArray[entitieID].color.a = alpha;
-    } else {
-      rotationSprite[entitieID].sprite.color.a = alpha;
-    }
-  }
-
-  if (animationDataArray[animationArray[entitieID].animID].scaleX.count(
-          animationArray[entitieID].currentFrame) == 1) {
-    if (spriteArray.count(entitieID) == 1) {
-      spriteArray[entitieID].size.x = originalSize[entitieID].x * animationDataArray[animationArray[entitieID].animID]
-              .scaleX[animationArray[entitieID].currentFrame];
-    } else {
-      rotationSprite[entitieID].sprite.size.x = originalSize[entitieID].x * animationDataArray[animationArray[entitieID].animID]
-              .scaleX[animationArray[entitieID].currentFrame];
-    }
-  }
-
-  if (animationDataArray[animationArray[entitieID].animID].scaleY.count(
-          animationArray[entitieID].currentFrame) == 1) {
-    if (spriteArray.count(entitieID) == 1) {
-      spriteArray[entitieID].size.y = originalSize[entitieID].y * animationDataArray[animationArray[entitieID].animID]
-              .scaleY[animationArray[entitieID].currentFrame];
-    } else {
-      rotationSprite[entitieID].sprite.size.y = originalSize[entitieID].y * animationDataArray[animationArray[entitieID].animID]
-              .scaleY[animationArray[entitieID].currentFrame];
-    }
-  }
-
-  if (animationDataArray[animationArray[entitieID].animID].angleX.count(
-          animationArray[entitieID].currentFrame) == 1) {
-    rotationSprite[entitieID].angle.x = animationDataArray[animationArray[entitieID].animID]
-                            .angleX[animationArray[entitieID].currentFrame];
-  }
-  if (animationDataArray[animationArray[entitieID].animID].angleY.count(
-          animationArray[entitieID].currentFrame) == 1) {
-    rotationSprite[entitieID].angle.y = animationDataArray[animationArray[entitieID].animID]
-                            .angleY[animationArray[entitieID].currentFrame];
-  }
-
-  return 0;
 }
 
 void AnimationManager::debugChangeFrame(const int entitieID, const int key) {
@@ -300,6 +205,14 @@ void RendererSprites::updateChildPos() {
   }
 }
 
+void RendererSprites::updateTexture(){
+  std::map<int, Vec2>::iterator it;
+  for (it = texPosArray.begin(); it != texPosArray.end();
+       it++) {
+      finalPosArray[it->first] +=
+      texPosArray.at(it->first) * scaleTexture.at(it->first);
+  } 
+}
 void RendererSprites::update() {
   std::map<int, Sprite*>::iterator it;
   for (it = spritesNormalRender.begin(); it != spritesNormalRender.end();
@@ -307,15 +220,12 @@ void RendererSprites::update() {
 
     // finalPos += entitiePos
 
-    finalPosArray[it->first] +=
-        texPosArray[it->first] * scaleTexture[it->first];
-
     finalPosArray[it->first] += posArray[it->first];
 
-    if (finalPosArray[it->first].x != it->second->position.x ||
-        finalPosArray[it->first].y != it->second->position.y) {
+    // if (finalPosArray[it->first].x != it->second->position.x ||
+    //     finalPosArray[it->first].y != it->second->position.y) {
       it->second->position = finalPosArray[it->first];
-    }
+    // }
 
     renderer->renderer2D.render(it->second);
     finalPosArray[it->first] = Vec2(0.0f, 0.0f);
@@ -407,9 +317,9 @@ void PlantsManager::create(){
   if (debugMode == false) {
     if (zombieCreateRow[(int)cursor[player].cursorTile.x] == true) {
       if (sunCounter >= cards[deckCursor[player].pos].cost &&
-          plantsCreated < maxPlants && cards[deckCursor[player].pos].seedTimer == 0) {
+          plantsCreated < maxPlants && timerArray[cards[deckCursor[player].pos].seedShadowTimer].counterMS >= timerArray[cards[deckCursor[player].pos].seedShadowTimer].maxMS) {
         sunCounter -= cards[deckCursor[player].pos].cost;
-        cards[deckCursor[player].pos].seedTimer = 60 * 8;
+        timerArray[cards[deckCursor[player].pos].seedShadowTimer].resetCounter();
         spriteArray[cards[deckCursor[player].pos].seedShadowTimer].size.y = 70;
         createPlant(cards[deckCursor[player].pos].plant, cursor[player].cursorTile.x,
                     cursor[player].cursorTile.y);
@@ -428,19 +338,19 @@ void PlantsManager::update() {
 }
 
 void ProjectileManager::update() {
-  std::vector<int>::iterator it;
+  std::vector<Proyectile>::iterator it;
 
   for (it = projectile.begin(); it < projectile.end(); it++) {
-    posArray[*it].x++;
-    boxColliderArray[*it].x = posArray[*it].x;
-    if (posArray[*it].x >= 580) {
+    posArray[it->id].x++;
+    boxColliderArray[it->id].x = posArray[it->id].x;
+    if (posArray[it->id].x >= 580) {
       // delete projectile
       printf("borrando proyectil\n");
-      deleteSprite(*it);
-      boxColliderArray.erase(*it);
-      deletePosArray(*it);
-      deleteDebugBoxCollider(*it);
-      Entities::deleteID(*it);
+      deleteSprite(it->id);
+      boxColliderArray.erase(it->id);
+      deletePosArray(it->id);
+      deleteDebugBoxCollider(it->id);
+      Entities::deleteID(it->id);
       it = projectile.erase(it);
       projectilesCreated--;
     }
@@ -448,14 +358,17 @@ void ProjectileManager::update() {
 }
 
 void ProjectileManager::zombieCollision() {
-  std::vector<int>::iterator it;
+  std::vector<Proyectile>::iterator it;
   std::vector<Zombie>::iterator it2;
   for (it = projectile.begin(); it < projectile.end(); it++) {
     for (it2 = zombie.begin(); it2 < zombie.end(); ) {
-      if (boxColliderArray[*it].collision(&boxColliderArray[it2->id[0]]) == true) {
+      if (boxColliderArray[it->id].collision(&boxColliderArray[it2->id[0]]) == true) {
 
         // damage zombie
-        it2->damage(*it);
+        it2->damage(it->id);
+        if(it->type == enumProyectile::snow){
+          speedArray[it2->id[0]] = 0.5f;
+        }
         // printf("zombie id: %d\n",it2->id[0]);
         // delete zombie
         if(it2->erase() == true){
@@ -467,13 +380,13 @@ void ProjectileManager::zombieCollision() {
         // delete projectile
 
         Tyra::Texture* text =
-            texRepo->getBySpriteId(spriteArray[*it].id);
+            texRepo->getBySpriteId(spriteArray[it->id].id);
         TYRA_ASSERT(text,
-                    "No se encontro la textura del proyectil with id: ", *it);
-        deleteSprite(*it);
-        boxColliderArray.erase(*it);
-        deleteDebugBoxCollider(*it);
-        Entities::deleteID(*it);
+                    "No se encontro la textura del proyectil with id: ", it->id);
+        deleteSprite(it->id);
+        boxColliderArray.erase(it->id);
+        deleteDebugBoxCollider(it->id);
+        Entities::deleteID(it->id);
         it = projectile.erase(it);
 
         // Break projectile loop if exist another zombie
@@ -496,18 +409,29 @@ void newPlayer(int* player){
   countPlayer++;
 }
 
-void newProjectile(Vec2 position) {
+void newProjectile(Vec2 position, const int damage, bool normalPea) {
   if (projectilesCreated < 100) {
-    projectile.insert(projectile.begin() + projectilesCreated,
-                      Entities::newID());
-    int* id = &projectile[projectilesCreated];
+    Proyectile projectileData;
+    projectileData.id = Entities::newID();
+    if(normalPea == true){
+      projectileData.type = enumProyectile::normal;
+    }else{
+      projectileData.type = enumProyectile::snow;
+    }
+    
+    projectile.insert(projectile.begin() + projectilesCreated, projectileData);
+    int* id = &projectile[projectilesCreated].id;
 
     position.y -= 15.0f;
     createSprite(*id, Tyra::MODE_STRETCH, position, Vec2(31 / 1.6f, 31 / 1.6f));
-    projectilePea->addLink(spriteArray[*id].id);
+    if(normalPea == true) { 
+      projectilePea->addLink(spriteArray[*id].id); 
+    }else{
+      projectileSnowPea->addLink(spriteArray[*id].id);
+    }
 
     // damage
-    damageArray[*id] = 20;
+    damageArray[*id] = damage;
     // hitbox
     boxColliderArray[*id] =
         BoxCollider(posArray[*id].x, posArray[*id].y, spriteArray[*id].size.x,
@@ -535,8 +459,6 @@ void newCursor(int* player, Tyra::Vec2 pos) {
   createSprite(cursor[*player].id, Tyra::MODE_STRETCH, pos, Vec2(56, 48));
   createTexture(cursor[*player].id, "cursor6.png");
   boxColliderArray[cursor[*player].id] = BoxCollider(pos.x, pos.y, 24, 24, 28 / 2, 24 / 2);
-  texPosArray[cursor[*player].id] = Vec2(0.0f, 0.0f);
-  scaleTexture[cursor[*player].id] = Vec2(1.0f, 1.0f);
   createDebugBoxCollider(cursor[*player].id, Tyra::MODE_STRETCH);
 }
 
@@ -546,8 +468,6 @@ void newDeckCursor(int* player, Tyra::Vec2 pos) {
   printf("deck cursor id: %d\n", deckCursor[*player].id);
   createSprite(deckCursor[*player].id, Tyra::MODE_STRETCH, pos, Vec2(56, 48));
   createTexture(deckCursor[*player].id, "cursor6.png");
-  texPosArray[deckCursor[*player].id] = Vec2(0.0f, 0.0f);
-  scaleTexture[deckCursor[*player].id] = Vec2(1.0f, 1.0f);
   // boxColliderArray[deckCursor[*player].id] = BoxCollider(
   //     pos.x, pos.y, 24, 24, 28 / 2, 24 / 2);
   // createDebugBoxCollider(deckCursor[*player].id, Tyra::MODE_STRETCH);
