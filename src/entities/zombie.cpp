@@ -68,8 +68,16 @@ int Zombie::attackPlant() {
       continue;
     }
     if (boxColliderArray[plant[i].father].collision(&boxColliderArray[id[0]]) == true) {
-      attack = true;
-      // animationArray[id[0]].animID = zombieNormalAttack;
+      if(attack==false) {
+        attack = true;
+        for (unsigned int j = 0; j < id.size(); j++) {
+          if(animationArray.count(id[j]) == 1){
+            // printf("anim attack id: %d\n",m_animID["Zombie"][j]);
+            setAnimationState(id[j],m_animID["Zombie"][j],normalZombieAttack);
+          }
+        }
+      }
+      
       if (attackTimer > 0) {
         attackTimer--;
       } else {
@@ -80,10 +88,17 @@ int Zombie::attackPlant() {
           printf("borre planta id: %d\n", plant[i].father);
           plant[i].erase(i);
           attack = false;
+          for (unsigned int j = 0; j < id.size(); j++) {
+            if(animationArray.count(id[j]) == 1){
+              // printf("anim attack id: %d\n",id[j]);
+              setAnimationState(id[j],m_animID["Zombie"][j],normalZombieWalk);
+            }
+          }
           // animationArray[id[0]].animID = zombieWalk;
         }
       }
-    } else {
+      break;
+    } else if(attack == true){
       attack = false;
       // animationArray[id[0]].animID = zombieWalk;
     }
