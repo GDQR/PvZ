@@ -2,6 +2,7 @@
 #include <tyra>
 #include <vector>
 #include <map>
+#include "arrayKey.hpp"
 #include "debugPVZ/debug.hpp"
 #include "renderSprite/textures.hpp"
 #include "renderSprite/animations.hpp"
@@ -18,10 +19,10 @@
 //   debug
 // };
 
-class Controller{
+class Controller {
  public:
- unsigned int index;
- void update(const int entityID);
+  unsigned int index;
+  void update(const int entityID);
 };
 
 class FatherID {
@@ -92,11 +93,11 @@ enum enumProyectile { normal, snow };
 class Proyectile {
  public:
   int id;
-  enumProyectile type; 
+  enumProyectile type;
 };
 
-class PS2Timer{
-  public:
+class PS2Timer {
+ public:
   PS2Timer();
   u64 lastTime;
   u64 actualTime;
@@ -122,7 +123,7 @@ extern std::unordered_map<int, AnimationData>
 extern std::map<int, FatherID> fatherIDArray;
 extern std::map<int, Tyra::Vec2> texPosArray;
 extern std::map<int, Tyra::Vec2> posArray;
-extern std::map<int, Tyra::Vec2> finalPosArray;
+extern ArrayKey<int, Tyra::Vec2> finalPosArray;
 extern std::map<int, Tyra::Sprite> spriteArray;
 extern std::map<int, Tyra::Sprite*> spritesNormalRender;
 extern std::vector<int> spriteNormalIdStopRender;
