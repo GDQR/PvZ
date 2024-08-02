@@ -120,35 +120,34 @@ int AnimationData::activeAnimation(const int entityID, const int firstFrame,
 
   Tyra::Vec2 scale(1.0f, 1.0f);
 
-  std::unordered_map<unsigned int, int>::iterator itDraw =
+  std::unordered_map<unsigned int, int>::iterator itInteger=
       draw.find(firstFrame);
   int pos = firstFrame - 1;
 
-  while (itDraw == draw.end()) {
-    itDraw = draw.find(pos);
+  while (itInteger == draw.end()) {
+    itInteger = draw.find(pos);
     pos--;
   }
 
-  animationArray[entityID].draw = itDraw->second;
-  setSprite(entityID, itDraw->second);
-  if (itDraw->second == -1) {
+  animationArray[entityID].draw = itInteger->second;
+  setSprite(entityID, itInteger->second);
+  if (itInteger->second == (int) enumDraw::noDraw) {
     return 1;
   }
 
-  std::unordered_map<unsigned int, int>::iterator itTexture =
-      texture.find(firstFrame);
+  itInteger = texture.find(firstFrame);
   pos = firstFrame - 1;
 
-  while (itTexture == texture.end() && pos >= 1) {
-    itTexture = texture.find(pos);
+  while (itInteger == texture.end() && pos >= 1) {
+    itInteger = texture.find(pos);
     pos--;
   }
 
   std::unordered_map<unsigned int, float>::iterator it = x.find(firstFrame);
-  pos = 1;
+  pos = firstFrame - 1;
   while (it == x.end()) {
-    it = x.find(firstFrame - pos);
-    pos++;
+    it = x.find(pos);
+    pos--;
   }
 
   texPosArray[entityID].x = it->second;
@@ -212,11 +211,11 @@ int AnimationData::activeAnimation(const int entityID, const int firstFrame,
     }
 
     // Link new Texture to the sprite entitie
-    texRepo->getByTextureId(itTexture->second)
+    texRepo->getByTextureId(itInteger->second)
         ->addLink(rotationSprite[entityID].sprite.id);
     originalSize[entityID] =
-        Vec2(texRepo->getByTextureId(itTexture->second)->getWidth(),
-             texRepo->getByTextureId(itTexture->second)->getHeight());
+        Vec2(texRepo->getByTextureId(itInteger->second)->getWidth(),
+             texRepo->getByTextureId(itInteger->second)->getHeight());
   } else {
     spriteArray[entityID].size = originalSize[entityID] * scale;
 
@@ -226,11 +225,11 @@ int AnimationData::activeAnimation(const int entityID, const int firstFrame,
           ->removeLinkById(spriteArray[entityID].id);
     }
     // Link new Texture to the sprite entitie
-    texRepo->getByTextureId(itTexture->second)
+    texRepo->getByTextureId(itInteger->second)
         ->addLink(spriteArray[entityID].id);
     originalSize[entityID] =
-        Vec2(texRepo->getByTextureId(itTexture->second)->getWidth(),
-             texRepo->getByTextureId(itTexture->second)->getHeight());
+        Vec2(texRepo->getByTextureId(itInteger->second)->getWidth(),
+             texRepo->getByTextureId(itInteger->second)->getHeight());
   }
   // printf("anim draw: %d\n", drawState);
   return 0;
