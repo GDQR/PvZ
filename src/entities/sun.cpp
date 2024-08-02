@@ -1,6 +1,5 @@
 #include "entities/entities.hpp"
 #include "entities/sun.hpp"
-#include "renderSprite/animations.hpp"
 #include "components.hpp"
 #include "systems.hpp"
 
@@ -32,7 +31,7 @@ void SunManager::create(Tyra::Vec2 position, sunCost cost, bool createdByPlant) 
     animID = m_animID["Sun"][i];
 
     newFatherID(&sun[indexpos].father, &sun[indexpos].id[i]);
-    loadAnimationSprite(entityID, animID);
+    animationDataArray[animID].loadAnimation(entityID, animID, 1, 1);
 
     animationArray[entityID].lastFrame = animationDataArray[animID].maxFrame;
   }

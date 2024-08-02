@@ -23,6 +23,7 @@ class RendererDebugSpritesManager {
 
 class RendererSprites {
  public:
+  void resetFinalPos();
   void updateChildPos();
   void updateTexture();
   void update();

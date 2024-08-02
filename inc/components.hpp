@@ -2,8 +2,10 @@
 #include <tyra>
 #include <vector>
 #include <map>
+#include "arrayKey.hpp"
 #include "debugPVZ/debug.hpp"
 #include "renderSprite/textures.hpp"
+#include "renderSprite/animations.hpp"
 #include "entities/plants.hpp"
 #include "entities/zombie.hpp"
 #include "entities/sun.hpp"
@@ -17,10 +19,10 @@
 //   debug
 // };
 
-class Controller{
+class Controller {
  public:
- unsigned int index;
- void update(const int entityID);
+  unsigned int index;
+  void update(const int entityID);
 };
 
 class FatherID {
@@ -57,47 +59,6 @@ class Card {
   void update();
 };
 
-class Animation {
- public:
-  Animation();
-  Animation(const int anim);
-  void update(const int entityID);
-  void activeDrawNormalSprites(const int entityID);
-  void updateNormalSprites(const int entityID);
-  void activeDrawRotationSprites(const int entityID);
-  void updateRotationSprites(const int entityID);
-  void position(const int entityID);
-  int debugAnim(const int entitieID);
-
-  int animID = -1;
-  bool draw = true;
-  unsigned int framesCounter = 0;
-  unsigned int currentFrame = 1;
-  unsigned int framesSpeed = 20;
-  unsigned int firstFrame = 1;
-  unsigned int lastFrame = 1;
-};
-
-class AnimationData {
- public:
-  unsigned int maxFrame;
-  std::string name;
-  std::unordered_map<unsigned int, int> texture;
-  std::unordered_map<unsigned int, float> x;
-  std::unordered_map<unsigned int, float> y;
-  std::unordered_map<unsigned int, float> scaleX;
-  std::unordered_map<unsigned int, float> scaleY;
-  std::unordered_map<unsigned int, float> angleX;
-  std::unordered_map<unsigned int, float> angleY;
-  std::unordered_map<unsigned int, float> alpha;
-  std::unordered_map<unsigned int, bool> draw;
-};
-
-class Time {
- public:
-  std::vector<int> seconds;  // can't be 0 for animations
-};
-
 class BoxCollider {
  public:
   BoxCollider();
@@ -132,11 +93,11 @@ enum enumProyectile { normal, snow };
 class Proyectile {
  public:
   int id;
-  enumProyectile type; 
+  enumProyectile type;
 };
 
-class PS2Timer{
-  public:
+class PS2Timer {
+ public:
   PS2Timer();
   u64 lastTime;
   u64 actualTime;
@@ -162,7 +123,7 @@ extern std::unordered_map<int, AnimationData>
 extern std::map<int, FatherID> fatherIDArray;
 extern std::map<int, Tyra::Vec2> texPosArray;
 extern std::map<int, Tyra::Vec2> posArray;
-extern std::map<int, Tyra::Vec2> finalPosArray;
+extern ArrayKey<int, Tyra::Vec2> finalPosArray;
 extern std::map<int, Tyra::Sprite> spriteArray;
 extern std::map<int, Tyra::Sprite*> spritesNormalRender;
 extern std::vector<int> spriteNormalIdStopRender;

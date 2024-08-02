@@ -15,7 +15,7 @@ std::unordered_map<int, AnimationData> animationDataArray;
 std::map<int, FatherID> fatherIDArray;
 std::map<int, Tyra::Vec2> posArray;
 std::map<int, Tyra::Vec2> texPosArray;
-std::map<int, Tyra::Vec2> finalPosArray;
+ArrayKey<int, Tyra::Vec2> finalPosArray;
 std::map<int, Tyra::Sprite> spriteArray;
 std::map<int, Tyra::Sprite*> spritesNormalRender;
 std::vector<int> spriteNormalIdStopRender;
@@ -59,7 +59,7 @@ void createSprite(int id, Tyra::SpriteMode mode, Tyra::Vec2 position,
                   Tyra::Vec2 size) {
   spriteArray[id] = Sprite();
   posArray[id] = position;
-  finalPosArray[id] = Vec2(0, 0);
+  finalPosArray.insert(id, Vec2(0,0));//[id] = Vec2(0, 0);
   loadSprite(&spriteArray[id], mode, Vec2(0.0f, 0.0f), size);
   spritesNormalRender[id] = &spriteArray[id];
 }
@@ -69,7 +69,7 @@ void createSpriteRotate(int id, Tyra::SpriteMode mode, Tyra::Vec2 position,
   rotationSprite[id].sprite = Sprite();
   rotationSprite[id].angle = angle;
   posArray[id] = position;
-  finalPosArray[id] = Vec2(0, 0);
+  finalPosArray.insert(id, Vec2(0,0));
   loadSprite(&rotationSprite[id].sprite, mode, Vec2(0.0f, 0.0f), size);
   spritesRotateRender[id] = &rotationSprite[id];
 }
@@ -465,26 +465,18 @@ int Animation::debugAnim(const int entitieID){
 void FatherID::update(const int entityID) {
   for (unsigned int i = 0; i < id.size(); i++) {
     // finalPos += fatherPos
-    finalPosArray[id[i]].x += posArray[entityID].x;
-    finalPosArray[id[i]].y += posArray[entityID].y;
+    finalPosArray.read(id[i]).x += posArray[entityID].x;
+    finalPosArray.read(id[i]).y += posArray[entityID].y;
   }
 }
 
 void RotationSprite::update(const int entityID) {
-  // finalPos += texPosArray
-  // finalPos += entitiePos
-
-  // finalPosArray[entityID] += texPosArray[entityID] * scaleTexture[entityID];
-
-  // finalPosArray[entityID] += posArray[entityID];
-
   // if (finalPosArray[entityID].x != sprite.position.x ||
   //     finalPosArray[entityID].y != sprite.position.y) {
-    sprite.position = finalPosArray[entityID];
+    sprite.position = finalPosArray.read(entityID);
   // }
 
   renderer->renderer2D.renderRotate(sprite, angle);
-  finalPosArray[entityID] = Vec2(0.0f, 0.0f);
 }
 
 PS2Timer::PS2Timer(){
@@ -496,7 +488,6 @@ void PS2Timer::setLastTime(){
 
 u64 PS2Timer::getTimeInMS(){
   actualTime = GetTimerSystemTime() / (kBUSCLK / CLOCKS_PER_SEC);
-  printf("actualTime - lastTime: %lld - %lld=%lld\n",actualTime, lastTime, actualTime - lastTime);
   return actualTime - lastTime;
 }
 

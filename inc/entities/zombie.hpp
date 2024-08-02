@@ -15,14 +15,15 @@ class Zombie {
   int father;
   std::vector<int> id;
   bool attack = false;
+  bool damaged = false;
   bool debug = false;
   void newZombie(Zombie_State_enum newType);
   int move();
   void animation(const int entityID, const int animID);
   int attackPlant();
   void damage(const int entityID);
+  int normalColor();
   bool erase();
 };
 
 void createZombie(Tyra::Vec2 pos);
-void createDebugZombie(Tyra::Vec2 pos);

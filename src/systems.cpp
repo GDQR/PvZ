@@ -198,6 +198,14 @@ void RendererDebugSpritesManager::update() {
   // }
 }
 
+void RendererSprites::resetFinalPos(){
+  // std::map<int, Vec2>::iterator it;
+  for (unsigned int i = 0; i < finalPosArray.second.size(); i++) {
+    finalPosArray.second[i] = Vec2(0.0f, 0.0f);
+    finalPosArray.second[i] += posArray[finalPosArray.first[i]];
+  } 
+}
+
 void RendererSprites::updateChildPos() {
   std::map<int, FatherID>::iterator it;
   for (it = fatherIDArray.begin(); it != fatherIDArray.end(); it++) {
@@ -207,28 +215,21 @@ void RendererSprites::updateChildPos() {
 
 void RendererSprites::updateTexture(){
   std::map<int, Vec2>::iterator it;
-  for (it = texPosArray.begin(); it != texPosArray.end();
-       it++) {
-      finalPosArray[it->first] +=
-      texPosArray.at(it->first) * scaleTexture.at(it->first);
+  for (it = texPosArray.begin(); it != texPosArray.end(); it++) {
+    finalPosArray.read(it->first) +=
+    texPosArray.at(it->first) * scaleTexture.at(it->first);
   } 
 }
 void RendererSprites::update() {
   std::map<int, Sprite*>::iterator it;
   for (it = spritesNormalRender.begin(); it != spritesNormalRender.end();
        it++) {
-
-    // finalPos += entitiePos
-
-    finalPosArray[it->first] += posArray[it->first];
-
     // if (finalPosArray[it->first].x != it->second->position.x ||
     //     finalPosArray[it->first].y != it->second->position.y) {
-      it->second->position = finalPosArray[it->first];
+      it->second->position = finalPosArray.read(it->first);
     // }
 
     renderer->renderer2D.render(it->second);
-    finalPosArray[it->first] = Vec2(0.0f, 0.0f);
   }
 }
 
@@ -247,6 +248,7 @@ void ZombiesManager::update() {
   for (it = zombie.begin(); it < zombie.end(); it++) {
     it->move();
     it->attackPlant();
+    it->normalColor();
   }
 }
 
