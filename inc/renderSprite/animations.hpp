@@ -3,6 +3,11 @@
 #include <string>
 #include <unordered_map>
 
+enum class enumDraw {
+  draw = 0,
+  noDraw = -1
+};
+
 enum enumAnimationState {
     normalZombieWalk,
     normalZombieAttack,
@@ -30,7 +35,7 @@ class Animation {
   int debugAnim(const int entitieID);
 
   int animID = -1;
-  bool draw = true;
+  int draw = (int) enumDraw::draw;
   unsigned int framesCounter = 0;
   unsigned int currentFrame = 1;
   unsigned int framesSpeed = 20;
@@ -50,16 +55,15 @@ class AnimationData {
   std::unordered_map<unsigned int, float> angleX;
   std::unordered_map<unsigned int, float> angleY;
   std::unordered_map<unsigned int, float> alpha;
-  std::unordered_map<unsigned int, bool> draw;
- 
+  std::unordered_map<unsigned int, int> draw;
   void loadAnimation(const int entityID, const int animID, enumAnimationState animationState);
   void loadAnimation(const int entityID, const int animID, const int firstFrame, const int lastFrame);
-  void activeAnimation(const int entityID, const int firstFrame, const int lastFrame);
+  int activeAnimation(const int entityID, const int firstFrame, const int lastFrame);
   void setAnimationState(const int entityID, enumAnimationState animationState);
 };
 
 extern AnimationState animationStateVector[enumMaxAnimationState];
 
-void setSprite(const int entityID, const bool draw);
+void setSprite(const int entityID, const int draw);
 void loadAnimationStates();
 void loadAnimation(std::string animName);

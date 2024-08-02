@@ -93,13 +93,20 @@ void deletePeashotter(const int pos) {
 
   deletePosArray(plant[pos].father);
 
-  for (unsigned int i = 0; i < m_animID["PeaShooterSingle"].size(); i++) {
-    deletePosArray(plant[pos].id[i]);
-    deleteTexPosArray(plant[pos].id[i]);
-    deleteFatherIDChild(&plant[pos].father, &plant[pos].id[i]);
-    deleteAnimation(plant[pos].id[i]);
-    deleteSprite(plant[pos].id[i]);
-    Entities::deleteID(plant[pos].id[i]);
+  std::vector<int>::iterator it = plant[pos].id.begin();
+  while (it != plant[pos].id.end()) {
+    deletePosArray(*it);
+    deleteTexPosArray(*it);
+    deleteFatherIDChild(&plant[pos].father, &*it);
+    if(animationArray.count(*it)){
+      deleteAnimation(*it);
+    }
+    if (spriteArray.count(*it) == 1 || rotationSprite.count(*it) == 1){
+      deleteSprite(*it);
+    }
+    
+    Entities::deleteID(*it);
+    plant[pos].id.erase(it);
   }
 
   deleteFatherID(&plant[pos].father);
@@ -141,7 +148,7 @@ void createSunflower(const int id, int row, int col, Tyra::Vec2 pos) {
     if (animationDataArray[animID].name == "anim_blink") {
       deleteAnimation(entityID);
       animationIdStopRender.push_back(entityID);
-      animationArray[entityID].draw = false;
+      animationArray[entityID].draw = (int) enumDraw::noDraw;
       // printf("encontre anim_blink\n");
       setSprite(entityID, animationArray[entityID].draw);
     }

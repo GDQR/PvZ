@@ -76,17 +76,23 @@ void createSpriteRotate(int id, Tyra::SpriteMode mode, Tyra::Vec2 position,
 
 void deleteSprite(const int entityID) {
   if (spriteArray.count(entityID) == 1) {
-    engine->renderer.getTextureRepository()
+    if (texRepo->getBySpriteId(spriteArray[entityID].id) != nullptr){
+      engine->renderer.getTextureRepository()
         .getBySpriteId(spriteArray[entityID].id)
         ->removeLinkById(spriteArray[entityID].id);
+    }
+
     spriteArray.erase(entityID);
     if (spritesNormalRender.count(entityID)) {
       spritesNormalRender.erase(entityID);
     }
   } else {
-    engine->renderer.getTextureRepository()
+    if (texRepo->getBySpriteId(rotationSprite[entityID].sprite.id) != nullptr){
+      engine->renderer.getTextureRepository()
         .getBySpriteId(rotationSprite[entityID].sprite.id)
         ->removeLinkById(rotationSprite[entityID].sprite.id);
+    }
+    
     rotationSprite.erase(entityID);
     if (spritesRotateRender.count(entityID)) {
       spritesRotateRender.erase(entityID);
@@ -239,12 +245,12 @@ void Animation::update(const int entityID) {
 
     if (spriteArray.count(entityID) == 1) {
       activeDrawNormalSprites(entityID);
-      if (draw == true) {
+      if (draw == (int) enumDraw::draw) {
         updateNormalSprites(entityID);
       }
     } else {
       activeDrawRotationSprites(entityID);
-      if (draw == true) {
+      if (draw == (int) enumDraw::draw) {
         updateRotationSprites(entityID);
       }
     }
@@ -267,7 +273,7 @@ void Animation::position(const int entityID) {
 void Animation::activeDrawNormalSprites(const int entityID) {
   if (animationDataArray[animID].draw.count(currentFrame)) {
     draw = animationDataArray[animID].draw[currentFrame];
-    if (draw == false) {
+    if (draw == (int) enumDraw::noDraw) {
       spritesNormalRender.erase(entityID);
       spriteNormalIdStopRender.push_back(entityID);
     } else {
@@ -361,7 +367,7 @@ void Animation::updateRotationSprites(const int entityID) {
 void Animation::activeDrawRotationSprites(const int entityID) {
   if (animationDataArray[animID].draw.count(currentFrame)) {
     draw = animationDataArray[animID].draw[currentFrame];
-    if (draw == false) {
+    if (draw == (int) enumDraw::noDraw) {
       spritesRotateRender.erase(entityID);
       spritesRotateIdStopRender.push_back(entityID);
     } else {

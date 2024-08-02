@@ -32,7 +32,7 @@ void Zombie::animation(const int entityID, const int animID) {
           animationDataArray[animID].name == "Zombie_mustache" ||
           animationDataArray[animID].name == "Zombie_innerarm_screendoor" ||
           animationDataArray[animID].name == "Zombie_flaghand") {
-        animationArray[entityID].draw = false;
+        animationArray[entityID].draw = (int) enumDraw::noDraw;
         setSprite(entityID, animationArray[entityID].draw);
         deleteAnimation(entityID);
         animationIdStopRender.push_back(entityID);
@@ -155,17 +155,20 @@ bool Zombie::erase() {
   if (lifeArray[id[0]] <= 0) {
     deletePosArray(father);
 
-    Entities::deleteID(father);
-
     for (unsigned int i = 0; i < m_animID["Zombie"].size(); i++) {
       deletePosArray(id[i]);
       deleteFatherIDChild(&father, &id[i]);
-      deleteSprite(id[i]);
-      deleteAnimation(id[i]);
+      if (spriteArray.count(id[i]) == 1 || rotationSprite.count(id[i]) == 1){
+        deleteSprite(id[i]);
+      }
+      if (animationArray.count(id[i]) == 1){
+        deleteAnimation(id[i]);
+      }
       deleteTexPosArray(id[i]);
       Entities::deleteID(id[i]);
     }
     deleteFatherID(&father);
+    Entities::deleteID(father);
     lifeArray.erase(id[0]);
     damageArray.erase(id[0]);
     boxColliderArray.erase(id[0]);
@@ -193,8 +196,9 @@ void createZombie(Vec2 pos) {
     // printf("Zombie ID: %d\n", entityID);
     // printf("animID: %d\n", animID);
     newFatherID(&zombie[id].father, &entityID);
-    animationDataArray[animID].loadAnimation(entityID, animID, normalZombieWalk);
-    animationDataArray[animID].setAnimationState(entityID, normalZombieWalk);
+    animationDataArray[animID].loadAnimation(entityID, animID,
+                                             normalZombieWalk);
+    // animationDataArray[animID].setAnimationState(entityID, normalZombieWalk);
     // animationArray[entityID].draw = true;
     zombie[id].animation(entityID, animID);
   }

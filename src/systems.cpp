@@ -40,7 +40,7 @@ void AnimationManager::debugChangeFrame(const int entitieID, const int key) {
   if (animationDataArray[animationArray[entitieID].animID].draw.count(animationArray[entitieID].currentFrame)) {
     animationArray[entitieID].draw =
         animationDataArray[animationArray[entitieID].animID].draw[animationArray[entitieID].currentFrame];
-    if (animationArray[entitieID].draw == false) {
+    if (animationArray[entitieID].draw == (int) enumDraw::noDraw) {
       if (texRepo->getBySpriteId(spriteArray[entitieID].id) != nullptr) {
         texRepo->getBySpriteId(spriteArray[entitieID].id)
             ->removeLinkById(spriteArray[entitieID].id);
