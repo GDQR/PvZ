@@ -24,7 +24,6 @@ void createPeashotter(int id, int row, int column, Tyra::Vec2 pos) {
 
   plant[id].father = Entities::newID();
 
-  posArray[plant[id].father] = pos;  // Vec2(row, column);
 
   printf("size: %d\n", m_animID["PeaShooterSingle"].size());
 
@@ -122,7 +121,7 @@ void createSunflower(const int id, int row, int col, Tyra::Vec2 pos) {
 
   plant[id].father = Entities::newID();
 
-  posArray[plant[id].father] = pos;  // Vec2(row, column);
+  posArray.insert(plant[id].father, pos);  // Vec2(row, column);
 
   printf("size: %d\n", m_animID["SunFlower"].size());
 
@@ -197,7 +196,7 @@ void createCherryBomb(const int id, int row, int col, Tyra::Vec2 pos) {
 
   plant[id].father = Entities::newID();
 
-  posArray[plant[id].father] = pos;
+  posArray.insert(plant[id].father, pos);
 
   printf("size: %d\n", m_animID["CherryBomb"].size());
 
@@ -258,7 +257,7 @@ void createWallnut(const int id, int row, int col, Tyra::Vec2 pos) {
 
   plant[id].father = Entities::newID();
 
-  posArray[plant[id].father] = pos;
+  posArray.insert(plant[id].father, pos);
 
   printf("size: %d\n", m_animID["Wallnut"].size());
 
@@ -319,7 +318,7 @@ void createPotatoMine(const int id, int row, int col, Tyra::Vec2 pos) {
 
   plant[id].father = Entities::newID();
 
-  posArray[plant[id].father] = pos;
+  posArray.insert(plant[id].father, pos);
 
   printf("size: %d\n", m_animID["PotatoMine"].size());
 
@@ -384,7 +383,7 @@ void createSnowPea(int id, int row, int column, Tyra::Vec2 pos) {
 
   plant[id].father = Entities::newID();
 
-  posArray[plant[id].father] = pos;  // Vec2(row, column);
+  posArray.insert(plant[id].father, pos);  // Vec2(row, column);
 
   printf("size: %d\n", m_animID["SnowPea"].size());
 
@@ -453,7 +452,7 @@ void createChomper(int id, int row, int column, Tyra::Vec2 pos) {
 
   plant[id].father = Entities::newID();
 
-  posArray[plant[id].father] = pos;  // Vec2(row, column);
+  posArray.insert(plant[id].father, pos);  // Vec2(row, column);
 
   printf("size: %d\n", m_animID["Chomper"].size());
 
@@ -515,7 +514,7 @@ void createRepeater(int id, int row, int column, Tyra::Vec2 pos) {
 
   plant[id].father = Entities::newID();
 
-  posArray[plant[id].father] = pos;  // Vec2(row, column);
+  posArray.insert(plant[id].father, pos); // Vec2(row, column);
 
   printf("size: %d\n", m_animID["PeaShooter"].size());
 

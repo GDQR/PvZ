@@ -61,7 +61,7 @@ int Zombie::move() {
   return 0;
 }
 
-int Zombie::attackPlant() {
+void Zombie::attackPlant() {
   for (int i = 0; i < 45; i++) {
     if (plant[i].type == NonePlant) {
       continue;
@@ -73,7 +73,8 @@ int Zombie::attackPlant() {
         for (unsigned int j = 0; j < id.size(); j++) {
           if (animationArray.count(id[j]) == 1) {
             // printf("anim attack id: %d\n",m_animID["Zombie"][j]);
-            animationDataArray[m_animID["Zombie"][j]].setAnimationState(id[j], normalZombieAttack);
+            animationDataArray[m_animID["Zombie"][j]].setAnimationState(
+                id[j], normalZombieAttack);
           }
         }
       }
@@ -91,19 +92,16 @@ int Zombie::attackPlant() {
           for (unsigned int j = 0; j < id.size(); j++) {
             if (animationArray.count(id[j]) == 1) {
               // printf("anim attack id: %d\n",id[j]);
-              animationDataArray[m_animID["Zombie"][j]].setAnimationState(id[j], normalZombieWalk);
+              animationDataArray[m_animID["Zombie"][j]].setAnimationState(
+                  id[j], normalZombieWalk);
             }
           }
           // animationArray[id[0]].animID = zombieWalk;
         }
       }
       break;
-    } else if (attack == true) {
-      attack = false;
-      // animationArray[id[0]].animID = zombieWalk;
     }
   }
-  return 0;
 }
 
 void Zombie::damage(const int entityID) {

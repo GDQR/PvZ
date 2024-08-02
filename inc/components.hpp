@@ -122,14 +122,14 @@ extern std::unordered_map<int, AnimationData>
     animationDataArray;  // Save the animation textures
 extern std::map<int, FatherID> fatherIDArray;
 extern std::map<int, Tyra::Vec2> texPosArray;
-extern std::map<int, Tyra::Vec2> posArray;
+extern ArrayKey<int, Tyra::Vec2> posArray;
 extern ArrayKey<int, Tyra::Vec2> finalPosArray;
 extern std::map<int, Tyra::Sprite> spriteArray;
 extern std::map<int, Tyra::Sprite*> spritesNormalRender;
 extern std::vector<int> spriteNormalIdStopRender;
 extern std::vector<int> animationIdStopRender;
 extern std::map<int, RotationSprite> rotationSprite;
-extern std::map<int, RotationSprite*> spritesRotateRender;
+extern ArrayKey<int, RotationSprite*> spritesRotateRender;
 extern std::vector<int> spritesRotateIdStopRender;
 extern std::map<int, Tyra::Vec2> originalSize;
 extern std::map<int, Tyra::Vec2> scaleTexture;

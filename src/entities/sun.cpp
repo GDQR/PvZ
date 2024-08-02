@@ -13,7 +13,6 @@ void SunManager::create(Tyra::Vec2 position, sunCost cost, bool createdByPlant) 
   int indexpos = sun.size() - 1;
   sun[indexpos].cost = cost;
   sun[indexpos].father = Entities::newID();
-  posArray[sun[indexpos].father] = position;
 
   int entityID;
   int animID;

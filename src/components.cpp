@@ -13,7 +13,7 @@ std::map<std::string, std::vector<int>> m_animID;
 std::map<int, Animation> animationArray;
 std::unordered_map<int, AnimationData> animationDataArray;
 std::map<int, FatherID> fatherIDArray;
-std::map<int, Tyra::Vec2> posArray;
+ArrayKey<int, Tyra::Vec2> posArray;
 std::map<int, Tyra::Vec2> texPosArray;
 ArrayKey<int, Tyra::Vec2> finalPosArray;
 std::map<int, Tyra::Sprite> spriteArray;
@@ -21,7 +21,7 @@ std::map<int, Tyra::Sprite*> spritesNormalRender;
 std::vector<int> spriteNormalIdStopRender;
 std::vector<int> animationIdStopRender;
 std::map<int, RotationSprite> rotationSprite;
-std::map<int, RotationSprite*> spritesRotateRender;
+ArrayKey<int, RotationSprite*> spritesRotateRender;
 std::vector<int> spritesRotateIdStopRender;
 std::map<int, Tyra::Vec2> originalSize;
 std::map<int, Tyra::Vec2> scaleTexture;
@@ -58,8 +58,8 @@ std::map<int, Tyra::Sprite> dm_SpriteRotatePivot;
 void createSprite(int id, Tyra::SpriteMode mode, Tyra::Vec2 position,
                   Tyra::Vec2 size) {
   spriteArray[id] = Sprite();
-  posArray[id] = position;
-  finalPosArray.insert(id, Vec2(0,0));//[id] = Vec2(0, 0);
+  posArray.insert(id, position);
+  finalPosArray.insert(id, Vec2(0,0));
   loadSprite(&spriteArray[id], mode, Vec2(0.0f, 0.0f), size);
   spritesNormalRender[id] = &spriteArray[id];
 }
@@ -68,10 +68,10 @@ void createSpriteRotate(int id, Tyra::SpriteMode mode, Tyra::Vec2 position,
                         Tyra::Vec2 size, const Tyra::Vec2 angle) {
   rotationSprite[id].sprite = Sprite();
   rotationSprite[id].angle = angle;
-  posArray[id] = position;
+  posArray.insert(id, position);
   finalPosArray.insert(id, Vec2(0,0));
   loadSprite(&rotationSprite[id].sprite, mode, Vec2(0.0f, 0.0f), size);
-  spritesRotateRender[id] = &rotationSprite[id];
+  spritesRotateRender.insert(id, &rotationSprite[id]);
 }
 
 void deleteSprite(const int entityID) {
@@ -99,6 +99,7 @@ void deleteAnimation(const int entityID){
 
 void deletePosArray(const int entityID){
   posArray.erase(entityID);
+  finalPosArray.erase(entityID);
 }
 
 void deleteTexPosArray(const int entityID){
