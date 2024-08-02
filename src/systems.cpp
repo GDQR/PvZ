@@ -40,7 +40,7 @@ void AnimationManager::debugChangeFrame(const int entitieID, const int key) {
   if (animationDataArray[animationArray[entitieID].animID].draw.count(animationArray[entitieID].currentFrame)) {
     animationArray[entitieID].draw =
         animationDataArray[animationArray[entitieID].animID].draw[animationArray[entitieID].currentFrame];
-    if (animationArray[entitieID].draw == false) {
+    if (animationArray[entitieID].draw == (int) enumDraw::noDraw) {
       if (texRepo->getBySpriteId(spriteArray[entitieID].id) != nullptr) {
         texRepo->getBySpriteId(spriteArray[entitieID].id)
             ->removeLinkById(spriteArray[entitieID].id);
@@ -234,11 +234,8 @@ void RendererSprites::update() {
 }
 
 void RendererSprites::updateRotate() {
-  std::map<int, RotationSprite*>::iterator it;
-
-  for (it = spritesRotateRender.begin(); it != spritesRotateRender.end();
-       it++) {
-    it->second->update(it->first);
+  for (unsigned int i = 0; i < spritesRotateRender.second.size(); i++) {
+    spritesRotateRender.second[i]->update(spritesRotateRender.first[i]);
   }
 }
 
@@ -386,6 +383,7 @@ void ProjectileManager::zombieCollision() {
         TYRA_ASSERT(text,
                     "No se encontro la textura del proyectil with id: ", it->id);
         deleteSprite(it->id);
+        deletePosArray(it->id);
         boxColliderArray.erase(it->id);
         deleteDebugBoxCollider(it->id);
         Entities::deleteID(it->id);
@@ -447,11 +445,15 @@ void newFatherID(int* fatherID, int* childID) {
   fatherIDArray[*fatherID].id.push_back(*childID);
 }
 
-void deleteFatherID(int* fatherID, int* childID) {
+void deleteFatherIDChild(int* fatherID, int* childID) {
   std::vector<int>::iterator it =
       find(fatherIDArray[*fatherID].id.begin(),
            fatherIDArray[*fatherID].id.end(), *childID);
   fatherIDArray[*fatherID].id.erase(it);
+}
+
+void deleteFatherID(const int* entityID){
+  fatherIDArray.erase(*entityID);
 }
 
 void newCursor(int* player, Tyra::Vec2 pos) {

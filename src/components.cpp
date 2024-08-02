@@ -13,7 +13,7 @@ std::map<std::string, std::vector<int>> m_animID;
 std::map<int, Animation> animationArray;
 std::unordered_map<int, AnimationData> animationDataArray;
 std::map<int, FatherID> fatherIDArray;
-std::map<int, Tyra::Vec2> posArray;
+ArrayKey<int, Tyra::Vec2> posArray;
 std::map<int, Tyra::Vec2> texPosArray;
 ArrayKey<int, Tyra::Vec2> finalPosArray;
 std::map<int, Tyra::Sprite> spriteArray;
@@ -21,7 +21,7 @@ std::map<int, Tyra::Sprite*> spritesNormalRender;
 std::vector<int> spriteNormalIdStopRender;
 std::vector<int> animationIdStopRender;
 std::map<int, RotationSprite> rotationSprite;
-std::map<int, RotationSprite*> spritesRotateRender;
+ArrayKey<int, RotationSprite*> spritesRotateRender;
 std::vector<int> spritesRotateIdStopRender;
 std::map<int, Tyra::Vec2> originalSize;
 std::map<int, Tyra::Vec2> scaleTexture;
@@ -58,8 +58,8 @@ std::map<int, Tyra::Sprite> dm_SpriteRotatePivot;
 void createSprite(int id, Tyra::SpriteMode mode, Tyra::Vec2 position,
                   Tyra::Vec2 size) {
   spriteArray[id] = Sprite();
-  posArray[id] = position;
-  finalPosArray.insert(id, Vec2(0,0));//[id] = Vec2(0, 0);
+  posArray.insert(id, position);
+  finalPosArray.insert(id, Vec2(0,0));
   loadSprite(&spriteArray[id], mode, Vec2(0.0f, 0.0f), size);
   spritesNormalRender[id] = &spriteArray[id];
 }
@@ -68,25 +68,31 @@ void createSpriteRotate(int id, Tyra::SpriteMode mode, Tyra::Vec2 position,
                         Tyra::Vec2 size, const Tyra::Vec2 angle) {
   rotationSprite[id].sprite = Sprite();
   rotationSprite[id].angle = angle;
-  posArray[id] = position;
+  posArray.insert(id, position);
   finalPosArray.insert(id, Vec2(0,0));
   loadSprite(&rotationSprite[id].sprite, mode, Vec2(0.0f, 0.0f), size);
-  spritesRotateRender[id] = &rotationSprite[id];
+  spritesRotateRender.insert(id, &rotationSprite[id]);
 }
 
 void deleteSprite(const int entityID) {
   if (spriteArray.count(entityID) == 1) {
-    engine->renderer.getTextureRepository()
+    if (texRepo->getBySpriteId(spriteArray[entityID].id) != nullptr){
+      engine->renderer.getTextureRepository()
         .getBySpriteId(spriteArray[entityID].id)
         ->removeLinkById(spriteArray[entityID].id);
+    }
+
     spriteArray.erase(entityID);
     if (spritesNormalRender.count(entityID)) {
       spritesNormalRender.erase(entityID);
     }
   } else {
-    engine->renderer.getTextureRepository()
+    if (texRepo->getBySpriteId(rotationSprite[entityID].sprite.id) != nullptr){
+      engine->renderer.getTextureRepository()
         .getBySpriteId(rotationSprite[entityID].sprite.id)
         ->removeLinkById(rotationSprite[entityID].sprite.id);
+    }
+    
     rotationSprite.erase(entityID);
     if (spritesRotateRender.count(entityID)) {
       spritesRotateRender.erase(entityID);
@@ -99,6 +105,7 @@ void deleteAnimation(const int entityID){
 
 void deletePosArray(const int entityID){
   posArray.erase(entityID);
+  finalPosArray.erase(entityID);
 }
 
 void deleteTexPosArray(const int entityID){
@@ -238,12 +245,12 @@ void Animation::update(const int entityID) {
 
     if (spriteArray.count(entityID) == 1) {
       activeDrawNormalSprites(entityID);
-      if (draw == true) {
+      if (draw == (int) enumDraw::draw) {
         updateNormalSprites(entityID);
       }
     } else {
       activeDrawRotationSprites(entityID);
-      if (draw == true) {
+      if (draw == (int) enumDraw::draw) {
         updateRotationSprites(entityID);
       }
     }
@@ -266,7 +273,7 @@ void Animation::position(const int entityID) {
 void Animation::activeDrawNormalSprites(const int entityID) {
   if (animationDataArray[animID].draw.count(currentFrame)) {
     draw = animationDataArray[animID].draw[currentFrame];
-    if (draw == false) {
+    if (draw == (int) enumDraw::noDraw) {
       spritesNormalRender.erase(entityID);
       spriteNormalIdStopRender.push_back(entityID);
     } else {
@@ -360,7 +367,7 @@ void Animation::updateRotationSprites(const int entityID) {
 void Animation::activeDrawRotationSprites(const int entityID) {
   if (animationDataArray[animID].draw.count(currentFrame)) {
     draw = animationDataArray[animID].draw[currentFrame];
-    if (draw == false) {
+    if (draw == (int) enumDraw::noDraw) {
       spritesRotateRender.erase(entityID);
       spritesRotateIdStopRender.push_back(entityID);
     } else {

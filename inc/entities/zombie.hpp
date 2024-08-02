@@ -20,7 +20,7 @@ class Zombie {
   void newZombie(Zombie_State_enum newType);
   int move();
   void animation(const int entityID, const int animID);
-  int attackPlant();
+  void attackPlant();
   void damage(const int entityID);
   int normalColor();
   bool erase();

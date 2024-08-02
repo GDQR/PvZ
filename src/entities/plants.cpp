@@ -24,7 +24,7 @@ void createPeashotter(int id, int row, int column, Tyra::Vec2 pos) {
 
   plant[id].father = Entities::newID();
 
-  posArray[plant[id].father] = pos;  // Vec2(row, column);
+  posArray.insert(plant[id].father, pos);  // Vec2(row, column);
 
   printf("size: %d\n", m_animID["PeaShooterSingle"].size());
 
@@ -93,13 +93,23 @@ void deletePeashotter(const int pos) {
 
   deletePosArray(plant[pos].father);
 
-  for (unsigned int i = 0; i < m_animID["PeaShooterSingle"].size(); i++) {
-    deletePosArray(plant[pos].id[i]);
-    deleteFatherID(&plant[pos].father, &plant[pos].id[i]);
-    deleteAnimation(plant[pos].id[i]);
-    deleteSprite(plant[pos].id[i]);
-    Entities::deleteID(plant[pos].id[i]);
+  std::vector<int>::iterator it = plant[pos].id.begin();
+  while (it != plant[pos].id.end()) {
+    deletePosArray(*it);
+    deleteTexPosArray(*it);
+    deleteFatherIDChild(&plant[pos].father, &*it);
+    if(animationArray.count(*it)){
+      deleteAnimation(*it);
+    }
+    if (spriteArray.count(*it) == 1 || rotationSprite.count(*it) == 1){
+      deleteSprite(*it);
+    }
+    
+    Entities::deleteID(*it);
+    plant[pos].id.erase(it);
   }
+
+  deleteFatherID(&plant[pos].father);
 
   lifeArray.erase(plant[pos].father);
 
@@ -119,7 +129,7 @@ void createSunflower(const int id, int row, int col, Tyra::Vec2 pos) {
 
   plant[id].father = Entities::newID();
 
-  posArray[plant[id].father] = pos;  // Vec2(row, column);
+  posArray.insert(plant[id].father, pos);  // Vec2(row, column);
 
   printf("size: %d\n", m_animID["SunFlower"].size());
 
@@ -138,7 +148,7 @@ void createSunflower(const int id, int row, int col, Tyra::Vec2 pos) {
     if (animationDataArray[animID].name == "anim_blink") {
       deleteAnimation(entityID);
       animationIdStopRender.push_back(entityID);
-      animationArray[entityID].draw = false;
+      animationArray[entityID].draw = (int) enumDraw::noDraw;
       // printf("encontre anim_blink\n");
       setSprite(entityID, animationArray[entityID].draw);
     }
@@ -168,11 +178,14 @@ void deleteSunflower(const int pos) {
 
   for (unsigned int i = 0; i < m_animID["SunFlower"].size(); i++) {
     deletePosArray(plant[pos].id[i]);
-    deleteFatherID(&plant[pos].father, &plant[pos].id[i]);
+    deleteTexPosArray(plant[pos].id[i]);
+    deleteFatherIDChild(&plant[pos].father, &plant[pos].id[i]);
     deleteAnimation(plant[pos].id[i]);
     deleteSprite(plant[pos].id[i]);
     Entities::deleteID(plant[pos].id[i]);
   }
+
+  deleteFatherID(&plant[pos].father);
 
   lifeArray.erase(plant[pos].father);
 
@@ -191,7 +204,7 @@ void createCherryBomb(const int id, int row, int col, Tyra::Vec2 pos) {
 
   plant[id].father = Entities::newID();
 
-  posArray[plant[id].father] = pos;
+  posArray.insert(plant[id].father, pos);
 
   printf("size: %d\n", m_animID["CherryBomb"].size());
 
@@ -228,11 +241,14 @@ void deleteCherryBomb(const int pos) {
 
   for (unsigned int i = 0; i < m_animID["CherryBomb"].size(); i++) {
     deletePosArray(plant[pos].id[i]);
-    deleteFatherID(&plant[pos].father, &plant[pos].id[i]);
+    deleteTexPosArray(plant[pos].id[i]);
+    deleteFatherIDChild(&plant[pos].father, &plant[pos].id[i]);
     deleteAnimation(plant[pos].id[i]);
     deleteSprite(plant[pos].id[i]);
     Entities::deleteID(plant[pos].id[i]);
   }
+
+  deleteFatherID(&plant[pos].father);
 
   lifeArray.erase(plant[pos].father);
 
@@ -249,7 +265,7 @@ void createWallnut(const int id, int row, int col, Tyra::Vec2 pos) {
 
   plant[id].father = Entities::newID();
 
-  posArray[plant[id].father] = pos;
+  posArray.insert(plant[id].father, pos);
 
   printf("size: %d\n", m_animID["Wallnut"].size());
 
@@ -286,11 +302,14 @@ void deleteWallNut(const int pos) {
 
   for (unsigned int i = 0; i < m_animID["Wallnut"].size(); i++) {
     deletePosArray(plant[pos].id[i]);
-    deleteFatherID(&plant[pos].father, &plant[pos].id[i]);
+    deleteTexPosArray(plant[pos].id[i]);
+    deleteFatherIDChild(&plant[pos].father, &plant[pos].id[i]);
     deleteAnimation(plant[pos].id[i]);
     deleteSprite(plant[pos].id[i]);
     Entities::deleteID(plant[pos].id[i]);
   }
+
+  deleteFatherID(&plant[pos].father);
 
   lifeArray.erase(plant[pos].father);
 
@@ -307,7 +326,7 @@ void createPotatoMine(const int id, int row, int col, Tyra::Vec2 pos) {
 
   plant[id].father = Entities::newID();
 
-  posArray[plant[id].father] = pos;
+  posArray.insert(plant[id].father, pos);
 
   printf("size: %d\n", m_animID["PotatoMine"].size());
 
@@ -348,12 +367,15 @@ void deletePotatoMine(const int pos) {
 
   for (unsigned int i = 0; i < m_animID["PotatoMine"].size(); i++) {
     deletePosArray(plant[pos].id[i]);
-    deleteFatherID(&plant[pos].father, &plant[pos].id[i]);
+    deleteTexPosArray(plant[pos].id[i]);
+    deleteFatherIDChild(&plant[pos].father, &plant[pos].id[i]);
     deleteAnimation(plant[pos].id[i]);
     deleteSprite(plant[pos].id[i]);
     Entities::deleteID(plant[pos].id[i]);
   }
 
+  deleteFatherID(&plant[pos].father);
+  
   lifeArray.erase(plant[pos].father);
 
   deleteDebugBoxCollider(plant[pos].father);
@@ -369,7 +391,7 @@ void createSnowPea(int id, int row, int column, Tyra::Vec2 pos) {
 
   plant[id].father = Entities::newID();
 
-  posArray[plant[id].father] = pos;  // Vec2(row, column);
+  posArray.insert(plant[id].father, pos);  // Vec2(row, column);
 
   printf("size: %d\n", m_animID["SnowPea"].size());
 
@@ -413,11 +435,14 @@ void deleteSnowPea(const int pos) {
 
   for (unsigned int i = 0; i < m_animID["SnowPea"].size(); i++) {
     deletePosArray(plant[pos].id[i]);
-    deleteFatherID(&plant[pos].father, &plant[pos].id[i]);
+    deleteTexPosArray(plant[pos].id[i]);
+    deleteFatherIDChild(&plant[pos].father, &plant[pos].id[i]);
     deleteAnimation(plant[pos].id[i]);
     deleteSprite(plant[pos].id[i]);
     Entities::deleteID(plant[pos].id[i]);
   }
+  
+  deleteFatherID(&plant[pos].father);
 
   lifeArray.erase(plant[pos].father);
 
@@ -435,7 +460,7 @@ void createChomper(int id, int row, int column, Tyra::Vec2 pos) {
 
   plant[id].father = Entities::newID();
 
-  posArray[plant[id].father] = pos;  // Vec2(row, column);
+  posArray.insert(plant[id].father, pos);  // Vec2(row, column);
 
   printf("size: %d\n", m_animID["Chomper"].size());
 
@@ -473,12 +498,15 @@ void deleteChomper(const int pos) {
 
   for (unsigned int i = 0; i < m_animID["Chomper"].size(); i++) {
     deletePosArray(plant[pos].id[i]);
-    deleteFatherID(&plant[pos].father, &plant[pos].id[i]);
+    deleteTexPosArray(plant[pos].id[i]);
+    deleteFatherIDChild(&plant[pos].father, &plant[pos].id[i]);
     deleteAnimation(plant[pos].id[i]);
     deleteSprite(plant[pos].id[i]);
     Entities::deleteID(plant[pos].id[i]);
   }
 
+  deleteFatherID(&plant[pos].father);
+  
   lifeArray.erase(plant[pos].father);
 
   deleteDebugBoxCollider(plant[pos].father);
@@ -494,7 +522,7 @@ void createRepeater(int id, int row, int column, Tyra::Vec2 pos) {
 
   plant[id].father = Entities::newID();
 
-  posArray[plant[id].father] = pos;  // Vec2(row, column);
+  posArray.insert(plant[id].father, pos); // Vec2(row, column);
 
   printf("size: %d\n", m_animID["PeaShooter"].size());
 
@@ -536,12 +564,14 @@ void deleteRepeater(const int pos) {
 
   for (unsigned int i = 0; i < m_animID["Repeater"].size(); i++) {
     deletePosArray(plant[pos].id[i]);
-    deleteFatherID(&plant[pos].father, &plant[pos].id[i]);
+    deleteTexPosArray(plant[pos].id[i]);
+    deleteFatherIDChild(&plant[pos].father, &plant[pos].id[i]);
     deleteAnimation(plant[pos].id[i]);
     deleteSprite(plant[pos].id[i]);
     Entities::deleteID(plant[pos].id[i]);
   }
 
+  deleteFatherID(&plant[pos].father);
   lifeArray.erase(plant[pos].father);
 
   deleteDebugBoxCollider(plant[pos].father);
