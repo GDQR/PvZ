@@ -95,11 +95,14 @@ void deletePeashotter(const int pos) {
 
   for (unsigned int i = 0; i < m_animID["PeaShooterSingle"].size(); i++) {
     deletePosArray(plant[pos].id[i]);
-    deleteFatherID(&plant[pos].father, &plant[pos].id[i]);
+    deleteTexPosArray(plant[pos].id[i]);
+    deleteFatherIDChild(&plant[pos].father, &plant[pos].id[i]);
     deleteAnimation(plant[pos].id[i]);
     deleteSprite(plant[pos].id[i]);
     Entities::deleteID(plant[pos].id[i]);
   }
+
+  deleteFatherID(&plant[pos].father);
 
   lifeArray.erase(plant[pos].father);
 
@@ -168,11 +171,14 @@ void deleteSunflower(const int pos) {
 
   for (unsigned int i = 0; i < m_animID["SunFlower"].size(); i++) {
     deletePosArray(plant[pos].id[i]);
-    deleteFatherID(&plant[pos].father, &plant[pos].id[i]);
+    deleteTexPosArray(plant[pos].id[i]);
+    deleteFatherIDChild(&plant[pos].father, &plant[pos].id[i]);
     deleteAnimation(plant[pos].id[i]);
     deleteSprite(plant[pos].id[i]);
     Entities::deleteID(plant[pos].id[i]);
   }
+
+  deleteFatherID(&plant[pos].father);
 
   lifeArray.erase(plant[pos].father);
 
@@ -228,11 +234,14 @@ void deleteCherryBomb(const int pos) {
 
   for (unsigned int i = 0; i < m_animID["CherryBomb"].size(); i++) {
     deletePosArray(plant[pos].id[i]);
-    deleteFatherID(&plant[pos].father, &plant[pos].id[i]);
+    deleteTexPosArray(plant[pos].id[i]);
+    deleteFatherIDChild(&plant[pos].father, &plant[pos].id[i]);
     deleteAnimation(plant[pos].id[i]);
     deleteSprite(plant[pos].id[i]);
     Entities::deleteID(plant[pos].id[i]);
   }
+
+  deleteFatherID(&plant[pos].father);
 
   lifeArray.erase(plant[pos].father);
 
@@ -286,11 +295,14 @@ void deleteWallNut(const int pos) {
 
   for (unsigned int i = 0; i < m_animID["Wallnut"].size(); i++) {
     deletePosArray(plant[pos].id[i]);
-    deleteFatherID(&plant[pos].father, &plant[pos].id[i]);
+    deleteTexPosArray(plant[pos].id[i]);
+    deleteFatherIDChild(&plant[pos].father, &plant[pos].id[i]);
     deleteAnimation(plant[pos].id[i]);
     deleteSprite(plant[pos].id[i]);
     Entities::deleteID(plant[pos].id[i]);
   }
+
+  deleteFatherID(&plant[pos].father);
 
   lifeArray.erase(plant[pos].father);
 
@@ -348,12 +360,15 @@ void deletePotatoMine(const int pos) {
 
   for (unsigned int i = 0; i < m_animID["PotatoMine"].size(); i++) {
     deletePosArray(plant[pos].id[i]);
-    deleteFatherID(&plant[pos].father, &plant[pos].id[i]);
+    deleteTexPosArray(plant[pos].id[i]);
+    deleteFatherIDChild(&plant[pos].father, &plant[pos].id[i]);
     deleteAnimation(plant[pos].id[i]);
     deleteSprite(plant[pos].id[i]);
     Entities::deleteID(plant[pos].id[i]);
   }
 
+  deleteFatherID(&plant[pos].father);
+  
   lifeArray.erase(plant[pos].father);
 
   deleteDebugBoxCollider(plant[pos].father);
@@ -413,11 +428,14 @@ void deleteSnowPea(const int pos) {
 
   for (unsigned int i = 0; i < m_animID["SnowPea"].size(); i++) {
     deletePosArray(plant[pos].id[i]);
-    deleteFatherID(&plant[pos].father, &plant[pos].id[i]);
+    deleteTexPosArray(plant[pos].id[i]);
+    deleteFatherIDChild(&plant[pos].father, &plant[pos].id[i]);
     deleteAnimation(plant[pos].id[i]);
     deleteSprite(plant[pos].id[i]);
     Entities::deleteID(plant[pos].id[i]);
   }
+  
+  deleteFatherID(&plant[pos].father);
 
   lifeArray.erase(plant[pos].father);
 
@@ -473,12 +491,15 @@ void deleteChomper(const int pos) {
 
   for (unsigned int i = 0; i < m_animID["Chomper"].size(); i++) {
     deletePosArray(plant[pos].id[i]);
-    deleteFatherID(&plant[pos].father, &plant[pos].id[i]);
+    deleteTexPosArray(plant[pos].id[i]);
+    deleteFatherIDChild(&plant[pos].father, &plant[pos].id[i]);
     deleteAnimation(plant[pos].id[i]);
     deleteSprite(plant[pos].id[i]);
     Entities::deleteID(plant[pos].id[i]);
   }
 
+  deleteFatherID(&plant[pos].father);
+  
   lifeArray.erase(plant[pos].father);
 
   deleteDebugBoxCollider(plant[pos].father);
@@ -536,12 +557,14 @@ void deleteRepeater(const int pos) {
 
   for (unsigned int i = 0; i < m_animID["Repeater"].size(); i++) {
     deletePosArray(plant[pos].id[i]);
-    deleteFatherID(&plant[pos].father, &plant[pos].id[i]);
+    deleteTexPosArray(plant[pos].id[i]);
+    deleteFatherIDChild(&plant[pos].father, &plant[pos].id[i]);
     deleteAnimation(plant[pos].id[i]);
     deleteSprite(plant[pos].id[i]);
     Entities::deleteID(plant[pos].id[i]);
   }
 
+  deleteFatherID(&plant[pos].father);
   lifeArray.erase(plant[pos].father);
 
   deleteDebugBoxCollider(plant[pos].father);

@@ -161,13 +161,13 @@ bool Zombie::erase() {
 
     for (unsigned int i = 0; i < m_animID["Zombie"].size(); i++) {
       deletePosArray(id[i]);
-      deleteFatherID(&father, &id[i]);
+      deleteFatherIDChild(&father, &id[i]);
       deleteSprite(id[i]);
       deleteAnimation(id[i]);
       deleteTexPosArray(id[i]);
       Entities::deleteID(id[i]);
     }
-    fatherIDArray.erase(father);
+    deleteFatherID(&father);
     lifeArray.erase(id[0]);
     damageArray.erase(id[0]);
     boxColliderArray.erase(id[0]);
@@ -182,7 +182,7 @@ void createZombie(Vec2 pos) {
   int id = zombie.size() - 1;
   zombie[id].newZombie(ZombieNormal);
   zombie[id].father = Entities::newID();
-  posArray[zombie[id].father] = pos;
+  posArray.insert(zombie[id].father, pos);
 
   int entityID;
   int animID;

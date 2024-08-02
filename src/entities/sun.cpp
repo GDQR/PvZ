@@ -84,14 +84,13 @@ bool Sun::erase(const int cursorID) {
     boxColliderArray.erase(father);
     deleteDebugBoxCollider(father);
 
-    fatherIDArray.erase(father);
-
     for (unsigned int i = 0; i < m_animID["Sun"].size(); i++) {
       deleteDebugSprite(id[i]);
       deleteDebugSpritePivot(id[i]);
       deleteSprite(id[i]);
       deleteAnimation(id[i]);
       deleteTexPosArray(id[i]);
+      deleteFatherIDChild(&father,&id[i]);
       Entities::deleteID(id[i]);
     }
 
@@ -102,6 +101,8 @@ bool Sun::erase(const int cursorID) {
         break;
       }
     }
+
+    deleteFatherID(&father);
     sunsCreated--;
     return true;
   }

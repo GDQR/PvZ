@@ -447,11 +447,15 @@ void newFatherID(int* fatherID, int* childID) {
   fatherIDArray[*fatherID].id.push_back(*childID);
 }
 
-void deleteFatherID(int* fatherID, int* childID) {
+void deleteFatherIDChild(int* fatherID, int* childID) {
   std::vector<int>::iterator it =
       find(fatherIDArray[*fatherID].id.begin(),
            fatherIDArray[*fatherID].id.end(), *childID);
   fatherIDArray[*fatherID].id.erase(it);
+}
+
+void deleteFatherID(const int* entityID){
+  fatherIDArray.erase(*entityID);
 }
 
 void newCursor(int* player, Tyra::Vec2 pos) {
