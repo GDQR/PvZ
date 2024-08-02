@@ -24,6 +24,7 @@ void createPeashotter(int id, int row, int column, Tyra::Vec2 pos) {
 
   plant[id].father = Entities::newID();
 
+  posArray.insert(plant[id].father, pos);  // Vec2(row, column);
 
   printf("size: %d\n", m_animID["PeaShooterSingle"].size());
 
