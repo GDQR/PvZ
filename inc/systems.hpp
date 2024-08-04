@@ -27,7 +27,6 @@ class RendererSprites {
   void updateChildPos();
   void updateTexture();
   void update();
-  void updateRotate();
 };
 
 class ZombiesManager {
@@ -63,4 +62,5 @@ void deleteFatherID(const int* entityID);
 void deleteSprite(const int entityID);
 void deleteAnimation(const int entityID);
 void deletePosArray(const int entityID);
+void deleteFinalPosArray(const int entityID);
 void deleteTexPosArray(const int entityID);

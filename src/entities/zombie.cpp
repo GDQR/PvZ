@@ -52,9 +52,9 @@ int Zombie::move() {
     timer--;
   } else if (attack == false) {
     timer = 12;
-    posArray[father].x -= speedArray[id[0]];
+    posArray.second[Entities::componentIndex[father][pos]].x -= speedArray[id[0]];
 
-    boxColliderArray[id[0]].x = posArray[father].x + posArray[id[0]].x + 60;
+    boxColliderArray[id[0]].x = posArray.second[Entities::componentIndex[father][pos]].x + posArray.second[Entities::componentIndex[id[0]][pos]].x + 60;
     // printf("box: %f,%f\n",
     // boxColliderArray[*it->id[0]].x,boxColliderArray[*it->id[0]].y);
   }
@@ -110,12 +110,8 @@ void Zombie::damage(const int entityID) {
   printf("dano zombie\n");
   for (unsigned int j = 0; j < id.size(); j++) {
     if (animationArray.count(id[j]) == 1) {
-      // printf("anim attack id: %d\n",m_animID["Zombie"][j]);
-      if (spriteArray.count(id[j]) == 1) {
-        spriteArray[id[j]].color = Tyra::Color(255, 255, 255, 128);
-      } else {
-        rotationSprite[id[j]].sprite.color = Tyra::Color(255, 255, 255, 128);
-      }
+      // printf("anim attack id: %d\n",m_animID["Zombie"][j]);  
+      spriteArray[id[j]].color = Tyra::Color(255, 255, 255, 128);
     }
   }
 }
@@ -136,15 +132,6 @@ int Zombie::normalColor() {
         } else {
           damaged = false;
         }
-      } else {
-        if (rotationSprite[id[j]].sprite.color.r > 128.0f &&
-            rotationSprite[id[j]].sprite.color.g > 128.0f &&
-            rotationSprite[id[j]].sprite.color.b > 128.0f) {
-          rotationSprite[id[j]].sprite.color -= 5;
-          rotationSprite[id[j]].sprite.color.a = 128;
-        } else {
-          damaged = false;
-        }
       }
     }
   }
@@ -157,10 +144,11 @@ bool Zombie::erase() {
 
     for (unsigned int i = 0; i < m_animID["Zombie"].size(); i++) {
       deletePosArray(id[i]);
+      deleteFinalPosArray(id[i]);
       deleteFatherIDChild(&father, &id[i]);
-      if (spriteArray.count(id[i]) == 1 || rotationSprite.count(id[i]) == 1){
-        deleteSprite(id[i]);
-      }
+
+      deleteSprite(id[i]);
+      
       if (animationArray.count(id[i]) == 1){
         deleteAnimation(id[i]);
       }

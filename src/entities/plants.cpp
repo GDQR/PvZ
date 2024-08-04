@@ -96,14 +96,14 @@ void deletePeashotter(const int pos) {
   std::vector<int>::iterator it = plant[pos].id.begin();
   while (it != plant[pos].id.end()) {
     deletePosArray(*it);
+    deleteFinalPosArray(*it);
     deleteTexPosArray(*it);
     deleteFatherIDChild(&plant[pos].father, &*it);
     if(animationArray.count(*it)){
       deleteAnimation(*it);
     }
-    if (spriteArray.count(*it) == 1 || rotationSprite.count(*it) == 1){
-      deleteSprite(*it);
-    }
+
+    deleteSprite(*it);   
     
     Entities::deleteID(*it);
     plant[pos].id.erase(it);

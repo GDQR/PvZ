@@ -13,9 +13,11 @@
 #include <stdlib.h>
 using namespace Tyra;
 
-int background = Entities::newID();
-int seedBank = Entities::newID();
-int zombieDebug = Entities::newID();
+#include <iostream>
+
+int background; 
+int seedBank ;
+int zombieDebug; 
 
 int map[5][9];
 int xMap = 9;
@@ -53,6 +55,9 @@ void Level1::init() {
   loadPlantRechargeTime();
   loadAnimationStates();
   loadDebugTextures();
+  background = Entities::newID();
+  seedBank = Entities::newID();
+  zombieDebug = Entities::newID();
   // load background
   createSprite(background, MODE_STRETCH, Vec2(-56, -1), Vec2(780, 524));
   createTexture(background, "Backgrounds/DAY Unsodded.png");
@@ -174,10 +179,12 @@ void Level1::update() {
 
   // renderer->core.renderer2D.pixelTest(&atest,&dtest,ZTEST_METHOD_GREATER);
 
+  // static u64 mytime = GetTimerSystemTime() / (kBUSCLK / CLOCKS_PER_SEC);
+  
+  renderSprites.resetFinalPos();
   renderSprites.updateChildPos();
   renderSprites.updateTexture();
   renderSprites.update();
-  renderSprites.updateRotate();
 
   renderDebugSpritesManager.update();
   engine->font.drawText(&myFont, std::to_string(sunCounter), 30, 30, 16,

@@ -32,9 +32,7 @@ extern int debugEntityId;
 extern std::map<int, Tyra::Sprite> dm_SpritePointCollider;
 extern std::map<int, Tyra::Sprite> dm_SpriteBoxCollider;
 extern std::map<int, Tyra::Sprite> dm_SpriteNormal;
-extern std::map<int, Tyra::Sprite> dm_SpriteRotate;
 extern std::map<int, Tyra::Sprite> dm_SpriteNormalPivot;
-extern std::map<int, Tyra::Sprite> dm_SpriteRotatePivot;
 
 // Normal or rotate sprites IDs
 extern std::map<int, Tyra::Sprite*> debugSpritesType;

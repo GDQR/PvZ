@@ -75,13 +75,6 @@ class BoxCollider {
   float offsetY;
 };
 
-class RotationSprite {
- public:
-  Tyra::Sprite sprite;
-  Tyra::Vec2 angle;
-  void update(const int entityID);
-};
-
 class PlantsManager {
  public:
   void create();
@@ -113,7 +106,7 @@ extern Tyra::Engine* engine;
 extern Tyra::Renderer* renderer;
 extern const Tyra::PadJoy* leftJoy;
 extern Tyra::TextureRepository* texRepo;
-extern std::map<std::string, std::vector<int>> m_animID;
+extern std::unordered_map<std::string, std::vector<int>> m_animID;
 
 // sparse array
 extern std::map<int, Animation>
@@ -124,13 +117,11 @@ extern std::map<int, FatherID> fatherIDArray;
 extern std::map<int, Tyra::Vec2> texPosArray;
 extern ArrayKey<int, Tyra::Vec2> posArray;
 extern ArrayKey<int, Tyra::Vec2> finalPosArray;
-extern std::map<int, Tyra::Sprite> spriteArray;
-extern std::map<int, Tyra::Sprite*> spritesNormalRender;
+extern std::unordered_map<int, Tyra::Sprite> spriteArray;
+extern ArrayKey<int, int> spriteRenderIDArray;
 extern std::vector<int> spriteNormalIdStopRender;
 extern std::vector<int> animationIdStopRender;
-extern std::map<int, RotationSprite> rotationSprite;
-extern ArrayKey<int, RotationSprite*> spritesRotateRender;
-extern std::vector<int> spritesRotateIdStopRender;
+extern std::unordered_map<int, Tyra::Vec2> angleArray;
 extern std::map<int, Tyra::Vec2> originalSize;
 extern std::map<int, Tyra::Vec2> scaleTexture;
 extern std::map<int, Tyra::Vec2> pointColliderArray;

@@ -157,7 +157,7 @@ void DebugMode::spriteModeMenu(){
   debugSpriteMode.menu();
 }
 int DebugMode::drawSpriteModeMenu(){
-  if (spriteArray.size() == 0 && rotationSprite.size() == 0) {
+  if (spriteArray.size() == 0) {
     // ERROR MENU
     engine->font.drawText(&myFont, "Sprites not found", 30, 80, 16, black);
     engine->font.drawText(&myFont, "PRESS O FOR GO BACK", 30, 320, 16, black);
@@ -203,11 +203,6 @@ void createDebugSprite(const int id, Tyra::SpriteMode mode) {
     loadSprite(&dm_SpriteNormal[id], mode, spriteArray[id].position,
                spriteArray[id].size);
     debugBoxTexture->addLink(dm_SpriteNormal[id].id);
-  }else{
-    dm_SpriteRotate[id] = Sprite(); 
-    loadSprite(&dm_SpriteRotate[id], mode, rotationSprite[id].sprite.position,
-               rotationSprite[id].sprite.size);
-    debugBoxTexture->addLink(dm_SpriteRotate[id].id);
   }
 }
 
@@ -218,12 +213,6 @@ void createDebugSpritePivot(const int id, Tyra::SpriteMode mode) {
                spriteArray[id].size);
     debugPointTexture->addLink(dm_SpriteNormalPivot[id].id);
     dm_SpriteNormalPivot[id].color = Tyra::Color(255.0f, 0.0f, 0.0f, 128.0f);
-  }else{
-    dm_SpriteRotatePivot[id] = Sprite(); 
-    loadSprite(&dm_SpriteRotatePivot[id], mode, rotationSprite[id].sprite.position,
-               rotationSprite[id].sprite.size);
-    debugPointTexture->addLink(dm_SpriteRotatePivot[id].id);
-    dm_SpriteRotatePivot[id].color = Tyra::Color(255.0f, 0.0f, 0.0f, 128.0f);
   }
 }
 
@@ -249,9 +238,6 @@ void deleteDebugSprite(const int id) {
   if (spriteArray.count(id)) {
     debugBoxTexture->removeLinkById(dm_SpriteNormal[id].id);
     dm_SpriteNormal.erase(id);
-  }else{
-    debugBoxTexture->removeLinkById(dm_SpriteRotate[id].id);
-    dm_SpriteRotate.erase(id);
   }
 }
 
@@ -259,9 +245,6 @@ void deleteDebugSpritePivot(const int id) {
   if (spriteArray.count(id)) {
     debugPointTexture->removeLinkById(dm_SpriteNormalPivot[id].id);
     dm_SpriteNormalPivot.erase(id);
-  }else{
-    debugPointTexture->removeLinkById(dm_SpriteRotatePivot[id].id);
-    dm_SpriteRotatePivot.erase(id);
   }
 }
 

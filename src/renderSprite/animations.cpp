@@ -7,17 +7,12 @@
 void setSprite(const int entityID, const int draw) {
   if (spriteArray.count(entityID)) {
     if (draw == -1) {
-      spritesNormalRender.erase(entityID);
+      // spritesNormalRender.erase(entityID);
+      spriteRenderIDArray.erase(entityID);
       spriteNormalIdStopRender.push_back(entityID);
-    } else if (spritesNormalRender.count(entityID) == 0) {
-      spritesNormalRender[entityID] = &spriteArray[entityID];
-    }
-  } else if (rotationSprite.count(entityID)) {
-    if (draw == -1) {
-      spritesRotateRender.erase(entityID);
-      spritesRotateIdStopRender.push_back(entityID);
-    } else if (spritesRotateRender.count(entityID) == 0) {
-      spritesRotateRender.insert(entityID, &rotationSprite[entityID]);
+    } else if (spriteRenderIDArray.count(entityID) == 0) {
+      spriteRenderIDArray.insert(entityID,0);
+      // spritesNormalRender[entityID] = &spriteArray[entityID];
     }
   } else {
     TYRA_WARN("Sprite don't founded in setSprite");
@@ -56,7 +51,6 @@ void AnimationData::loadAnimation(const int entityID, const int animID,
       rotateSprite = true;
       createSpriteRotate(entityID, Tyra::MODE_STRETCH, Vec2(0, 0),
                          Vec2(128 / 1.6f, 128 / 1.6f), Vec2(0.0f, 0.0f));
-      spriteID = rotationSprite[entityID].sprite.id;
       break;
     }
   }
@@ -64,8 +58,9 @@ void AnimationData::loadAnimation(const int entityID, const int animID,
   if (rotateSprite == false) {
     createSprite(entityID, Tyra::MODE_STRETCH, Vec2(0, 0),
                  Vec2(128 / 1.6f, 128 / 1.6f));
-    spriteID = spriteArray[entityID].id;
   }
+
+  spriteID = spriteArray[entityID].id;
 
   animationArray[entityID] = Animation(animID);
 
@@ -120,7 +115,7 @@ int AnimationData::activeAnimation(const int entityID, const int firstFrame,
 
   Tyra::Vec2 scale(1.0f, 1.0f);
 
-  std::unordered_map<unsigned int, int>::iterator itInteger=
+  std::unordered_map<unsigned int, int>::iterator itInteger =
       draw.find(firstFrame);
   int pos = firstFrame - 1;
 
@@ -131,7 +126,7 @@ int AnimationData::activeAnimation(const int entityID, const int firstFrame,
 
   animationArray[entityID].draw = itInteger->second;
   setSprite(entityID, itInteger->second);
-  if (itInteger->second == (int) enumDraw::noDraw) {
+  if (itInteger->second == (int)enumDraw::noDraw) {
     return 1;
   }
 
@@ -142,6 +137,17 @@ int AnimationData::activeAnimation(const int entityID, const int firstFrame,
     itInteger = texture.find(pos);
     pos--;
   }
+
+  if (texRepo->getBySpriteId(spriteArray[entityID].id) != nullptr) {
+    // printf("unlink sprite id: %d\n", spriteArray[entityID].id);
+    texRepo->getBySpriteId(spriteArray[entityID].id)
+        ->removeLinkById(spriteArray[entityID].id);
+  }
+  // Link new Texture to the sprite entitie
+  texRepo->getByTextureId(itInteger->second)->addLink(spriteArray[entityID].id);
+  originalSize[entityID] =
+      Vec2(texRepo->getByTextureId(itInteger->second)->getWidth(),
+           texRepo->getByTextureId(itInteger->second)->getHeight());
 
   std::unordered_map<unsigned int, float>::iterator it = x.find(firstFrame);
   pos = firstFrame - 1;
@@ -182,7 +188,9 @@ int AnimationData::activeAnimation(const int entityID, const int firstFrame,
 
   scale.y = it->second;
 
-  if (rotationSprite.count(entityID) == 1) {
+  spriteArray[entityID].size = originalSize[entityID] * scale;
+
+  if (angleArray.count(entityID) == 1) {
     it = angleX.find(firstFrame);
     pos = firstFrame - 1;
 
@@ -191,7 +199,7 @@ int AnimationData::activeAnimation(const int entityID, const int firstFrame,
       pos--;
     }
 
-    rotationSprite[entityID].angle.x = it->second;
+    angleArray[entityID].x = it->second;
 
     it = angleY.find(firstFrame);
     pos = firstFrame - 1;
@@ -201,36 +209,8 @@ int AnimationData::activeAnimation(const int entityID, const int firstFrame,
       pos--;
     }
 
-    rotationSprite[entityID].angle.y = it->second;
-    rotationSprite[entityID].sprite.size = originalSize[entityID] * scale;
-
-    if (texRepo->getBySpriteId(rotationSprite[entityID].sprite.id) != nullptr) {
-      // printf("unlink sprite id: %d\n", spriteArray[entityID].id);
-      texRepo->getBySpriteId(rotationSprite[entityID].sprite.id)
-          ->removeLinkById(rotationSprite[entityID].sprite.id);
-    }
-
-    // Link new Texture to the sprite entitie
-    texRepo->getByTextureId(itInteger->second)
-        ->addLink(rotationSprite[entityID].sprite.id);
-    originalSize[entityID] =
-        Vec2(texRepo->getByTextureId(itInteger->second)->getWidth(),
-             texRepo->getByTextureId(itInteger->second)->getHeight());
-  } else {
-    spriteArray[entityID].size = originalSize[entityID] * scale;
-
-    if (texRepo->getBySpriteId(spriteArray[entityID].id) != nullptr) {
-      // printf("unlink sprite id: %d\n", spriteArray[entityID].id);
-      texRepo->getBySpriteId(spriteArray[entityID].id)
-          ->removeLinkById(spriteArray[entityID].id);
-    }
-    // Link new Texture to the sprite entitie
-    texRepo->getByTextureId(itInteger->second)
-        ->addLink(spriteArray[entityID].id);
-    originalSize[entityID] =
-        Vec2(texRepo->getByTextureId(itInteger->second)->getWidth(),
-             texRepo->getByTextureId(itInteger->second)->getHeight());
-  }
+    angleArray[entityID].y = it->second;
+  } 
   // printf("anim draw: %d\n", drawState);
   return 0;
 }
