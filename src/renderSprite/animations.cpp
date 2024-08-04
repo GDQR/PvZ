@@ -1,5 +1,6 @@
 #include "renderSprite/animations.hpp"
 #include "renderSprite/textures.hpp"
+#include "entities/entities.hpp"
 #include "components.hpp"
 #include "systems.hpp"
 #include <iostream>
