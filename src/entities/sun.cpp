@@ -69,8 +69,8 @@ void SunManager::create(Tyra::Vec2 position, sunCost cost, bool createdByPlant) 
   // printf("sun hitbox id: %d\n", sun[indexpos].id[0]);
   // HitBox
   boxColliderArray[sun[indexpos].father] =
-      BoxCollider(position.x + texPosArray[entityID].x,
-                  position.y + texPosArray[entityID].y, 32, 32);
+      BoxCollider(position.x + texPosArray[Entities::componentIndex[entityID][texPos]].x,
+                  position.y + texPosArray[Entities::componentIndex[entityID][texPos]].y, 32, 32);
   createDebugBoxCollider(sun[indexpos].father, Tyra::MODE_STRETCH);
 
   sunsCreated++;

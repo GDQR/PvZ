@@ -583,59 +583,59 @@ void deleteRepeater(const int pos) {
 void createPlant(Plant_State_enum typePlant, const int row, const int column) {
   if (plantCreatedInMap[row][column] == false) {
     plantCreatedInMap[row][column] = true;
-    plantsCreated++;
 
+    int plantPos = row * column + column;
     switch (typePlant) {
       case PeaShotter:
         printf("peashooter\n");
         createPeashotter(
-            plantsCreated, row, column,
+            plantPos, row, column,
             Vec2(mapCollider[row][column].x, mapCollider[row][column].y));
         break;
       case SunFlower:
         printf("sunflower\n");
         createSunflower(
-            plantsCreated, row, column,
+            plantPos, row, column,
             Vec2(mapCollider[row][column].x, mapCollider[row][column].y));
         break;
       case CherryBomb:
         printf("cherryBomb");
         createCherryBomb(
-            plantsCreated, row, column,
+            plantPos, row, column,
             Vec2(mapCollider[row][column].x, mapCollider[row][column].y));
         break;
       case Wallnut:
         printf("wallNut");
         createWallnut(
-            plantsCreated, row, column,
+            plantPos, row, column,
             Vec2(mapCollider[row][column].x, mapCollider[row][column].y));
         break;
       case PotatoMine:
         printf("potatoMine");
         createPotatoMine(
-            plantsCreated, row, column,
+            plantPos, row, column,
             Vec2(mapCollider[row][column].x, mapCollider[row][column].y));
         break;
       case SnowPea:
         printf("SnowPea");
         createSnowPea(
-            plantsCreated, row, column,
+            plantPos, row, column,
             Vec2(mapCollider[row][column].x, mapCollider[row][column].y));
         break;
       case Chomper:
         printf("Chomper");
         createChomper(
-            plantsCreated, row, column,
+            plantPos, row, column,
             Vec2(mapCollider[row][column].x, mapCollider[row][column].y));
       case Repeater:
         printf("Repeater");
         createRepeater(
-            plantsCreated, row, column,
+            plantPos, row, column,
             Vec2(mapCollider[row][column].x, mapCollider[row][column].y));
       default:
         break;
     }
-
+    plantsCreated++;
     // printf("estoy en tile %f,%f\n",cursorTile.x,cursorTile.y);
     // printf("plantas creadas: %d\n",plantsCreated);
   } else {

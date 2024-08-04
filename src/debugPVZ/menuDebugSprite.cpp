@@ -187,8 +187,8 @@ int getTexPos(){
   if(animationFound == false){
     return 1;
   }
-  d_texPosX = &texPosArray[debugEntityId].x;
-  d_texPosY = &texPosArray[debugEntityId].y;
+  d_texPosX = &texPosArray[Entities::componentIndex[debugEntityId][texPos]].x;
+  d_texPosY = &texPosArray[Entities::componentIndex[debugEntityId][texPos]].y;
 
   return 0;
 }
@@ -364,14 +364,14 @@ void DebugSpriteMode::secondMenu(){
           posArray[Entities::componentIndex[debugEntityId][pos]].y -= padSpeed;
         }
         *d_texPosY -= padSpeed;
-        texPosArray[debugEntityId].y--;
+        texPosArray[Entities::componentIndex[debugEntityId][texPos]].y--;
       } else if (menuDownOptionRightJoy(engine->pad)) {
         speedDebugOptions();
         if (animationFound == false) {
           posArray[Entities::componentIndex[debugEntityId][pos]].y += padSpeed;
         }
         *d_texPosY += padSpeed;
-        texPosArray[debugEntityId].y++;
+        texPosArray[Entities::componentIndex[debugEntityId][texPos]].y++;
       }
 
       if (menuLeftOptionRightJoy(engine->pad)) {
@@ -380,14 +380,14 @@ void DebugSpriteMode::secondMenu(){
           posArray[Entities::componentIndex[debugEntityId][pos]].x -= padSpeed;
         }
         *d_texPosX -= padSpeed;
-        texPosArray[debugEntityId].x--;
+        texPosArray[Entities::componentIndex[debugEntityId][texPos]].x--;
       } else if (menuRightOptionRightJoy(engine->pad)) {
         speedDebugOptions();
         if (animationFound == false) {
           posArray[Entities::componentIndex[debugEntityId][pos]].x += padSpeed;
         }
         *d_texPosX += padSpeed;
-        texPosArray[debugEntityId].x++;
+        texPosArray[Entities::componentIndex[debugEntityId][texPos]].x++;
       }
 
       if (menuUpOptionRightJoy(engine->pad) == false &&

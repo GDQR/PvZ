@@ -68,14 +68,14 @@ void AnimationManager::debugChangeFrame(const int entitieID, const int key) {
 
   if (animationDataArray[animationArray[entitieID].animID].x.count(
           animationArray[entitieID].currentFrame) == 1) {
-    texPosArray[entitieID].x =
+    texPosArray[Entities::componentIndex[entitieID][texPos]].x =
         animationDataArray[animationArray[entitieID].animID]
             .x[animationArray[entitieID].currentFrame];
   }
 
   if (animationDataArray[animationArray[entitieID].animID].y.count(
           animationArray[entitieID].currentFrame) == 1) {
-    texPosArray[entitieID].y =
+    texPosArray[Entities::componentIndex[entitieID][texPos]].y =
         animationDataArray[animationArray[entitieID].animID]
             .y[animationArray[entitieID].currentFrame];
   }
@@ -191,10 +191,9 @@ void RendererSprites::updateChildPos() {
 }
 
 void RendererSprites::updateTexture(){
-  std::map<int, Vec2>::iterator it;
-  for (it = texPosArray.begin(); it != texPosArray.end(); it++) {
-    finalPosArray[Entities::componentIndex[it->first][finalPos]] +=
-    texPosArray.at(it->first) * scaleTexture.at(it->first);
+  for (unsigned int i=0; i< texPosArray.first.size(); i++) {
+    finalPosArray[Entities::componentIndex[texPosArray.first[i]][finalPos]] +=
+    texPosArray[i] * scaleTexture.at(texPosArray.first[i]);
   } 
 }
 void RendererSprites::update() {

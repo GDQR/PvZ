@@ -52,7 +52,7 @@ void ArrayKey<Key, Type>::write(const Key key, const Type value) {
     }
   }
 
-  TYRA_ASSERT(!(true == true), "ERROR SEARCHING KEY, KEY NOT FOUNDED", key);
+  TYRA_ASSERT(!(true == true), "ERROR SEARCHING KEY, KEY NOT FOUNDED:", key,"COMPONENT:",type);
 }
 
 template <class Key, class Type>
@@ -73,7 +73,7 @@ Type& ArrayKey<Key, Type>::operator[](const unsigned int& index) {
   //   }
   // }
   if(index >= second.size()){
-    TYRA_ASSERT(!(true == true), "ERROR SEARCHING KEY, KEY NOT FOUNDED:", index);
+    TYRA_ASSERT(!(true == true), "ERROR SEARCHING KEY, KEY NOT FOUNDED:", index,"COMPONENT:",type);
   }
 
   return second[index];

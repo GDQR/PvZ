@@ -83,6 +83,7 @@ void AnimationData::loadAnimation(const int entityID, const int animID,
     scaleTexture[entityID] =
         Vec2(originalSize[entityID].x / newTexture->getWidth(),
              originalSize[entityID].y / newTexture->getHeight());
+    texPosArray.insert(entityID, Tyra::Vec2());
   }
 
   // for (unsigned int j = 1; j < maxFrame; j++) {
@@ -157,7 +158,7 @@ int AnimationData::activeAnimation(const int entityID, const int firstFrame,
     pos--;
   }
 
-  texPosArray[entityID].x = it->second;
+  texPosArray[Entities::componentIndex[entityID][texPos]].x = it->second;
 
   it = y.find(firstFrame);
   pos = firstFrame - 1;
@@ -167,7 +168,7 @@ int AnimationData::activeAnimation(const int entityID, const int firstFrame,
     pos--;
   }
 
-  texPosArray[entityID].y = it->second;
+  texPosArray[Entities::componentIndex[entityID][texPos]].y = it->second;
 
   it = scaleX.find(firstFrame);
   pos = firstFrame - 1;

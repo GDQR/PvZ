@@ -6,6 +6,7 @@
 enum enumComponents {
   pos,
   finalPos,
+  texPos,
   spriteRender
 };
 

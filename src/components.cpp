@@ -14,7 +14,7 @@ std::map<int, Animation> animationArray;
 std::unordered_map<int, AnimationData> animationDataArray;
 std::map<int, FatherID> fatherIDArray;
 ArrayKey<int, Tyra::Vec2> posArray(enumComponents::pos);
-std::map<int, Tyra::Vec2> texPosArray;
+ArrayKey<int, Tyra::Vec2> texPosArray(enumComponents::texPos);
 ArrayKey<int, Tyra::Vec2> finalPosArray(enumComponents::finalPos);
 std::unordered_map<int, Tyra::Sprite> spriteArray;
 ArrayKey<int, int> spriteRenderIDArray(enumComponents::spriteRender);
@@ -247,10 +247,10 @@ void Animation::position(const int entityID) {
   // finalPos += animPos
 
   if (animationDataArray[animID].x.count(currentFrame)) {
-    texPosArray[entityID].x = animationDataArray[animID].x[currentFrame];
+    texPosArray[Entities::componentIndex[entityID][texPos]].x = animationDataArray[animID].x[currentFrame];
   }
   if (animationDataArray[animID].y.count(currentFrame)) {
-    texPosArray[entityID].y = animationDataArray[animID].y[currentFrame];
+    texPosArray[Entities::componentIndex[entityID][texPos]].y = animationDataArray[animID].y[currentFrame];
   }
 }
 
@@ -353,11 +353,11 @@ int Animation::debugAnim(const int entitieID) {
   }
 
   if (animationDataArray[animID].x.count(currentFrame) == 1) {
-    texPosArray[entitieID].x = animationDataArray[animID].x[currentFrame];
+    texPosArray[Entities::componentIndex[entitieID][texPos]].x = animationDataArray[animID].x[currentFrame];
   }
 
   if (animationDataArray[animID].y.count(currentFrame) == 1) {
-    texPosArray[entitieID].y = animationDataArray[animID].y[currentFrame];
+    texPosArray[Entities::componentIndex[entitieID][texPos]].y = animationDataArray[animID].y[currentFrame];
   }
 
   if (animationDataArray[animID].alpha.count(currentFrame) == 1) {
@@ -433,8 +433,8 @@ void createCard(Plant_State_enum typePlant, Vec2 pos, bool isVersusMode) {
   spriteArray[card.seedShadowTimer].color =
       Tyra::Color(0.0F, 0.0F, 0.0F, 60.0F);
 
-  timerArray[card.seedShadowTimer].maxMS =
-      getPlantRechargeTime(typePlant, isVersusMode);
+  timerArray[card.seedShadowTimer].maxMS = 0;
+      // getPlantRechargeTime(typePlant, isVersusMode);
   if (startWithoutWait(typePlant, isVersusMode) == true) {
     timerArray[card.seedShadowTimer].counterMS =
         timerArray[card.seedShadowTimer].maxMS;
