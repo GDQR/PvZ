@@ -110,9 +110,9 @@ bool Sun::erase(const int cursorID) {
 }
 
 void NaturalSun::move() {
-  if (posArray[father].y < 370) {
-    posArray[father].y++;
-    boxColliderArray[father].y++;
+  if (posArray[Entities::componentIndex[father][pos]].y < 370) {
+    posArray[Entities::componentIndex[father][pos]].y++;
+    boxColliderArray[Entities::componentIndex[father][pos]].y++;
   }
 }
 

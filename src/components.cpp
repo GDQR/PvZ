@@ -134,8 +134,8 @@ BoxCollider::BoxCollider(float x, float y, float width, float height,
 }
 
 void BoxCollider::move(const int entityID) {
-  x = offsetX + posArray.second[Entities::componentIndex[entityID][pos]].x;
-  y = offsetY + posArray.second[Entities::componentIndex[entityID][pos]].y;
+  x = offsetX + posArray[Entities::componentIndex[entityID][pos]].x;
+  y = offsetY + posArray[Entities::componentIndex[entityID][pos]].y;
 }
 
 /*
@@ -165,9 +165,9 @@ void Cursor::move() {
     y = cursorSpeed;
   }
 
-  posArray.second[Entities::componentIndex[id][pos]] += Vec2(x, y);
-  if (spriteArray[id].position.x != posArray.second[Entities::componentIndex[id][pos]].x ||
-      spriteArray[id].position.y != posArray.second[Entities::componentIndex[id][pos]].y) {
+  posArray[Entities::componentIndex[id][pos]] += Vec2(x, y);
+  if (spriteArray[id].position.x != posArray[Entities::componentIndex[id][pos]].x ||
+      spriteArray[id].position.y != posArray[Entities::componentIndex[id][pos]].y) {
     if (cursorTimer < 20) {
       cursorTimer++;
 
@@ -189,7 +189,7 @@ void DeckCursor::moveLeft() {
   if (pos < 0) {
     pos = cards.size() - 1;
   }
-  posArray[id].x = posArray.second[Entities::componentIndex[cards[pos].seed][enumComponents::pos]].x - 3;
+  posArray[Entities::componentIndex[id][pos]].x = posArray[Entities::componentIndex[cards[pos].seed][enumComponents::pos]].x - 3;
 }
 
 void DeckCursor::moveRight() {
@@ -197,7 +197,7 @@ void DeckCursor::moveRight() {
   if (pos >= (int)cards.size()) {
     pos = 0;
   }
-  posArray[id].x = posArray.second[Entities::componentIndex[cards[pos].seed][enumComponents::pos]].x - 3;
+  posArray[Entities::componentIndex[id][pos]].x = posArray[Entities::componentIndex[cards[pos].seed][enumComponents::pos]].x - 3;
 }
 
 void Card::update() {
@@ -261,7 +261,7 @@ void Animation::activeDrawNormalSprites(const int entityID) {
       spriteRenderIDArray.erase(entityID);
       spriteNormalIdStopRender.push_back(entityID);
     } else {
-      spriteRenderIDArray.second[Entities::componentIndex[entityID][spriteRender]] = entityID;
+      spriteRenderIDArray[Entities::componentIndex[entityID][spriteRender]] = entityID;
     }
   }
 }
@@ -390,8 +390,8 @@ int Animation::debugAnim(const int entitieID) {
 void FatherID::update(const int entityID) {
   for (unsigned int i = 0; i < id.size(); i++) {
     // finalPos += fatherPos
-    finalPosArray.second[Entities::componentIndex[id[i]][finalPos]].x += posArray.second[Entities::componentIndex[entityID][pos]].x; // look this
-    finalPosArray.second[Entities::componentIndex[id[i]][finalPos]].y += posArray.second[Entities::componentIndex[entityID][pos]].y;
+    finalPosArray[Entities::componentIndex[id[i]][finalPos]].x += posArray[Entities::componentIndex[entityID][pos]].x; // look this
+    finalPosArray[Entities::componentIndex[id[i]][finalPos]].y += posArray[Entities::componentIndex[entityID][pos]].y;
   }
 }
 

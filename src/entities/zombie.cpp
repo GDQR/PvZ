@@ -52,9 +52,9 @@ int Zombie::move() {
     timer--;
   } else if (attack == false) {
     timer = 12;
-    posArray.second[Entities::componentIndex[father][pos]].x -= speedArray[id[0]];
+    posArray[Entities::componentIndex[father][pos]].x -= speedArray[id[0]];
 
-    boxColliderArray[id[0]].x = posArray.second[Entities::componentIndex[father][pos]].x + posArray.second[Entities::componentIndex[id[0]][pos]].x + 60;
+    boxColliderArray[id[0]].x = posArray[Entities::componentIndex[father][pos]].x + posArray[Entities::componentIndex[id[0]][pos]].x + 60;
     // printf("box: %f,%f\n",
     // boxColliderArray[*it->id[0]].x,boxColliderArray[*it->id[0]].y);
   }

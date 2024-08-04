@@ -49,7 +49,7 @@ void AnimationManager::debugChangeFrame(const int entitieID, const int key) {
       }
 
     } else {
-      spriteRenderIDArray[entitieID] = entitieID;
+      spriteRenderIDArray[Entities::componentIndex[entitieID][spriteRender]] = entitieID;
     }
   }
 
@@ -179,8 +179,7 @@ void RendererDebugSpritesManager::update() {
 void RendererSprites::resetFinalPos(){
   // std::map<int, Vec2>::iterator it;
   for (unsigned int i = 0; i < finalPosArray.second.size(); i++) {
-    finalPosArray.second[i] = Vec2(0.0f, 0.0f);
-    finalPosArray.second[i] += posArray.second[Entities::componentIndex[finalPosArray.first[i]][pos]];
+    finalPosArray[i] = posArray[Entities::componentIndex[finalPosArray.first[i]][pos]];
   } 
 }
 
@@ -194,7 +193,7 @@ void RendererSprites::updateChildPos() {
 void RendererSprites::updateTexture(){
   std::map<int, Vec2>::iterator it;
   for (it = texPosArray.begin(); it != texPosArray.end(); it++) {
-    finalPosArray.second[Entities::componentIndex[it->first][finalPos]] +=
+    finalPosArray[Entities::componentIndex[it->first][finalPos]] +=
     texPosArray.at(it->first) * scaleTexture.at(it->first);
   } 
 }
@@ -204,7 +203,7 @@ void RendererSprites::update() {
   // }
   for (auto it : spriteRenderIDArray.first) {
     // spriteArray[it].color.a = frameDataArray[it].alpha;
-    spriteArray[it].position = finalPosArray.second[Entities::componentIndex[it][finalPos]];
+    spriteArray[it].position = finalPosArray[Entities::componentIndex[it][finalPos]];
     // spriteArray[it].size = Tyra::Vec2(frameDataArray[it].scaleX,frameDataArray[it].scaleY);
   //   if (animationDataArray[animID].texture.count(currentFrame) == 1) {
   //   // Unlink Texture from the sprite entitie
@@ -359,9 +358,9 @@ void ProjectileManager::update() {
   std::vector<Proyectile>::iterator it;
 
   for (it = projectile.begin(); it < projectile.end(); it++) {
-    posArray.second[Entities::componentIndex[it->id][pos]].x++;
-    boxColliderArray[it->id].x = posArray.second[Entities::componentIndex[it->id][pos]].x;
-    if (posArray.second[Entities::componentIndex[it->id][pos]].x >= 580) {
+    posArray[Entities::componentIndex[it->id][pos]].x++;
+    boxColliderArray[it->id].x = posArray[Entities::componentIndex[it->id][pos]].x;
+    if (posArray[Entities::componentIndex[it->id][pos]].x >= 580) {
       // delete projectile
       printf("borrando proyectil\n");
       deleteSprite(it->id);
@@ -455,7 +454,7 @@ void newProjectile(Vec2 position, const int damage, bool normalPea) {
     damageArray[*id] = damage;
     // hitbox
     boxColliderArray[*id] =
-        BoxCollider(posArray.second[Entities::componentIndex[*id][pos]].x, posArray.second[Entities::componentIndex[*id][pos]].y, spriteArray[*id].size.x,
+        BoxCollider(posArray[Entities::componentIndex[*id][pos]].x, posArray[Entities::componentIndex[*id][pos]].y, spriteArray[*id].size.x,
                     spriteArray[*id].size.y);
     createDebugBoxCollider(*id, Tyra::MODE_STRETCH);
     projectilesCreated++;

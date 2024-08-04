@@ -28,7 +28,7 @@ void activateRender() {
   int id;
   for (unsigned int i = 0; i < debugStopRenderNormalSprites.size(); i++) {
     id = debugStopRenderNormalSprites.front();
-    spriteRenderIDArray[id] = id;
+    spriteRenderIDArray[Entities::componentIndex[id][spriteRender]] = id;
     debugStopRenderNormalSprites.pop_back();
   }
 }
@@ -217,8 +217,8 @@ void DebugSpriteMode::secondMenu(){
     hideSprite = false;
     activateRender();
     if (animationFound == false) {
-      posArray[debugEntityId].x -= *d_texPosX;
-      posArray[debugEntityId].y -= *d_texPosY;
+      posArray[Entities::componentIndex[debugEntityId][pos]].x -= *d_texPosX;
+      posArray[Entities::componentIndex[debugEntityId][pos]].y -= *d_texPosY;
       if(d_saveFramesCounter == false){
         d_saveFramesCounter = true;
         animationArray[debugEntityId].framesCounter = d_framesCounter;
@@ -268,7 +268,7 @@ void DebugSpriteMode::secondMenu(){
     if (menuUpOptionLeftJoy(engine->pad)) {
       speedDebugOptions();
       if (rotateMode == false && sizeMode == false) {
-        posArray[debugEntityId].y -= padSpeed;
+        posArray[Entities::componentIndex[debugEntityId][pos]].y -= padSpeed;
       } else if (sizeMode == false) {
         *d_angleY += padSpeed;
         angleArray[debugEntityId].y = *d_angleY;
@@ -289,7 +289,7 @@ void DebugSpriteMode::secondMenu(){
       speedDebugOptions();
 
       if (rotateMode == false && sizeMode == false) {
-        posArray[debugEntityId].y += padSpeed;
+        posArray[Entities::componentIndex[debugEntityId][pos]].y += padSpeed;
       } else if (sizeMode == false) {
         *d_angleY -= padSpeed;
         angleArray[debugEntityId].y = *d_angleY;
@@ -316,7 +316,7 @@ void DebugSpriteMode::secondMenu(){
       speedDebugOptions();
 
       if (rotateMode == false && sizeMode == false) {
-        posArray[debugEntityId].x -= padSpeed;
+        posArray[Entities::componentIndex[debugEntityId][pos]].x -= padSpeed;
       } else if (sizeMode == false) {
         *d_angleX -= padSpeed;
         angleArray[debugEntityId].x = *d_angleX;
@@ -336,7 +336,7 @@ void DebugSpriteMode::secondMenu(){
       speedDebugOptions();
 
       if (rotateMode == false && sizeMode == false) {
-        posArray[debugEntityId].x += padSpeed;
+        posArray[Entities::componentIndex[debugEntityId][pos]].x += padSpeed;
       } else if (sizeMode == false) {
         *d_angleX += padSpeed;
         angleArray[debugEntityId].x = *d_angleX;
@@ -361,14 +361,14 @@ void DebugSpriteMode::secondMenu(){
       if (menuUpOptionRightJoy(engine->pad)) {
         speedDebugOptions();
         if (animationFound == false) {
-          posArray[debugEntityId].y -= padSpeed;
+          posArray[Entities::componentIndex[debugEntityId][pos]].y -= padSpeed;
         }
         *d_texPosY -= padSpeed;
         texPosArray[debugEntityId].y--;
       } else if (menuDownOptionRightJoy(engine->pad)) {
         speedDebugOptions();
         if (animationFound == false) {
-          posArray[debugEntityId].y += padSpeed;
+          posArray[Entities::componentIndex[debugEntityId][pos]].y += padSpeed;
         }
         *d_texPosY += padSpeed;
         texPosArray[debugEntityId].y++;
@@ -377,14 +377,14 @@ void DebugSpriteMode::secondMenu(){
       if (menuLeftOptionRightJoy(engine->pad)) {
         speedDebugOptions();
         if (animationFound == false) {
-          posArray[debugEntityId].x -= padSpeed;
+          posArray[Entities::componentIndex[debugEntityId][pos]].x -= padSpeed;
         }
         *d_texPosX -= padSpeed;
         texPosArray[debugEntityId].x--;
       } else if (menuRightOptionRightJoy(engine->pad)) {
         speedDebugOptions();
         if (animationFound == false) {
-          posArray[debugEntityId].x += padSpeed;
+          posArray[Entities::componentIndex[debugEntityId][pos]].x += padSpeed;
         }
         *d_texPosX += padSpeed;
         texPosArray[debugEntityId].x++;
@@ -446,8 +446,8 @@ void DebugSpriteMode::drawSecondMenu(){
     }
     if (rotateMode == false && sizeMode == false) {
       std::string position =
-          "Position: " + std::to_string(posArray[debugEntityId].x) + ", " +
-          std::to_string(posArray[debugEntityId].y);
+          "Position: " + std::to_string(posArray[Entities::componentIndex[debugEntityId][pos]].x) + ", " +
+          std::to_string(posArray[Entities::componentIndex[debugEntityId][pos]].y);
 
       engine->font.drawText(&myFont, position, 30, 140, 16,
                             Tyra::Color(0, 0, 0, 128));

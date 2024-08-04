@@ -59,8 +59,8 @@ void subMenu(Tyra::Pad& pad, Tyra::Font& font, int& entitieID) {
 
   if (hideText == false) {
     std::string position =
-        "Position: " + std::to_string(posArray[entitieID].x) + ", " +
-        std::to_string(posArray[entitieID].y);
+        "Position: " + std::to_string(posArray[Entities::componentIndex[entitieID][pos]].x) + ", " +
+        std::to_string(posArray[Entities::componentIndex[entitieID][pos]].y);
     std::string texPosition = "Texture Position: " + std::to_string(texPos->x) +
                               ", " + std::to_string(texPos->y);
 
