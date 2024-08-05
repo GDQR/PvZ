@@ -379,7 +379,7 @@ void readInfo(std::ifstream& MyReadFile, std::string& insideArrow,
   }
 }
 
-void readReanimFiles(std::string nameID, std::string file) {
+void readReanimFiles(int nameID, std::string file) {
   std::string myText;
 
   // Read from the text file
@@ -433,7 +433,7 @@ void readReanimFiles(std::string nameID, std::string file) {
   MyReadFile.close();
 }
 
-void loadAnimation(std::string animName) {
-  readReanimFiles(animName,
+void loadAnimation(const enumAnimName animNameID, std::string animName) {
+  readReanimFiles(animNameID,
                   Tyra::FileUtils::fromCwd("reanim/" + animName + ".reanim"));
 }

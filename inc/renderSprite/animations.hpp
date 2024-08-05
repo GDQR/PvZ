@@ -11,6 +11,19 @@ enum enumAnimationState {
   enumMaxAnimationState
 };
 
+enum enumAnimName {
+  PeashooterSingleAnimName,
+  SunFlowerAnimName,
+  CherryBombAnimName,
+  WallnutAnimName,
+  PotatoMineAnimName,
+  SnowPeaAnimName,
+  ChomperAnimName,
+  PeaShooterAnimName,
+  SunAnimName,
+  ZombieAnimName
+};
+
 class AnimationState {
  public:
   AnimationState();
@@ -65,4 +78,4 @@ extern AnimationState animationStateVector[enumMaxAnimationState];
 
 void setSprite(const int entityID, const int draw);
 void loadAnimationStates();
-void loadAnimation(std::string animName);
+void loadAnimation(const enumAnimName animNameID, std::string animName);

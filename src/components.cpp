@@ -9,7 +9,7 @@ const Tyra::PadJoy* leftJoy;
 Tyra::TextureRepository* texRepo;
 
 // sparse array
-std::unordered_map<std::string, std::vector<int>> m_animID;
+std::unordered_map<int, std::vector<int>> m_animID;
 ArrayKey<int, Animation> animationArray(enumComponents::animation);
 std::unordered_map<int, AnimationData> animationDataArray;
 std::map<int, FatherID> fatherIDArray;

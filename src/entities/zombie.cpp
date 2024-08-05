@@ -73,7 +73,7 @@ void Zombie::attackPlant() {
         for (unsigned int j = 0; j < id.size(); j++) {
           if (animationArray.count(id[j]) == 1) {
             // printf("anim attack id: %d\n",m_animID["Zombie"][j]);
-            animationDataArray[m_animID["Zombie"][j]].setAnimationState(
+            animationDataArray[m_animID[enumAnimName::ZombieAnimName][j]].setAnimationState(
                 id[j], normalZombieAttack);
           }
         }
@@ -92,7 +92,7 @@ void Zombie::attackPlant() {
           for (unsigned int j = 0; j < id.size(); j++) {
             if (animationArray.count(id[j]) == 1) {
               // printf("anim attack id: %d\n",id[j]);
-              animationDataArray[m_animID["Zombie"][j]].setAnimationState(
+              animationDataArray[m_animID[enumAnimName::ZombieAnimName][j]].setAnimationState(
                   id[j], normalZombieWalk);
             }
           }
@@ -142,7 +142,7 @@ bool Zombie::erase() {
   if (lifeArray[id[0]] <= 0) {
     deletePosArray(father);
 
-    for (unsigned int i = 0; i < m_animID["Zombie"].size(); i++) {
+    for (unsigned int i = 0; i < m_animID[enumAnimName::ZombieAnimName].size(); i++) {
       deletePosArray(id[i]);
       deleteFinalPosArray(id[i]);
       deleteFatherIDChild(&father, &id[i]);
@@ -172,14 +172,15 @@ void createZombie(Vec2 pos) {
   zombie[id].newZombie(ZombieNormal);
   zombie[id].father = Entities::newID();
   posArray.insert(zombie[id].father, pos);
+  printf("zombie father id: %d\n",zombie[id].father);
 
   int entityID;
   int animID;
-  printf("zombie anim size: %d\n", m_animID["Zombie"].size());
-  for (unsigned int i = 0; i < m_animID["Zombie"].size(); i++) {
+  printf("zombie anim size: %d\n", m_animID[enumAnimName::ZombieAnimName].size());
+  for (unsigned int i = 0; i < m_animID[enumAnimName::ZombieAnimName].size(); i++) {
     zombie[id].id.push_back(Entities::newID());
     entityID = zombie[id].id[i];
-    animID = m_animID["Zombie"][i];
+    animID = m_animID[enumAnimName::ZombieAnimName][i];
     // printf("i: %d\n",i);
     // printf("Zombie ID: %d\n", entityID);
     // printf("animID: %d\n", animID);

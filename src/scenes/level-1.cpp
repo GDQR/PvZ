@@ -89,8 +89,8 @@ void Level1::init() {
   newDeckCursor(&player,
                 Vec2(posArray[cards[deckCursor[player].pos].seed].x - 3, -10));  
   // loadAnimation("Sun");
-  // loadAnimation("PeaShooterSingle");
-  // loadAnimation("Zombie");
+  loadAnimation(enumAnimName::PeashooterSingleAnimName, "PeaShooterSingle");
+  loadAnimation(enumAnimName::ZombieAnimName,"Zombie");
   // loadAnimation("SunFlower");
   // loadAnimation("CherryBomb");
   // createPlant(cards[deckCursor.pos].plant, 2,7);

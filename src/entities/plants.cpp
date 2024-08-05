@@ -26,18 +26,17 @@ void createPeashotter(int id, int row, int column, Tyra::Vec2 pos) {
 
   posArray.insert(plant[id].father, pos);  // Vec2(row, column);
 
-  printf("size: %d\n", m_animID["PeaShooterSingle"].size());
+  printf("size: %d\n", m_animID[enumAnimName::PeashooterSingleAnimName].size());
 
   int entityID;
   int animID;
   // int spriteID;
-
-  for (unsigned int i = 0; i < m_animID["PeaShooterSingle"].size(); i++) {
+  for (unsigned int i = 0; i < m_animID[enumAnimName::PeashooterSingleAnimName].size(); i++) {
     plant[id].id.push_back(Entities::newID());
     entityID = plant[id].id[i];
-    animID = m_animID["PeaShooterSingle"][i];
-    printf("plant ID: %d\n", entityID);
-    printf("animID: %d\n", animID);
+    animID = m_animID[enumAnimName::PeashooterSingleAnimName][i];
+    // printf("plant ID: %d\n", entityID);
+    // printf("animID: %d\n", animID);
     newFatherID(&plant[id].father, &entityID);
     animationDataArray[animID].loadAnimation(entityID, animID, 80,104);
     // animationDataArray[animID].activeAnimation(entityID, 80, 104);
@@ -122,7 +121,7 @@ void deletePeashotter(const int pos) {
 }
 
 void createSunflower(const int id, int row, int col, Tyra::Vec2 pos) {
-  plant[id].newPlant(SunFlower);
+  plant[id].newPlant(Plant_State_enum::SunFlower);
 
   plant[id].row = row;
   plant[id].column = col;
@@ -131,15 +130,15 @@ void createSunflower(const int id, int row, int col, Tyra::Vec2 pos) {
 
   posArray.insert(plant[id].father, pos);  // Vec2(row, column);
 
-  printf("size: %d\n", m_animID["SunFlower"].size());
+  printf("size: %d\n", m_animID[enumAnimName::SunFlowerAnimName].size());
 
   int entityID;
   int animID;
 
-  for (unsigned int i = 0; i < m_animID["SunFlower"].size(); i++) {
+  for (unsigned int i = 0; i < m_animID[enumAnimName::SunFlowerAnimName].size(); i++) {
     plant[id].id.push_back(Entities::newID());
     entityID = plant[id].id[i];
-    animID = m_animID["SunFlower"][i];
+    animID = m_animID[enumAnimName::SunFlowerAnimName][i];
     printf("plant ID: %d\n", entityID);
     printf("animID: %d\n", animID);
     newFatherID(&plant[id].father, &entityID);
@@ -176,7 +175,7 @@ void deleteSunflower(const int pos) {
 
   deletePosArray(plant[pos].father);
 
-  for (unsigned int i = 0; i < m_animID["SunFlower"].size(); i++) {
+  for (unsigned int i = 0; i < m_animID[enumAnimName::SunFlowerAnimName].size(); i++) {
     deletePosArray(plant[pos].id[i]);
     deleteTexPosArray(plant[pos].id[i]);
     deleteFatherIDChild(&plant[pos].father, &plant[pos].id[i]);
@@ -197,7 +196,7 @@ void deleteSunflower(const int pos) {
 }
 
 void createCherryBomb(const int id, int row, int col, Tyra::Vec2 pos) {
-  plant[id].newPlant(CherryBomb);
+  plant[id].newPlant(Plant_State_enum::CherryBomb);
 
   plant[id].row = row;
   plant[id].column = col;
@@ -206,15 +205,15 @@ void createCherryBomb(const int id, int row, int col, Tyra::Vec2 pos) {
 
   posArray.insert(plant[id].father, pos);
 
-  printf("size: %d\n", m_animID["CherryBomb"].size());
+  printf("size: %d\n", m_animID[enumAnimName::CherryBombAnimName].size());
 
   int entityID;
   int animID;
 
-  for (unsigned int i = 0; i < m_animID["CherryBomb"].size(); i++) {
+  for (unsigned int i = 0; i < m_animID[enumAnimName::CherryBombAnimName].size(); i++) {
     plant[id].id.push_back(Entities::newID());
     entityID = plant[id].id[i];
-    animID = m_animID["CherryBomb"][i];
+    animID = m_animID[enumAnimName::CherryBombAnimName][i];
     printf("plant ID: %d\n", entityID);
     printf("animID: %d\n", animID);
     newFatherID(&plant[id].father, &entityID);
@@ -239,7 +238,7 @@ void deleteCherryBomb(const int pos) {
 
   deletePosArray(plant[pos].father);
 
-  for (unsigned int i = 0; i < m_animID["CherryBomb"].size(); i++) {
+  for (unsigned int i = 0; i < m_animID[enumAnimName::CherryBombAnimName].size(); i++) {
     deletePosArray(plant[pos].id[i]);
     deleteTexPosArray(plant[pos].id[i]);
     deleteFatherIDChild(&plant[pos].father, &plant[pos].id[i]);
@@ -258,7 +257,7 @@ void deleteCherryBomb(const int pos) {
 }
 
 void createWallnut(const int id, int row, int col, Tyra::Vec2 pos) {
-  plant[id].newPlant(Wallnut);
+  plant[id].newPlant(Plant_State_enum::Wallnut);
 
   plant[id].row = row;
   plant[id].column = col;
@@ -267,15 +266,15 @@ void createWallnut(const int id, int row, int col, Tyra::Vec2 pos) {
 
   posArray.insert(plant[id].father, pos);
 
-  printf("size: %d\n", m_animID["Wallnut"].size());
+  printf("size: %d\n", m_animID[enumAnimName::WallnutAnimName].size());
 
   int entityID;
   int animID;
 
-  for (unsigned int i = 0; i < m_animID["Wallnut"].size(); i++) {
+  for (unsigned int i = 0; i < m_animID[enumAnimName::WallnutAnimName].size(); i++) {
     plant[id].id.push_back(Entities::newID());
     entityID = plant[id].id[i];
-    animID = m_animID["Wallnut"][i];
+    animID = m_animID[enumAnimName::WallnutAnimName][i];
     printf("plant ID: %d\n", entityID);
     printf("animID: %d\n", animID);
     newFatherID(&plant[id].father, &entityID);
@@ -300,7 +299,7 @@ void deleteWallNut(const int pos) {
 
   deletePosArray(plant[pos].father);
 
-  for (unsigned int i = 0; i < m_animID["Wallnut"].size(); i++) {
+  for (unsigned int i = 0; i < m_animID[enumAnimName::WallnutAnimName].size(); i++) {
     deletePosArray(plant[pos].id[i]);
     deleteTexPosArray(plant[pos].id[i]);
     deleteFatherIDChild(&plant[pos].father, &plant[pos].id[i]);
@@ -319,7 +318,7 @@ void deleteWallNut(const int pos) {
 }
 
 void createPotatoMine(const int id, int row, int col, Tyra::Vec2 pos) {
-  plant[id].newPlant(PotatoMine);
+  plant[id].newPlant(Plant_State_enum::PotatoMine);
 
   plant[id].row = row;
   plant[id].column = col;
@@ -328,15 +327,15 @@ void createPotatoMine(const int id, int row, int col, Tyra::Vec2 pos) {
 
   posArray.insert(plant[id].father, pos);
 
-  printf("size: %d\n", m_animID["PotatoMine"].size());
+  printf("size: %d\n", m_animID[enumAnimName::PotatoMineAnimName].size());
 
   int entityID;
   int animID;
 
-  for (unsigned int i = 0; i < m_animID["PotatoMine"].size(); i++) {
+  for (unsigned int i = 0; i < m_animID[enumAnimName::PotatoMineAnimName].size(); i++) {
     plant[id].id.push_back(Entities::newID());
     entityID = plant[id].id[i];
-    animID = m_animID["PotatoMine"][i];
+    animID = m_animID[enumAnimName::PotatoMineAnimName][i];
     printf("plant ID: %d\n", entityID);
     printf("animID: %d\n", animID);
     newFatherID(&plant[id].father, &entityID);
@@ -365,7 +364,7 @@ void deletePotatoMine(const int pos) {
 
   deletePosArray(plant[pos].father);
 
-  for (unsigned int i = 0; i < m_animID["PotatoMine"].size(); i++) {
+  for (unsigned int i = 0; i < m_animID[enumAnimName::PotatoMineAnimName].size(); i++) {
     deletePosArray(plant[pos].id[i]);
     deleteTexPosArray(plant[pos].id[i]);
     deleteFatherIDChild(&plant[pos].father, &plant[pos].id[i]);
@@ -384,7 +383,7 @@ void deletePotatoMine(const int pos) {
 }
 
 void createSnowPea(int id, int row, int column, Tyra::Vec2 pos) {
-  plant[id].newPlant(SnowPea);
+  plant[id].newPlant(Plant_State_enum::SnowPea);
 
   plant[id].row = row;
   plant[id].column = column;
@@ -393,16 +392,16 @@ void createSnowPea(int id, int row, int column, Tyra::Vec2 pos) {
 
   posArray.insert(plant[id].father, pos);  // Vec2(row, column);
 
-  printf("size: %d\n", m_animID["SnowPea"].size());
+  printf("size: %d\n", m_animID[enumAnimName::SnowPeaAnimName].size());
 
   int entityID;
   int animID;
   // int spriteID;
 
-  for (unsigned int i = 0; i < m_animID["SnowPea"].size(); i++) {
+  for (unsigned int i = 0; i < m_animID[enumAnimName::SnowPeaAnimName].size(); i++) {
     plant[id].id.push_back(Entities::newID());
     entityID = plant[id].id[i];
-    animID = m_animID["SnowPea"][i];
+    animID = m_animID[enumAnimName::SnowPeaAnimName][i];
     printf("plant ID: %d\n", entityID);
     printf("animID: %d\n", animID);
     newFatherID(&plant[id].father, &entityID);
@@ -433,7 +432,7 @@ void deleteSnowPea(const int pos) {
 
   deletePosArray(plant[pos].father);
 
-  for (unsigned int i = 0; i < m_animID["SnowPea"].size(); i++) {
+  for (unsigned int i = 0; i < m_animID[enumAnimName::SnowPeaAnimName].size(); i++) {
     deletePosArray(plant[pos].id[i]);
     deleteTexPosArray(plant[pos].id[i]);
     deleteFatherIDChild(&plant[pos].father, &plant[pos].id[i]);
@@ -453,7 +452,7 @@ void deleteSnowPea(const int pos) {
 }
 
 void createChomper(int id, int row, int column, Tyra::Vec2 pos) {
-  plant[id].newPlant(Chomper);
+  plant[id].newPlant(Plant_State_enum::Chomper);
 
   plant[id].row = row;
   plant[id].column = column;
@@ -462,16 +461,16 @@ void createChomper(int id, int row, int column, Tyra::Vec2 pos) {
 
   posArray.insert(plant[id].father, pos);  // Vec2(row, column);
 
-  printf("size: %d\n", m_animID["Chomper"].size());
+  printf("size: %d\n", m_animID[enumAnimName::ChomperAnimName].size());
 
   int entityID;
   int animID;
   // int spriteID;
 
-  for (unsigned int i = 0; i < m_animID["Chomper"].size(); i++) {
+  for (unsigned int i = 0; i < m_animID[enumAnimName::ChomperAnimName].size(); i++) {
     plant[id].id.push_back(Entities::newID());
     entityID = plant[id].id[i];
-    animID = m_animID["Chomper"][i];
+    animID = m_animID[enumAnimName::ChomperAnimName][i];
     printf("plant ID: %d\n", entityID);
     printf("animID: %d\n", animID);
     newFatherID(&plant[id].father, &entityID);
@@ -496,7 +495,7 @@ void deleteChomper(const int pos) {
 
   deletePosArray(plant[pos].father);
 
-  for (unsigned int i = 0; i < m_animID["Chomper"].size(); i++) {
+  for (unsigned int i = 0; i < m_animID[enumAnimName::ChomperAnimName].size(); i++) {
     deletePosArray(plant[pos].id[i]);
     deleteTexPosArray(plant[pos].id[i]);
     deleteFatherIDChild(&plant[pos].father, &plant[pos].id[i]);
@@ -515,7 +514,7 @@ void deleteChomper(const int pos) {
 }
 
 void createRepeater(int id, int row, int column, Tyra::Vec2 pos) {
-  plant[id].newPlant(Repeater);
+  plant[id].newPlant(Plant_State_enum::Repeater);
 
   plant[id].row = row;
   plant[id].column = column;
@@ -524,16 +523,16 @@ void createRepeater(int id, int row, int column, Tyra::Vec2 pos) {
 
   posArray.insert(plant[id].father, pos); // Vec2(row, column);
 
-  printf("size: %d\n", m_animID["PeaShooter"].size());
+  printf("size: %d\n", m_animID[enumAnimName::PeaShooterAnimName].size());
 
   int entityID;
   int animID;
   // int spriteID;
 
-  for (unsigned int i = 0; i < m_animID["PeaShooter"].size(); i++) {
+  for (unsigned int i = 0; i < m_animID[enumAnimName::PeaShooterAnimName].size(); i++) {
     plant[id].id.push_back(Entities::newID());
     entityID = plant[id].id[i];
-    animID = m_animID["PeaShooter"][i];
+    animID = m_animID[enumAnimName::PeaShooterAnimName][i];
     printf("plant ID: %d\n", entityID);
     printf("animID: %d\n", animID);
     newFatherID(&plant[id].father, &entityID);
@@ -562,7 +561,7 @@ void deleteRepeater(const int pos) {
 
   deletePosArray(plant[pos].father);
 
-  for (unsigned int i = 0; i < m_animID["Repeater"].size(); i++) {
+  for (unsigned int i = 0; i < m_animID[enumAnimName::PeaShooterAnimName].size(); i++) {
     deletePosArray(plant[pos].id[i]);
     deleteTexPosArray(plant[pos].id[i]);
     deleteFatherIDChild(&plant[pos].father, &plant[pos].id[i]);
