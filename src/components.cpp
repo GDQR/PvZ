@@ -231,7 +231,6 @@ void Animation::update(const int entityID) {
 
     activeDrawNormalSprites(entityID);
     if (draw == (int)enumDraw::draw) {
-      position(entityID);
       updateSprites(entityID);
       if (angleArray.count(entityID) == 1) {
         updateAngle(entityID);
@@ -303,6 +302,13 @@ void Animation::updateSprites(const int entityID) {
             ->getByTextureId(animationDataArray[animID].texture[currentFrame])
             ->getHeight());
   }
+  if (animationDataArray[animID].x.count(currentFrame)) {
+    texPosArray[entityID].x = animationDataArray[animID].x[currentFrame];
+  }
+  if (animationDataArray[animID].y.count(currentFrame)) {
+    texPosArray[entityID].y = animationDataArray[animID].y[currentFrame];
+  }
+  texPosArray[entityID] *= scaleTexture.at(entityID);
   if (animationDataArray[animID].alpha.count(currentFrame) == 1) {
     spriteArray[entityID].color.a =
         animationDataArray[animID].alpha[currentFrame] * 128;

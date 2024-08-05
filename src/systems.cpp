@@ -191,8 +191,7 @@ void RendererSprites::updateChildPos() {
 void RendererSprites::updateTexture(){
   int i=0;
   for (auto it : texPosArray.first) {
-    finalPosArray[it] +=
-    texPosArray.second[i] * scaleTexture.at(it);
+    finalPosArray[it] += texPosArray.second[i];
     i++;
   } 
 }
