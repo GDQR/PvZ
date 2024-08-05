@@ -16,7 +16,7 @@ std::map<int, FatherID> fatherIDArray;
 ArrayKey<int, Tyra::Vec2> posArray(enumComponents::pos);
 ArrayKey<int, Tyra::Vec2> texPosArray(enumComponents::texPos);
 ArrayKey<int, Tyra::Vec2> finalPosArray(enumComponents::finalPos);
-std::unordered_map<int, Tyra::Sprite> spriteArray;
+ArrayKey<int, Tyra::Sprite> spriteArray(enumComponents::sprite);
 ArrayKey<int, int> spriteRenderIDArray(enumComponents::spriteRender);
 std::vector<int> spriteNormalIdStopRender;
 std::vector<int> animationIdStopRender;
@@ -53,7 +53,7 @@ std::map<int, Tyra::Sprite> dm_SpriteNormalPivot;
 
 void createSprite(int id, Tyra::SpriteMode mode, Tyra::Vec2 position,
                   Tyra::Vec2 size) {
-  spriteArray[id] = Sprite();
+  spriteArray.insert(id, Sprite());
   posArray.insert(id, position);
   finalPosArray.insert(id, Vec2(0, 0));
   loadSprite(&spriteArray[id], mode, Vec2(0.0f, 0.0f), size);

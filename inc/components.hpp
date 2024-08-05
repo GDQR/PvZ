@@ -117,7 +117,7 @@ extern std::map<int, FatherID> fatherIDArray;
 extern ArrayKey<int, Tyra::Vec2> texPosArray;
 extern ArrayKey<int, Tyra::Vec2> posArray;
 extern ArrayKey<int, Tyra::Vec2> finalPosArray;
-extern std::unordered_map<int, Tyra::Sprite> spriteArray;
+extern ArrayKey<int, Tyra::Sprite> spriteArray;
 extern ArrayKey<int, int> spriteRenderIDArray;
 extern std::vector<int> spriteNormalIdStopRender;
 extern std::vector<int> animationIdStopRender;
