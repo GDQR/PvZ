@@ -28,7 +28,7 @@ void activateRender() {
   int id;
   for (unsigned int i = 0; i < debugStopRenderNormalSprites.size(); i++) {
     id = debugStopRenderNormalSprites.front();
-    spriteRenderIDArray[Entities::componentIndex[id][spriteRender]] = id;
+    spriteRenderIDArray[id] = id;
     debugStopRenderNormalSprites.pop_back();
   }
 }
@@ -187,8 +187,8 @@ int getTexPos(){
   if(animationFound == false){
     return 1;
   }
-  d_texPosX = &texPosArray[Entities::componentIndex[debugEntityId][texPos]].x;
-  d_texPosY = &texPosArray[Entities::componentIndex[debugEntityId][texPos]].y;
+  d_texPosX = &texPosArray[debugEntityId].x;
+  d_texPosY = &texPosArray[debugEntityId].y;
 
   return 0;
 }
@@ -217,8 +217,8 @@ void DebugSpriteMode::secondMenu(){
     hideSprite = false;
     activateRender();
     if (animationFound == false) {
-      posArray[Entities::componentIndex[debugEntityId][pos]].x -= *d_texPosX;
-      posArray[Entities::componentIndex[debugEntityId][pos]].y -= *d_texPosY;
+      posArray[debugEntityId].x -= *d_texPosX;
+      posArray[debugEntityId].y -= *d_texPosY;
       if(d_saveFramesCounter == false){
         d_saveFramesCounter = true;
         animationArray[debugEntityId].framesCounter = d_framesCounter;
@@ -268,7 +268,7 @@ void DebugSpriteMode::secondMenu(){
     if (menuUpOptionLeftJoy(engine->pad)) {
       speedDebugOptions();
       if (rotateMode == false && sizeMode == false) {
-        posArray[Entities::componentIndex[debugEntityId][pos]].y -= padSpeed;
+        posArray[debugEntityId].y -= padSpeed;
       } else if (sizeMode == false) {
         *d_angleY += padSpeed;
         angleArray[debugEntityId].y = *d_angleY;
@@ -289,7 +289,7 @@ void DebugSpriteMode::secondMenu(){
       speedDebugOptions();
 
       if (rotateMode == false && sizeMode == false) {
-        posArray[Entities::componentIndex[debugEntityId][pos]].y += padSpeed;
+        posArray[debugEntityId].y += padSpeed;
       } else if (sizeMode == false) {
         *d_angleY -= padSpeed;
         angleArray[debugEntityId].y = *d_angleY;
@@ -316,7 +316,7 @@ void DebugSpriteMode::secondMenu(){
       speedDebugOptions();
 
       if (rotateMode == false && sizeMode == false) {
-        posArray[Entities::componentIndex[debugEntityId][pos]].x -= padSpeed;
+        posArray[debugEntityId].x -= padSpeed;
       } else if (sizeMode == false) {
         *d_angleX -= padSpeed;
         angleArray[debugEntityId].x = *d_angleX;
@@ -336,7 +336,7 @@ void DebugSpriteMode::secondMenu(){
       speedDebugOptions();
 
       if (rotateMode == false && sizeMode == false) {
-        posArray[Entities::componentIndex[debugEntityId][pos]].x += padSpeed;
+        posArray[debugEntityId].x += padSpeed;
       } else if (sizeMode == false) {
         *d_angleX += padSpeed;
         angleArray[debugEntityId].x = *d_angleX;
@@ -361,33 +361,33 @@ void DebugSpriteMode::secondMenu(){
       if (menuUpOptionRightJoy(engine->pad)) {
         speedDebugOptions();
         if (animationFound == false) {
-          posArray[Entities::componentIndex[debugEntityId][pos]].y -= padSpeed;
+          posArray[debugEntityId].y -= padSpeed;
         }
         *d_texPosY -= padSpeed;
-        texPosArray[Entities::componentIndex[debugEntityId][texPos]].y--;
+        texPosArray[debugEntityId].y--;
       } else if (menuDownOptionRightJoy(engine->pad)) {
         speedDebugOptions();
         if (animationFound == false) {
-          posArray[Entities::componentIndex[debugEntityId][pos]].y += padSpeed;
+          posArray[debugEntityId].y += padSpeed;
         }
         *d_texPosY += padSpeed;
-        texPosArray[Entities::componentIndex[debugEntityId][texPos]].y++;
+        texPosArray[debugEntityId].y++;
       }
 
       if (menuLeftOptionRightJoy(engine->pad)) {
         speedDebugOptions();
         if (animationFound == false) {
-          posArray[Entities::componentIndex[debugEntityId][pos]].x -= padSpeed;
+          posArray[debugEntityId].x -= padSpeed;
         }
         *d_texPosX -= padSpeed;
-        texPosArray[Entities::componentIndex[debugEntityId][texPos]].x--;
+        texPosArray[debugEntityId].x--;
       } else if (menuRightOptionRightJoy(engine->pad)) {
         speedDebugOptions();
         if (animationFound == false) {
-          posArray[Entities::componentIndex[debugEntityId][pos]].x += padSpeed;
+          posArray[debugEntityId].x += padSpeed;
         }
         *d_texPosX += padSpeed;
-        texPosArray[Entities::componentIndex[debugEntityId][texPos]].x++;
+        texPosArray[debugEntityId].x++;
       }
 
       if (menuUpOptionRightJoy(engine->pad) == false &&
@@ -446,8 +446,8 @@ void DebugSpriteMode::drawSecondMenu(){
     }
     if (rotateMode == false && sizeMode == false) {
       std::string position =
-          "Position: " + std::to_string(posArray[Entities::componentIndex[debugEntityId][pos]].x) + ", " +
-          std::to_string(posArray[Entities::componentIndex[debugEntityId][pos]].y);
+          "Position: " + std::to_string(posArray[debugEntityId].x) + ", " +
+          std::to_string(posArray[debugEntityId].y);
 
       engine->font.drawText(&myFont, position, 30, 140, 16,
                             Tyra::Color(0, 0, 0, 128));

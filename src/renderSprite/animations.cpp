@@ -158,7 +158,7 @@ int AnimationData::activeAnimation(const int entityID, const int firstFrame,
     pos--;
   }
 
-  texPosArray[Entities::componentIndex[entityID][texPos]].x = it->second;
+  texPosArray[entityID].x = it->second;
 
   it = y.find(firstFrame);
   pos = firstFrame - 1;
@@ -168,7 +168,7 @@ int AnimationData::activeAnimation(const int entityID, const int firstFrame,
     pos--;
   }
 
-  texPosArray[Entities::componentIndex[entityID][texPos]].y = it->second;
+  texPosArray[entityID].y = it->second;
 
   it = scaleX.find(firstFrame);
   pos = firstFrame - 1;

@@ -87,7 +87,7 @@ void Level1::init() {
   zombieCreateRow[2] = true;
   newCursor(&player, Vec2(mapCollider[0][0].x, mapCollider[0][0].y + 30));
   newDeckCursor(&player,
-                Vec2(posArray[Entities::componentIndex[cards[deckCursor[player].pos].seed][pos]].x - 3, -10));  
+                Vec2(posArray[cards[deckCursor[player].pos].seed].x - 3, -10));  
   // loadAnimation("Sun");
   // loadAnimation("PeaShooterSingle");
   // loadAnimation("Zombie");

@@ -49,7 +49,7 @@ void AnimationManager::debugChangeFrame(const int entitieID, const int key) {
       }
 
     } else {
-      spriteRenderIDArray[Entities::componentIndex[entitieID][spriteRender]] = entitieID;
+      spriteRenderIDArray[entitieID] = entitieID;
     }
   }
 
@@ -68,14 +68,14 @@ void AnimationManager::debugChangeFrame(const int entitieID, const int key) {
 
   if (animationDataArray[animationArray[entitieID].animID].x.count(
           animationArray[entitieID].currentFrame) == 1) {
-    texPosArray[Entities::componentIndex[entitieID][texPos]].x =
+    texPosArray[entitieID].x =
         animationDataArray[animationArray[entitieID].animID]
             .x[animationArray[entitieID].currentFrame];
   }
 
   if (animationDataArray[animationArray[entitieID].animID].y.count(
           animationArray[entitieID].currentFrame) == 1) {
-    texPosArray[Entities::componentIndex[entitieID][texPos]].y =
+    texPosArray[entitieID].y =
         animationDataArray[animationArray[entitieID].animID]
             .y[animationArray[entitieID].currentFrame];
   }
@@ -179,7 +179,7 @@ void RendererDebugSpritesManager::update() {
 void RendererSprites::resetFinalPos(){
   // std::map<int, Vec2>::iterator it;
   for (unsigned int i = 0; i < finalPosArray.second.size(); i++) {
-    finalPosArray[i] = posArray[Entities::componentIndex[finalPosArray.first[i]][pos]];
+    finalPosArray.second[i] = posArray[finalPosArray.first[i]];
   } 
 }
 
@@ -192,8 +192,8 @@ void RendererSprites::updateChildPos() {
 
 void RendererSprites::updateTexture(){
   for (unsigned int i=0; i< texPosArray.first.size(); i++) {
-    finalPosArray[Entities::componentIndex[texPosArray.first[i]][finalPos]] +=
-    texPosArray[i] * scaleTexture.at(texPosArray.first[i]);
+    finalPosArray[texPosArray.first[i]] +=
+    texPosArray.second[i] * scaleTexture.at(texPosArray.first[i]);
   } 
 }
 void RendererSprites::update() {
@@ -202,7 +202,7 @@ void RendererSprites::update() {
   // }
   for (auto it : spriteRenderIDArray.first) {
     // spriteArray[it].color.a = frameDataArray[it].alpha;
-    spriteArray[it].position = finalPosArray[Entities::componentIndex[it][finalPos]];
+    spriteArray[it].position = finalPosArray[it];
     // spriteArray[it].size = Tyra::Vec2(frameDataArray[it].scaleX,frameDataArray[it].scaleY);
   //   if (animationDataArray[animID].texture.count(currentFrame) == 1) {
   //   // Unlink Texture from the sprite entitie
@@ -357,9 +357,9 @@ void ProjectileManager::update() {
   std::vector<Proyectile>::iterator it;
 
   for (it = projectile.begin(); it < projectile.end(); it++) {
-    posArray[Entities::componentIndex[it->id][pos]].x++;
-    boxColliderArray[it->id].x = posArray[Entities::componentIndex[it->id][pos]].x;
-    if (posArray[Entities::componentIndex[it->id][pos]].x >= 580) {
+    posArray[it->id].x++;
+    boxColliderArray[it->id].x = posArray[it->id].x;
+    if (posArray[it->id].x >= 580) {
       // delete projectile
       printf("borrando proyectil\n");
       deleteSprite(it->id);
@@ -453,7 +453,7 @@ void newProjectile(Vec2 position, const int damage, bool normalPea) {
     damageArray[*id] = damage;
     // hitbox
     boxColliderArray[*id] =
-        BoxCollider(posArray[Entities::componentIndex[*id][pos]].x, posArray[Entities::componentIndex[*id][pos]].y, spriteArray[*id].size.x,
+        BoxCollider(posArray[*id].x, posArray[*id].y, spriteArray[*id].size.x,
                     spriteArray[*id].size.y);
     createDebugBoxCollider(*id, Tyra::MODE_STRETCH);
     projectilesCreated++;

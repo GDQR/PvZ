@@ -18,7 +18,7 @@ class ArrayKey {
   int count(const Key key);
   void clear();
   void erase(const Key& key);
-  Type& operator[](const unsigned int& index);
+  Type& operator[](const unsigned int& entityID);
 };
 
 template <class Key, class Type>
@@ -66,17 +66,18 @@ int ArrayKey<Key, Type>::count(const Key key) {
 }
 
 template <class Key, class Type>
-Type& ArrayKey<Key, Type>::operator[](const unsigned int& index) {
+Type& ArrayKey<Key, Type>::operator[](const unsigned int& entityID) {
   // for (unsigned int i = 0; i < first.size(); i++) {
   //   if (first[i] == key) {
   //     return second[i];
   //   }
   // }
-  if(index >= second.size()){
+  unsigned int pos = Entities::componentIndex[entityID][type];
+  if(pos >= second.size()){
     TYRA_ASSERT(!(true == true), "ERROR SEARCHING KEY, KEY NOT FOUNDED:", index,"COMPONENT:",type);
   }
 
-  return second[index];
+  return second[pos];
 }
 
 template <class Key, class Type>
