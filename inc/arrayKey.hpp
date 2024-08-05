@@ -101,7 +101,7 @@ void ArrayKey<Key, Type>::erase(const Key& key) {
       index = i;
       first.erase(first.begin() + index);
       second.erase(second.begin() + index);
-      Entities::removeComponent(key,type,first.size());
+      Entities::removeComponent(key,type);
       break;
     }
   }

@@ -26,7 +26,7 @@ class Entities {
                            const unsigned int componentID,
                            const unsigned int componentIDIndex);
   static void removeComponent(const unsigned int id,
-                              const unsigned int componentID, unsigned int size);
+                              const unsigned int componentID);
   static void clearComponent(const unsigned int componentID);
   static unsigned int getComponent(const unsigned int id,
                               const unsigned int componentID);

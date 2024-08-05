@@ -26,8 +26,7 @@ void Entities::addComponent(const unsigned int id,
 }
 
 void Entities::removeComponent(const unsigned int id,
-                               const unsigned int componentID, 
-                               unsigned int size) {
+                               const unsigned int componentID) {
   // printf("componente borrado: %d id: %d\n",componentID,id);
   // printf("size: %d\n",size);
   componentIndex[id].erase(componentID);
