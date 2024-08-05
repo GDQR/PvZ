@@ -231,13 +231,14 @@ void Animation::update(const int entityID) {
 
     activeDrawNormalSprites(entityID);
     if (draw == (int)enumDraw::draw) {
+      position(entityID);
       updateSprites(entityID);
       if (angleArray.count(entityID) == 1) {
         updateAngle(entityID);
       }
     }
   }
-  position(entityID);
+  
   framesCounter++;
 }
 
