@@ -115,24 +115,25 @@ void menuDebugAnimation(Tyra::Pad& pad, Tyra::Font& font, int& entitieID) {
     } else if (menuUpOptionLeftJoy(pad) || menuRightOptionLeftJoy(pad)) {
       spriteArray[entitieID].color.a = 128.0f;
 
-      std::map<int, Animation>::iterator it = animationArray.find(entitieID);
+      // fix this
+      // std::map<int, Animation>::iterator it = animationArray.find(entitieID);
 
-      if (std::next(it)->first == animationArray.end()->first) {
-        entitieID = animationArray.begin()->first;
-      } else {
-        entitieID = std::next(it)->first;
-      }
+      // if (std::next(it)->first == animationArray.end()->first) {
+      //   entitieID = animationArray.begin()->first;
+      // } else {
+      //   entitieID = std::next(it)->first;
+      // }
 
     } else if (menuDownOptionLeftJoy(pad) || menuLeftOptionLeftJoy(pad)) {
       spriteArray[entitieID].color.a = 128.0f;
+    // fix this
+    //   std::map<int, Animation>::iterator it = animationArray.find(entitieID);
 
-      std::map<int, Animation>::iterator it = animationArray.find(entitieID);
-
-      if (entitieID == animationArray.begin()->first) {
-        entitieID = animationArray.rbegin()->first;
-      } else {
-        entitieID = std::prev(it)->first;
-      }
+    //   if (entitieID == animationArray.begin()->first) {
+    //     entitieID = animationArray.rbegin()->first;
+    //   } else {
+    //     entitieID = std::prev(it)->first;
+    //   }
     }
     engine->font.drawText(&myFont, "PRESS X FOR SELECT THE TEXTURE", 30, 400,
                           16, black);

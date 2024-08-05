@@ -63,7 +63,7 @@ void AnimationData::loadAnimation(const int entityID, const int animID,
 
   spriteID = spriteArray[entityID].id;
 
-  animationArray[entityID] = Animation(animID);
+  animationArray.insert(entityID, Animation(animID));
 
   std::unordered_map<unsigned int, int>::iterator itTexture =
       texture.find(firstFrame);

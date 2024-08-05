@@ -20,18 +20,16 @@ void PlayerControl::update(){
   }
 }
 void AnimationManager::update() {
-  std::map<int, Animation>::iterator it;
-
-  for (it = animationArray.begin(); it != animationArray.end(); it++) {
-    it->second.update(it->first);
+  int i=0;
+  for (auto it : animationArray.first) {
+    animationArray.second[i].update(it);
+    i++;
   }
 }
 
 void AnimationManager::debug() {
-  std::map<int, Animation>::iterator it;
-
-  for (it = animationArray.begin(); it != animationArray.end(); it++) {
-    it->second.position(it->first);
+  for (unsigned int i = 0; i < animationArray.first.size(); i++) {
+    animationArray.second[i].position(animationArray.first[i]);
   }
 }
 
@@ -191,9 +189,11 @@ void RendererSprites::updateChildPos() {
 }
 
 void RendererSprites::updateTexture(){
-  for (unsigned int i=0; i< texPosArray.first.size(); i++) {
-    finalPosArray[texPosArray.first[i]] +=
-    texPosArray.second[i] * scaleTexture.at(texPosArray.first[i]);
+  int i=0;
+  for (auto it : texPosArray.first) {
+    finalPosArray[it] +=
+    texPosArray.second[i] * scaleTexture.at(it);
+    i++;
   } 
 }
 void RendererSprites::update() {

@@ -8,7 +8,8 @@ enum enumComponents {
   finalPos,
   texPos,
   sprite,
-  spriteRender
+  spriteRender,
+  animation
 };
 
 class Entities {

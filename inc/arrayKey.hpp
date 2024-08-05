@@ -15,7 +15,8 @@ class ArrayKey {
   Type& read(const Key key);
   void insert(const Key key, const Type value);
   void write(const Key key, const Type value);
-  int count(const Key key);
+  int count(const unsigned int& entityID);
+  int countSafe(const Key key);
   void clear();
   void erase(const Key& key);
   Type& operator[](const unsigned int& entityID);
@@ -56,13 +57,18 @@ void ArrayKey<Key, Type>::write(const Key key, const Type value) {
 }
 
 template <class Key, class Type>
-int ArrayKey<Key, Type>::count(const Key key) {
+int ArrayKey<Key, Type>::countSafe(const Key key) {
   for (unsigned int i = 0; i < first.size(); i++) {
     if (first[i] == key) {
       return 1;
     }
   }
   return 0;
+}
+
+template <class Key, class Type>
+int ArrayKey<Key, Type>::count(const unsigned int& entityID) {
+  return Entities::componentIndex[entityID].count(type);
 }
 
 template <class Key, class Type>

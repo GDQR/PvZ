@@ -109,7 +109,7 @@ extern Tyra::TextureRepository* texRepo;
 extern std::unordered_map<std::string, std::vector<int>> m_animID;
 
 // sparse array
-extern std::map<int, Animation>
+extern ArrayKey<int, Animation>
     animationArray;  // Link the sprite with the texture
 extern std::unordered_map<int, AnimationData>
     animationDataArray;  // Save the animation textures

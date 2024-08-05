@@ -10,7 +10,7 @@ Tyra::TextureRepository* texRepo;
 
 // sparse array
 std::unordered_map<std::string, std::vector<int>> m_animID;
-std::map<int, Animation> animationArray;
+ArrayKey<int, Animation> animationArray(enumComponents::animation);
 std::unordered_map<int, AnimationData> animationDataArray;
 std::map<int, FatherID> fatherIDArray;
 ArrayKey<int, Tyra::Vec2> posArray(enumComponents::pos);
@@ -229,13 +229,11 @@ void Animation::update(const int entityID) {
       currentFrame = firstFrame;
     }
 
-    if (spriteArray.count(entityID) == 1) {
-      activeDrawNormalSprites(entityID);
-      if (draw == (int)enumDraw::draw) {
-        updateSprites(entityID);
-        if (angleArray.count(entityID) == 1) {
-          updateAngle(entityID);
-        }
+    activeDrawNormalSprites(entityID);
+    if (draw == (int)enumDraw::draw) {
+      updateSprites(entityID);
+      if (angleArray.count(entityID) == 1) {
+        updateAngle(entityID);
       }
     }
   }
