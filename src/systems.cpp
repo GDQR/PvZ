@@ -74,8 +74,7 @@ void AnimationManager::debugChangeFrame(const int entitieID, const int key) {
   if (animationDataArray[animationArray[entitieID].animID].alpha.count(
           animationArray[entitieID].currentFrame) == 1) {
     float alpha = animationDataArray[animationArray[entitieID].animID]
-                      .alpha[animationArray[entitieID].currentFrame] *
-                  128;
+                      .alpha[animationArray[entitieID].currentFrame];
     spriteArray[entitieID].color.a = alpha;
   }
 

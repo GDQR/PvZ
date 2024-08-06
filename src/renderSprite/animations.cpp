@@ -11,7 +11,7 @@ void setSprite(const int entityID, const int draw) {
     spriteRenderIDArray.erase(entityID);
     spriteNormalIdStopRender.push_back(entityID);
   } else if (spriteRenderIDArray.count(entityID) == 0) {
-    spriteRenderIDArray.insert(entityID,0);
+    spriteRenderIDArray.insert(entityID, 0);
     // spritesNormalRender[entityID] = &spriteArray[entityID];
   }
   // printf("plant draw: %d\n", animationArray[entityID].draw);
@@ -70,14 +70,15 @@ void AnimationData::loadAnimation(const int entityID, const int animID,
   // printf("termine\n\n");
 }
 
-int AnimationData::activeAnimation(const int entityID, const int firstFrame,
-                                   const int lastFrame) {
-  int index = -1;
-  int pos = firstFrame;
+int AnimationData::activeAnimation(const int entityID,
+                                   const unsigned int firstFrame,
+                                   const unsigned int lastFrame) {
+  int index = 0;
 
-  while (index == -1){
-    index = draw.getIndex(pos);
-    pos--;
+  for (unsigned int i = 0; i < draw.first.size(); i++) {
+    if (draw.first[i] <= firstFrame) {
+      index = i;
+    }
   }
 
   animationArray[entityID].draw = draw.second[index];
@@ -86,21 +87,20 @@ int AnimationData::activeAnimation(const int entityID, const int firstFrame,
     return 1;
   }
 
-  index = -1;
-  pos = firstFrame;
-  while (index == -1){
-    index = texture.getIndex(pos);
-    pos--;
+  for (unsigned int i = 0; i < texture.first.size(); i++) {
+    if (texture.first[i] <= firstFrame) {
+      index = i;
+    }
   }
 
   const int spriteID = spriteArray[entityID].id;
   Tyra::Texture* oldTexture = texRepo->getBySpriteId(spriteID);
   Tyra::Texture* newTexture = texRepo->getByTextureId(texture.second[index]);
 
-  if(oldTexture != newTexture){
-    if (texRepo->getBySpriteId(spriteID) != nullptr) {
+  if (oldTexture != newTexture) {
+    if (oldTexture != nullptr) {
       // printf("unlink sprite id: %d\n", spriteArray[entityID].id);
-      texRepo->getBySpriteId(spriteID)->removeLinkById(spriteID);
+      oldTexture->removeLinkById(spriteID);
     }
 
     // Link new Texture to the sprite entitie
@@ -108,42 +108,38 @@ int AnimationData::activeAnimation(const int entityID, const int firstFrame,
     originalSize[entityID] =
         Vec2(newTexture->getWidth(), newTexture->getHeight());
     scaleTexture[entityID] =
-          Vec2(originalSize[entityID].x / newTexture->getWidth(),
-               originalSize[entityID].y / newTexture->getHeight());
+        Vec2(originalSize[entityID].x / newTexture->getWidth(),
+             originalSize[entityID].y / newTexture->getHeight());
   }
 
-  index = -1;
-  pos = firstFrame;
-  while (index == -1){
-    index = position.getIndex(pos);
-    pos--;
+  for (unsigned int i = 0; i < position.first.size(); i++) {
+    if (position.first[i] <= firstFrame) {
+      index = i;
+    }
   }
 
   texPosArray[entityID] = position.second[index];
 
-  std::unordered_map<unsigned int, float>::iterator it;
-
-  index = -1;
-  pos = firstFrame;
-  while(index == -1){
-    index = scale.getIndex(pos);
-    pos--;
+  for (unsigned int i = 0; i < scale.first.size(); i++) {
+    if (scale.first[i] <= firstFrame) {
+      index = i;
+    }
   }
 
   spriteArray[entityID].size = originalSize[entityID] * scale.second[index];
 
-  index = -1;
-  pos = firstFrame;
-  while(index == -1){
-    index = alpha.getIndex(pos);
-    pos--;
+  for (unsigned int i = 0; i < alpha.first.size(); i++) {
+    if (alpha.first[i] <= firstFrame) {
+      index = i;
+    }
   }
-  
+
   spriteArray[entityID].color.a = alpha.second[index];
 
   if (angleArray.count(entityID) == 1) {
-    it = angleX.find(firstFrame);
-    pos = firstFrame - 1;
+    std::unordered_map<unsigned int, float>::iterator it =
+        angleX.find(firstFrame);
+    int pos = firstFrame - 1;
 
     while (it == angleX.end()) {
       it = angleX.find(pos);
@@ -161,7 +157,7 @@ int AnimationData::activeAnimation(const int entityID, const int firstFrame,
     }
 
     angleArray[entityID].y = it->second;
-  } 
+  }
   // printf("anim draw: %d\n", drawState);
   return 0;
 }
@@ -226,7 +222,8 @@ void readInfo(std::ifstream& MyReadFile, std::string& insideArrow,
       for (u32 i = 0; i < texRepo->getTexturesCount(); i++) {
         if ((*texRepo->getAll())[i]->name == insideArrow) {
           textureFounded = true;
-          animationDataArray[animID].texture.insert(countframes,(*texRepo->getAll())[i]->id);
+          animationDataArray[animID].texture.insert(
+              countframes, (*texRepo->getAll())[i]->id);
           break;
         }
       }
@@ -235,7 +232,7 @@ void readInfo(std::ifstream& MyReadFile, std::string& insideArrow,
         std::cout << " new i: " << insideArrow;
         texture = loadTexture(fileName);
 
-        animationDataArray[animID].texture.insert(countframes,texture->id);
+        animationDataArray[animID].texture.insert(countframes, texture->id);
         printf(" texture width: %d, height: %d\n", texture->getWidth(),
                texture->getHeight());
       }
@@ -278,18 +275,19 @@ void readInfo(std::ifstream& MyReadFile, std::string& insideArrow,
       if (beforeSx != sx || beforeSY != sy) {
         beforeSx = sx;
         beforeSY = sy;
-        animationDataArray[animID].scale.insert(countframes,Tyra::Vec2(sx,sy));
+        animationDataArray[animID].scale.insert(countframes,
+                                                Tyra::Vec2(sx, sy));
       }
 
       if (beforeA != a) {
         beforeA = a;
-        animationDataArray[animID].alpha.insert(countframes, a*128);
+        animationDataArray[animID].alpha.insert(countframes, a * 128);
       }
 
       if (beforeX != x || beforeY != y) {
         beforeX = x;
         beforeY = y;
-        animationDataArray[animID].position.insert(countframes, Vec2(x,y));
+        animationDataArray[animID].position.insert(countframes, Vec2(x, y));
       }
 
       if (beforeDraw != draw) {

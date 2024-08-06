@@ -70,8 +70,8 @@ class AnimationData {
                      enumAnimationState animationState);
   void loadAnimation(const int entityID, const int animID, const int firstFrame,
                      const int lastFrame);
-  int activeAnimation(const int entityID, const int firstFrame,
-                      const int lastFrame);
+  int activeAnimation(const int entityID, const unsigned int firstFrame,
+                      const unsigned int lastFrame);
   void setAnimationState(const int entityID, enumAnimationState animationState);
 };
 
