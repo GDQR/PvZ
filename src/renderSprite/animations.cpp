@@ -139,7 +139,7 @@ int AnimationData::activeAnimation(const int entityID, const int firstFrame,
     pos--;
   }
   
-  spriteArray[entityID].color.a = alpha.second[index] * 128;
+  spriteArray[entityID].color.a = alpha.second[index];
 
   if (angleArray.count(entityID) == 1) {
     it = angleX.find(firstFrame);
@@ -283,7 +283,7 @@ void readInfo(std::ifstream& MyReadFile, std::string& insideArrow,
 
       if (beforeA != a) {
         beforeA = a;
-        animationDataArray[animID].alpha.insert(countframes, a);
+        animationDataArray[animID].alpha.insert(countframes, a*128);
       }
 
       if (beforeX != x || beforeY != y) {

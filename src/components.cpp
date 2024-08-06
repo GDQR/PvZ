@@ -292,7 +292,7 @@ void Animation::updateSprites(const int entityID) {
   myindex = animationDataArray[animID].alpha.getIndex(currentFrame);
   if (myindex != -1) {
     spriteArray[entityID].color.a =
-        animationDataArray[animID].alpha.second[myindex] * 128;
+        animationDataArray[animID].alpha.second[myindex];
   }
 
   myindex = animationDataArray[animID].scale.getIndex(currentFrame);
@@ -345,8 +345,7 @@ int Animation::debugAnim(const int entitieID) {
   }
 
   if (animationDataArray[animID].alpha.count(currentFrame) == 1) {
-    float alpha = animationDataArray[animID].alpha[currentFrame] * 128;
-    spriteArray[entitieID].color.a = alpha;
+    spriteArray[entitieID].color.a = animationDataArray[animID].alpha[currentFrame];
   }
   myindex = animationDataArray[animID].scale.getIndex(currentFrame);
   if (myindex != -1) {
