@@ -6,17 +6,13 @@
 #include <iostream>
 
 void setSprite(const int entityID, const int draw) {
-  if (spriteArray.count(entityID)) {
-    if (draw == -1) {
-      // spritesNormalRender.erase(entityID);
-      spriteRenderIDArray.erase(entityID);
-      spriteNormalIdStopRender.push_back(entityID);
-    } else if (spriteRenderIDArray.count(entityID) == 0) {
-      spriteRenderIDArray.insert(entityID,0);
-      // spritesNormalRender[entityID] = &spriteArray[entityID];
-    }
-  } else {
-    TYRA_WARN("Sprite don't founded in setSprite");
+  if (draw == -1) {
+    // spritesNormalRender.erase(entityID);
+    spriteRenderIDArray.erase(entityID);
+    spriteNormalIdStopRender.push_back(entityID);
+  } else if (spriteRenderIDArray.count(entityID) == 0) {
+    spriteRenderIDArray.insert(entityID,0);
+    // spritesNormalRender[entityID] = &spriteArray[entityID];
   }
   // printf("plant draw: %d\n", animationArray[entityID].draw);
 }
@@ -46,7 +42,7 @@ void AnimationData::loadAnimation(const int entityID, const int animID,
 void AnimationData::loadAnimation(const int entityID, const int animID,
                                   const int firstFrame, const int lastFrame) {
   bool rotateSprite = false;
-  int spriteID;
+
   for (unsigned int j = 1; j < maxFrame; j++) {
     if (angleX.count(j) == true || angleY.count(j) == true) {
       rotateSprite = true;
@@ -61,48 +57,13 @@ void AnimationData::loadAnimation(const int entityID, const int animID,
                  Vec2(128 / 1.6f, 128 / 1.6f));
   }
 
-  spriteID = spriteArray[entityID].id;
-
   animationArray.insert(entityID, Animation(animID));
 
-  std::unordered_map<unsigned int, int>::iterator itTexture =
-      texture.find(firstFrame);
-  int pos = firstFrame - 1;
+  animationArray[entityID].currentFrame = firstFrame;
+  animationArray[entityID].firstFrame = firstFrame;
+  animationArray[entityID].lastFrame = lastFrame;
 
-  while (itTexture == texture.end() && pos >= 1) {
-    itTexture = texture.find(pos);
-    pos--;
-  }
-
-  if (itTexture != texture.end()) {
-    Tyra::Texture* newTexture;
-    newTexture = texRepo->getByTextureId(itTexture->second);
-    newTexture->addLink(spriteID);
-    originalSize[entityID] =
-        Vec2(newTexture->getWidth(), newTexture->getHeight());
-    scaleTexture[entityID] =
-        Vec2(originalSize[entityID].x / newTexture->getWidth(),
-             originalSize[entityID].y / newTexture->getHeight());
-    texPosArray.insert(entityID, Tyra::Vec2());
-  }
-
-  // for (unsigned int j = 1; j < maxFrame; j++) {
-  //   if (texture.count(j) == 1) {
-  //     // printf("frame %d\n", j);
-  //     newTexture = texRepo->getByTextureId(texture[j]);
-  //     newTexture->addLink(spriteID);
-  //     originalSize[entityID] =
-  //         Vec2(newTexture->getWidth(), newTexture->getHeight());
-  //     scaleTexture[entityID] =
-  //         Vec2(originalSize[entityID].x / newTexture->getWidth(),
-  //              originalSize[entityID].y / newTexture->getHeight());
-  //     // printf("name anim: %s\n", name.c_str());
-  //     // printf("name Texture: %s\n", newTexture->name.c_str());
-  //     // printf("size: %s\n", spriteArray[entityID].size.getPrint().c_str());
-  //     // printf("scale: %s\n", scaleTexture[entityID].getPrint().c_str());
-  //     break;
-  //   }
-  // }
+  texPosArray.insert(entityID, Tyra::Vec2());
 
   activeAnimation(entityID, firstFrame, lastFrame);
 
@@ -111,86 +72,74 @@ void AnimationData::loadAnimation(const int entityID, const int animID,
 
 int AnimationData::activeAnimation(const int entityID, const int firstFrame,
                                    const int lastFrame) {
-  animationArray[entityID].currentFrame = firstFrame;
-  animationArray[entityID].firstFrame = firstFrame;
-  animationArray[entityID].lastFrame = lastFrame;
+  int index = -1;
+  int pos = firstFrame;
 
-  Tyra::Vec2 scale(1.0f, 1.0f);
-
-  std::unordered_map<unsigned int, int>::iterator itInteger =
-      draw.find(firstFrame);
-  int pos = firstFrame - 1;
-
-  while (itInteger == draw.end()) {
-    itInteger = draw.find(pos);
+  while (index == -1){
+    index = draw.getIndex(pos);
     pos--;
   }
 
-  animationArray[entityID].draw = itInteger->second;
-  setSprite(entityID, itInteger->second);
-  if (itInteger->second == (int)enumDraw::noDraw) {
+  animationArray[entityID].draw = draw.second[index];
+  setSprite(entityID, draw.second[index]);
+  if (draw.second[index] == (int)enumDraw::noDraw) {
     return 1;
   }
 
-  itInteger = texture.find(firstFrame);
-  pos = firstFrame - 1;
-
-  while (itInteger == texture.end() && pos >= 1) {
-    itInteger = texture.find(pos);
+  index = -1;
+  pos = firstFrame;
+  while (index == -1){
+    index = texture.getIndex(pos);
     pos--;
   }
 
-  if (texRepo->getBySpriteId(spriteArray[entityID].id) != nullptr) {
-    // printf("unlink sprite id: %d\n", spriteArray[entityID].id);
-    texRepo->getBySpriteId(spriteArray[entityID].id)
-        ->removeLinkById(spriteArray[entityID].id);
-  }
-  // Link new Texture to the sprite entitie
-  texRepo->getByTextureId(itInteger->second)->addLink(spriteArray[entityID].id);
-  originalSize[entityID] =
-      Vec2(texRepo->getByTextureId(itInteger->second)->getWidth(),
-           texRepo->getByTextureId(itInteger->second)->getHeight());
+  const int spriteID = spriteArray[entityID].id;
+  Tyra::Texture* oldTexture = texRepo->getBySpriteId(spriteID);
+  Tyra::Texture* newTexture = texRepo->getByTextureId(texture.second[index]);
 
-  std::unordered_map<unsigned int, float>::iterator it = x.find(firstFrame);
-  pos = firstFrame - 1;
-  while (it == x.end()) {
-    it = x.find(pos);
+  if(oldTexture != newTexture){
+    if (texRepo->getBySpriteId(spriteID) != nullptr) {
+      // printf("unlink sprite id: %d\n", spriteArray[entityID].id);
+      texRepo->getBySpriteId(spriteID)->removeLinkById(spriteID);
+    }
+
+    // Link new Texture to the sprite entitie
+    newTexture->addLink(spriteID);
+    originalSize[entityID] =
+        Vec2(newTexture->getWidth(), newTexture->getHeight());
+    scaleTexture[entityID] =
+          Vec2(originalSize[entityID].x / newTexture->getWidth(),
+               originalSize[entityID].y / newTexture->getHeight());
+  }
+
+  index = -1;
+  pos = firstFrame;
+  while (index == -1){
+    index = position.getIndex(pos);
     pos--;
   }
 
-  texPosArray[entityID].x = it->second;
+  texPosArray[entityID] = position.second[index];
 
-  it = y.find(firstFrame);
-  pos = firstFrame - 1;
+  std::unordered_map<unsigned int, float>::iterator it;
 
-  while (it == y.end()) {
-    it = y.find(pos);
+  index = -1;
+  pos = firstFrame;
+  while(index == -1){
+    index = scale.getIndex(pos);
     pos--;
   }
 
-  texPosArray[entityID].y = it->second;
+  spriteArray[entityID].size = originalSize[entityID] * scale.second[index];
 
-  it = scaleX.find(firstFrame);
-  pos = firstFrame - 1;
-
-  while (it == scaleX.end()) {
-    it = scaleX.find(pos);
+  index = -1;
+  pos = firstFrame;
+  while(index == -1){
+    index = alpha.getIndex(pos);
     pos--;
   }
-
-  scale.x = it->second;
-
-  it = scaleY.find(firstFrame);
-  pos = firstFrame - 1;
-
-  while (it == scaleY.end()) {
-    it = scaleY.find(pos);
-    pos--;
-  }
-
-  scale.y = it->second;
-
-  spriteArray[entityID].size = originalSize[entityID] * scale;
+  
+  spriteArray[entityID].color.a = alpha.second[index] * 128;
 
   if (angleArray.count(entityID) == 1) {
     it = angleX.find(firstFrame);
@@ -277,8 +226,7 @@ void readInfo(std::ifstream& MyReadFile, std::string& insideArrow,
       for (u32 i = 0; i < texRepo->getTexturesCount(); i++) {
         if ((*texRepo->getAll())[i]->name == insideArrow) {
           textureFounded = true;
-          animationDataArray[animID].texture[countframes] =
-              (*texRepo->getAll())[i]->id;
+          animationDataArray[animID].texture.insert(countframes,(*texRepo->getAll())[i]->id);
           break;
         }
       }
@@ -287,7 +235,7 @@ void readInfo(std::ifstream& MyReadFile, std::string& insideArrow,
         std::cout << " new i: " << insideArrow;
         texture = loadTexture(fileName);
 
-        animationDataArray[animID].texture[countframes] = texture->id;
+        animationDataArray[animID].texture.insert(countframes,texture->id);
         printf(" texture width: %d, height: %d\n", texture->getWidth(),
                texture->getHeight());
       }
@@ -327,34 +275,26 @@ void readInfo(std::ifstream& MyReadFile, std::string& insideArrow,
     } else if (insideArrow == "/t") {
       std::cout << std::endl;
 
-      if (beforeSx != sx) {
+      if (beforeSx != sx || beforeSY != sy) {
         beforeSx = sx;
-        animationDataArray[animID].scaleX[countframes] = sx;
-      }
-
-      if (beforeSY != sy) {
         beforeSY = sy;
-        animationDataArray[animID].scaleY[countframes] = sy;
+        animationDataArray[animID].scale.insert(countframes,Tyra::Vec2(sx,sy));
       }
 
       if (beforeA != a) {
         beforeA = a;
-        animationDataArray[animID].alpha[countframes] = a;
+        animationDataArray[animID].alpha.insert(countframes, a);
       }
 
-      if (beforeX != x) {
+      if (beforeX != x || beforeY != y) {
         beforeX = x;
-        animationDataArray[animID].x[countframes] = x;
-      }
-
-      if (beforeY != y) {
         beforeY = y;
-        animationDataArray[animID].y[countframes] = y;
+        animationDataArray[animID].position.insert(countframes, Vec2(x,y));
       }
 
       if (beforeDraw != draw) {
         beforeDraw = draw;
-        animationDataArray[animID].draw[countframes] = draw;
+        animationDataArray[animID].draw.insert(countframes, draw);
       }
 
       if (beforeKx != kx) {
@@ -414,13 +354,11 @@ void readReanimFiles(int nameID, std::string file) {
         useAnim = false;
       } else {
         animationDataArray[animID].draw.clear();
+        animationDataArray[animID].position.clear();
         animationDataArray[animID].angleX.clear();
         animationDataArray[animID].angleY.clear();
-        animationDataArray[animID].scaleX.clear();
-        animationDataArray[animID].scaleY.clear();
+        animationDataArray[animID].scale.clear();
         animationDataArray[animID].alpha.clear();
-        animationDataArray[animID].x.clear();
-        animationDataArray[animID].y.clear();
         printf("borre la memoria\n");
       }
       animationDataArray[animID].name = insideArrow;

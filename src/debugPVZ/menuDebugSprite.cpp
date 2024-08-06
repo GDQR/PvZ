@@ -481,7 +481,7 @@ void DebugSpriteMode::drawSecondMenu(){
       std::string animSize =
           "Total textures: " +
           std::to_string(animationDataArray[animationArray[debugEntityId].animID]
-                             .texture.size());
+                             .texture.first.size());
 
       engine->font.drawText(&myFont, textKey, 30, 120, 16, black);
 

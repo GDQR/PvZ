@@ -64,18 +64,11 @@ void AnimationManager::debugChangeFrame(const int entitieID, const int key) {
         .texture[animationArray[entitieID].currentFrame])->addLink(spriteArray[entitieID].id);
   }
 
-  if (animationDataArray[animationArray[entitieID].animID].x.count(
+  if (animationDataArray[animationArray[entitieID].animID].position.count(
           animationArray[entitieID].currentFrame) == 1) {
-    texPosArray[entitieID].x =
+    texPosArray[entitieID] =
         animationDataArray[animationArray[entitieID].animID]
-            .x[animationArray[entitieID].currentFrame];
-  }
-
-  if (animationDataArray[animationArray[entitieID].animID].y.count(
-          animationArray[entitieID].currentFrame) == 1) {
-    texPosArray[entitieID].y =
-        animationDataArray[animationArray[entitieID].animID]
-            .y[animationArray[entitieID].currentFrame];
+            .position[animationArray[entitieID].currentFrame];
   }
 
   if (animationDataArray[animationArray[entitieID].animID].alpha.count(
@@ -86,17 +79,10 @@ void AnimationManager::debugChangeFrame(const int entitieID, const int key) {
     spriteArray[entitieID].color.a = alpha;
   }
 
-  if (animationDataArray[animationArray[entitieID].animID].scaleX.count(
+  if (animationDataArray[animationArray[entitieID].animID].scale.count(
           animationArray[entitieID].currentFrame) == 1) {
-    spriteArray[entitieID].size.x = originalSize[entitieID].x * animationDataArray[animationArray[entitieID].animID]
-            .scaleX[animationArray[entitieID].currentFrame];
-  }
-
-  if (animationDataArray[animationArray[entitieID].animID].scaleY.count(
-          animationArray[entitieID].currentFrame) == 1) {
-    spriteArray[entitieID].size.y = originalSize[entitieID].y * animationDataArray[animationArray[entitieID].animID]
-            .scaleY[animationArray[entitieID].currentFrame];
-    
+    spriteArray[entitieID].size = originalSize[entitieID] * animationDataArray[animationArray[entitieID].animID]
+            .scale[animationArray[entitieID].currentFrame];
   }
 
   if (animationDataArray[animationArray[entitieID].animID].angleX.count(

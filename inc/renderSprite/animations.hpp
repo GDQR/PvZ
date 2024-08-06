@@ -2,6 +2,8 @@
 #include <vector>
 #include <string>
 #include <unordered_map>
+#include <tyra>
+#include "linearArrayKey.hpp"
 
 enum class enumDraw { draw = 0, noDraw = -1 };
 
@@ -40,6 +42,7 @@ class Animation {
   void activeDrawNormalSprites(const int entityID);
   void updateSprites(const int entityID);
   void updateAngle(const int entityID);
+  void setAnimation(enumAnimationState animationState);
   void position(const int entityID);
   int debugAnim(const int entitieID);
 
@@ -56,15 +59,13 @@ class AnimationData {
  public:
   unsigned int maxFrame;
   std::string name;
-  std::unordered_map<unsigned int, int> texture;
-  std::unordered_map<unsigned int, float> x;
-  std::unordered_map<unsigned int, float> y;
-  std::unordered_map<unsigned int, float> scaleX;
-  std::unordered_map<unsigned int, float> scaleY;
+  LinearArrayKey<unsigned int, int> texture;
+  LinearArrayKey<unsigned int, Tyra::Vec2> position;
+  LinearArrayKey<unsigned int, Tyra::Vec2> scale;
   std::unordered_map<unsigned int, float> angleX;
   std::unordered_map<unsigned int, float> angleY;
-  std::unordered_map<unsigned int, float> alpha;
-  std::unordered_map<unsigned int, int> draw;
+  LinearArrayKey<unsigned int, float> alpha;
+  LinearArrayKey<unsigned int, int> draw;
   void loadAnimation(const int entityID, const int animID,
                      enumAnimationState animationState);
   void loadAnimation(const int entityID, const int animID, const int firstFrame,

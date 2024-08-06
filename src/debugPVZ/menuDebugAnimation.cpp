@@ -9,21 +9,21 @@ bool startAnimationDebug = true;
 void subMenu(Tyra::Pad& pad, Tyra::Font& font, int& entitieID) {
   // TODO: Fix this texpos
   Tyra::Vec2* texPos;
-  texPos->x = animationDataArray[animationArray[entitieID].animID]
-                     .x[animationArray[entitieID].currentFrame];
+  texPos = &animationDataArray[animationArray[entitieID].animID]
+                     .position[animationArray[entitieID].currentFrame];
 
   if (pad.getClicked().L1) {
     if (animationArray[entitieID].currentFrame > 0) {
       animationArray[entitieID].currentFrame--;
     } else {
       animationArray[entitieID].currentFrame =
-          animationDataArray[animationArray[entitieID].animID].texture.size() - 1;
+          animationDataArray[animationArray[entitieID].animID].texture.first.size() - 1;
     }
     animManager.debugChangeFrame(entitieID, animationArray[entitieID].currentFrame);
   } else if (pad.getClicked().R1) {
     animationArray[entitieID].currentFrame++;
     if (animationArray[entitieID].currentFrame >=
-        animationDataArray[animationArray[entitieID].animID].texture.size()) {
+        animationDataArray[animationArray[entitieID].animID].texture.first.size()) {
       animationArray[entitieID].currentFrame = 0;
     }
     animManager.debugChangeFrame(entitieID, animationArray[entitieID].currentFrame);
@@ -67,7 +67,7 @@ void subMenu(Tyra::Pad& pad, Tyra::Font& font, int& entitieID) {
     std::string animSize =
         "Total textures: " +
         std::to_string(
-            animationDataArray[animationArray[entitieID].animID].texture.size());
+            animationDataArray[animationArray[entitieID].animID].texture.first.size());
 
     std::string textKey =
         "Key: " + std::to_string(animationArray[entitieID].currentFrame);

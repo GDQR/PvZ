@@ -72,6 +72,7 @@ void Zombie::attackPlant() {
         attack = true;
         for (unsigned int j = 0; j < id.size(); j++) {
           if (animationArray.count(id[j]) == 1) {
+            animationArray[id[j]].setAnimation(normalZombieAttack);
             // printf("anim attack id: %d\n",m_animID["Zombie"][j]);
             animationDataArray[m_animID[enumAnimName::ZombieAnimName][j]].setAnimationState(
                 id[j], normalZombieAttack);
@@ -92,6 +93,7 @@ void Zombie::attackPlant() {
           for (unsigned int j = 0; j < id.size(); j++) {
             if (animationArray.count(id[j]) == 1) {
               // printf("anim attack id: %d\n",id[j]);
+              animationArray[id[j]].setAnimation(normalZombieWalk);
               animationDataArray[m_animID[enumAnimName::ZombieAnimName][j]].setAnimationState(
                   id[j], normalZombieWalk);
             }

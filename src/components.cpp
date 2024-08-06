@@ -20,9 +20,9 @@ ArrayKey<int, Tyra::Sprite> spriteArray(enumComponents::sprite);
 ArrayKey<int, int> spriteRenderIDArray(enumComponents::spriteRender);
 std::vector<int> spriteNormalIdStopRender;
 std::vector<int> animationIdStopRender;
-std::unordered_map<int, Tyra::Vec2> angleArray;
-std::map<int, Tyra::Vec2> originalSize;
-std::map<int, Tyra::Vec2> scaleTexture;
+ArrayKey<int, Tyra::Vec2> angleArray(enumComponents::angle);
+std::unordered_map<int, Tyra::Vec2> originalSize;
+std::unordered_map<int, Tyra::Vec2> scaleTexture;
 std::map<int, Tyra::Vec2> pointColliderArray;
 std::map<int, BoxCollider> boxColliderArray;
 std::map<int, PS2Timer> timerArray;
@@ -62,7 +62,7 @@ void createSprite(int id, Tyra::SpriteMode mode, Tyra::Vec2 position,
 
 void createSpriteRotate(int id, Tyra::SpriteMode mode, Tyra::Vec2 position,
                         Tyra::Vec2 size, const Tyra::Vec2 angle) {
-  angleArray[id] = angle;
+  angleArray.insert(id, angle);
   createSprite(id, mode, position, size);
 }
 
@@ -243,18 +243,15 @@ void Animation::update(const int entityID) {
 
 void Animation::position(const int entityID) {
   // finalPos += animPos
-
-  if (animationDataArray[animID].x.count(currentFrame)) {
-    texPosArray[entityID].x = animationDataArray[animID].x[currentFrame];
-  }
-  if (animationDataArray[animID].y.count(currentFrame)) {
-    texPosArray[entityID].y = animationDataArray[animID].y[currentFrame];
+  if (animationDataArray[animID].position.count(currentFrame)) {
+    texPosArray[entityID] = animationDataArray[animID].position[currentFrame];
   }
 }
 
 void Animation::activeDrawNormalSprites(const int entityID) {
-  if (animationDataArray[animID].draw.count(currentFrame)) {
-    draw = animationDataArray[animID].draw[currentFrame];
+  int index = animationDataArray[animID].draw.getIndex(currentFrame);
+  if (index != -1) {
+    draw = animationDataArray[animID].draw.second[index];
     if (draw == (int)enumDraw::noDraw) {
       spriteRenderIDArray.erase(entityID);
       spriteNormalIdStopRender.push_back(entityID);
@@ -265,25 +262,8 @@ void Animation::activeDrawNormalSprites(const int entityID) {
 }
 
 void Animation::updateSprites(const int entityID) {
-  // if (animationDataArray[animID].texture.count(currentFrame) == 1) {
-  //   frameDataArray[entityID].texture = animationDataArray[animID].texture[currentFrame];
-  // }
-
-  // if (animationDataArray[animID].alpha.count(currentFrame) == 1) {
-  //   frameDataArray[entityID].alpha = animationDataArray[animID].alpha[currentFrame] * 128;
-  // }
-
-  // if (animationDataArray[animID].scaleX.count(currentFrame) == 1) {
-  //   frameDataArray[entityID].scaleX = originalSize[entityID].x * animationDataArray[animID].scaleX[currentFrame];
-  // }
-  // if (animationDataArray[animID].scaleY.count(currentFrame) == 1) {
-  //   frameDataArray[entityID].scaleY = originalSize[entityID].y * animationDataArray[animID].scaleY[currentFrame];
-  // }
-
-  // spriteArray[entityID].color.a = frameDataArray[entityID].alpha;
-  // spriteArray[entityID].position = finalPosArray.second[Entities::componentIndex[entityID][0]];
-  // spriteArray[entityID].size = Tyra::Vec2(frameDataArray[entityID].scaleX,frameDataArray[entityID].scaleY);
-  if (animationDataArray[animID].texture.count(currentFrame) == 1) {
+  int myindex = animationDataArray[animID].texture.getIndex(currentFrame);
+  if (myindex != -1) {
     // Unlink Texture from the sprite entitie
     if (texRepo->getBySpriteId(spriteArray[entityID].id) != nullptr) {
       // printf("unlink sprite id: %d\n", spriteArray[entityID].id);
@@ -292,36 +272,34 @@ void Animation::updateSprites(const int entityID) {
     }
 
     // Link new Texture to the sprite entitie
-    texRepo->getByTextureId(animationDataArray[animID].texture[currentFrame])
+    texRepo->getByTextureId(animationDataArray[animID].texture.second[myindex])
         ->addLink(spriteArray[entityID].id);
     originalSize[entityID] = Vec2(
         texRepo
-            ->getByTextureId(animationDataArray[animID].texture[currentFrame])
+            ->getByTextureId(animationDataArray[animID].texture.second[myindex])
             ->getWidth(),
         texRepo
-            ->getByTextureId(animationDataArray[animID].texture[currentFrame])
+            ->getByTextureId(animationDataArray[animID].texture.second[myindex])
             ->getHeight());
   }
-  if (animationDataArray[animID].x.count(currentFrame)) {
-    texPosArray[entityID].x = animationDataArray[animID].x[currentFrame];
+  myindex = animationDataArray[animID].position.getIndex(currentFrame);
+  // printf("currentFrame: %d\n",currentFrame);
+  // printf("index: %d\n",myindex);
+  if (myindex != -1) {
+    texPosArray[entityID] = animationDataArray[animID].position.second[myindex] * scaleTexture.at(entityID);
   }
-  if (animationDataArray[animID].y.count(currentFrame)) {
-    texPosArray[entityID].y = animationDataArray[animID].y[currentFrame];
-  }
-  texPosArray[entityID] *= scaleTexture.at(entityID);
-  if (animationDataArray[animID].alpha.count(currentFrame) == 1) {
+
+  myindex = animationDataArray[animID].alpha.getIndex(currentFrame);
+  if (myindex != -1) {
     spriteArray[entityID].color.a =
-        animationDataArray[animID].alpha[currentFrame] * 128;
+        animationDataArray[animID].alpha.second[myindex] * 128;
   }
-  if (animationDataArray[animID].scaleX.count(currentFrame) == 1) {
-    spriteArray[entityID].size.x =
-        originalSize[entityID].x *
-        animationDataArray[animID].scaleX[currentFrame];
-  }
-  if (animationDataArray[animID].scaleY.count(currentFrame) == 1) {
-    spriteArray[entityID].size.y =
-        originalSize[entityID].y *
-        animationDataArray[animID].scaleY[currentFrame];
+
+  myindex = animationDataArray[animID].scale.getIndex(currentFrame);
+  if (myindex != -1) {
+    spriteArray[entityID].size =
+        originalSize[entityID] *
+        animationDataArray[animID].scale.second[myindex];
   }
 }
 
@@ -335,6 +313,11 @@ void Animation::updateAngle(const int entityID) {
   }
 }
 
+void Animation::setAnimation(enumAnimationState animationState){
+  currentFrame = animationStateVector[animationState].firstFrame;
+  lastFrame = animationStateVector[animationState].lastFrame;
+  firstFrame = currentFrame;
+}
 int Animation::debugAnim(const int entitieID) {
   if (framesCounter < (60 / framesSpeed)) {
     framesCounter++;
@@ -356,30 +339,19 @@ int Animation::debugAnim(const int entitieID) {
     texRepo->getByTextureId(animationDataArray[animID].texture[currentFrame])
         ->addLink(spriteArray[entitieID].id);
   }
-
-  if (animationDataArray[animID].x.count(currentFrame) == 1) {
-    texPosArray[entitieID].x = animationDataArray[animID].x[currentFrame];
-  }
-
-  if (animationDataArray[animID].y.count(currentFrame) == 1) {
-    texPosArray[entitieID].y = animationDataArray[animID].y[currentFrame];
+  int myindex = animationDataArray[animID].position.getIndex(currentFrame);
+  if (myindex != 1) {
+    texPosArray[entitieID] = animationDataArray[animID].position.second[currentFrame];
   }
 
   if (animationDataArray[animID].alpha.count(currentFrame) == 1) {
     float alpha = animationDataArray[animID].alpha[currentFrame] * 128;
     spriteArray[entitieID].color.a = alpha;
   }
-
-  if (animationDataArray[animID].scaleX.count(currentFrame) == 1) {
-    spriteArray[entitieID].size.x =
-        originalSize[entitieID].x *
-        animationDataArray[animID].scaleX[currentFrame];
-  }
-
-  if (animationDataArray[animID].scaleY.count(currentFrame) == 1) {
-    spriteArray[entitieID].size.y =
-        originalSize[entitieID].y *
-        animationDataArray[animID].scaleY[currentFrame];
+  myindex = animationDataArray[animID].scale.getIndex(currentFrame);
+  if (myindex != -1) {
+    spriteArray[entitieID].size = originalSize[entitieID] *
+    animationDataArray[animID].scale.second[myindex];
   }
 
   if (animationDataArray[animID].angleX.count(currentFrame) == 1) {

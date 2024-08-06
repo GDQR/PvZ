@@ -1,6 +1,5 @@
 #pragma once
 #include <iostream>
-#include <iterator>
 #include <vector>
 #include <tyra>
 #include "entities/entities.hpp"
