@@ -65,6 +65,8 @@ void AnimationData::loadAnimation(const int entityID, const int animID,
 
   texPosArray.insert(entityID, Tyra::Vec2());
 
+  scaleTexture[entityID] = Vec2(1, 1);
+
   activeAnimation(entityID, firstFrame, lastFrame);
 
   // printf("termine\n\n");
