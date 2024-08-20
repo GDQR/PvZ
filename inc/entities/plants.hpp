@@ -10,12 +10,7 @@ extern Tyra::Texture* projectilePea;
 extern Tyra::Texture* projectileSnowPea;
 extern int plantsCreated;
 
-enum Plant_Recharge_Time_enum {
-  fast,
-  slow,
-  verySlow,
-  enumMaxRecharge
-};
+enum Plant_Recharge_Time_enum { fast, slow, verySlow, enumMaxRecharge };
 
 extern int plantRechargeTime[enumMaxRecharge];
 
@@ -76,21 +71,17 @@ enum Plant_State_enum {
 extern std::string plantsAnim[enumMaxPlants];
 
 class Plant {
-  void createSpace();
-
  public:
-  Plant_State_enum type = NonePlant;
-
   std::vector<int> id;
 
+  Plant_State_enum type = NonePlant;
   int father;
+  int row;
+  int column;
   void newPlant(Plant_State_enum newType);
   int attack();
   void ability();
   void erase();
-  int attackTimer = 0;
-  int row;
-  int column;
 };
 
 void createPlant(Plant_State_enum typePlant, const int row, const int column);

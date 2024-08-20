@@ -198,7 +198,7 @@ void createPotatoMine(const int id, const Tyra::Vec2 pos) {
 
   // time
 
-  plant[id].attackTimer = 30;  // TODO: change this
+  timerArray[plant[id].id[0]].maxMS = 30;
 
   // HitBox
   boxColliderArray[plant[id].father] =
@@ -292,6 +292,9 @@ void createRepeater(const int id, const Tyra::Vec2 pos) {
   // Life
 
   lifeArray[plant[id].father] = 300;
+  
+  timerArray[plant[id].father].maxMS = 1000;
+  timerArray[plant[id].id[0]].maxMS = 0;
 
   // proyectile
   pointColliderArray[plant[id].father] = Vec2(pos.x + 40, pos.y + 25);
@@ -369,20 +372,8 @@ void createPlant(Plant_State_enum typePlant, const int row, const int column) {
   }
 }
 
-void Plant::createSpace() {
-  switch (type) {
-    case PeaShotter:
-      break;
-    case SunFlower:
-      id.reserve(3);
-    default:
-      break;
-  }
-}
-
 void Plant::newPlant(Plant_State_enum newType) {
   type = newType;
-  createSpace();
 }
 
 int Plant::attack() {
@@ -421,12 +412,12 @@ int Plant::attack() {
             newProjectile(pointColliderArray[father], 20, false);
           } else if (type == Repeater) {
             newProjectile(pointColliderArray[father], 40, true);
-            attackTimer++;  // is used like a counter
-            if (attackTimer < 2) {
+            timerArray[id[0]].maxMS++;  // is used like a counter
+            if (timerArray[id[0]].maxMS < 2) {
               timerArray[father].maxMS = 1000;
             } else {
               timerArray[father].maxMS = 1500;
-              attackTimer = 0;
+              timerArray[id[0]].maxMS = 0;
             }
           }
         }
