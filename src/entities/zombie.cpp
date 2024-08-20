@@ -61,7 +61,7 @@ int Zombie::move() {
   return 0;
 }
 
-void Zombie::attackPlant() {
+int Zombie::attackPlant() {
   for (int i = 0; i < 45; i++) {
     if (plant[i].type == NonePlant) {
       continue;
@@ -84,32 +84,47 @@ void Zombie::attackPlant() {
         attackTimer--;
       } else {
         attackTimer = 80;
-        printf("comiendo planta\n");
-        lifeArray[plant[i].father] -= damageArray[id[0]];
-        if (lifeArray[plant[i].father] <= 0) {
-          printf("borre planta id: %d\n", plant[i].father);
-          plant[i].erase(i);
-          attack = false;
-          for (unsigned int j = 0; j < id.size(); j++) {
-            if (animationArray.count(id[j]) == 1) {
-              // printf("anim attack id: %d\n",id[j]);
-              animationArray[id[j]].setAnimation(normalZombieWalk);
-              animationDataArray[m_animID[enumAnimName::ZombieAnimName][j]].setAnimationState(
-                  id[j], normalZombieWalk);
+        if(lifeArray.count(plant[i].father) == 1){
+          printf("comiendo planta\n");
+          lifeArray[plant[i].father] -= damageArray[id[0]];
+          if (lifeArray[plant[i].father] <= 0) {
+            printf("borre planta id: %d\n", plant[i].father);
+            plant[i].erase();
+            attack = false;
+            for (unsigned int j = 0; j < id.size(); j++) {
+              if (animationArray.count(id[j]) == 1) {
+                // printf("anim attack id: %d\n",id[j]);
+                animationArray[id[j]].setAnimation(normalZombieWalk);
+                animationDataArray[m_animID[enumAnimName::ZombieAnimName][j]].setAnimationState(
+                    id[j], normalZombieWalk);
+              }
             }
+            // animationArray[id[0]].animID = zombieWalk;
           }
-          // animationArray[id[0]].animID = zombieWalk;
         }
       }
-      break;
+      return 0;
     }
   }
+  
+  if (attack == true) {
+    attack = false;
+    for (unsigned int j = 0; j < id.size(); j++) {
+      if (animationArray.count(id[j]) == 1) {
+        // printf("anim attack id: %d\n",id[j]);
+        animationArray[id[j]].setAnimation(normalZombieWalk);
+        animationDataArray[m_animID[enumAnimName::ZombieAnimName][j]].setAnimationState(
+            id[j], normalZombieWalk);
+      }
+    }
+  }
+
+  return 1;
 }
 
 void Zombie::damage(const int entityID) {
   damaged = true;
   lifeArray[id[0]] -= damageArray[entityID];
-  printf("dano zombie\n");
   for (unsigned int j = 0; j < id.size(); j++) {
     if (animationArray.count(id[j]) == 1) {
       // printf("anim attack id: %d\n",m_animID["Zombie"][j]);  

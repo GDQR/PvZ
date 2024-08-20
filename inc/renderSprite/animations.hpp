@@ -10,6 +10,7 @@ enum class enumDraw { draw = 0, noDraw = -1 };
 enum enumAnimationState {
   normalZombieWalk,
   normalZombieAttack,
+  explodeCherryBomb,
   enumMaxAnimationState
 };
 

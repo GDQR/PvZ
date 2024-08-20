@@ -26,27 +26,6 @@ int yMap = 5;
 int timerZombies = 0;
 int maxZombies = 5;
 
-void plantMovement() {
-  float x = 0.0F;
-  float y = 0.0F;
-
-  if (leftJoy->h <= 100) {
-    x = -1;
-  } else if (leftJoy->h >= 200) {
-    x = 1;
-  }
-
-  if (leftJoy->v <= 100) {
-    y = -1;
-  } else if (leftJoy->v >= 200) {
-    y = 1;
-  }
-
-  if (x != 0 || y != 0) {
-    printf("me movi\n");
-  }
-}
-
 void Level1::init() {
   srand(time(NULL));
   newPlayer(&player);

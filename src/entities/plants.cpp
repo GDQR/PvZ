@@ -16,41 +16,35 @@ void loadPlantRechargeTime() {
   plantRechargeTime[verySlow] = 50000;  // 50 seconds
 }
 
-void createPeashotter(int id, int row, int column, Tyra::Vec2 pos) {
-  plant[id].newPlant(PeaShotter);
-
-  plant[id].row = row;
-  plant[id].column = column;
-
-  plant[id].father = Entities::newID();
-
-  posArray.insert(plant[id].father, pos);  // Vec2(row, column);
-
+void createPeashotter(const int id, const Tyra::Vec2 pos) {
   printf("size: %d\n", m_animID[enumAnimName::PeashooterSingleAnimName].size());
 
   int entityID;
   int animID;
   // int spriteID;
-  for (unsigned int i = 0; i < m_animID[enumAnimName::PeashooterSingleAnimName].size(); i++) {
+  // static PS2Timer myTimer;
+  for (unsigned int i = 0;
+       i < m_animID[enumAnimName::PeashooterSingleAnimName].size(); i++) {
     plant[id].id.push_back(Entities::newID());
     entityID = plant[id].id[i];
     animID = m_animID[enumAnimName::PeashooterSingleAnimName][i];
     // printf("plant ID: %d\n", entityID);
     // printf("animID: %d\n", animID);
     newFatherID(&plant[id].father, &entityID);
-    animationDataArray[animID].loadAnimation(entityID, animID, 80,104);
+    animationDataArray[animID].loadAnimation(entityID, animID, 80, 104);
     // animationDataArray[animID].activeAnimation(entityID, 80, 104);
     // printf("draw: %d\n", animationArray[entityID].draw);
-    if (animationDataArray[animID].name == "anim_blink" ||
-        animationDataArray[animID].name == "idle_shoot_blink") {
-      // animationArray[entityID].draw = false;
-      // setSprite(entityID, animationArray[entityID].draw);
-      // deleteAnimation(entityID);
-      // animationIdStopRender.push_back(entityID);
-      printf("encontre anim_blink\n");
-    }
+    // if (animationDataArray[animID].name == "anim_blink" ||
+    //     animationDataArray[animID].name == "idle_shoot_blink") {
+    //   // animationArray[entityID].draw = false;
+    //   // setSprite(entityID, animationArray[entityID].draw);
+    //   // deleteAnimation(entityID);
+    //   // animationIdStopRender.push_back(entityID);
+    //   printf("encontre anim_blink\n");
+    // }
   }
-
+  // myTimer.setLastTime();
+  // printf("anim time: %d\n",myTimer.getTimeInMS());
   // printf("plant[%d].id[0]: %d\n",id,plant[id].id[0]);
   // printf("plant[%d].id[1]: %d\n",id,plant[id].id[1]);
   // printf("plant[%d].id[2]: %d\n",id,plant[id].id[2]);
@@ -85,72 +79,31 @@ void createPeashotter(int id, int row, int column, Tyra::Vec2 pos) {
   createDebugPoint(plant[id].father, Tyra::MODE_STRETCH);
 }
 
-void deletePeashotter(const int pos) {
-  plant[pos].type = NonePlant;
-
-  plantCreatedInMap[plant[pos].row][plant[pos].column] = false;
-
-  deletePosArray(plant[pos].father);
-
-  std::vector<int>::iterator it = plant[pos].id.begin();
-  while (it != plant[pos].id.end()) {
-    deletePosArray(*it);
-    deleteFinalPosArray(*it);
-    deleteTexPosArray(*it);
-    deleteFatherIDChild(&plant[pos].father, &*it);
-    if(animationArray.count(*it)){
-      deleteAnimation(*it);
-    }
-
-    deleteSprite(*it);   
-    
-    Entities::deleteID(*it);
-    plant[pos].id.erase(it);
-  }
-
-  deleteFatherID(&plant[pos].father);
-
-  lifeArray.erase(plant[pos].father);
-
-  timerArray.erase(plant[pos].father);
-
-  deleteDebugBoxCollider(plant[pos].father);
-  deleteDebugPoint(plant[pos].father);
-  Entities::deleteID(plant[pos].father);
-  plantsCreated--;
-}
-
-void createSunflower(const int id, int row, int col, Tyra::Vec2 pos) {
-  plant[id].newPlant(Plant_State_enum::SunFlower);
-
-  plant[id].row = row;
-  plant[id].column = col;
-
-  plant[id].father = Entities::newID();
-
-  posArray.insert(plant[id].father, pos);  // Vec2(row, column);
-
+void createSunflower(const int id, const Tyra::Vec2 pos) {
   printf("size: %d\n", m_animID[enumAnimName::SunFlowerAnimName].size());
 
   int entityID;
   int animID;
 
-  for (unsigned int i = 0; i < m_animID[enumAnimName::SunFlowerAnimName].size(); i++) {
+  for (unsigned int i = 0; i < m_animID[enumAnimName::SunFlowerAnimName].size();
+       i++) {
     plant[id].id.push_back(Entities::newID());
     entityID = plant[id].id[i];
     animID = m_animID[enumAnimName::SunFlowerAnimName][i];
     printf("plant ID: %d\n", entityID);
     printf("animID: %d\n", animID);
     newFatherID(&plant[id].father, &entityID);
-    animationDataArray[animID].loadAnimation(entityID, animID, 5, animationDataArray[animID].maxFrame);
-    // animationDataArray[animID].activeAnimation(entityID, 5, animationDataArray[animID].maxFrame);
-    if (animationDataArray[animID].name == "anim_blink") {
-      deleteAnimation(entityID);
-      animationIdStopRender.push_back(entityID);
-      animationArray[entityID].draw = (int) enumDraw::noDraw;
-      // printf("encontre anim_blink\n");
-      setSprite(entityID, animationArray[entityID].draw);
-    }
+    animationDataArray[animID].loadAnimation(
+        entityID, animID, 5, animationDataArray[animID].maxFrame);
+    // animationDataArray[animID].activeAnimation(entityID, 5,
+    // animationDataArray[animID].maxFrame);
+    // if (animationDataArray[animID].name == "anim_blink") {
+    //   deleteAnimation(entityID);
+    //   animationIdStopRender.push_back(entityID);
+    //   animationArray[entityID].draw = (int)enumDraw::noDraw;
+    //   // printf("encontre anim_blink\n");
+    //   setSprite(entityID, animationArray[entityID].draw);
+    // }
     // printf("draw: %d\n", animationArray[entityID].draw);
   }
 
@@ -168,62 +121,24 @@ void createSunflower(const int id, int row, int col, Tyra::Vec2 pos) {
   createDebugBoxCollider(plant[id].father, Tyra::MODE_STRETCH);
 }
 
-void deleteSunflower(const int pos) {
-  plant[pos].type = NonePlant;
-
-  plantCreatedInMap[plant[pos].row][plant[pos].column] = false;
-
-  deletePosArray(plant[pos].father);
-
-  for (unsigned int i = 0; i < m_animID[enumAnimName::SunFlowerAnimName].size(); i++) {
-    deletePosArray(plant[pos].id[i]);
-    deleteTexPosArray(plant[pos].id[i]);
-    deleteFatherIDChild(&plant[pos].father, &plant[pos].id[i]);
-    deleteAnimation(plant[pos].id[i]);
-    deleteSprite(plant[pos].id[i]);
-    Entities::deleteID(plant[pos].id[i]);
-  }
-
-  deleteFatherID(&plant[pos].father);
-
-  lifeArray.erase(plant[pos].father);
-
-  timerArray.erase(plant[pos].father);
-
-  deleteDebugBoxCollider(plant[pos].father);
-  Entities::deleteID(plant[pos].father);
-  plantsCreated--;
-}
-
-void createCherryBomb(const int id, int row, int col, Tyra::Vec2 pos) {
-  plant[id].newPlant(Plant_State_enum::CherryBomb);
-
-  plant[id].row = row;
-  plant[id].column = col;
-
-  plant[id].father = Entities::newID();
-
-  posArray.insert(plant[id].father, pos);
-
+void createCherryBomb(const int id, const Tyra::Vec2 pos) {
   printf("size: %d\n", m_animID[enumAnimName::CherryBombAnimName].size());
 
   int entityID;
   int animID;
 
-  for (unsigned int i = 0; i < m_animID[enumAnimName::CherryBombAnimName].size(); i++) {
+  for (unsigned int i = 0;
+       i < m_animID[enumAnimName::CherryBombAnimName].size(); i++) {
     plant[id].id.push_back(Entities::newID());
     entityID = plant[id].id[i];
     animID = m_animID[enumAnimName::CherryBombAnimName][i];
     printf("plant ID: %d\n", entityID);
     printf("animID: %d\n", animID);
     newFatherID(&plant[id].father, &entityID);
-    animationDataArray[animID].loadAnimation(entityID, animID, 1, 13);
-    // animationDataArray[animID].activeAnimation(entityID, 1, 13);
+    animationDataArray[animID].loadAnimation(
+        entityID, animID, enumAnimationState::explodeCherryBomb);
   }
-
-  // Life
-
-  lifeArray[plant[id].father] = 300;
+  printf("lastframe: %d\n", animationArray[plant[id].id[0]].lastFrame);
 
   // HitBox
   boxColliderArray[plant[id].father] =
@@ -231,47 +146,14 @@ void createCherryBomb(const int id, int row, int col, Tyra::Vec2 pos) {
   createDebugBoxCollider(plant[id].father, Tyra::MODE_STRETCH);
 }
 
-void deleteCherryBomb(const int pos) {
-  plant[pos].type = NonePlant;
-
-  plantCreatedInMap[plant[pos].row][plant[pos].column] = false;
-
-  deletePosArray(plant[pos].father);
-
-  for (unsigned int i = 0; i < m_animID[enumAnimName::CherryBombAnimName].size(); i++) {
-    deletePosArray(plant[pos].id[i]);
-    deleteTexPosArray(plant[pos].id[i]);
-    deleteFatherIDChild(&plant[pos].father, &plant[pos].id[i]);
-    deleteAnimation(plant[pos].id[i]);
-    deleteSprite(plant[pos].id[i]);
-    Entities::deleteID(plant[pos].id[i]);
-  }
-
-  deleteFatherID(&plant[pos].father);
-
-  lifeArray.erase(plant[pos].father);
-
-  deleteDebugBoxCollider(plant[pos].father);
-  Entities::deleteID(plant[pos].father);
-  plantsCreated--;
-}
-
-void createWallnut(const int id, int row, int col, Tyra::Vec2 pos) {
-  plant[id].newPlant(Plant_State_enum::Wallnut);
-
-  plant[id].row = row;
-  plant[id].column = col;
-
-  plant[id].father = Entities::newID();
-
-  posArray.insert(plant[id].father, pos);
-
+void createWallnut(const int id, const Tyra::Vec2 pos) {
   printf("size: %d\n", m_animID[enumAnimName::WallnutAnimName].size());
 
   int entityID;
   int animID;
 
-  for (unsigned int i = 0; i < m_animID[enumAnimName::WallnutAnimName].size(); i++) {
+  for (unsigned int i = 0; i < m_animID[enumAnimName::WallnutAnimName].size();
+       i++) {
     plant[id].id.push_back(Entities::newID());
     entityID = plant[id].id[i];
     animID = m_animID[enumAnimName::WallnutAnimName][i];
@@ -292,47 +174,14 @@ void createWallnut(const int id, int row, int col, Tyra::Vec2 pos) {
   createDebugBoxCollider(plant[id].father, Tyra::MODE_STRETCH);
 }
 
-void deleteWallNut(const int pos) {
-  plant[pos].type = NonePlant;
-
-  plantCreatedInMap[plant[pos].row][plant[pos].column] = false;
-
-  deletePosArray(plant[pos].father);
-
-  for (unsigned int i = 0; i < m_animID[enumAnimName::WallnutAnimName].size(); i++) {
-    deletePosArray(plant[pos].id[i]);
-    deleteTexPosArray(plant[pos].id[i]);
-    deleteFatherIDChild(&plant[pos].father, &plant[pos].id[i]);
-    deleteAnimation(plant[pos].id[i]);
-    deleteSprite(plant[pos].id[i]);
-    Entities::deleteID(plant[pos].id[i]);
-  }
-
-  deleteFatherID(&plant[pos].father);
-
-  lifeArray.erase(plant[pos].father);
-
-  deleteDebugBoxCollider(plant[pos].father);
-  Entities::deleteID(plant[pos].father);
-  plantsCreated--;
-}
-
-void createPotatoMine(const int id, int row, int col, Tyra::Vec2 pos) {
-  plant[id].newPlant(Plant_State_enum::PotatoMine);
-
-  plant[id].row = row;
-  plant[id].column = col;
-
-  plant[id].father = Entities::newID();
-
-  posArray.insert(plant[id].father, pos);
-
+void createPotatoMine(const int id, const Tyra::Vec2 pos) {
   printf("size: %d\n", m_animID[enumAnimName::PotatoMineAnimName].size());
 
   int entityID;
   int animID;
 
-  for (unsigned int i = 0; i < m_animID[enumAnimName::PotatoMineAnimName].size(); i++) {
+  for (unsigned int i = 0;
+       i < m_animID[enumAnimName::PotatoMineAnimName].size(); i++) {
     plant[id].id.push_back(Entities::newID());
     entityID = plant[id].id[i];
     animID = m_animID[enumAnimName::PotatoMineAnimName][i];
@@ -357,48 +206,15 @@ void createPotatoMine(const int id, int row, int col, Tyra::Vec2 pos) {
   createDebugBoxCollider(plant[id].father, Tyra::MODE_STRETCH);
 }
 
-void deletePotatoMine(const int pos) {
-  plant[pos].type = NonePlant;
-
-  plantCreatedInMap[plant[pos].row][plant[pos].column] = false;
-
-  deletePosArray(plant[pos].father);
-
-  for (unsigned int i = 0; i < m_animID[enumAnimName::PotatoMineAnimName].size(); i++) {
-    deletePosArray(plant[pos].id[i]);
-    deleteTexPosArray(plant[pos].id[i]);
-    deleteFatherIDChild(&plant[pos].father, &plant[pos].id[i]);
-    deleteAnimation(plant[pos].id[i]);
-    deleteSprite(plant[pos].id[i]);
-    Entities::deleteID(plant[pos].id[i]);
-  }
-
-  deleteFatherID(&plant[pos].father);
-  
-  lifeArray.erase(plant[pos].father);
-
-  deleteDebugBoxCollider(plant[pos].father);
-  Entities::deleteID(plant[pos].father);
-  plantsCreated--;
-}
-
-void createSnowPea(int id, int row, int column, Tyra::Vec2 pos) {
-  plant[id].newPlant(Plant_State_enum::SnowPea);
-
-  plant[id].row = row;
-  plant[id].column = column;
-
-  plant[id].father = Entities::newID();
-
-  posArray.insert(plant[id].father, pos);  // Vec2(row, column);
-
+void createSnowPea(const int id, const Tyra::Vec2 pos) {
   printf("size: %d\n", m_animID[enumAnimName::SnowPeaAnimName].size());
 
   int entityID;
   int animID;
   // int spriteID;
 
-  for (unsigned int i = 0; i < m_animID[enumAnimName::SnowPeaAnimName].size(); i++) {
+  for (unsigned int i = 0; i < m_animID[enumAnimName::SnowPeaAnimName].size();
+       i++) {
     plant[id].id.push_back(Entities::newID());
     entityID = plant[id].id[i];
     animID = m_animID[enumAnimName::SnowPeaAnimName][i];
@@ -425,49 +241,15 @@ void createSnowPea(int id, int row, int column, Tyra::Vec2 pos) {
   createDebugPoint(plant[id].father, Tyra::MODE_STRETCH);
 }
 
-void deleteSnowPea(const int pos) {
-  plant[pos].type = NonePlant;
-
-  plantCreatedInMap[plant[pos].row][plant[pos].column] = false;
-
-  deletePosArray(plant[pos].father);
-
-  for (unsigned int i = 0; i < m_animID[enumAnimName::SnowPeaAnimName].size(); i++) {
-    deletePosArray(plant[pos].id[i]);
-    deleteTexPosArray(plant[pos].id[i]);
-    deleteFatherIDChild(&plant[pos].father, &plant[pos].id[i]);
-    deleteAnimation(plant[pos].id[i]);
-    deleteSprite(plant[pos].id[i]);
-    Entities::deleteID(plant[pos].id[i]);
-  }
-  
-  deleteFatherID(&plant[pos].father);
-
-  lifeArray.erase(plant[pos].father);
-
-  deleteDebugBoxCollider(plant[pos].father);
-  deleteDebugPoint(plant[pos].father);
-  Entities::deleteID(plant[pos].father);
-  plantsCreated--;
-}
-
-void createChomper(int id, int row, int column, Tyra::Vec2 pos) {
-  plant[id].newPlant(Plant_State_enum::Chomper);
-
-  plant[id].row = row;
-  plant[id].column = column;
-
-  plant[id].father = Entities::newID();
-
-  posArray.insert(plant[id].father, pos);  // Vec2(row, column);
-
+void createChomper(const int id, const Tyra::Vec2 pos) {
   printf("size: %d\n", m_animID[enumAnimName::ChomperAnimName].size());
 
   int entityID;
   int animID;
   // int spriteID;
 
-  for (unsigned int i = 0; i < m_animID[enumAnimName::ChomperAnimName].size(); i++) {
+  for (unsigned int i = 0; i < m_animID[enumAnimName::ChomperAnimName].size();
+       i++) {
     plant[id].id.push_back(Entities::newID());
     entityID = plant[id].id[i];
     animID = m_animID[enumAnimName::ChomperAnimName][i];
@@ -488,48 +270,15 @@ void createChomper(int id, int row, int column, Tyra::Vec2 pos) {
   createDebugBoxCollider(plant[id].father, Tyra::MODE_STRETCH);
 }
 
-void deleteChomper(const int pos) {
-  plant[pos].type = NonePlant;
-
-  plantCreatedInMap[plant[pos].row][plant[pos].column] = false;
-
-  deletePosArray(plant[pos].father);
-
-  for (unsigned int i = 0; i < m_animID[enumAnimName::ChomperAnimName].size(); i++) {
-    deletePosArray(plant[pos].id[i]);
-    deleteTexPosArray(plant[pos].id[i]);
-    deleteFatherIDChild(&plant[pos].father, &plant[pos].id[i]);
-    deleteAnimation(plant[pos].id[i]);
-    deleteSprite(plant[pos].id[i]);
-    Entities::deleteID(plant[pos].id[i]);
-  }
-
-  deleteFatherID(&plant[pos].father);
-  
-  lifeArray.erase(plant[pos].father);
-
-  deleteDebugBoxCollider(plant[pos].father);
-  Entities::deleteID(plant[pos].father);
-  plantsCreated--;
-}
-
-void createRepeater(int id, int row, int column, Tyra::Vec2 pos) {
-  plant[id].newPlant(Plant_State_enum::Repeater);
-
-  plant[id].row = row;
-  plant[id].column = column;
-
-  plant[id].father = Entities::newID();
-
-  posArray.insert(plant[id].father, pos); // Vec2(row, column);
-
+void createRepeater(const int id, const Tyra::Vec2 pos) {
   printf("size: %d\n", m_animID[enumAnimName::PeaShooterAnimName].size());
 
   int entityID;
   int animID;
   // int spriteID;
 
-  for (unsigned int i = 0; i < m_animID[enumAnimName::PeaShooterAnimName].size(); i++) {
+  for (unsigned int i = 0;
+       i < m_animID[enumAnimName::PeaShooterAnimName].size(); i++) {
     plant[id].id.push_back(Entities::newID());
     entityID = plant[id].id[i];
     animID = m_animID[enumAnimName::PeaShooterAnimName][i];
@@ -554,83 +303,61 @@ void createRepeater(int id, int row, int column, Tyra::Vec2 pos) {
   createDebugBoxCollider(plant[id].father, Tyra::MODE_STRETCH);
 }
 
-void deleteRepeater(const int pos) {
-  plant[pos].type = NonePlant;
-
-  plantCreatedInMap[plant[pos].row][plant[pos].column] = false;
-
-  deletePosArray(plant[pos].father);
-
-  for (unsigned int i = 0; i < m_animID[enumAnimName::PeaShooterAnimName].size(); i++) {
-    deletePosArray(plant[pos].id[i]);
-    deleteTexPosArray(plant[pos].id[i]);
-    deleteFatherIDChild(&plant[pos].father, &plant[pos].id[i]);
-    deleteAnimation(plant[pos].id[i]);
-    deleteSprite(plant[pos].id[i]);
-    Entities::deleteID(plant[pos].id[i]);
-  }
-
-  deleteFatherID(&plant[pos].father);
-  lifeArray.erase(plant[pos].father);
-
-  deleteDebugBoxCollider(plant[pos].father);
-  deleteDebugPoint(plant[pos].father);
-  Entities::deleteID(plant[pos].father);
-  plantsCreated--;
-}
-
 void createPlant(Plant_State_enum typePlant, const int row, const int column) {
   if (plantCreatedInMap[row][column] == false) {
     plantCreatedInMap[row][column] = true;
 
     int plantPos = row * column + column;
+    printf("new plant pos:%d\n",plantPos);
+
+    plant[plantPos].newPlant(typePlant);
+    plant[plantPos].row = row;
+    plant[plantPos].column = column;
+    plant[plantPos].father = Entities::newID();
+    printf("plant father: %d\n", plant[plantPos].father);
+
+    Tyra::Vec2 pos(mapCollider[row][column].x, mapCollider[row][column].y);
+    posArray.insert(plant[plantPos].father, pos);
+
     switch (typePlant) {
       case PeaShotter:
         printf("peashooter\n");
-        createPeashotter(
-            plantPos, row, column,
-            Vec2(mapCollider[row][column].x, mapCollider[row][column].y));
+        createPeashotter(plantPos, Vec2(mapCollider[row][column].x,
+                                        mapCollider[row][column].y));
         break;
       case SunFlower:
         printf("sunflower\n");
-        createSunflower(
-            plantPos, row, column,
-            Vec2(mapCollider[row][column].x, mapCollider[row][column].y));
+        createSunflower(plantPos, Vec2(mapCollider[row][column].x,
+                                       mapCollider[row][column].y));
         break;
       case CherryBomb:
         printf("cherryBomb");
-        createCherryBomb(
-            plantPos, row, column,
-            Vec2(mapCollider[row][column].x, mapCollider[row][column].y));
+        createCherryBomb(plantPos, Vec2(mapCollider[row][column].x,
+                                        mapCollider[row][column].y));
         break;
       case Wallnut:
         printf("wallNut");
-        createWallnut(
-            plantPos, row, column,
-            Vec2(mapCollider[row][column].x, mapCollider[row][column].y));
+        createWallnut(plantPos, Vec2(mapCollider[row][column].x,
+                                     mapCollider[row][column].y));
         break;
       case PotatoMine:
         printf("potatoMine");
-        createPotatoMine(
-            plantPos, row, column,
-            Vec2(mapCollider[row][column].x, mapCollider[row][column].y));
+        createPotatoMine(plantPos, Vec2(mapCollider[row][column].x,
+                                        mapCollider[row][column].y));
         break;
       case SnowPea:
         printf("SnowPea");
-        createSnowPea(
-            plantPos, row, column,
-            Vec2(mapCollider[row][column].x, mapCollider[row][column].y));
+        createSnowPea(plantPos, Vec2(mapCollider[row][column].x,
+                                     mapCollider[row][column].y));
         break;
       case Chomper:
         printf("Chomper");
-        createChomper(
-            plantPos, row, column,
-            Vec2(mapCollider[row][column].x, mapCollider[row][column].y));
+        createChomper(plantPos, Vec2(mapCollider[row][column].x,
+                                     mapCollider[row][column].y));
       case Repeater:
         printf("Repeater");
-        createRepeater(
-            plantPos, row, column,
-            Vec2(mapCollider[row][column].x, mapCollider[row][column].y));
+        createRepeater(plantPos, Vec2(mapCollider[row][column].x,
+                                      mapCollider[row][column].y));
       default:
         break;
     }
@@ -723,6 +450,7 @@ void Plant::ability() {
   } else if (type == CherryBomb) {
     if (animationArray[id[0]].currentFrame == animationArray[id[0]].lastFrame) {
       printf("explode\n");
+      erase();
     }
   } else if (type == Wallnut) {
     if (lifeArray[father] <= 2667) {
@@ -733,22 +461,45 @@ void Plant::ability() {
   }
 }
 
-void Plant::erase(const int entityID) {
-  if (type == PeaShotter) {
-    deletePeashotter(entityID);
-  } else if (type == SunFlower) {
-    deleteSunflower(entityID);
-  } else if (type == CherryBomb) {
-    deleteCherryBomb(entityID);
-  } else if (type == Wallnut) {
-    deleteWallNut(entityID);
-  } else if (type == SnowPea) {
-    deleteSnowPea(entityID);
-  } else if (type == Chomper) {
-    deleteChomper(entityID);
-  } else if (type == Repeater) {
-    deleteRepeater(entityID);
+void Plant::erase() {
+  printf("erase plant\n");
+  plantCreatedInMap[row][column] = false;
+  deletePosArray(father);
+  std::vector<int>::iterator it = id.begin();
+  while (it != id.end()) {
+    deletePosArray(*it);
+    deleteFinalPosArray(*it);
+    deleteTexPosArray(*it);
+    deleteFatherIDChild(&father, &*it);
+    if (animationArray.count(*it)) {
+      deleteAnimation(*it);
+    }
+
+    deleteSprite(*it);
+
+    Entities::deleteID(*it);
+    id.erase(it);
   }
+  if (type == PeaShotter) {
+    timerArray.erase(father);
+    deleteDebugPoint(father);
+  } else if (type == SunFlower) {
+    timerArray.erase(father);
+  } else if (type == SnowPea) {
+    deleteDebugPoint(father);
+  } else if (type == Repeater) {
+    deleteDebugPoint(father);
+  }
+  deleteFatherID(&father);
+
+  if (type != CherryBomb) {
+    lifeArray.erase(father);
+  }
+
+  deleteDebugBoxCollider(father);
+  Entities::deleteID(father);
+  type = NonePlant;
+  plantsCreated--;
 }
 
 void loadPlantCost() {

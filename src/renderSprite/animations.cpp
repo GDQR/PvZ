@@ -30,6 +30,7 @@ int maxAnimID = 0;
 void loadAnimationStates() {
   animationStateVector[normalZombieWalk] = AnimationState(45, 91);
   animationStateVector[normalZombieAttack] = AnimationState(139, 178);
+  animationStateVector[explodeCherryBomb] = AnimationState(1, 8);
 }
 
 void AnimationData::loadAnimation(const int entityID, const int animID,
