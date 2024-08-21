@@ -339,57 +339,44 @@ void PlantsManager::update() {
   }
 }
 
-void ProjectileManager::update() {
-  std::vector<Proyectile>::iterator it;
-
-  for (it = projectile.begin(); it < projectile.end(); it++) {
-    posArray[it->id].x++;
-    boxColliderArray[it->id].x = posArray[it->id].x;
-    if (posArray[it->id].x >= 580) {
-      // delete projectile
-      printf("deleting projectile\n");
-      it->erase();
-      it = projectile.erase(it);
-      projectilesCreated--;
-    }
-  }
-}
-
-void ProjectileManager::zombieCollision() {
-  std::vector<Proyectile>::iterator it;
+int ProjectileManager::update() {
+  std::vector<Proyectile>::iterator it = projectile.begin();
   std::vector<Zombie>::iterator it2;
-  for (it = projectile.begin(); it < projectile.end(); it++) {
-    for (it2 = zombie.begin(); it2 < zombie.end(); ) {
-      if (boxColliderArray[it->id].collision(&boxColliderArray[it2->id[0]]) == true) {
-
-        // damage zombie
+  while (it != projectile.end()) {
+    for (it2 = zombie.begin(); it2 != zombie.end();) {
+      if (boxColliderArray[it->id].collision(&boxColliderArray[it2->id[0]]) == false){
+        it2++;
+      }else{
         it2->damage(it->id);
         if(it->type == enumProyectile::snowPea){
           speedArray[it2->id[0]] = 0.5f;
         }
         // printf("zombie id: %d\n",it2->id[0]);
         // delete zombie
-        if(it2->erase() == true){
-          it2 = zombie.erase(it2);
-        }else{
-          it2++;
+        if (it2->erase() == true) {
+          zombie.erase(it2);
         }
-
         // delete projectile
         it->erase();
         it = projectile.erase(it);
-
-        // Break projectile loop if exist another zombie
-        if (it == projectile.end()) {
-          it2 = zombie.end();
-        }
-
+        it2 = zombie.begin();
         projectilesCreated--;
-      }else{
-        it2++;
+        if(it == projectile.end()){
+          return 1;
+        }
       }
     }
+
+    if (it->move() == false){
+      it++;
+    }else{
+      // delete projectile
+      printf("deleting projectile\n");
+      it = projectile.erase(it);
+      projectilesCreated--;
+    }
   }
+  return 0;
 }
 
 void ExplosionManager::zombieCollision() {

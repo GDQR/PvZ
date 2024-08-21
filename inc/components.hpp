@@ -87,6 +87,7 @@ class Proyectile {
  public:
   int id;
   enumProyectile type;
+  bool move();
   void erase();
 };
 

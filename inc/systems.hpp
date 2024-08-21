@@ -38,7 +38,7 @@ class ZombiesManager {
 
 class ProjectileManager {
  public:
-  void update();
+  int update();
   void zombieCollision();
 };
 
