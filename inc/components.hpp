@@ -81,12 +81,20 @@ class PlantsManager {
   void update();
 };
 
-enum enumProyectile { normal, snow };
+enum enumProyectile { pea, snowPea, ExplosionPowie};
 
 class Proyectile {
  public:
   int id;
   enumProyectile type;
+  void erase();
+};
+
+class Explosion {
+ public:
+  int id;
+  enumProyectile type;
+  void erase();
 };
 
 class PS2Timer {
@@ -139,6 +147,7 @@ extern std::vector<Zombie> zombie;
 extern std::vector<Sun> sun;
 extern std::vector<NaturalSun> naturalSun;
 extern std::vector<Proyectile> projectile;
+extern std::vector<Explosion> explosion;
 extern std::vector<Card> cards;
 extern int player;
 extern std::map<int, Cursor> cursor;

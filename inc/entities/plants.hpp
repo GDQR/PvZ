@@ -8,6 +8,7 @@ using Tyra::Sprite;
 
 extern Tyra::Texture* projectilePea;
 extern Tyra::Texture* projectileSnowPea;
+extern Tyra::Texture* projectileExplosionPowie;
 extern int plantsCreated;
 
 enum Plant_Recharge_Time_enum { fast, slow, verySlow, enumMaxRecharge };

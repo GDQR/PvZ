@@ -1,5 +1,6 @@
 #pragma once
 #include <tyra>
+#include "components.hpp"
 
 class PlayerControl {
  public:
@@ -41,15 +42,24 @@ class ProjectileManager {
   void zombieCollision();
 };
 
+class ExplosionManager {
+ public:
+  void zombieCollision();
+};
+
 extern PlayerControl playerControl;
 extern AnimationManager animManager;
 extern ProjectileManager projectileManager;
+extern ExplosionManager explosionManager;
 extern RendererSprites renderSprites;
 extern RendererDebugSpritesManager renderDebugSpritesManager;
 extern ZombiesManager zombiesManager;
 
 void newPlayer(int* player);
-void newProjectile(Tyra::Vec2 position, const int damage, bool normalPea);
+void newProjectile(Tyra::Vec2 position, const int damage,
+                   const enumProyectile projectileType);
+void newExplosion(Tyra::Vec2 position, const int damage,
+                  const enumProyectile projectileType);
 void newFatherID(int* fatherID, int* childID);
 void newCursor(int* player, Tyra::Vec2 pos);
 void newDeckCursor(int* player, Tyra::Vec2 pos);

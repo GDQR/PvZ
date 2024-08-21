@@ -407,11 +407,11 @@ int Plant::attack() {
         } else if (stopAnimation == false) {
           timerArray[father].resetCounter();
           if (type == PeaShotter) {
-            newProjectile(pointColliderArray[father], 20, true);
+            newProjectile(pointColliderArray[father], 20, enumProyectile::pea);
           } else if (type == SnowPea) {
-            newProjectile(pointColliderArray[father], 20, false);
+            newProjectile(pointColliderArray[father], 20, enumProyectile::snowPea);
           } else if (type == Repeater) {
-            newProjectile(pointColliderArray[father], 40, true);
+            newProjectile(pointColliderArray[father], 40, enumProyectile::pea);
             timerArray[id[0]].maxMS++;  // is used like a counter
             if (timerArray[id[0]].maxMS < 2) {
               timerArray[father].maxMS = 1000;
@@ -441,6 +441,7 @@ void Plant::ability() {
   } else if (type == CherryBomb) {
     if (animationArray[id[0]].currentFrame == animationArray[id[0]].lastFrame) {
       printf("explode\n");
+      newExplosion(posArray[father], 1800, enumProyectile::ExplosionPowie);
       erase();
     }
   } else if (type == Wallnut) {

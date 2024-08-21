@@ -37,6 +37,7 @@ std::vector<Zombie> zombie;
 std::vector<Sun> sun;
 std::vector<NaturalSun> naturalSun;
 std::vector<Proyectile> projectile;
+std::vector<Explosion> explosion;
 std::vector<Card> cards;
 int player;
 std::map<int, Cursor> cursor;
@@ -216,6 +217,24 @@ void Card::update() {
   }
 }
 
+void Proyectile::erase() {
+  deleteSprite(id);
+  deletePosArray(id);
+  deleteFinalPosArray(id);
+  boxColliderArray.erase(id);
+  deleteDebugBoxCollider(id);
+  Entities::deleteID(id);
+}
+
+void Explosion::erase() {
+  deleteSprite(id);
+  deletePosArray(id);
+  deleteFinalPosArray(id);
+  boxColliderArray.erase(id);
+  deleteDebugBoxCollider(id);
+  Entities::deleteID(id);
+}
+
 Animation::Animation() {}
 
 Animation::Animation(const int anim) { animID = anim; }
@@ -237,7 +256,7 @@ void Animation::update(const int entityID) {
       }
     }
   }
-  
+
   framesCounter++;
 }
 

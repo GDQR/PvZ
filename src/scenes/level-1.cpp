@@ -122,7 +122,8 @@ void Level1::update() {
 
   // printf("FPS: %d\n",engine->info.getFps()) ;
   // printf("ram: %f\n",engine->info.getAvailableRAM());
-  // projectileManager.zombieCollision();
+  projectileManager.zombieCollision();
+  explosionManager.zombieCollision();
   // printf("texture free space: %f\n",engine->renderer.core.gs.vram.getFreeSpaceInMB());
 
   // shoot zombies

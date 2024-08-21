@@ -3,10 +3,12 @@
 #include "components.hpp"
 
 int projectilesCreated = 0;
+int explosionsCreated = 0;
 
 PlayerControl playerControl;
 AnimationManager animManager;
 ProjectileManager projectileManager;
+ExplosionManager explosionManager;
 RendererSprites renderSprites;
 RendererDebugSpritesManager renderDebugSpritesManager;
 ZombiesManager zombiesManager;
@@ -163,7 +165,7 @@ void RendererSprites::resetFinalPos(){
   // std::map<int, Vec2>::iterator it;
   for (unsigned int i = 0; i < finalPosArray.second.size(); i++) {
     finalPosArray.second[i] = posArray[finalPosArray.first[i]];
-  } 
+  }
 }
 
 void RendererSprites::updateChildPos() {
@@ -345,13 +347,8 @@ void ProjectileManager::update() {
     boxColliderArray[it->id].x = posArray[it->id].x;
     if (posArray[it->id].x >= 580) {
       // delete projectile
-      printf("borrando proyectil\n");
-      deleteSprite(it->id);
-      boxColliderArray.erase(it->id);
-      deletePosArray(it->id);
-      deleteFinalPosArray(it->id);
-      deleteDebugBoxCollider(it->id);
-      Entities::deleteID(it->id);
+      printf("deleting projectile\n");
+      it->erase();
       it = projectile.erase(it);
       projectilesCreated--;
     }
@@ -367,7 +364,7 @@ void ProjectileManager::zombieCollision() {
 
         // damage zombie
         it2->damage(it->id);
-        if(it->type == enumProyectile::snow){
+        if(it->type == enumProyectile::snowPea){
           speedArray[it2->id[0]] = 0.5f;
         }
         // printf("zombie id: %d\n",it2->id[0]);
@@ -379,17 +376,7 @@ void ProjectileManager::zombieCollision() {
         }
 
         // delete projectile
-
-        Tyra::Texture* text =
-            texRepo->getBySpriteId(spriteArray[it->id].id);
-        TYRA_ASSERT(text,
-                    "No se encontro la textura del proyectil with id: ", it->id);
-        deleteSprite(it->id);
-        deletePosArray(it->id);
-        deleteFinalPosArray(it->id);
-        boxColliderArray.erase(it->id);
-        deleteDebugBoxCollider(it->id);
-        Entities::deleteID(it->id);
+        it->erase();
         it = projectile.erase(it);
 
         // Break projectile loop if exist another zombie
@@ -405,6 +392,41 @@ void ProjectileManager::zombieCollision() {
   }
 }
 
+void ExplosionManager::zombieCollision() {
+  std::vector<Explosion>::iterator it;
+  std::vector<Zombie>::iterator it2;
+  for (it = explosion.begin(); it < explosion.end(); it++) {
+    for (it2 = zombie.begin(); it2 < zombie.end(); ) {
+      if (boxColliderArray[it->id].collision(&boxColliderArray[it2->id[0]]) == true) {
+
+        // damage zombie
+        it2->damage(it->id);
+
+        // printf("zombie id: %d\n",it2->id[0]);
+        // delete zombie
+        if(it2->erase() == true){
+          it2 = zombie.erase(it2);
+        }else{
+          it2++;
+        }
+
+        // delete explosion
+        it->erase();
+        it = explosion.erase(it);
+
+        // Break projectile loop if exist another zombie
+        if (it == explosion.end()) {
+          it2 = zombie.end();
+        }
+
+        explosionsCreated--;
+      }else{
+        it2++;
+      }
+    }
+  }
+}
+
 void newPlayer(int* player){
   static int countPlayer = 0;
   *player = Entities::newID();
@@ -412,24 +434,20 @@ void newPlayer(int* player){
   countPlayer++;
 }
 
-void newProjectile(Vec2 position, const int damage, bool normalPea) {
+void newProjectile(Vec2 position, const int damage, const enumProyectile projectileType) {
   if (projectilesCreated < 100) {
     Proyectile projectileData;
     projectileData.id = Entities::newID();
-    if(normalPea == true){
-      projectileData.type = enumProyectile::normal;
-    }else{
-      projectileData.type = enumProyectile::snow;
-    }
+    projectileData.type = projectileType;
     
     projectile.insert(projectile.begin() + projectilesCreated, projectileData);
     int* id = &projectile[projectilesCreated].id;
 
     position.y -= 15.0f;
     createSprite(*id, Tyra::MODE_STRETCH, position, Vec2(31 / 1.6f, 31 / 1.6f));
-    if(normalPea == true) { 
+    if(projectileType == enumProyectile::pea) { 
       projectilePea->addLink(spriteArray[*id].id); 
-    }else{
+    }else if(projectileType == enumProyectile::snowPea) {
       projectileSnowPea->addLink(spriteArray[*id].id);
     }
 
@@ -441,6 +459,32 @@ void newProjectile(Vec2 position, const int damage, bool normalPea) {
                     spriteArray[*id].size.y);
     createDebugBoxCollider(*id, Tyra::MODE_STRETCH);
     projectilesCreated++;
+  }
+}
+
+void newExplosion(Vec2 position, const int damage, const enumProyectile projectileType){
+  if (explosionsCreated < 100) {
+    Explosion explosionData;
+    explosionData.id = Entities::newID();
+    explosionData.type = projectileType;
+    
+    explosion.insert(explosion.begin() + explosionsCreated, explosionData);
+    int* id = &explosion[explosionsCreated].id;
+
+    position.y -= 15.0f;
+    createSprite(*id, Tyra::MODE_STRETCH, position, Vec2(256 / 1.6f, 256 / 1.6f));
+    if (projectileType == enumProyectile::ExplosionPowie) {
+      projectileExplosionPowie->addLink(spriteArray[*id].id);
+    }
+
+    // damage
+    damageArray[*id] = damage;
+    // hitbox
+    boxColliderArray[*id] =
+        BoxCollider(posArray[*id].x, posArray[*id].y, spriteArray[*id].size.x,
+                    spriteArray[*id].size.y);
+    createDebugBoxCollider(*id, Tyra::MODE_STRETCH);
+    explosionsCreated++;
   }
 }
 
