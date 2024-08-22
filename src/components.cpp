@@ -25,10 +25,10 @@ std::unordered_map<int, Tyra::Vec2> originalSize;
 std::unordered_map<int, Tyra::Vec2> scaleTexture;
 std::map<int, Tyra::Vec2> pointColliderArray;
 std::map<int, BoxCollider> boxColliderArray;
-std::map<int, PS2Timer> timerArray;
+ArrayKey<int, PS2Timer> timerArray(enumComponents::timer);
 std::map<int, float> speedArray;
 std::map<int, int> damageArray;
-std::map<int, int> lifeArray;
+ArrayKey<int, int> lifeArray(enumComponents::life);
 std::map<int, Tyra::Vec2> pivot;
 std::map<int, Controller> controller;
 
@@ -440,6 +440,7 @@ void createCard(Plant_State_enum typePlant, Vec2 pos, bool isVersusMode) {
   spriteArray[card.seedShadowTimer].color =
       Tyra::Color(0.0F, 0.0F, 0.0F, 60.0F);
 
+  timerArray.insert(card.seedShadowTimer, PS2Timer());
   timerArray[card.seedShadowTimer].maxMS = 0;
       // getPlantRechargeTime(typePlant, isVersusMode);
   if (startWithoutWait(typePlant, isVersusMode) == true) {

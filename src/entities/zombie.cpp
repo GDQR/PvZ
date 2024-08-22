@@ -224,7 +224,7 @@ void createNormalZombie(const int id, Tyra::Vec2 pos){
   }
 
   // Life
-  lifeArray[zombie[id].id[0]] = 200; //270 for flagZombie
+  lifeArray.insert(zombie[id].id[0], 200); //270 for flagZombie
   // TODO: change apparence when has 100 of life
 
   // damage
@@ -259,7 +259,7 @@ void createFlagZombie(const int id, Tyra::Vec2 pos){
   }
 
   // Life
-  lifeArray[zombie[id].id[0]] = 200; //270 for flagZombie
+  lifeArray.insert(zombie[id].id[0], 200); //270 for flagZombie
   // TODO: change apparence when has 100 of life
 
   // damage

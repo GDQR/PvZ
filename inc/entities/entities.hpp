@@ -10,7 +10,9 @@ enum enumComponents {
   angle,
   sprite,
   spriteRender,
-  animation
+  animation,
+  timer,
+  life
 };
 
 class Entities {

@@ -135,10 +135,10 @@ extern std::unordered_map<int, Tyra::Vec2> originalSize;
 extern std::unordered_map<int, Tyra::Vec2> scaleTexture;
 extern std::map<int, Tyra::Vec2> pointColliderArray;
 extern std::map<int, BoxCollider> boxColliderArray;
-extern std::map<int, PS2Timer> timerArray;
+extern ArrayKey<int, PS2Timer> timerArray;
 extern std::map<int, float> speedArray;
 extern std::map<int, int> damageArray;
-extern std::map<int, int> lifeArray;
+extern ArrayKey<int, int> lifeArray;
 extern std::map<int, Tyra::Vec2> pivot;
 extern std::map<int, Controller> controller;
 

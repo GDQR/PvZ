@@ -65,8 +65,9 @@ void createPeashotter(const int id, const Tyra::Vec2 pos) {
 
   // Life
 
-  lifeArray[plant[id].father] = 300;
+  lifeArray.insert(plant[id].father, 300);
 
+  timerArray.insert(plant[id].father, PS2Timer());
   timerArray[plant[id].father].maxMS = 1500;
 
   // HitBox
@@ -109,10 +110,11 @@ void createSunflower(const int id, const Tyra::Vec2 pos) {
 
   // Life
 
-  lifeArray[plant[id].father] = 300;
+  lifeArray.insert(plant[id].father, 300);
 
   // time
 
+  timerArray.insert(plant[id].father, PS2Timer());
   timerArray[plant[id].father].maxMS = 7000;
 
   // HitBox
@@ -166,7 +168,7 @@ void createWallnut(const int id, const Tyra::Vec2 pos) {
 
   // Life
 
-  lifeArray[plant[id].father] = 4000;
+  lifeArray.insert(plant[id].father, 4000);
 
   // HitBox
   boxColliderArray[plant[id].father] =
@@ -193,10 +195,11 @@ void createPotatoMine(const int id, const Tyra::Vec2 pos) {
 
   // Life
 
-  lifeArray[plant[id].father] = 300;
+  lifeArray.insert(plant[id].father, 300);
 
   // time
 
+  timerArray.insert(plant[id].father, PS2Timer());
   timerArray[plant[id].father].maxMS = 15000;
 
   // HitBox
@@ -226,8 +229,9 @@ void createSnowPea(const int id, const Tyra::Vec2 pos) {
 
   // Life
 
-  lifeArray[plant[id].father] = 300;
+  lifeArray.insert(plant[id].father, 300);
 
+  timerArray.insert(plant[id].father, PS2Timer());
   timerArray[plant[id].father].maxMS = 1500;
 
   // HitBox
@@ -261,9 +265,9 @@ void createChomper(const int id, const Tyra::Vec2 pos) {
 
   // Life
 
-  lifeArray[plant[id].father] = 300;
+  lifeArray.insert(plant[id].father, 300);
   
-  timerArray[plant[id].father] = PS2Timer();
+  timerArray.insert(plant[id].father, PS2Timer());
   timerArray[plant[id].father].maxMS = 0;
   
   damageArray[plant[id].father] = 1600;
@@ -299,9 +303,11 @@ void createRepeater(const int id, const Tyra::Vec2 pos) {
 
   // Life
 
-  lifeArray[plant[id].father] = 300;
+  lifeArray.insert(plant[id].father, 300);
   
+  timerArray.insert(plant[id].father, PS2Timer());
   timerArray[plant[id].father].maxMS = 1000;
+  timerArray.insert(plant[id].id[0], PS2Timer());
   timerArray[plant[id].id[0]].maxMS = 0;
 
   // proyectile
