@@ -10,6 +10,7 @@ enum class enumDraw { draw = 0, noDraw = -1 };
 enum enumAnimationState {
   normalZombieWalk,
   normalZombieAttack,
+  poleVaulterWalk,
   explodeCherryBomb,
   enumMaxAnimationState
 };
@@ -24,7 +25,8 @@ enum enumAnimName {
   ChomperAnimName,
   PeaShooterAnimName,
   SunAnimName,
-  ZombieAnimName
+  ZombieAnimName,
+  ZombiePoleVaulterAnimName
 };
 
 class AnimationState {

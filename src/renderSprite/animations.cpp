@@ -30,6 +30,7 @@ int maxAnimID = 0;
 void loadAnimationStates() {
   animationStateVector[normalZombieWalk] = AnimationState(45, 91);
   animationStateVector[normalZombieAttack] = AnimationState(139, 178);
+  animationStateVector[poleVaulterWalk] = AnimationState(14, 50);
   animationStateVector[explodeCherryBomb] = AnimationState(1, 8);
 }
 
