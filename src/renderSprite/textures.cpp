@@ -7,6 +7,7 @@ using Tyra::FileUtils;
 Tyra::Texture* projectilePea;
 Tyra::Texture* projectileSnowPea;
 Tyra::Texture* projectileExplosionPowie;
+Tyra::Texture* projectileExplosionSpudow;
 
 void loadSprite(Sprite* sprite) {
   sprite->mode = Tyra::MODE_STRETCH;
@@ -137,4 +138,5 @@ void loadProjectile() {
   projectilePea = loadTexture("images/ProjectilePea.png");
   projectileSnowPea = loadTexture("images/ProjectileSnowPea.png");
   projectileExplosionPowie = loadTexture("particles/ExplosionPowie.png");
+  projectileExplosionSpudow = loadTexture("particles/ExplosionSpudow.png");
 }

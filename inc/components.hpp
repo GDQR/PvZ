@@ -81,7 +81,7 @@ class PlantsManager {
   void update();
 };
 
-enum enumProyectile { pea, snowPea, ExplosionPowie};
+enum enumProyectile { pea, snowPea, ExplosionPowie, ExplosionSpudow};
 
 class Proyectile {
  public:

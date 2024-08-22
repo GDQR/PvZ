@@ -188,8 +188,7 @@ void createPotatoMine(const int id, const Tyra::Vec2 pos) {
     printf("plant ID: %d\n", entityID);
     printf("animID: %d\n", animID);
     newFatherID(&plant[id].father, &entityID);
-    animationDataArray[animID].loadAnimation(entityID, animID, 1, 2);
-    // animationDataArray[animID].activeAnimation(entityID, 1, 2);
+    animationDataArray[animID].loadAnimation(entityID, animID, 1, 1);
   }
 
   // Life
@@ -198,7 +197,7 @@ void createPotatoMine(const int id, const Tyra::Vec2 pos) {
 
   // time
 
-  timerArray[plant[id].id[0]].maxMS = 30;
+  timerArray[plant[id].father].maxMS = 15000;
 
   // HitBox
   boxColliderArray[plant[id].father] =
@@ -441,7 +440,7 @@ void Plant::ability() {
   } else if (type == CherryBomb) {
     if (animationArray[id[0]].currentFrame == animationArray[id[0]].lastFrame) {
       printf("explode\n");
-      newExplosion(posArray[father], 1800, enumProyectile::ExplosionPowie);
+      newExplosion(posArray[father], Vec2(256 / 1.6f, 256 / 1.6f), 1800, enumProyectile::ExplosionPowie);
       erase();
     }
   } else if (type == Wallnut) {
@@ -450,7 +449,15 @@ void Plant::ability() {
     } else if (lifeArray[father] <= 1333) {
       printf("change animation\n");
     }
-  }
+  } else if (type == PotatoMine) {
+    printf("potato timer: %lld\n", timerArray[father].counterMS);
+    if (timerArray[father].counterMS < timerArray[father].maxMS){
+      timerArray[father].addMSinCounter();
+    }else if(timerArray[father].maxMS == 15000){
+      timerArray[father].maxMS = 0;
+      newExplosion(posArray[father], Vec2(64, 64), 1800, enumProyectile::ExplosionSpudow);
+    }
+  } 
 }
 
 void Plant::erase() {

@@ -58,7 +58,7 @@ extern ZombiesManager zombiesManager;
 void newPlayer(int* player);
 void newProjectile(Tyra::Vec2 position, const int damage,
                    const enumProyectile projectileType);
-void newExplosion(Tyra::Vec2 position, const int damage,
+void newExplosion(Tyra::Vec2 position, Vec2 size, const int damage,
                   const enumProyectile projectileType);
 void newFatherID(int* fatherID, int* childID);
 void newCursor(int* player, Tyra::Vec2 pos);

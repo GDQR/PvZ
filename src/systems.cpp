@@ -449,7 +449,8 @@ void newProjectile(Vec2 position, const int damage, const enumProyectile project
   }
 }
 
-void newExplosion(Vec2 position, const int damage, const enumProyectile projectileType){
+// TODO: Fix this for potato mine
+void newExplosion(Vec2 position, Vec2 size, const int damage, const enumProyectile projectileType){
   if (explosionsCreated < 100) {
     Explosion explosionData;
     explosionData.id = Entities::newID();
@@ -457,19 +458,20 @@ void newExplosion(Vec2 position, const int damage, const enumProyectile projecti
     
     explosion.insert(explosion.begin() + explosionsCreated, explosionData);
     int* id = &explosion[explosionsCreated].id;
-
-    position.y -= 15.0f;
-    createSprite(*id, Tyra::MODE_STRETCH, position, Vec2(256 / 1.6f, 256 / 1.6f));
+    // TODO: Fix position for sprite
+    createSprite(*id, Tyra::MODE_STRETCH, position-size/2/2, Vec2(256 / 1.6f, 256 / 1.6f));
     if (projectileType == enumProyectile::ExplosionPowie) {
       projectileExplosionPowie->addLink(spriteArray[*id].id);
+    }else if (projectileType == enumProyectile::ExplosionSpudow){
+      projectileExplosionSpudow->addLink(spriteArray[*id].id);
     }
+    position -= size/2/2;
 
     // damage
     damageArray[*id] = damage;
     // hitbox
     boxColliderArray[*id] =
-        BoxCollider(posArray[*id].x, posArray[*id].y, spriteArray[*id].size.x,
-                    spriteArray[*id].size.y);
+        BoxCollider(position.x, position.y, size.x, size.y);
     createDebugBoxCollider(*id, Tyra::MODE_STRETCH);
     explosionsCreated++;
   }
