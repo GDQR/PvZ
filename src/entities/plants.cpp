@@ -252,8 +252,8 @@ void createChomper(const int id, const Tyra::Vec2 pos) {
     plant[id].id.push_back(Entities::newID());
     entityID = plant[id].id[i];
     animID = m_animID[enumAnimName::ChomperAnimName][i];
-    printf("plant ID: %d\n", entityID);
-    printf("animID: %d\n", animID);
+    // printf("plant ID: %d\n", entityID);
+    // printf("animID: %d\n", animID);
     newFatherID(&plant[id].father, &entityID);
     animationDataArray[animID].loadAnimation(entityID, animID, 1, 25);
     // animationDataArray[animID].activeAnimation(entityID, 1, 25);
@@ -262,11 +262,20 @@ void createChomper(const int id, const Tyra::Vec2 pos) {
   // Life
 
   lifeArray[plant[id].father] = 300;
+  
+  timerArray[plant[id].father] = PS2Timer();
+  timerArray[plant[id].father].maxMS = 0;
+  
+  damageArray[plant[id].father] = 1600;
 
-  // HitBox
+  // lifeBox
   boxColliderArray[plant[id].father] =
       BoxCollider(pos.x + 10, pos.y + 20, 28, 38);
+  // HitBox
+  boxColliderArray[plant[id].id[0]] =
+      BoxCollider(pos.x + 30, pos.y + 20, 28, 38);
   createDebugBoxCollider(plant[id].father, Tyra::MODE_STRETCH);
+  createDebugBoxCollider(plant[id].id[0], Tyra::MODE_STRETCH);
 }
 
 void createRepeater(const int id, const Tyra::Vec2 pos) {
@@ -356,10 +365,12 @@ void createPlant(Plant_State_enum typePlant, const int row, const int column) {
         printf("Chomper");
         createChomper(plantPos, Vec2(mapCollider[row][column].x,
                                      mapCollider[row][column].y));
+        break;
       case Repeater:
         printf("Repeater");
         createRepeater(plantPos, Vec2(mapCollider[row][column].x,
                                       mapCollider[row][column].y));
+        break;
       default:
         break;
     }
@@ -382,7 +393,7 @@ int Plant::attack() {
 
   std::vector<Zombie>::iterator it;
 
-  for (it = zombie.begin(); it < zombie.end(); it++) {
+  for (it = zombie.begin(); it < zombie.end(); ) {
     if (type == PeaShotter || type == SnowPea || type == Repeater) {
       //  printf("vec plant %f,%f. vec zombi %f,%f,%f,%f\n",
       //  pointColliderArray[*plant[i].body[0]].x,
@@ -421,6 +432,20 @@ int Plant::attack() {
           }
         }
         it = zombie.end();
+      }else{
+        it++;
+      }
+    }else if(type == Chomper){
+      printf("chomper estoy\n");
+      if(timerArray[father].maxMS == 0 && boxColliderArray[id[0]].collision(&boxColliderArray[it->id[0]]) == true){
+        printf("eat zombie\n");
+        timerArray[father].maxMS = 42000;
+        it->damage(father);
+        it->erase();
+        it = zombie.erase(it);
+      }else{
+        it++;
+        
       }
     }
   }
@@ -457,7 +482,17 @@ void Plant::ability() {
       timerArray[father].maxMS = 0;
       newExplosion(posArray[father], Vec2(64, 64), 1800, enumProyectile::ExplosionSpudow);
     }
-  } 
+  } else if (type == Chomper){
+    printf("maxMS: %lld\n",timerArray[father].maxMS);
+    if(timerArray[father].counterMS < timerArray[father].maxMS){
+      printf("ms: %lld\n",timerArray[father].counterMS);
+      timerArray[father].addMSinCounter();
+    }
+    if(timerArray[father].counterMS >= timerArray[father].maxMS){
+      timerArray[father].counterMS = 0;
+      timerArray[father].maxMS = 0;
+    }
+  }
 }
 
 void Plant::erase() {
