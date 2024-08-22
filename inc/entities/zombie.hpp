@@ -1,7 +1,7 @@
 #pragma once
 #include <tyra>
 #include <vector>
-enum Zombie_State_enum { NoneZombie, ZombieNormal };
+enum Zombie_State_enum { NoneZombie, normalZombie, flagZombie };
 
 class Zombie {
  private:
@@ -26,4 +26,4 @@ class Zombie {
   bool erase();
 };
 
-void createZombie(Tyra::Vec2 pos);
+void createZombie(Tyra::Vec2 pos, const Zombie_State_enum type);
