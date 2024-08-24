@@ -82,6 +82,25 @@ void Zombie::animation(const int entityID, const int animID) {
         animationIdStopRender.push_back(entityID);
       }
       break;
+    case Zombie_State_enum::bucketHeadZombie:
+      if (animationDataArray[animID].name == "anim_cone" ||
+          animationDataArray[animID].name == "anim_hair" ||
+          animationDataArray[animID].name == "Zombie_outerarm_screendoor" ||
+          animationDataArray[animID].name ==
+              "Zombie_innerarm_screendoor_hand" ||
+          animationDataArray[animID].name == "anim_screendoor" ||
+          animationDataArray[animID].name == "Zombie_mustache" ||
+          animationDataArray[animID].name == "anim_tongue" ||
+          animationDataArray[animID].name == "Zombie_whitewater" ||
+          animationDataArray[animID].name == "Zombie_duckytube" ||
+          animationDataArray[animID].name == "Zombie_innerarm_screendoor" ||
+          animationDataArray[animID].name == "Zombie_flaghand") {
+        animationArray[entityID].draw = (int)enumDraw::noDraw;
+        setSprite(entityID, animationArray[entityID].draw);
+        deleteAnimation(entityID);
+        animationIdStopRender.push_back(entityID);
+      }
+      break;
     default:
       break;
   }
@@ -376,6 +395,43 @@ void createPoleVaulterZombie(const int id, Tyra::Vec2 pos) {
   createDebugBoxCollider(zombie[id].id[0], Tyra::MODE_STRETCH);
 }
 
+void createBucketheadZombie(const int id, Tyra::Vec2 pos) {
+  int entityID;
+  int animID;
+  printf("zombie anim size: %d\n",
+         m_animID[enumAnimName::ZombieAnimName].size());
+  for (unsigned int i = 0; i < m_animID[enumAnimName::ZombieAnimName].size();
+       i++) {
+    zombie[id].id.push_back(Entities::newID());
+    entityID = zombie[id].id[i];
+    animID = m_animID[enumAnimName::ZombieAnimName][i];
+    // printf("i: %d\n",i);
+    // printf("Zombie ID: %d\n", entityID);
+    // printf("animID: %d\n", animID);
+    newFatherID(&zombie[id].father, &entityID);
+    animationDataArray[animID].loadAnimation(entityID, animID,
+                                             normalZombieWalk);
+    // animationDataArray[animID].setAnimationState(entityID, normalZombieWalk);
+    // animationArray[entityID].draw = true;
+    zombie[id].animation(entityID, animID);
+  }
+
+  // Life
+  lifeArray.insert(zombie[id].id[0], 200);  // 270 for flagZombie
+  // TODO: change apparence when has 100 of life
+
+  // damage
+  damageArray[zombie[id].id[0]] = 100;
+
+  // speed
+  speedArray[zombie[id].id[0]] = 1;
+
+  // HitBox
+  boxColliderArray[zombie[id].id[0]] = BoxCollider(pos.x, pos.y + 10, 28, 50);
+  //   BoxCollider(pos.x + 100, pos.y + 20, 28, 50);
+  createDebugBoxCollider(zombie[id].id[0], Tyra::MODE_STRETCH);
+}
+
 void createZombie(Tyra::Vec2 pos, const Zombie_State_enum type) {
   zombie.push_back(Zombie());
   int id = zombie.size() - 1;
@@ -392,6 +448,8 @@ void createZombie(Tyra::Vec2 pos, const Zombie_State_enum type) {
     createConeheadZombie(id, pos);
   } else if (type == Zombie_State_enum::poleVaulterZombie) {
     createPoleVaulterZombie(id, pos);
+  } else if (type == Zombie_State_enum::bucketHeadZombie){
+    createBucketheadZombie(id, pos);
   }
 
   zombiesCreated++;

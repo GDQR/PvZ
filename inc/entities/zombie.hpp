@@ -1,7 +1,7 @@
 #pragma once
 #include <tyra>
 #include <vector>
-enum Zombie_State_enum { NoneZombie, normalZombie, flagZombie, coneheadZombie, poleVaulterZombie };
+enum Zombie_State_enum { NoneZombie, normalZombie, flagZombie, coneheadZombie, poleVaulterZombie, bucketHeadZombie };
 
 class Zombie {
  private:
