@@ -64,6 +64,7 @@ void Level1::init() {
 
   printf("pase una vez 1\n");
   zombieCreateRow[2] = true;
+  zombiescreated = 0;
   newCursor(&player, Vec2(mapCollider[0][0].x, mapCollider[0][0].y + 30));
   newDeckCursor(&player,
                 Vec2(posArray[cards[deckCursor[player].pos].seed].x - 3, -10));  
@@ -132,8 +133,7 @@ void Level1::update() {
   if (timerZombies > 0) {
     timerZombies--;
   } else {
-    static int zombiescreados = 0;
-    if (zombiescreados < 1) {
+    if (zombiescreated < 1) {
       int row = rand() % 5;
       while (zombieCreateRow[row] == false) {
         row = rand() % 5;
@@ -141,7 +141,7 @@ void Level1::update() {
 
       // createDebugZombie(Vec2(mapCollider[row][8].x, mapCollider[row][8].y));
       timerZombies = 60;
-      zombiescreados++;
+      zombiescreated++;
     }
   }
 

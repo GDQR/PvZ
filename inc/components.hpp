@@ -159,6 +159,7 @@ extern int player;
 extern std::map<int, Cursor> cursor;
 extern std::map<int, DeckCursor> deckCursor;
 
+extern int zombiescreated;
 extern bool zombieCreateRow[5];
 extern bool plantCreatedInMap[5][9];
 extern BoxCollider mapCollider[5][9];

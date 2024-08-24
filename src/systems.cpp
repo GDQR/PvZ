@@ -528,5 +528,10 @@ void createLawnMower(const Tyra::Vec2 pos) {
     newFatherID(&entity.id[0], &entityID);
     animationDataArray[animID].loadAnimation(entityID, animID, 1, 1);
   }
+
+  // HitBox
+  boxColliderArray[entity.id[0]] =
+      BoxCollider(pos.x + 10, pos.y + 20, 28, 38);
+  createDebugBoxCollider(entity.id[0], Tyra::MODE_STRETCH);
   lawnMower.push_back(entity);
 }

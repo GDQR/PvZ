@@ -39,10 +39,12 @@ std::vector<NaturalSun> naturalSun;
 std::vector<Proyectile> projectile;
 std::vector<Explosion> explosion;
 std::vector<Card> cards;
+std::vector<LawnMower> lawnMower;
 int player;
 std::map<int, Cursor> cursor;
 std::map<int, DeckCursor> deckCursor;
 
+int zombiescreated;
 bool zombieCreateRow[5];
 bool plantCreatedInMap[5][9];
 BoxCollider mapCollider[5][9];
