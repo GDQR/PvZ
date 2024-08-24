@@ -107,9 +107,6 @@ void Zombie::animation(const int entityID, const int animID) {
 }
 
 int Zombie::move() {
-  if (debug == true) {
-    return 1;
-  }
   if (timer > 0) {
     timer--;
   } else if (attack == false) {

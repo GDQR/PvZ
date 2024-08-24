@@ -16,7 +16,6 @@ class Zombie {
   std::vector<int> id;
   bool attack = false;
   bool damaged = false;
-  bool debug = false;
   void newZombie(Zombie_State_enum newType);
   int move();
   void animation(const int entityID, const int animID);
