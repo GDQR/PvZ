@@ -512,3 +512,21 @@ void newDeckCursor(int* player, Tyra::Vec2 pos) {
   //     pos.x, pos.y, 24, 24, 28 / 2, 24 / 2);
   // createDebugBoxCollider(deckCursor[*player].id, Tyra::MODE_STRETCH);
 }
+
+void createLawnMower(const Tyra::Vec2 pos) {
+  LawnMower entity;
+  entity.id.push_back(Entities::newID());
+  posArray.insert(entity.id[0], pos);
+  int entityID;
+  int animID;
+  for(unsigned int i=0; i < m_animID[enumAnimName::LawnMowerAnimName].size(); i++){
+    entityID = Entities::newID();
+    entity.id.push_back(entityID);
+    animID = m_animID[enumAnimName::LawnMowerAnimName][i];
+    // printf("plant ID: %d\n", entityID);
+    // printf("animID: %d\n", animID);
+    newFatherID(&entity.id[0], &entityID);
+    animationDataArray[animID].loadAnimation(entityID, animID, 1, 1);
+  }
+  lawnMower.push_back(entity);
+}

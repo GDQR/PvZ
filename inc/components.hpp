@@ -34,7 +34,6 @@ class FatherID {
 class Cursor {
  public:
   int id = -1;
-  Sprite sprite;
   Vec2 cursorTile;
   int cursorTimer = 0;
   float cursorSpeed = 1;
@@ -57,6 +56,11 @@ class Card {
   Plant_State_enum plant;
   int cost;
   void update();
+};
+
+class LawnMower {
+ public:
+  std::vector<int> id;
 };
 
 class BoxCollider {
@@ -150,6 +154,7 @@ extern std::vector<NaturalSun> naturalSun;
 extern std::vector<Proyectile> projectile;
 extern std::vector<Explosion> explosion;
 extern std::vector<Card> cards;
+extern std::vector<LawnMower> lawnMower;
 extern int player;
 extern std::map<int, Cursor> cursor;
 extern std::map<int, DeckCursor> deckCursor;

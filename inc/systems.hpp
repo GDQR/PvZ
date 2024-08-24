@@ -67,6 +67,7 @@ void createSprite(int id, Tyra::SpriteMode mode, Tyra::Vec2 position,
                   Tyra::Vec2 size);
 void createSpriteRotate(int id, Tyra::SpriteMode mode, Tyra::Vec2 position,
                         Tyra::Vec2 size, const Tyra::Vec2 angle);
+void createLawnMower(const Tyra::Vec2 pos);
 void deleteFatherIDChild(int* fatherID, int* childID);
 void deleteFatherID(const int* entityID);
 void deleteSprite(const int entityID);

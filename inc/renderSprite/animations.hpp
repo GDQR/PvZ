@@ -27,7 +27,8 @@ enum enumAnimName {
   SunAnimName,
   ZombieAnimName,
   ZombiePoleVaulterAnimName,
-  ZombieBucketHeadAnimName
+  ZombieBucketHeadAnimName,
+  LawnMowerAnimName
 };
 
 class AnimationState {
