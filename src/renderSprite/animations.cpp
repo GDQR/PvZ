@@ -46,7 +46,7 @@ void AnimationData::loadAnimation(const int entityID, const int animID,
   bool rotateSprite = false;
 
   for (unsigned int j = 1; j < maxFrame; j++) {
-    if (angleX.count(j) == true || angleY.count(j) == true) {
+    if (angle.count(j) == true) {
       rotateSprite = true;
       createSpriteRotate(entityID, Tyra::MODE_STRETCH, Vec2(0, 0),
                          Vec2(128 / 1.6f, 128 / 1.6f), Vec2(0.0f, 0.0f));
@@ -141,26 +141,13 @@ int AnimationData::activeAnimation(const int entityID,
   spriteArray[entityID].color.a = alpha.second[index];
 
   if (angleArray.count(entityID) == 1) {
-    std::unordered_map<unsigned int, float>::iterator it =
-        angleX.find(firstFrame);
-    int pos = firstFrame - 1;
-
-    while (it == angleX.end()) {
-      it = angleX.find(pos);
-      pos--;
+    for (unsigned int i = 0; i < angle.first.size(); i++) {
+      if (angle.first[i] <= firstFrame) {
+        index = i;
+      }
     }
 
-    angleArray[entityID].x = it->second;
-
-    it = angleY.find(firstFrame);
-    pos = firstFrame - 1;
-
-    while (it == angleY.end()) {
-      it = angleY.find(pos);
-      pos--;
-    }
-
-    angleArray[entityID].y = it->second;
+    angleArray[entityID] = angle.second[index];
   }
   // printf("anim draw: %d\n", drawState);
   return 0;
@@ -299,14 +286,11 @@ void readInfo(std::ifstream& MyReadFile, std::string& insideArrow,
         animationDataArray[animID].draw.insert(countframes, draw);
       }
 
-      if (beforeKx != kx) {
+      if (beforeKx != kx || beforeKY != ky) {
         beforeKx = kx;
-        animationDataArray[animID].angleX[countframes] = kx;
-      }
-
-      if (beforeKY != ky) {
         beforeKY = ky;
-        animationDataArray[animID].angleY[countframes] = ky;
+        animationDataArray[animID].angle.insert(countframes,
+                                                Tyra::Vec2(kx, ky));
       }
 
       countframes++;
@@ -357,9 +341,8 @@ void readReanimFiles(int nameID, std::string file) {
       } else {
         animationDataArray[animID].draw.clear();
         animationDataArray[animID].position.clear();
-        animationDataArray[animID].angleX.clear();
-        animationDataArray[animID].angleY.clear();
         animationDataArray[animID].scale.clear();
+        animationDataArray[animID].angle.clear();
         animationDataArray[animID].alpha.clear();
         printf("borre la memoria\n");
       }

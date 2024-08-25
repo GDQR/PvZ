@@ -337,12 +337,9 @@ void Animation::updateSprites(const int entityID) {
 }
 
 void Animation::updateAngle(const int entityID) {
-  if (animationDataArray[animID].angleX.count(currentFrame) == 1) {
-    angleArray[entityID].x = animationDataArray[animID].angleX[currentFrame];
-  }
-
-  if (animationDataArray[animID].angleY.count(currentFrame) == 1) {
-    angleArray[entityID].y = animationDataArray[animID].angleY[currentFrame];
+  int myindex = animationDataArray[animID].angle.getIndex(currentFrame);
+  if (myindex != -1) {
+    angleArray[entityID] = animationDataArray[animID].angle.second[myindex];
   }
 }
 
@@ -386,11 +383,8 @@ int Animation::debugAnim(const int entitieID) {
     animationDataArray[animID].scale.second[myindex];
   }
 
-  if (animationDataArray[animID].angleX.count(currentFrame) == 1) {
-    angleArray[entitieID].x = animationDataArray[animID].angleX[currentFrame];
-  }
-  if (animationDataArray[animID].angleY.count(currentFrame) == 1) {
-    angleArray[entitieID].y = animationDataArray[animID].angleY[currentFrame];
+  if (animationDataArray[animID].angle.count(currentFrame) == 1) {
+    angleArray[entitieID] = animationDataArray[animID].angle[currentFrame];
   }
 
   return 0;

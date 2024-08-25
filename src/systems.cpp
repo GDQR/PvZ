@@ -86,16 +86,10 @@ void AnimationManager::debugChangeFrame(const int entitieID, const int key) {
             .scale[animationArray[entitieID].currentFrame];
   }
 
-  if (animationDataArray[animationArray[entitieID].animID].angleX.count(
+  if (animationDataArray[animationArray[entitieID].animID].angle.count(
           animationArray[entitieID].currentFrame) == 1) {
-    angleArray[entitieID].x = animationDataArray[animationArray[entitieID].animID]
-                            .angleX[animationArray[entitieID].currentFrame];
-  }
-
-  if (animationDataArray[animationArray[entitieID].animID].angleY.count(
-          animationArray[entitieID].currentFrame) == 1) {
-    angleArray[entitieID].y = animationDataArray[animationArray[entitieID].animID]
-                            .angleY[animationArray[entitieID].currentFrame];
+    angleArray[entitieID] = animationDataArray[animationArray[entitieID].animID]
+                            .angle[animationArray[entitieID].currentFrame];
   }
 }
 

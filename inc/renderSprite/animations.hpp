@@ -67,8 +67,7 @@ class AnimationData {
   LinearArrayKey<unsigned int, int> texture;
   LinearArrayKey<unsigned int, Tyra::Vec2> position;
   LinearArrayKey<unsigned int, Tyra::Vec2> scale;
-  std::unordered_map<unsigned int, float> angleX;
-  std::unordered_map<unsigned int, float> angleY;
+  LinearArrayKey<unsigned int, Tyra::Vec2> angle;
   LinearArrayKey<unsigned int, float> alpha;
   LinearArrayKey<unsigned int, int> draw;
   void loadAnimation(const int entityID, const int animID,
