@@ -163,7 +163,7 @@ void RendererSprites::resetFinalPos(){
 }
 
 void RendererSprites::updateChildPos() {
-  std::map<int, FatherID>::iterator it;
+  std::unordered_map<int, FatherID>::iterator it;
   for (it = fatherIDArray.begin(); it != fatherIDArray.end(); it++) {
     it->second.update(it->first);
   }
@@ -177,63 +177,14 @@ void RendererSprites::updateTexture(){
   } 
 }
 void RendererSprites::update() {
-  // for (unsigned int i = 0; i < finalPosArray.first.size(); i++){
-  //   spriteArray[finalPosArray.first[i]].position = finalPosArray.second[i];
-  // }
   for (auto it : spriteRenderIDArray.first) {
-    // spriteArray[it].color.a = frameDataArray[it].alpha;
     spriteArray[it].position = finalPosArray[it];
-    // spriteArray[it].size = Tyra::Vec2(frameDataArray[it].scaleX,frameDataArray[it].scaleY);
-  //   if (animationDataArray[animID].texture.count(currentFrame) == 1) {
-  //   // Unlink Texture from the sprite entitie
-  //   if (texRepo->getBySpriteId(spriteArray[entityID].id) != nullptr) {
-  //     // printf("unlink sprite id: %d\n", spriteArray[entityID].id);
-  //     texRepo->getBySpriteId(spriteArray[entityID].id)
-  //         ->removeLinkById(spriteArray[entityID].id);
-  //   }
-
-  //   // Link new Texture to the sprite entitie
-  //   texRepo->getByTextureId(animationDataArray[animID].texture[currentFrame])
-  //       ->addLink(spriteArray[entityID].id);
-  //   originalSize[entityID] = Vec2(
-  //       texRepo
-  //           ->getByTextureId(animationDataArray[animID].texture[currentFrame])
-  //           ->getWidth(),
-  //       texRepo
-  //           ->getByTextureId(animationDataArray[animID].texture[currentFrame])
-  //           ->getHeight());
-  // }
-  // if (animationDataArray[animID].alpha.count(currentFrame) == 1) {
-  //   spriteArray[entityID].color.a =
-  //       animationDataArray[animID].alpha[currentFrame] * 128;
-  // }
-  // if (animationDataArray[animID].scaleX.count(currentFrame) == 1) {
-  //   spriteArray[entityID].size.x =
-  //       originalSize[entityID].x *
-  //       animationDataArray[animID].scaleX[currentFrame];
-  // }
-  // if (animationDataArray[animID].scaleY.count(currentFrame) == 1) {
-  //   spriteArray[entityID].size.y =
-  //       originalSize[entityID].y *
-  //       animationDataArray[animID].scaleY[currentFrame];
-  // }
-
     if(angleArray.count(it) == 1){
       renderer->renderer2D.renderRotate(spriteArray[it],angleArray[it]);
     }else{
       renderer->renderer2D.render(spriteArray[it]);
     }
   }
-  // std::map<int, Sprite*>::iterator it;
-  // for (it = spritesNormalRender.begin(); it != spritesNormalRender.end();
-  //      it++) {
-  //   // if (finalPosArray[it->first].x != it->second->position.x ||
-  //   //     finalPosArray[it->first].y != it->second->position.y) {
-  //     it->second->position = finalPosArray.read(it->first);
-  //   // }
-
-  //   renderer->renderer2D.render(it->second);
-  // }
 }
 
 void ZombiesManager::update() {
