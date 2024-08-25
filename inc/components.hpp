@@ -55,6 +55,7 @@ class Card {
   int seedShadowTimer;
   Plant_State_enum plant;
   int cost;
+  std::vector<int> plantID;
   void update();
 };
 
@@ -85,7 +86,7 @@ class PlantsManager {
   void update();
 };
 
-enum enumProyectile { pea, snowPea, ExplosionPowie, ExplosionSpudow};
+enum enumProyectile { pea, snowPea, ExplosionPowie, ExplosionSpudow };
 
 class Proyectile {
  public:
@@ -165,5 +166,3 @@ extern bool plantCreatedInMap[5][9];
 extern BoxCollider mapCollider[5][9];
 
 extern PlantsManager plantsManager;
-
-void createCard(Plant_State_enum typePlant, Vec2 pos, bool isVersusMode);

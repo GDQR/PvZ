@@ -21,16 +21,16 @@ void createPeashotter(const int id, const Tyra::Vec2 pos) {
 
   int entityID;
   int animID;
-  // int spriteID;
-  // static PS2Timer myTimer;
+  
+  int* father = &plant[id].father;
   for (unsigned int i = 0;
        i < m_animID[enumAnimName::PeashooterSingleAnimName].size(); i++) {
-    plant[id].id.push_back(Entities::newID());
-    entityID = plant[id].id[i];
+    entityID = Entities::newID();
+    plant[id].id.push_back(entityID);
     animID = m_animID[enumAnimName::PeashooterSingleAnimName][i];
     // printf("plant ID: %d\n", entityID);
     // printf("animID: %d\n", animID);
-    newFatherID(&plant[id].father, &entityID);
+    newFatherID(father, &entityID);
     animationDataArray[animID].loadAnimation(entityID, animID, 80, 104);
     // animationDataArray[animID].activeAnimation(entityID, 80, 104);
     // printf("draw: %d\n", animationArray[entityID].draw);
@@ -43,8 +43,6 @@ void createPeashotter(const int id, const Tyra::Vec2 pos) {
     //   printf("encontre anim_blink\n");
     // }
   }
-  // myTimer.setLastTime();
-  // printf("anim time: %d\n",myTimer.getTimeInMS());
   // printf("plant[%d].id[0]: %d\n",id,plant[id].id[0]);
   // printf("plant[%d].id[1]: %d\n",id,plant[id].id[1]);
   // printf("plant[%d].id[2]: %d\n",id,plant[id].id[2]);
@@ -65,19 +63,19 @@ void createPeashotter(const int id, const Tyra::Vec2 pos) {
 
   // Life
 
-  lifeArray.insert(plant[id].father, 300);
+  lifeArray.insert(*father, 300);
 
-  timerArray.insert(plant[id].father, PS2Timer());
-  timerArray[plant[id].father].maxMS = 1500;
+  timerArray.insert(*father, PS2Timer());
+  timerArray[*father].maxMS = 1500;
 
   // HitBox
-  boxColliderArray[plant[id].father] =
+  boxColliderArray[*father] =
       BoxCollider(pos.x + 10, pos.y + 20, 28, 38);
-  createDebugBoxCollider(plant[id].father, Tyra::MODE_STRETCH);
+  createDebugBoxCollider(*father, Tyra::MODE_STRETCH);
 
   // proyectile
-  pointColliderArray[plant[id].father] = Vec2(pos.x + 40, pos.y + 25);
-  createDebugPoint(plant[id].father, Tyra::MODE_STRETCH);
+  pointColliderArray[*father] = Tyra::Vec2(pos.x + 40, pos.y + 25);
+  createDebugPoint(*father, Tyra::MODE_STRETCH);
 }
 
 void createSunflower(const int id, const Tyra::Vec2 pos) {
@@ -88,8 +86,8 @@ void createSunflower(const int id, const Tyra::Vec2 pos) {
 
   for (unsigned int i = 0; i < m_animID[enumAnimName::SunFlowerAnimName].size();
        i++) {
-    plant[id].id.push_back(Entities::newID());
-    entityID = plant[id].id[i];
+    entityID = Entities::newID();
+    plant[id].id.push_back(entityID);
     animID = m_animID[enumAnimName::SunFlowerAnimName][i];
     printf("plant ID: %d\n", entityID);
     printf("animID: %d\n", animID);
@@ -131,8 +129,8 @@ void createCherryBomb(const int id, const Tyra::Vec2 pos) {
 
   for (unsigned int i = 0;
        i < m_animID[enumAnimName::CherryBombAnimName].size(); i++) {
-    plant[id].id.push_back(Entities::newID());
-    entityID = plant[id].id[i];
+    entityID = Entities::newID();
+    plant[id].id.push_back(entityID);
     animID = m_animID[enumAnimName::CherryBombAnimName][i];
     printf("plant ID: %d\n", entityID);
     printf("animID: %d\n", animID);
@@ -156,8 +154,8 @@ void createWallnut(const int id, const Tyra::Vec2 pos) {
 
   for (unsigned int i = 0; i < m_animID[enumAnimName::WallnutAnimName].size();
        i++) {
-    plant[id].id.push_back(Entities::newID());
-    entityID = plant[id].id[i];
+    entityID = Entities::newID();
+    plant[id].id.push_back(entityID);
     animID = m_animID[enumAnimName::WallnutAnimName][i];
     printf("plant ID: %d\n", entityID);
     printf("animID: %d\n", animID);
@@ -184,8 +182,8 @@ void createPotatoMine(const int id, const Tyra::Vec2 pos) {
 
   for (unsigned int i = 0;
        i < m_animID[enumAnimName::PotatoMineAnimName].size(); i++) {
-    plant[id].id.push_back(Entities::newID());
-    entityID = plant[id].id[i];
+    entityID = Entities::newID();
+    plant[id].id.push_back(entityID);
     animID = m_animID[enumAnimName::PotatoMineAnimName][i];
     printf("plant ID: %d\n", entityID);
     printf("animID: %d\n", animID);
@@ -213,12 +211,11 @@ void createSnowPea(const int id, const Tyra::Vec2 pos) {
 
   int entityID;
   int animID;
-  // int spriteID;
 
   for (unsigned int i = 0; i < m_animID[enumAnimName::SnowPeaAnimName].size();
        i++) {
-    plant[id].id.push_back(Entities::newID());
-    entityID = plant[id].id[i];
+    entityID = Entities::newID();
+    plant[id].id.push_back(entityID);
     animID = m_animID[enumAnimName::SnowPeaAnimName][i];
     printf("plant ID: %d\n", entityID);
     printf("animID: %d\n", animID);
@@ -249,12 +246,11 @@ void createChomper(const int id, const Tyra::Vec2 pos) {
 
   int entityID;
   int animID;
-  // int spriteID;
 
   for (unsigned int i = 0; i < m_animID[enumAnimName::ChomperAnimName].size();
        i++) {
-    plant[id].id.push_back(Entities::newID());
-    entityID = plant[id].id[i];
+    entityID = Entities::newID();
+    plant[id].id.push_back(entityID);
     animID = m_animID[enumAnimName::ChomperAnimName][i];
     // printf("plant ID: %d\n", entityID);
     // printf("animID: %d\n", animID);
@@ -287,12 +283,11 @@ void createRepeater(const int id, const Tyra::Vec2 pos) {
 
   int entityID;
   int animID;
-  // int spriteID;
 
   for (unsigned int i = 0;
        i < m_animID[enumAnimName::PeaShooterAnimName].size(); i++) {
-    plant[id].id.push_back(Entities::newID());
-    entityID = plant[id].id[i];
+    entityID = Entities::newID();
+    plant[id].id.push_back(entityID);
     animID = m_animID[enumAnimName::PeaShooterAnimName][i];
     printf("plant ID: %d\n", entityID);
     printf("animID: %d\n", animID);

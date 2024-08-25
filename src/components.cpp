@@ -422,37 +422,3 @@ void PS2Timer::addMSinCounter() {
   setLastTime();
   counterMS += getTimeInMS();
 }
-
-void createCard(Plant_State_enum typePlant, Vec2 pos, bool isVersusMode) {
-  Card card;
-  card.seed = Entities::newID();
-  card.seedShadow = Entities::newID();
-  card.seedShadowTimer = Entities::newID();
-
-  createSprite(card.seed, Tyra::MODE_REPEAT, pos, Vec2(50, 70));
-  createTexture(card.seed, "UI/Seeds.png");
-  spriteArray[card.seed].offset.x = 100;
-
-  createSprite(card.seedShadow, Tyra::MODE_REPEAT, pos, Vec2(50, 70));
-  createTexture(card.seedShadow, "UI/Seeds.png");
-  spriteArray[card.seedShadow].color = Tyra::Color(0.0F, 0.0F, 0.0F, 60.0F);
-
-  createSprite(card.seedShadowTimer, Tyra::MODE_REPEAT, pos, Vec2(50, 70));
-  createTexture(card.seedShadowTimer, "UI/Seeds.png");
-  spriteArray[card.seedShadowTimer].color =
-      Tyra::Color(0.0F, 0.0F, 0.0F, 60.0F);
-
-  timerArray.insert(card.seedShadowTimer, PS2Timer());
-  timerArray[card.seedShadowTimer].maxMS = 0;
-      // getPlantRechargeTime(typePlant, isVersusMode);
-  if (startWithoutWait(typePlant, isVersusMode) == true) {
-    timerArray[card.seedShadowTimer].counterMS =
-        timerArray[card.seedShadowTimer].maxMS;
-  }
-
-  card.plant = typePlant;
-
-  card.cost = getPlantCost(typePlant);
-
-  cards.push_back(card);
-}
