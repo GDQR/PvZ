@@ -8,10 +8,10 @@ void createCardPeashotter(std::vector<int>& plantID, const Tyra::Vec2 pos) {
   posArray.insert(plantID[0], pos);
 
   for (unsigned int i = 0;
-       i < m_animID[enumAnimName::PeashooterSingleAnimName].size(); i++) {
+       i < m_animID[AnimIndex::Peashooter].size(); i++) {
     entityID = Entities::newID();
     plantID.push_back(entityID);
-    animID = m_animID[enumAnimName::PeashooterSingleAnimName][i];
+    animID = m_animID[AnimIndex::Peashooter][i];
     newFatherID(&plantID[0], &entityID);
     animationDataArray[animID].loadAnimation(entityID, animID, 80, 80);
     // spriteArray[entityID].scale = 0.5f;
@@ -26,11 +26,11 @@ void createCardSunFlower(std::vector<int>& plantID, const Tyra::Vec2 pos) {
 
   plantID.push_back(Entities::newID());
   posArray.insert(plantID[0], pos);
-  for (unsigned int i = 0; i < m_animID[enumAnimName::SunFlowerAnimName].size();
+  for (unsigned int i = 0; i < m_animID[AnimIndex::SunFlower].size();
        i++) {
     entityID = Entities::newID();
     plantID.push_back(entityID);
-    animID = m_animID[enumAnimName::SunFlowerAnimName][i];
+    animID = m_animID[AnimIndex::SunFlower][i];
     newFatherID(&plantID[0], &entityID);
     animationDataArray[animID].loadAnimation(entityID, animID, 8, 8);
   }
@@ -43,10 +43,10 @@ void createCardCherryBomb(std::vector<int>& plantID, const Tyra::Vec2 pos) {
   plantID.push_back(Entities::newID());
   posArray.insert(plantID[0], pos);
   for (unsigned int i = 0;
-       i < m_animID[enumAnimName::CherryBombAnimName].size(); i++) {
+       i < m_animID[AnimIndex::CherryBomb].size(); i++) {
     entityID = Entities::newID();
     plantID.push_back(entityID);
-    animID = m_animID[enumAnimName::CherryBombAnimName][i];
+    animID = m_animID[AnimIndex::CherryBomb][i];
     newFatherID(&plantID[0], &entityID);
     animationDataArray[animID].loadAnimation(entityID, animID, 1, 1);
   }
@@ -58,11 +58,11 @@ void createCardWallnut(std::vector<int>& plantID, const Tyra::Vec2 pos) {
 
   plantID.push_back(Entities::newID());
   posArray.insert(plantID[0], pos);
-  for (unsigned int i = 0; i < m_animID[enumAnimName::WallnutAnimName].size();
+  for (unsigned int i = 0; i < m_animID[AnimIndex::Wallnut].size();
        i++) {
     entityID = Entities::newID();
     plantID.push_back(entityID);
-    animID = m_animID[enumAnimName::WallnutAnimName][i];
+    animID = m_animID[AnimIndex::Wallnut][i];
     newFatherID(&plantID[0], &entityID);
     animationDataArray[animID].loadAnimation(entityID, animID, 1, 1);
   }
@@ -75,10 +75,10 @@ void createCardPotatoMine(std::vector<int>& plantID, const Tyra::Vec2 pos) {
   plantID.push_back(Entities::newID());
   posArray.insert(plantID[0], pos);
   for (unsigned int i = 0;
-       i < m_animID[enumAnimName::PotatoMineAnimName].size(); i++) {
+       i < m_animID[AnimIndex::PotatoMine].size(); i++) {
     entityID = Entities::newID();
     plantID.push_back(entityID);
-    animID = m_animID[enumAnimName::PotatoMineAnimName][i];
+    animID = m_animID[AnimIndex::PotatoMine][i];
     newFatherID(&plantID[0], &entityID);
     animationDataArray[animID].loadAnimation(entityID, animID, 31, 31);
   }
@@ -90,11 +90,11 @@ void createCardSnowPea(std::vector<int>& plantID, const Tyra::Vec2 pos) {
 
   plantID.push_back(Entities::newID());
   posArray.insert(plantID[0], pos);
-  for (unsigned int i = 0; i < m_animID[enumAnimName::SnowPeaAnimName].size();
+  for (unsigned int i = 0; i < m_animID[AnimIndex::SnowPea].size();
        i++) {
     entityID = Entities::newID();
     plantID.push_back(entityID);
-    animID = m_animID[enumAnimName::SnowPeaAnimName][i];
+    animID = m_animID[AnimIndex::SnowPea][i];
     newFatherID(&plantID[0], &entityID);
     animationDataArray[animID].loadAnimation(entityID, animID, 80, 80);
   }
@@ -106,11 +106,11 @@ void createCardChomper(std::vector<int>& plantID, const Tyra::Vec2 pos) {
 
   plantID.push_back(Entities::newID());
   posArray.insert(plantID[0], pos);
-  for (unsigned int i = 0; i < m_animID[enumAnimName::ChomperAnimName].size();
+  for (unsigned int i = 0; i < m_animID[AnimIndex::Chomper].size();
        i++) {
     entityID = Entities::newID();
     plantID.push_back(entityID);
-    animID = m_animID[enumAnimName::ChomperAnimName][i];
+    animID = m_animID[AnimIndex::Chomper][i];
     newFatherID(&plantID[0], &entityID);
     animationDataArray[animID].loadAnimation(entityID, animID, 1, 1);
   }
@@ -123,10 +123,10 @@ void createCardRepeater(std::vector<int>& plantID, const Tyra::Vec2 pos) {
   plantID.push_back(Entities::newID());
   posArray.insert(plantID[0], pos);
   for (unsigned int i = 0;
-       i < m_animID[enumAnimName::PeaShooterAnimName].size(); i++) {
+       i < m_animID[AnimIndex::Repeater].size(); i++) {
     entityID = Entities::newID();
     plantID.push_back(entityID);
-    animID = m_animID[enumAnimName::PeaShooterAnimName][i];
+    animID = m_animID[AnimIndex::Repeater][i];
     newFatherID(&plantID[0], &entityID);
     animationDataArray[animID].loadAnimation(entityID, animID, 80, 80);
   }

@@ -4,7 +4,6 @@
 #include "components.hpp"
 #include "systems.hpp"
 
-std::string plantsAnim[enumMaxPlants];
 int plantCost[enumMaxPlants];
 int plantRechargeTime[enumMaxRecharge];
 int plantsCreated = 0;
@@ -17,17 +16,17 @@ void loadPlantRechargeTime() {
 }
 
 void createPeashotter(const int id, const Tyra::Vec2 pos) {
-  printf("size: %d\n", m_animID[enumAnimName::PeashooterSingleAnimName].size());
+  printf("size: %d\n", m_animID[AnimIndex::Peashooter].size());
 
   int entityID;
   int animID;
   
   int* father = &plant[id].father;
   for (unsigned int i = 0;
-       i < m_animID[enumAnimName::PeashooterSingleAnimName].size(); i++) {
+       i < m_animID[AnimIndex::Peashooter].size(); i++) {
     entityID = Entities::newID();
     plant[id].id.push_back(entityID);
-    animID = m_animID[enumAnimName::PeashooterSingleAnimName][i];
+    animID = m_animID[AnimIndex::Peashooter][i];
     // printf("plant ID: %d\n", entityID);
     // printf("animID: %d\n", animID);
     newFatherID(father, &entityID);
@@ -79,16 +78,16 @@ void createPeashotter(const int id, const Tyra::Vec2 pos) {
 }
 
 void createSunflower(const int id, const Tyra::Vec2 pos) {
-  printf("size: %d\n", m_animID[enumAnimName::SunFlowerAnimName].size());
+  printf("size: %d\n", m_animID[AnimIndex::SunFlower].size());
 
   int entityID;
   int animID;
 
-  for (unsigned int i = 0; i < m_animID[enumAnimName::SunFlowerAnimName].size();
+  for (unsigned int i = 0; i < m_animID[AnimIndex::SunFlower].size();
        i++) {
     entityID = Entities::newID();
     plant[id].id.push_back(entityID);
-    animID = m_animID[enumAnimName::SunFlowerAnimName][i];
+    animID = m_animID[AnimIndex::SunFlower][i];
     printf("plant ID: %d\n", entityID);
     printf("animID: %d\n", animID);
     newFatherID(&plant[id].father, &entityID);
@@ -122,16 +121,16 @@ void createSunflower(const int id, const Tyra::Vec2 pos) {
 }
 
 void createCherryBomb(const int id, const Tyra::Vec2 pos) {
-  printf("size: %d\n", m_animID[enumAnimName::CherryBombAnimName].size());
+  printf("size: %d\n", m_animID[AnimIndex::CherryBomb].size());
 
   int entityID;
   int animID;
 
   for (unsigned int i = 0;
-       i < m_animID[enumAnimName::CherryBombAnimName].size(); i++) {
+       i < m_animID[AnimIndex::CherryBomb].size(); i++) {
     entityID = Entities::newID();
     plant[id].id.push_back(entityID);
-    animID = m_animID[enumAnimName::CherryBombAnimName][i];
+    animID = m_animID[AnimIndex::CherryBomb][i];
     printf("plant ID: %d\n", entityID);
     printf("animID: %d\n", animID);
     newFatherID(&plant[id].father, &entityID);
@@ -147,16 +146,16 @@ void createCherryBomb(const int id, const Tyra::Vec2 pos) {
 }
 
 void createWallnut(const int id, const Tyra::Vec2 pos) {
-  printf("size: %d\n", m_animID[enumAnimName::WallnutAnimName].size());
+  printf("size: %d\n", m_animID[AnimIndex::Wallnut].size());
 
   int entityID;
   int animID;
 
-  for (unsigned int i = 0; i < m_animID[enumAnimName::WallnutAnimName].size();
+  for (unsigned int i = 0; i < m_animID[AnimIndex::Wallnut].size();
        i++) {
     entityID = Entities::newID();
     plant[id].id.push_back(entityID);
-    animID = m_animID[enumAnimName::WallnutAnimName][i];
+    animID = m_animID[AnimIndex::Wallnut][i];
     printf("plant ID: %d\n", entityID);
     printf("animID: %d\n", animID);
     newFatherID(&plant[id].father, &entityID);
@@ -175,16 +174,16 @@ void createWallnut(const int id, const Tyra::Vec2 pos) {
 }
 
 void createPotatoMine(const int id, const Tyra::Vec2 pos) {
-  printf("size: %d\n", m_animID[enumAnimName::PotatoMineAnimName].size());
+  printf("size: %d\n", m_animID[AnimIndex::PotatoMine].size());
 
   int entityID;
   int animID;
 
   for (unsigned int i = 0;
-       i < m_animID[enumAnimName::PotatoMineAnimName].size(); i++) {
+       i < m_animID[AnimIndex::PotatoMine].size(); i++) {
     entityID = Entities::newID();
     plant[id].id.push_back(entityID);
-    animID = m_animID[enumAnimName::PotatoMineAnimName][i];
+    animID = m_animID[AnimIndex::PotatoMine][i];
     printf("plant ID: %d\n", entityID);
     printf("animID: %d\n", animID);
     newFatherID(&plant[id].father, &entityID);
@@ -207,16 +206,16 @@ void createPotatoMine(const int id, const Tyra::Vec2 pos) {
 }
 
 void createSnowPea(const int id, const Tyra::Vec2 pos) {
-  printf("size: %d\n", m_animID[enumAnimName::SnowPeaAnimName].size());
+  printf("size: %d\n", m_animID[AnimIndex::SnowPea].size());
 
   int entityID;
   int animID;
 
-  for (unsigned int i = 0; i < m_animID[enumAnimName::SnowPeaAnimName].size();
+  for (unsigned int i = 0; i < m_animID[AnimIndex::SnowPea].size();
        i++) {
     entityID = Entities::newID();
     plant[id].id.push_back(entityID);
-    animID = m_animID[enumAnimName::SnowPeaAnimName][i];
+    animID = m_animID[AnimIndex::SnowPea][i];
     printf("plant ID: %d\n", entityID);
     printf("animID: %d\n", animID);
     newFatherID(&plant[id].father, &entityID);
@@ -242,16 +241,16 @@ void createSnowPea(const int id, const Tyra::Vec2 pos) {
 }
 
 void createChomper(const int id, const Tyra::Vec2 pos) {
-  printf("size: %d\n", m_animID[enumAnimName::ChomperAnimName].size());
+  printf("size: %d\n", m_animID[AnimIndex::Chomper].size());
 
   int entityID;
   int animID;
 
-  for (unsigned int i = 0; i < m_animID[enumAnimName::ChomperAnimName].size();
+  for (unsigned int i = 0; i < m_animID[AnimIndex::Chomper].size();
        i++) {
     entityID = Entities::newID();
     plant[id].id.push_back(entityID);
-    animID = m_animID[enumAnimName::ChomperAnimName][i];
+    animID = m_animID[AnimIndex::Chomper][i];
     // printf("plant ID: %d\n", entityID);
     // printf("animID: %d\n", animID);
     newFatherID(&plant[id].father, &entityID);
@@ -279,16 +278,16 @@ void createChomper(const int id, const Tyra::Vec2 pos) {
 }
 
 void createRepeater(const int id, const Tyra::Vec2 pos) {
-  printf("size: %d\n", m_animID[enumAnimName::PeaShooterAnimName].size());
+  printf("size: %d\n", m_animID[AnimIndex::Repeater].size());
 
   int entityID;
   int animID;
 
   for (unsigned int i = 0;
-       i < m_animID[enumAnimName::PeaShooterAnimName].size(); i++) {
+       i < m_animID[AnimIndex::Repeater].size(); i++) {
     entityID = Entities::newID();
     plant[id].id.push_back(entityID);
-    animID = m_animID[enumAnimName::PeaShooterAnimName][i];
+    animID = m_animID[AnimIndex::Repeater][i];
     printf("plant ID: %d\n", entityID);
     printf("animID: %d\n", animID);
     newFatherID(&plant[id].father, &entityID);
@@ -589,57 +588,6 @@ void loadPlantCost() {
   plantCost[Imitator] = 0;  // this needs to copy the cost of another plant
 }
 
-void loadPlantAnimString() {
-  plantsAnim[PeaShotter] = "PeaShooterSingle";
-  plantsAnim[SunFlower] = "SunFlower";
-  plantsAnim[CherryBomb] = "CherryBomb";
-  plantsAnim[Wallnut] = "Wallnut";
-  plantsAnim[PotatoMine] = "PotatoMine";
-  plantsAnim[SnowPea] = "SnowPea";
-  plantsAnim[Chomper] = "Chomper";
-  plantsAnim[Repeater] = "PeaShooter";
-  plantsAnim[PuffShroom] = "PuffShroom";
-  plantsAnim[SunShroom] = "SunShroom";
-  plantsAnim[FumeShroom] = "FumeShroom";
-  plantsAnim[GraveBuster] = "Gravebuster";
-  plantsAnim[HypnoShroom] = "HypnoShroom";
-  plantsAnim[ScaredyShroom] = "ScaredyShroom";
-  plantsAnim[IceShroom] = "IceShroom";
-  plantsAnim[DoomShroom] = "DoomShroom";
-  plantsAnim[LilyPad] = "LilyPad";
-  plantsAnim[Squash] = "Squash";
-  plantsAnim[Threepeater] = "ThreePeater";
-  plantsAnim[Tanglekelp] = "Tanglekelp";
-  plantsAnim[Jalapeno] = "Jalapeno";
-  plantsAnim[Spikeweed] = "Caltrop";
-  plantsAnim[Torchwood] = "Torchwood";
-  plantsAnim[Tallnut] = "Tallnut";
-  plantsAnim[SeaShroom] = "SeaShroom";
-  plantsAnim[Plantern] = "Plantern";
-  plantsAnim[Cactus] = "Cactus";
-  plantsAnim[Blover] = "Blover";
-  plantsAnim[SplitPea] = "SplitPea";
-  plantsAnim[Starfruit] = "Starfruit";
-  plantsAnim[Pumpkin] = "Pumpkin";
-  plantsAnim[Magnetshroom] = "Magnetshroom";
-  plantsAnim[Cabbagepult] = "Cabbagepult";
-  plantsAnim[FlowerPot] = "Pot";
-  plantsAnim[Kernelpult] = "Cornpult";
-  plantsAnim[CoffeeBean] = "Coffeebean";
-  plantsAnim[Garlic] = "Garlic";
-  plantsAnim[UmbrellaLeaf] = "Umbrellaleaf";
-  plantsAnim[Marigold] = "Marigold";
-  plantsAnim[Melonpult] = "Melonpult";
-  plantsAnim[GatlingPea] = "GatlingPea";
-  plantsAnim[TwinSunflower] = "TwinSunflower";
-  plantsAnim[GloomShroom] = "GloomShroom";
-  plantsAnim[Cattail] = "Cattail";
-  plantsAnim[WinterMelon] = "WinterMelon";
-  plantsAnim[GoldMagnet] = "GoldMagnet";
-  plantsAnim[Spikerock] = "SpikeRock";
-  plantsAnim[CobCannon] = "CobCannon";
-  plantsAnim[Imitator] = "Imitater";
-}
 int getPlantCost(Plant_State_enum typePlant) { return plantCost[typePlant]; }
 
 int getPlantRechargeTime(Plant_State_enum typePlant, bool isVersusMode) {

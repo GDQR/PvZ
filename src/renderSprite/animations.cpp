@@ -5,6 +5,65 @@
 #include "systems.hpp"
 #include <iostream>
 
+std::string animString[AnimIndex::enumMax];
+
+void loadAnimString(){
+  animString[AnimIndex::Peashooter] = "PeaShooterSingle";
+  animString[AnimIndex::SunFlower] = "SunFlower";
+  animString[AnimIndex::CherryBomb] = "CherryBomb";
+  animString[AnimIndex::Wallnut] = "Wallnut";
+  animString[AnimIndex::PotatoMine] = "PotatoMine";
+  animString[AnimIndex::SnowPea] = "SnowPea";
+  animString[AnimIndex::Chomper] = "Chomper";
+  animString[AnimIndex::Repeater] = "PeaShooter";
+  animString[AnimIndex::PuffShroom] = "PuffShroom";
+  animString[AnimIndex::SunShroom] = "SunShroom";
+  animString[AnimIndex::FumeShroom] = "FumeShroom";
+  animString[AnimIndex::GraveBuster] = "Gravebuster";
+  animString[AnimIndex::HypnoShroom] = "HypnoShroom";
+  animString[AnimIndex::ScaredyShroom] = "ScaredyShroom";
+  animString[AnimIndex::IceShroom] = "IceShroom";
+  animString[AnimIndex::DoomShroom] = "DoomShroom";
+  animString[AnimIndex::LilyPad] = "LilyPad";
+  animString[AnimIndex::Squash] = "Squash";
+  animString[AnimIndex::Threepeater] = "ThreePeater";
+  animString[AnimIndex::Tanglekelp] = "Tanglekelp";
+  animString[AnimIndex::Jalapeno] = "Jalapeno";
+  animString[AnimIndex::Spikeweed] = "Caltrop";
+  animString[AnimIndex::Torchwood] = "Torchwood";
+  animString[AnimIndex::Tallnut] = "Tallnut";
+  animString[AnimIndex::SeaShroom] = "SeaShroom";
+  animString[AnimIndex::Plantern] = "Plantern";
+  animString[AnimIndex::Cactus] = "Cactus";
+  animString[AnimIndex::Blover] = "Blover";
+  animString[AnimIndex::SplitPea] = "SplitPea";
+  animString[AnimIndex::Starfruit] = "Starfruit";
+  animString[AnimIndex::Pumpkin] = "Pumpkin";
+  animString[AnimIndex::Magnetshroom] = "Magnetshroom";
+  animString[AnimIndex::Cabbagepult] = "Cabbagepult";
+  animString[AnimIndex::FlowerPot] = "Pot";
+  animString[AnimIndex::Kernelpult] = "Cornpult";
+  animString[AnimIndex::CoffeeBean] = "Coffeebean";
+  animString[AnimIndex::Garlic] = "Garlic";
+  animString[AnimIndex::UmbrellaLeaf] = "Umbrellaleaf";
+  animString[AnimIndex::Marigold] = "Marigold";
+  animString[AnimIndex::Melonpult] = "Melonpult";
+  animString[AnimIndex::GatlingPea] = "GatlingPea";
+  animString[AnimIndex::TwinSunflower] = "TwinSunflower";
+  animString[AnimIndex::GloomShroom] = "GloomShroom";
+  animString[AnimIndex::Cattail] = "Cattail";
+  animString[AnimIndex::WinterMelon] = "WinterMelon";
+  animString[AnimIndex::GoldMagnet] = "GoldMagnet";
+  animString[AnimIndex::Spikerock] = "SpikeRock";
+  animString[AnimIndex::CobCannon] = "CobCannon";
+  animString[AnimIndex::Imitator] = "Imitater";
+  animString[AnimIndex::Sun] = "Sun";
+  animString[AnimIndex::Zombie] = "Zombie";
+  animString[AnimIndex::ZombiePoleVaulter] = "Zombie_polevaulter";
+  animString[AnimIndex::ZombieCharred] = "Imitater";
+  animString[AnimIndex::LawnMower] = "LawnMower";
+}
+
 void setSprite(const int entityID, const int draw) {
   if (draw == -1) {
     // spritesNormalRender.erase(entityID);
@@ -356,7 +415,7 @@ void readReanimFiles(int nameID, std::string file) {
   MyReadFile.close();
 }
 
-void loadAnimation(const enumAnimName animNameID, std::string animName) {
+void loadAnimation(const AnimIndex::Animation animNameID) {
   readReanimFiles(animNameID,
-                  Tyra::FileUtils::fromCwd("reanim/" + animName + ".reanim"));
+                  Tyra::FileUtils::fromCwd("reanim/" + animString[animNameID] + ".reanim"));
 }

@@ -464,10 +464,10 @@ void createLawnMower(const Tyra::Vec2 pos) {
   posArray.insert(entity.id[0], pos);
   int entityID;
   int animID;
-  for(unsigned int i=0; i < m_animID[enumAnimName::LawnMowerAnimName].size(); i++){
+  for(unsigned int i=0; i < m_animID[AnimIndex::LawnMower].size(); i++){
     entityID = Entities::newID();
     entity.id.push_back(entityID);
-    animID = m_animID[enumAnimName::LawnMowerAnimName][i];
+    animID = m_animID[AnimIndex::LawnMower][i];
     // printf("plant ID: %d\n", entityID);
     // printf("animID: %d\n", animID);
     newFatherID(&entity.id[0], &entityID);

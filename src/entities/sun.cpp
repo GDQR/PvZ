@@ -24,11 +24,11 @@ void SunManager::create(Tyra::Vec2 position, sunCost cost, bool createdByPlant) 
     naturalSun[naturalSunID].father = sun[indexpos].father;
   }
 
-  for (unsigned int i = 0; i < m_animID[enumAnimName::SunAnimName].size(); i++) {
+  for (unsigned int i = 0; i < m_animID[AnimIndex::Sun].size(); i++) {
     sun[indexpos].id.push_back(Entities::newID());
 
     entityID = sun[indexpos].id[i];
-    animID = m_animID[enumAnimName::SunAnimName][i];
+    animID = m_animID[AnimIndex::Sun][i];
 
     newFatherID(&sun[indexpos].father, &sun[indexpos].id[i]);
     animationDataArray[animID].loadAnimation(entityID, animID, 1, 1);
@@ -60,13 +60,13 @@ void SunManager::create(Tyra::Vec2 position, sunCost cost, bool createdByPlant) 
   // printf("scaleTexture: %s\n", scaleTexture[sun[indexpos].id[2]].getPrint().c_str());
   
   // esto es lo que funciona para cambiar el tamaño de los sprites ahora
-  originalSize[sun[indexpos].id[0]] /= 2;
-  originalSize[sun[indexpos].id[1]] /= 2;
-  originalSize[sun[indexpos].id[2]] /= 2;
+  // originalSize[sun[indexpos].id[0]] /= 2;
+  // originalSize[sun[indexpos].id[1]] /= 2;
+  // originalSize[sun[indexpos].id[2]] /= 2;
   
-  scaleTexture[sun[indexpos].id[0]] = Vec2(0.5f,0.5f);
-  scaleTexture[sun[indexpos].id[1]] = Vec2(0.5f,0.5f);
-  scaleTexture[sun[indexpos].id[2]] = Vec2(0.5f,0.5f);
+  // scaleTexture[sun[indexpos].id[0]] = Vec2(0.5f,0.5f);
+  // scaleTexture[sun[indexpos].id[1]] = Vec2(0.5f,0.5f);
+  // scaleTexture[sun[indexpos].id[2]] = Vec2(0.5f,0.5f);
 
   createDebugSprite(sun[indexpos].id[0], Tyra::MODE_STRETCH);
   createDebugSprite(sun[indexpos].id[1], Tyra::MODE_STRETCH);
@@ -94,7 +94,7 @@ bool Sun::erase(const int cursorID) {
     boxColliderArray.erase(father);
     deleteDebugBoxCollider(father);
 
-    for (unsigned int i = 0; i < m_animID[enumAnimName::SunAnimName].size(); i++) {
+    for (unsigned int i = 0; i < m_animID[AnimIndex::Sun].size(); i++) {
       deleteDebugSprite(id[i]);
       deleteDebugSpritePivot(id[i]);
       deleteSprite(id[i]);

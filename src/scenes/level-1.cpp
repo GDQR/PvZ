@@ -30,7 +30,7 @@ void Level1::init() {
   srand(time(NULL));
   newPlayer(&player);
   loadPlantCost();
-  loadPlantAnimString();
+  loadAnimString();
   loadPlantRechargeTime();
   loadAnimationStates();
   loadDebugTextures();
@@ -46,6 +46,12 @@ void Level1::init() {
   createTexture(seedBank, "UI/SeedBank.png");
 
   bool isVersusMode = false;
+  loadAnimation(AnimIndex::Peashooter);
+  loadAnimation(AnimIndex::SnowPea);
+  loadAnimation(AnimIndex::Chomper);
+  loadAnimation(AnimIndex::LawnMower);
+  loadAnimation(AnimIndex::Zombie);
+  loadAnimation(AnimIndex::Sun);
   createCard(PeaShotter, Vec2(120, 10), isVersusMode);
   createCard(SunFlower, Vec2(180, 10), isVersusMode);
   createCard(CherryBomb, Vec2(240, 10), isVersusMode);
@@ -61,20 +67,14 @@ void Level1::init() {
       map[i][j] = Entities::newID();
     }
   }
-
-  printf("pase una vez 1\n");
+  // createPlant(cards[2].plant, 2,7);
   zombieCreateRow[2] = true;
   zombiescreated = 0;
   newCursor(&player, Vec2(mapCollider[0][0].x, mapCollider[0][0].y + 30));
   newDeckCursor(&player,
                 Vec2(posArray[cards[deckCursor[player].pos].seed].x - 3, -10));  
-  // loadAnimation("Sun");
-  loadAnimation(enumAnimName::PeashooterSingleAnimName, "PeaShooterSingle");
-  loadAnimation(enumAnimName::ZombieAnimName,"Zombie");
-  // loadAnimation("SunFlower");
-  // loadAnimation("CherryBomb");
-  // createPlant(cards[deckCursor.pos].plant, 2,7);
-  // createZombie(Vec2(mapCollider[2][8].x, mapCollider[2][8].y));
+  // createPlant(cards[deckCursor[player].pos].plant, 2,8);
+  createZombie(Vec2(mapCollider[2][8].x, mapCollider[2][8].y), Zombie_State_enum::bucketHeadZombie);
   loadProjectile();
   engine->font.loadFont(&myFont, "Fonts/roboto-Bold.ttf");
   // renderer->core.setFrameLimit(false);

@@ -70,8 +70,6 @@ enum Plant_State_enum {
   NonePlant
 };
 
-extern std::string plantsAnim[enumMaxPlants];
-
 class Plant {
  public:
   std::vector<int> id;
@@ -88,7 +86,6 @@ class Plant {
 
 void createPlant(Plant_State_enum typePlant, const int row, const int column);
 void loadPlantCost();
-void loadPlantAnimString();
 void loadPlantRechargeTime();
 int getPlantCost(Plant_State_enum typePlant);
 int getPlantRechargeTime(Plant_State_enum typePlant, bool isVersusMode);

@@ -15,20 +15,64 @@ enum enumAnimationState {
   enumMaxAnimationState
 };
 
-enum enumAnimName {
-  PeashooterSingleAnimName,
-  SunFlowerAnimName,
-  CherryBombAnimName,
-  WallnutAnimName,
-  PotatoMineAnimName,
-  SnowPeaAnimName,
-  ChomperAnimName,
-  PeaShooterAnimName,
-  SunAnimName,
-  ZombieAnimName,
-  ZombiePoleVaulterAnimName,
-  ZombieBucketHeadAnimName,
-  LawnMowerAnimName
+struct AnimIndex {
+  enum Animation {
+    Peashooter,
+    SunFlower,
+    CherryBomb,
+    Wallnut,
+    PotatoMine,
+    SnowPea,
+    Chomper,
+    Repeater,
+    PuffShroom,
+    SunShroom,
+    FumeShroom,
+    GraveBuster,
+    HypnoShroom,
+    ScaredyShroom,
+    IceShroom,
+    DoomShroom,
+    LilyPad,
+    Squash,
+    Threepeater,
+    Tanglekelp,
+    Jalapeno,
+    Spikeweed,
+    Torchwood,
+    Tallnut,
+    SeaShroom,
+    Plantern,
+    Cactus,
+    Blover,
+    SplitPea,
+    Starfruit,
+    Pumpkin,
+    Magnetshroom,
+    Cabbagepult,
+    FlowerPot,
+    Kernelpult,
+    CoffeeBean,
+    Garlic,
+    UmbrellaLeaf,
+    Marigold,
+    Melonpult,
+    GatlingPea,
+    TwinSunflower,
+    GloomShroom,
+    Cattail,
+    WinterMelon,
+    GoldMagnet,
+    Spikerock,
+    CobCannon,
+    Imitator,
+    Sun,
+    Zombie,
+    ZombiePoleVaulter,
+    ZombieCharred,
+    LawnMower,
+    enumMax
+  };
 };
 
 class AnimationState {
@@ -80,7 +124,9 @@ class AnimationData {
 };
 
 extern AnimationState animationStateVector[enumMaxAnimationState];
+extern std::string animString[AnimIndex::enumMax];
 
 void setSprite(const int entityID, const int draw);
+void loadAnimString();
 void loadAnimationStates();
-void loadAnimation(const enumAnimName animNameID, std::string animName);
+void loadAnimation(const AnimIndex::Animation animNameID);

@@ -133,7 +133,7 @@ int Zombie::attackPlant() {
           if (animationArray.count(id[j]) == 1) {
             animationArray[id[j]].setAnimation(normalZombieAttack);
             // printf("anim attack id: %d\n",m_animID["Zombie"][j]);
-            animationDataArray[m_animID[enumAnimName::ZombieAnimName][j]]
+            animationDataArray[m_animID[AnimIndex::Zombie][j]]
                 .setAnimationState(id[j], normalZombieAttack);
           }
         }
@@ -154,7 +154,7 @@ int Zombie::attackPlant() {
               if (animationArray.count(id[j]) == 1) {
                 // printf("anim attack id: %d\n",id[j]);
                 animationArray[id[j]].setAnimation(normalZombieWalk);
-                animationDataArray[m_animID[enumAnimName::ZombieAnimName][j]]
+                animationDataArray[m_animID[AnimIndex::Zombie][j]]
                     .setAnimationState(id[j], normalZombieWalk);
               }
             }
@@ -172,7 +172,7 @@ int Zombie::attackPlant() {
       if (animationArray.count(id[j]) == 1) {
         // printf("anim attack id: %d\n",id[j]);
         animationArray[id[j]].setAnimation(normalZombieWalk);
-        animationDataArray[m_animID[enumAnimName::ZombieAnimName][j]]
+        animationDataArray[m_animID[AnimIndex::Zombie][j]]
             .setAnimationState(id[j], normalZombieWalk);
       }
     }
@@ -218,7 +218,7 @@ bool Zombie::erase() {
   if (lifeArray[id[0]] <= 0) {
     deletePosArray(father);
 
-    for (unsigned int i = 0; i < m_animID[enumAnimName::ZombieAnimName].size();
+    for (unsigned int i = 0; i < m_animID[AnimIndex::Zombie].size();
          i++) {
       deletePosArray(id[i]);
       deleteFinalPosArray(id[i]);
@@ -248,12 +248,12 @@ void createNormalZombie(const int id, Tyra::Vec2 pos) {
   int entityID;
   int animID;
   printf("zombie anim size: %d\n",
-         m_animID[enumAnimName::ZombieAnimName].size());
-  for (unsigned int i = 0; i < m_animID[enumAnimName::ZombieAnimName].size();
+         m_animID[AnimIndex::Zombie].size());
+  for (unsigned int i = 0; i < m_animID[AnimIndex::Zombie].size();
        i++) {
     zombie[id].id.push_back(Entities::newID());
     entityID = zombie[id].id[i];
-    animID = m_animID[enumAnimName::ZombieAnimName][i];
+    animID = m_animID[AnimIndex::Zombie][i];
     // printf("i: %d\n",i);
     // printf("Zombie ID: %d\n", entityID);
     // printf("animID: %d\n", animID);
@@ -285,12 +285,12 @@ void createFlagZombie(const int id, Tyra::Vec2 pos) {
   int entityID;
   int animID;
   printf("zombie anim size: %d\n",
-         m_animID[enumAnimName::ZombieAnimName].size());
-  for (unsigned int i = 0; i < m_animID[enumAnimName::ZombieAnimName].size();
+         m_animID[AnimIndex::Zombie].size());
+  for (unsigned int i = 0; i < m_animID[AnimIndex::Zombie].size();
        i++) {
     zombie[id].id.push_back(Entities::newID());
     entityID = zombie[id].id[i];
-    animID = m_animID[enumAnimName::ZombieAnimName][i];
+    animID = m_animID[AnimIndex::Zombie][i];
     // printf("i: %d\n",i);
     // printf("Zombie ID: %d\n", entityID);
     // printf("animID: %d\n", animID);
@@ -322,12 +322,12 @@ void createConeheadZombie(const int id, Tyra::Vec2 pos) {
   int entityID;
   int animID;
   printf("zombie anim size: %d\n",
-         m_animID[enumAnimName::ZombieAnimName].size());
-  for (unsigned int i = 0; i < m_animID[enumAnimName::ZombieAnimName].size();
+         m_animID[AnimIndex::Zombie].size());
+  for (unsigned int i = 0; i < m_animID[AnimIndex::Zombie].size();
        i++) {
     zombie[id].id.push_back(Entities::newID());
     entityID = zombie[id].id[i];
-    animID = m_animID[enumAnimName::ZombieAnimName][i];
+    animID = m_animID[AnimIndex::Zombie][i];
     // printf("i: %d\n",i);
     // printf("Zombie ID: %d\n", entityID);
     // printf("animID: %d\n", animID);
@@ -359,12 +359,12 @@ void createPoleVaulterZombie(const int id, Tyra::Vec2 pos) {
   int entityID;
   int animID;
   printf("zombie anim size: %d\n",
-         m_animID[enumAnimName::ZombiePoleVaulterAnimName].size());
+         m_animID[AnimIndex::ZombiePoleVaulter].size());
   for (unsigned int i = 0;
-       i < m_animID[enumAnimName::ZombiePoleVaulterAnimName].size(); i++) {
+       i < m_animID[AnimIndex::ZombiePoleVaulter].size(); i++) {
     zombie[id].id.push_back(Entities::newID());
     entityID = zombie[id].id[i];
-    animID = m_animID[enumAnimName::ZombiePoleVaulterAnimName][i];
+    animID = m_animID[AnimIndex::ZombiePoleVaulter][i];
     // printf("i: %d\n",i);
     // printf("Zombie ID: %d\n", entityID);
     // printf("animID: %d\n", animID);
@@ -396,12 +396,12 @@ void createBucketheadZombie(const int id, Tyra::Vec2 pos) {
   int entityID;
   int animID;
   printf("zombie anim size: %d\n",
-         m_animID[enumAnimName::ZombieAnimName].size());
-  for (unsigned int i = 0; i < m_animID[enumAnimName::ZombieAnimName].size();
+         m_animID[AnimIndex::Zombie].size());
+  for (unsigned int i = 0; i < m_animID[AnimIndex::Zombie].size();
        i++) {
     zombie[id].id.push_back(Entities::newID());
     entityID = zombie[id].id[i];
-    animID = m_animID[enumAnimName::ZombieAnimName][i];
+    animID = m_animID[AnimIndex::Zombie][i];
     // printf("i: %d\n",i);
     // printf("Zombie ID: %d\n", entityID);
     // printf("animID: %d\n", animID);
