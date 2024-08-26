@@ -307,6 +307,7 @@ void Animation::updateSprites(const int entityID) {
     // Link new Texture to the sprite entitie
     texRepo->getByTextureId(animationDataArray[animID].texture.second[myindex])
         ->addLink(spriteArray[entityID].id);
+    // TODO: ver mejor esto, jode al escalar
     originalSize[entityID] = Vec2(
         texRepo
             ->getByTextureId(animationDataArray[animID].texture.second[myindex])

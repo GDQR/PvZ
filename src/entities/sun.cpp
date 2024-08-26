@@ -40,24 +40,34 @@ void SunManager::create(Tyra::Vec2 position, sunCost cost, bool createdByPlant) 
   // rotationSprite[sun[indexpos].id[1]].sprite.size = Vec2(128.0f/2, 128.0f/2);
   // spriteArray[sun[indexpos].id[2]].size = Vec2(64.0f/2, 64.0f/2);
 
-  scaleTexture[sun[indexpos].id[0]] =
-      Vec2(originalSize[sun[indexpos].id[0]].x /
-               texRepo->getByTextureId(animationDataArray[m_animID[enumAnimName::SunAnimName][0]].texture[1])->getWidth(),
-           originalSize[sun[indexpos].id[0]].y /
-               texRepo->getByTextureId(animationDataArray[m_animID[enumAnimName::SunAnimName][0]].texture[1])->getHeight());
-  scaleTexture[sun[indexpos].id[1]] =
-      Vec2(originalSize[sun[indexpos].id[1]].x /
-              texRepo->getByTextureId(animationDataArray[m_animID[enumAnimName::SunAnimName][1]].texture[1])->getWidth(),
-           originalSize[sun[indexpos].id[1]].y /
-              texRepo->getByTextureId(animationDataArray[m_animID[enumAnimName::SunAnimName][1]].texture[1])->getHeight());
-  scaleTexture[sun[indexpos].id[2]] =
-      Vec2(originalSize[sun[indexpos].id[2]].x /
-               texRepo->getByTextureId(animationDataArray[m_animID[enumAnimName::SunAnimName][2]].texture[1])->getWidth(),
-           originalSize[sun[indexpos].id[2]].y /
-               texRepo->getByTextureId(animationDataArray[m_animID[enumAnimName::SunAnimName][2]].texture[1])->getHeight());
+  // scaleTexture[sun[indexpos].id[0]] =
+  //     Vec2(originalSize[sun[indexpos].id[0]].x /
+  //              texRepo->getByTextureId(animationDataArray[m_animID[enumAnimName::SunAnimName][0]].texture[1])->getWidth(),
+  //          originalSize[sun[indexpos].id[0]].y /
+  //              texRepo->getByTextureId(animationDataArray[m_animID[enumAnimName::SunAnimName][0]].texture[1])->getHeight());
+  // scaleTexture[sun[indexpos].id[1]] =
+  //     Vec2(originalSize[sun[indexpos].id[1]].x /
+  //             texRepo->getByTextureId(animationDataArray[m_animID[enumAnimName::SunAnimName][1]].texture[1])->getWidth(),
+  //          originalSize[sun[indexpos].id[1]].y /
+  //             texRepo->getByTextureId(animationDataArray[m_animID[enumAnimName::SunAnimName][1]].texture[1])->getHeight());
+  // scaleTexture[sun[indexpos].id[2]] =
+  //     Vec2(originalSize[sun[indexpos].id[2]].x /
+  //              texRepo->getByTextureId(animationDataArray[m_animID[enumAnimName::SunAnimName][2]].texture[1])->getWidth(),
+  //          originalSize[sun[indexpos].id[2]].y /
+  //              texRepo->getByTextureId(animationDataArray[m_animID[enumAnimName::SunAnimName][2]].texture[1])->getHeight());
 
   // printf("sun sizeX: %f, sizeY: %f\n", spriteArray[sun[indexpos].id[2]].size.x*0.8f,spriteArray[sun[indexpos].id[2]].size.y*0.8f);
   // printf("scaleTexture: %s\n", scaleTexture[sun[indexpos].id[2]].getPrint().c_str());
+  
+  // esto es lo que funciona para cambiar el tamaño de los sprites ahora
+  originalSize[sun[indexpos].id[0]] /= 2;
+  originalSize[sun[indexpos].id[1]] /= 2;
+  originalSize[sun[indexpos].id[2]] /= 2;
+  
+  scaleTexture[sun[indexpos].id[0]] = Vec2(0.5f,0.5f);
+  scaleTexture[sun[indexpos].id[1]] = Vec2(0.5f,0.5f);
+  scaleTexture[sun[indexpos].id[2]] = Vec2(0.5f,0.5f);
+
   createDebugSprite(sun[indexpos].id[0], Tyra::MODE_STRETCH);
   createDebugSprite(sun[indexpos].id[1], Tyra::MODE_STRETCH);
   createDebugSprite(sun[indexpos].id[2], Tyra::MODE_STRETCH);
