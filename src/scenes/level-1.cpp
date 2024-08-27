@@ -47,8 +47,8 @@ void Level1::init() {
 
   bool isVersusMode = false;
   loadAnimation(AnimIndex::Peashooter);
-  loadAnimation(AnimIndex::SnowPea);
-  loadAnimation(AnimIndex::Chomper);
+  loadAnimation(AnimIndex::SunFlower);
+  loadAnimation(AnimIndex::CherryBomb);
   loadAnimation(AnimIndex::LawnMower);
   loadAnimation(AnimIndex::Zombie);
   loadAnimation(AnimIndex::Sun);

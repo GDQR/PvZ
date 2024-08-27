@@ -359,12 +359,12 @@ void createPoleVaulterZombie(const int id, Tyra::Vec2 pos) {
   int entityID;
   int animID;
   printf("zombie anim size: %d\n",
-         m_animID[AnimIndex::ZombiePoleVaulter].size());
+         m_animID[AnimIndex::Zombie_PoleVaulter].size());
   for (unsigned int i = 0;
-       i < m_animID[AnimIndex::ZombiePoleVaulter].size(); i++) {
+       i < m_animID[AnimIndex::Zombie_PoleVaulter].size(); i++) {
     zombie[id].id.push_back(Entities::newID());
     entityID = zombie[id].id[i];
-    animID = m_animID[AnimIndex::ZombiePoleVaulter][i];
+    animID = m_animID[AnimIndex::Zombie_PoleVaulter][i];
     // printf("i: %d\n",i);
     // printf("Zombie ID: %d\n", entityID);
     // printf("animID: %d\n", animID);
