@@ -288,7 +288,7 @@ void Animation::activeDrawNormalSprites(const int entityID) {
     if (draw == (int)enumDraw::noDraw) {
       spriteRenderIDArray.erase(entityID);
       spriteNormalIdStopRender.push_back(entityID);
-    } else {
+    } else if (spriteRenderIDArray.count(entityID) == 0) {
       spriteRenderIDArray.insert(entityID, 0);
     }
   }
