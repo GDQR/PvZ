@@ -45,7 +45,7 @@ void AnimationManager::debugChangeFrame(const int entitieID, const int key) {
         texRepo->getBySpriteId(spriteArray[entitieID].id)
             ->removeLinkById(spriteArray[entitieID].id);
         spriteRenderIDArray.erase(entitieID);
-        spriteNormalIdStopRender.push_back(entitieID);
+        // spriteNormalIdStopRender.push_back(entitieID);
       }
 
     } else {

@@ -18,7 +18,7 @@ ArrayKey<int, Tyra::Vec2> texPosArray(enumComponents::texPos);
 ArrayKey<int, Tyra::Vec2> finalPosArray(enumComponents::finalPos);
 ArrayKey<int, Tyra::Sprite> spriteArray(enumComponents::sprite);
 ArrayKey<int, int> spriteRenderIDArray(enumComponents::spriteRender);
-std::vector<int> spriteNormalIdStopRender;
+// std::vector<int> spriteNormalIdStopRender;
 std::vector<int> animationIdStopRender;
 ArrayKey<int, Tyra::Vec2> angleArray(enumComponents::angle);
 std::unordered_map<int, Tyra::Vec2> originalSize;
@@ -287,7 +287,7 @@ void Animation::activeDrawNormalSprites(const int entityID) {
     draw = animationDataArray[animID].draw.second[index];
     if (draw == (int)enumDraw::noDraw) {
       spriteRenderIDArray.erase(entityID);
-      spriteNormalIdStopRender.push_back(entityID);
+      // spriteNormalIdStopRender.push_back(entityID);
     } else if (spriteRenderIDArray.count(entityID) == 0) {
       spriteRenderIDArray.insert(entityID, 0);
     }

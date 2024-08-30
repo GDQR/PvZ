@@ -133,7 +133,7 @@ extern ArrayKey<int, Tyra::Vec2> posArray;
 extern ArrayKey<int, Tyra::Vec2> finalPosArray;
 extern ArrayKey<int, Tyra::Sprite> spriteArray;
 extern ArrayKey<int, int> spriteRenderIDArray;
-extern std::vector<int> spriteNormalIdStopRender;
+// extern std::vector<int> spriteNormalIdStopRender; useless maybe
 extern std::vector<int> animationIdStopRender;
 extern ArrayKey<int, Tyra::Vec2> angleArray;
 extern std::unordered_map<int, Tyra::Vec2> originalSize;
