@@ -79,7 +79,7 @@ Type& ArrayKey<Key, Type>::operator[](const unsigned int& entityID) {
   // }
   unsigned int pos = Entities::componentIndex[entityID][type];
   if(pos >= second.size()){
-    TYRA_ASSERT(!(true == true), "ERROR SEARCHING KEY, KEY NOT FOUNDED:", index,"COMPONENT:",type);
+    TYRA_ASSERT(!(true == true), "ERROR SEARCHING KEY, KEY NOT FOUNDED:", entityID,"COMPONENT:",type);
   }
 
   return second[pos];

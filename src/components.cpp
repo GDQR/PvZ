@@ -289,7 +289,7 @@ void Animation::activeDrawNormalSprites(const int entityID) {
       spriteRenderIDArray.erase(entityID);
       spriteNormalIdStopRender.push_back(entityID);
     } else {
-      spriteRenderIDArray[entityID] = entityID;
+      spriteRenderIDArray.insert(entityID, 0);
     }
   }
 }
