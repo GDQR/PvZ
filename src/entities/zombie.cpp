@@ -192,6 +192,15 @@ void Zombie::damage(const int entityID) {
   }
 }
 
+bool Zombie::explosionState() {
+  if(animationArray[id[0]].currentFrame == animationArray[id[0]].lastFrame){
+    // printf("zombie id: %d\n",it2->id[0]);
+    // delete zombie
+    return erase();
+  }
+  return false;
+}
+
 // this maybe can be better
 int Zombie::normalColor() {
   if (damaged == false) {

@@ -190,10 +190,19 @@ void RendererSprites::update() {
 void ZombiesManager::update() {
   std::vector<Zombie>::iterator it;
 
-  for (it = zombie.begin(); it < zombie.end(); it++) {
-    it->move();
-    it->attackPlant();
-    it->normalColor();
+  for (it = zombie.begin(); it < zombie.end(); ) {
+    if(it->explosion == false){
+      it->move();
+      it->attackPlant();
+      it->normalColor();
+      it++;
+    }else{
+      if(it->explosionState() == true){
+        it = zombie.erase(it);
+      }else{
+        it++;
+      }
+    }
   }
 }
 
@@ -335,11 +344,36 @@ void ExplosionManager::zombieCollision() {
         it2->damage(it->id);
 
         // printf("zombie id: %d\n",it2->id[0]);
-        // delete zombie
-        if(it2->erase() == true){
-          it2 = zombie.erase(it2);
-        }else{
-          it2++;
+        lifeArray[it2->id[0]] -= damageArray[it->id];
+
+        if(lifeArray[it2->id[0]] <= 0 && it2->explosion == false ){
+          printf("explosion state\n");
+          it2->explosion = true;
+          it2->damaged = false;
+          it2->attack = false;
+          for (unsigned int j = 0; j < it2->id.size(); j++) {
+            if (animationArray.count(it2->id[j]) == 1) {
+              // printf("id: %d\n",it2->id[j]);
+              animationArray[it2->id[j]].draw = -1;
+              if (texRepo->getBySpriteId(spriteArray[it2->id[j]].id) != nullptr) {
+                // printf("unlink sprite id: %d\n", spriteArray[it2->id[j]].id);
+                texRepo->getBySpriteId(spriteArray[it2->id[j]].id)
+                    ->removeLinkById(spriteArray[it2->id[j]].id);
+              }
+              setSprite(it2->id[j], -1);
+            }
+          }
+          int animID;
+          for (unsigned int j = 0; j < m_animID[AnimIndex::Zombie_charred].size(); j++) {
+            if (animationArray.count(it2->id[j]) == 1) {
+              animID = m_animID[AnimIndex::Zombie_charred][j];
+              animationArray[it2->id[j]].animID = animID;
+              animationArray[it2->id[j]].framesCounter = 0;
+              animationArray[it2->id[j]].setAnimation(normalZombieCharred);
+              animationDataArray[animID]
+              .setAnimationState(it2->id[j], normalZombieCharred);
+            }
+          }
         }
 
         // delete explosion

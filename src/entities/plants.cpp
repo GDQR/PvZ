@@ -447,6 +447,8 @@ int Plant::attack() {
         it++;
         
       }
+    } else {
+      it++;
     }
   }
   return 0;
