@@ -8,14 +8,11 @@ using Tyra::Sprite;
 
 extern Tyra::Texture* projectilePea;
 extern Tyra::Texture* projectileSnowPea;
+extern Tyra::Texture* projectileExplosionPowie;
+extern Tyra::Texture* projectileExplosionSpudow;
 extern int plantsCreated;
 
-enum Plant_Recharge_Time_enum {
-  fast,
-  slow,
-  verySlow,
-  enumMaxRecharge
-};
+enum Plant_Recharge_Time_enum { fast, slow, verySlow, enumMaxRecharge };
 
 extern int plantRechargeTime[enumMaxRecharge];
 
@@ -73,29 +70,22 @@ enum Plant_State_enum {
   NonePlant
 };
 
-extern std::string plantsAnim[enumMaxPlants];
-
 class Plant {
-  void createSpace();
-
  public:
-  Plant_State_enum type = NonePlant;
-
   std::vector<int> id;
 
+  Plant_State_enum type = NonePlant;
   int father;
+  int row;
+  int column;
   void newPlant(Plant_State_enum newType);
   int attack();
   void ability();
-  void erase(const int entityID);
-  int attackTimer = 0;
-  int row;
-  int column;
+  void erase();
 };
 
 void createPlant(Plant_State_enum typePlant, const int row, const int column);
 void loadPlantCost();
-void loadPlantAnimString();
 void loadPlantRechargeTime();
 int getPlantCost(Plant_State_enum typePlant);
 int getPlantRechargeTime(Plant_State_enum typePlant, bool isVersusMode);

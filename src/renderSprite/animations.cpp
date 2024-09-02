@@ -1,26 +1,172 @@
 #include "renderSprite/animations.hpp"
 #include "renderSprite/textures.hpp"
+#include "entities/entities.hpp"
 #include "components.hpp"
 #include "systems.hpp"
 #include <iostream>
 
+std::string animString[AnimIndex::enumMax];
+
+void loadAnimString(){
+  animString[AnimIndex::Blover] = "Blover";
+  animString[AnimIndex::Cabbagepult] = "Cabbagepult";
+  animString[AnimIndex::Cactus] = "Cactus";
+  animString[AnimIndex::Spikeweed] = "Caltrop";
+  animString[AnimIndex::Cattail] = "Cattail";
+  animString[AnimIndex::CherryBomb] = "CherryBomb";
+  animString[AnimIndex::Chomper] = "Chomper";
+  animString[AnimIndex::CobCannon] = "CobCannon";
+  animString[AnimIndex::CoffeeBean] = "Coffeebean";
+  animString[AnimIndex::Coin_gold] = "Coin_gold";
+  animString[AnimIndex::Coin_silver] = "Coin_silver";
+  animString[AnimIndex::Kernelpult] = "Cornpult";
+  animString[AnimIndex::CrazyDave] = "CrazyDave";
+  animString[AnimIndex::Credits_AnyHour] = "Credits_AnyHour";
+  animString[AnimIndex::Credits_BigBrain] = "Credits_BigBrain";
+  animString[AnimIndex::Credits_Bossdance] = "Credits_Bossdance";
+  animString[AnimIndex::Credits_brainplate] = "Credits_brainplate";
+  animString[AnimIndex::Credits_CrazyDave] = "Credits_CrazyDave";
+  animString[AnimIndex::Credits_DiscoLights] = "Credits_DiscoLights";
+  animString[AnimIndex::Credits_Flower_petals] = "Credits_Flower_petals";
+  animString[AnimIndex::Credits_Football] = "Credits_Football";
+  animString[AnimIndex::Credits_Infantry] = "Credits_Infantry";
+  animString[AnimIndex::Credits_Jackbox] = "Credits_Jackbox";
+  animString[AnimIndex::Credits_Main] = "Credits_Main";
+  animString[AnimIndex::Credits_Main2] = "Credits_Main2";
+  animString[AnimIndex::Credits_Main3] = "Credits_Main3";
+  animString[AnimIndex::Credits_SolarPower] = "Credits_SolarPower";
+  animString[AnimIndex::Credits_stage] = "Credits_stage";
+  animString[AnimIndex::Credits_Throat] = "Credits_Throat";
+  animString[AnimIndex::Credits_Tombstones] = "Credits_Tombstones";
+  animString[AnimIndex::Credits_WeAreTheUndead] = "Credits_WeAreTheUndead";
+  animString[AnimIndex::Credits_ZombieArmy1] = "Credits_ZombieArmy1";
+  animString[AnimIndex::Credits_ZombieArmy2] = "Credits_ZombieArmy2";
+  animString[AnimIndex::Diamond] = "Diamond";
+  animString[AnimIndex::Digger_rising_dirt] = "Digger_rising_dirt";
+  animString[AnimIndex::FinalWave] = "FinalWave";
+  animString[AnimIndex::Fire] = "Fire";
+  animString[AnimIndex::FirePea] = "FirePea";
+  animString[AnimIndex::FumeShroom] = "FumeShroom";
+  animString[AnimIndex::Garlic] = "Garlic";
+  animString[AnimIndex::GatlingPea] = "GatlingPea";
+  animString[AnimIndex::GloomShroom] = "GloomShroom";
+  animString[AnimIndex::GoldMagnet] = "GoldMagnet";
+  animString[AnimIndex::Gravebuster] = "Gravebuster";
+  animString[AnimIndex::Hammer] = "Hammer";
+  animString[AnimIndex::HypnoShroom] = "HypnoShroom";
+  animString[AnimIndex::IceShroom] = "IceShroom";
+  animString[AnimIndex::Imitater] = "Imitater";
+  animString[AnimIndex::Jalapeno] = "Jalapeno";
+  animString[AnimIndex::LawnMower] = "LawnMower";
+  animString[AnimIndex::LawnMoweredZombie] = "LawnMoweredZombie";
+  animString[AnimIndex::LilyPad] = "LilyPad";
+  animString[AnimIndex::LoadBar_sprout] = "LoadBar_sprout";
+  animString[AnimIndex::LoadBar_Zombiehead] = "LoadBar_Zombiehead";
+  animString[AnimIndex::Magnetshroom] = "Magnetshroom";
+  animString[AnimIndex::Marigold] = "Marigold";
+  animString[AnimIndex::Melonpult] = "Melonpult";
+  animString[AnimIndex::Peashooter] = "PeaShooterSingle";
+  animString[AnimIndex::Repeater] = "PeaShooter";
+  animString[AnimIndex::Plantern] = "Plantern";
+  animString[AnimIndex::PoolCleaner] = "PoolCleaner";
+  animString[AnimIndex::Portal_Circle] = "Portal_Circle";
+  animString[AnimIndex::Portal_Square] = "Portal_Square";
+  animString[AnimIndex::FlowerPot] = "Pot";
+  animString[AnimIndex::PotatoMine] = "PotatoMine";
+  animString[AnimIndex::puff] = "puff";
+  animString[AnimIndex::PuffShroom] = "PuffShroom";
+  animString[AnimIndex::Pumpkin] = "Pumpkin";
+  animString[AnimIndex::Rain_circle] = "Rain_circle";
+  animString[AnimIndex::Rain_splash] = "Rain_splash";
+  animString[AnimIndex::Rake] = "Rake";
+  animString[AnimIndex::RoofCleaner] = "RoofCleaner";
+  animString[AnimIndex::ScaredyShroom] = "ScaredyShroom";
+  animString[AnimIndex::SeaShroom] = "SeaShroom";
+  animString[AnimIndex::SelectorScreen] = "SelectorScreen";
+  animString[AnimIndex::SelectorScreen_WoodSign] = "SelectorScreen_WoodSign";
+  animString[AnimIndex::SlotMachine] = "SlotMachine";
+  animString[AnimIndex::SnowPea] = "SnowPea";
+  animString[AnimIndex::SodRoll] = "SodRoll";
+  animString[AnimIndex::Spikerock] = "SpikeRock";
+  animString[AnimIndex::splash] = "splash";
+  animString[AnimIndex::SplitPea] = "SplitPea";
+  animString[AnimIndex::Squash] = "Squash";
+  animString[AnimIndex::Starfruit] = "Starfruit";
+  animString[AnimIndex::StartReadySetPlant] = "StartReadySetPlant";
+  animString[AnimIndex::Stinky] = "Stinky";
+  animString[AnimIndex::Sun] = "Sun";
+  animString[AnimIndex::SunFlower] = "SunFlower";
+  animString[AnimIndex::SunShroom] = "SunShroom";
+  animString[AnimIndex::Tallnut] = "Tallnut";
+  animString[AnimIndex::Tanglekelp] = "Tanglekelp";
+  animString[AnimIndex::TextFadeOn] = "TextFadeOn";
+  animString[AnimIndex::TextSlideDown] = "TextSlideDown";
+  animString[AnimIndex::TextSlideOn] = "TextSlideOn";
+  animString[AnimIndex::ThreePeater] = "ThreePeater";
+  animString[AnimIndex::Torchwood] = "Torchwood";
+  animString[AnimIndex::TreeFood] = "TreeFood";
+  animString[AnimIndex::treeofWisdom] = "treeofWisdom";
+  animString[AnimIndex::TreeOfWisdomClouds] = "TreeOfWisdomClouds";
+  animString[AnimIndex::TwinSunflower] = "TwinSunflower";
+  animString[AnimIndex::UmbrellaLeaf] = "Umbrellaleaf";
+  animString[AnimIndex::Wallnut] = "Wallnut";
+  animString[AnimIndex::WinterMelon] = "WinterMelon";
+  animString[AnimIndex::Z] = "Z";
+  animString[AnimIndex::ZenGarden_bugspray] = "ZenGarden_bugspray";
+  animString[AnimIndex::ZenGarden_fertilizer] = "ZenGarden_fertilizer";
+  animString[AnimIndex::ZenGarden_phonograph] = "ZenGarden_phonograph";
+  animString[AnimIndex::ZenGarden_sprout] = "ZenGarden_sprout";
+  animString[AnimIndex::ZenGarden_wateringcan] = "ZenGarden_wateringcan";
+  animString[AnimIndex::zombatar_zombie_head] = "zombatar_zombie_head";
+  animString[AnimIndex::Zombie] = "Zombie";
+  animString[AnimIndex::Zombie_balloon] = "Zombie_balloon";
+  animString[AnimIndex::Zombie_bobsled] = "Zombie_bobsled";
+  animString[AnimIndex::Zombie_boss] = "Zombie_boss";
+  animString[AnimIndex::Zombie_Boss_driver] = "Zombie_Boss_driver";
+  animString[AnimIndex::Zombie_boss_fireball] = "Zombie_boss_fireball";
+  animString[AnimIndex::Zombie_boss_iceball] = "Zombie_boss_iceball";
+  animString[AnimIndex::Zombie_bungi] = "Zombie_bungi";
+  animString[AnimIndex::Zombie_catapult] = "Zombie_catapult";
+  animString[AnimIndex::Zombie_charred] = "Zombie_charred";
+  animString[AnimIndex::Zombie_charred_catapult] = "Zombie_charred_catapult";
+  animString[AnimIndex::Zombie_charred_digger] = "Zombie_charred_digger";
+  animString[AnimIndex::Zombie_charred_gargantuar] = "Zombie_charred_gargantuar";
+  animString[AnimIndex::Zombie_charred_imp] = "Zombie_charred_imp";
+  animString[AnimIndex::Zombie_charred_zamboni] = "Zombie_charred_zamboni";
+  animString[AnimIndex::Zombie_credits_conehead] = "Zombie_credits_conehead";
+  animString[AnimIndex::Zombie_credits_dance] = "Zombie_credits_dance";
+  animString[AnimIndex::Zombie_credits_screendoor] = "Zombie_credits_screendoor";
+  animString[AnimIndex::Zombie_dancer] = "Zombie_dancer";
+  animString[AnimIndex::Zombie_digger] = "Zombie_digger";
+  animString[AnimIndex::Zombie_disco] = "Zombie_disco";
+  animString[AnimIndex::Zombie_dolphinrider] = "Zombie_dolphinrider";
+  animString[AnimIndex::Zombie_flagpole] = "Zombie_flagpole";
+  animString[AnimIndex::Zombie_football] = "Zombie_football";
+  animString[AnimIndex::Zombie_gargantuar] = "Zombie_gargantuar";
+  animString[AnimIndex::Zombie_hand] = "Zombie_hand";
+  animString[AnimIndex::Zombie_imp] = "Zombie_imp";
+  animString[AnimIndex::Zombie_jackbox] = "Zombie_jackbox";
+  animString[AnimIndex::Zombie_Jackson] = "Zombie_Jackson";
+  animString[AnimIndex::Zombie_ladder] = "Zombie_ladder";
+  animString[AnimIndex::Zombie_paper] = "Zombie_paper";
+  animString[AnimIndex::Zombie_pogo] = "Zombie_pogo";
+  animString[AnimIndex::Zombie_PoleVaulter] = "Zombie_polevaulter";
+  animString[AnimIndex::Zombie_snorkle] = "Zombie_snorkle";
+  animString[AnimIndex::Zombie_surprise] = "Zombie_surprise";
+  animString[AnimIndex::Zombie_Target] = "Zombie_Target";
+  animString[AnimIndex::Zombie_yeti] = "Zombie_yeti";
+  animString[AnimIndex::Zombie_zamboni] = "Zombie_zamboni";
+  animString[AnimIndex::ZombiesWon] = "ZombiesWon";
+}
+
 void setSprite(const int entityID, const int draw) {
-  if (spriteArray.count(entityID)) {
-    if (draw == -1) {
-      spritesNormalRender.erase(entityID);
-      spriteNormalIdStopRender.push_back(entityID);
-    } else if (spritesNormalRender.count(entityID) == 0) {
-      spritesNormalRender[entityID] = &spriteArray[entityID];
-    }
-  } else if (rotationSprite.count(entityID)) {
-    if (draw == -1) {
-      spritesRotateRender.erase(entityID);
-      spritesRotateIdStopRender.push_back(entityID);
-    } else if (spritesRotateRender.count(entityID) == 0) {
-      spritesRotateRender.insert(entityID, &rotationSprite[entityID]);
-    }
-  } else {
-    TYRA_WARN("Sprite don't founded in setSprite");
+  if (draw == -1) {
+    // spritesNormalRender.erase(entityID);
+    spriteRenderIDArray.erase(entityID);
+    // spriteNormalIdStopRender.push_back(entityID);
+  } else if (spriteRenderIDArray.count(entityID) == 0) {
+    spriteRenderIDArray.insert(entityID, 0);
+    // spritesNormalRender[entityID] = &spriteArray[entityID];
   }
   // printf("plant draw: %d\n", animationArray[entityID].draw);
 }
@@ -38,6 +184,9 @@ int maxAnimID = 0;
 void loadAnimationStates() {
   animationStateVector[normalZombieWalk] = AnimationState(45, 91);
   animationStateVector[normalZombieAttack] = AnimationState(139, 178);
+  animationStateVector[normalZombieCharred] = AnimationState(1, 20);
+  animationStateVector[poleVaulterWalk] = AnimationState(14, 50);
+  animationStateVector[explodeCherryBomb] = AnimationState(1, 8);
 }
 
 void AnimationData::loadAnimation(const int entityID, const int animID,
@@ -50,13 +199,12 @@ void AnimationData::loadAnimation(const int entityID, const int animID,
 void AnimationData::loadAnimation(const int entityID, const int animID,
                                   const int firstFrame, const int lastFrame) {
   bool rotateSprite = false;
-  int spriteID;
+
   for (unsigned int j = 1; j < maxFrame; j++) {
-    if (angleX.count(j) == true || angleY.count(j) == true) {
+    if (angle.count(j) == true) {
       rotateSprite = true;
       createSpriteRotate(entityID, Tyra::MODE_STRETCH, Vec2(0, 0),
                          Vec2(128 / 1.6f, 128 / 1.6f), Vec2(0.0f, 0.0f));
-      spriteID = rotationSprite[entityID].sprite.id;
       break;
     }
   }
@@ -64,23 +212,57 @@ void AnimationData::loadAnimation(const int entityID, const int animID,
   if (rotateSprite == false) {
     createSprite(entityID, Tyra::MODE_STRETCH, Vec2(0, 0),
                  Vec2(128 / 1.6f, 128 / 1.6f));
-    spriteID = spriteArray[entityID].id;
   }
 
-  animationArray[entityID] = Animation(animID);
+  animationArray.insert(entityID, Animation(animID));
 
-  std::unordered_map<unsigned int, int>::iterator itTexture =
-      texture.find(firstFrame);
-  int pos = firstFrame - 1;
+  animationArray[entityID].currentFrame = firstFrame;
+  animationArray[entityID].firstFrame = firstFrame;
+  animationArray[entityID].lastFrame = lastFrame;
 
-  while (itTexture == texture.end() && pos >= 1) {
-    itTexture = texture.find(pos);
-    pos--;
+  texPosArray.insert(entityID, Tyra::Vec2());
+
+  scaleTexture[entityID] = Vec2(1, 1);
+
+  activeAnimation(entityID, firstFrame, lastFrame);
+
+  // printf("termine\n\n");
+}
+
+int AnimationData::activeAnimation(const int entityID,
+                                   const unsigned int firstFrame,
+                                   const unsigned int lastFrame) {
+  int index = 0;
+
+  for (unsigned int i = 0; i < draw.first.size(); i++) {
+    if (draw.first[i] <= firstFrame) {
+      index = i;
+    }
   }
 
-  if (itTexture != texture.end()) {
-    Tyra::Texture* newTexture;
-    newTexture = texRepo->getByTextureId(itTexture->second);
+  animationArray[entityID].draw = draw.second[index];
+  setSprite(entityID, draw.second[index]);
+  if (draw.second[index] == (int)enumDraw::noDraw) {
+    return 1;
+  }
+
+  for (unsigned int i = 0; i < texture.first.size(); i++) {
+    if (texture.first[i] <= firstFrame) {
+      index = i;
+    }
+  }
+
+  const int spriteID = spriteArray[entityID].id;
+  Tyra::Texture* oldTexture = texRepo->getBySpriteId(spriteID);
+  Tyra::Texture* newTexture = texRepo->getByTextureId(texture.second[index]);
+
+  if (oldTexture != newTexture) {
+    if (oldTexture != nullptr) {
+      // printf("unlink sprite id: %d\n", spriteArray[entityID].id);
+      oldTexture->removeLinkById(spriteID);
+    }
+
+    // Link new Texture to the sprite entitie
     newTexture->addLink(spriteID);
     originalSize[entityID] =
         Vec2(newTexture->getWidth(), newTexture->getHeight());
@@ -89,147 +271,38 @@ void AnimationData::loadAnimation(const int entityID, const int animID,
              originalSize[entityID].y / newTexture->getHeight());
   }
 
-  // for (unsigned int j = 1; j < maxFrame; j++) {
-  //   if (texture.count(j) == 1) {
-  //     // printf("frame %d\n", j);
-  //     newTexture = texRepo->getByTextureId(texture[j]);
-  //     newTexture->addLink(spriteID);
-  //     originalSize[entityID] =
-  //         Vec2(newTexture->getWidth(), newTexture->getHeight());
-  //     scaleTexture[entityID] =
-  //         Vec2(originalSize[entityID].x / newTexture->getWidth(),
-  //              originalSize[entityID].y / newTexture->getHeight());
-  //     // printf("name anim: %s\n", name.c_str());
-  //     // printf("name Texture: %s\n", newTexture->name.c_str());
-  //     // printf("size: %s\n", spriteArray[entityID].size.getPrint().c_str());
-  //     // printf("scale: %s\n", scaleTexture[entityID].getPrint().c_str());
-  //     break;
-  //   }
-  // }
-
-  activeAnimation(entityID, firstFrame, lastFrame);
-
-  // printf("termine\n\n");
-}
-
-int AnimationData::activeAnimation(const int entityID, const int firstFrame,
-                                   const int lastFrame) {
-  animationArray[entityID].currentFrame = firstFrame;
-  animationArray[entityID].firstFrame = firstFrame;
-  animationArray[entityID].lastFrame = lastFrame;
-
-  Tyra::Vec2 scale(1.0f, 1.0f);
-
-  std::unordered_map<unsigned int, int>::iterator itInteger=
-      draw.find(firstFrame);
-  int pos = firstFrame - 1;
-
-  while (itInteger == draw.end()) {
-    itInteger = draw.find(pos);
-    pos--;
+  for (unsigned int i = 0; i < position.first.size(); i++) {
+    if (position.first[i] <= firstFrame) {
+      index = i;
+    }
   }
 
-  animationArray[entityID].draw = itInteger->second;
-  setSprite(entityID, itInteger->second);
-  if (itInteger->second == (int) enumDraw::noDraw) {
-    return 1;
+  texPosArray[entityID] = position.second[index];
+
+  for (unsigned int i = 0; i < scale.first.size(); i++) {
+    if (scale.first[i] <= firstFrame) {
+      index = i;
+    }
   }
 
-  itInteger = texture.find(firstFrame);
-  pos = firstFrame - 1;
+  spriteArray[entityID].size = originalSize[entityID] * scale.second[index];
 
-  while (itInteger == texture.end() && pos >= 1) {
-    itInteger = texture.find(pos);
-    pos--;
+  for (unsigned int i = 0; i < alpha.first.size(); i++) {
+    if (alpha.first[i] <= firstFrame) {
+      index = i;
+    }
   }
 
-  std::unordered_map<unsigned int, float>::iterator it = x.find(firstFrame);
-  pos = firstFrame - 1;
-  while (it == x.end()) {
-    it = x.find(pos);
-    pos--;
-  }
+  spriteArray[entityID].color.a = alpha.second[index];
 
-  texPosArray[entityID].x = it->second;
-
-  it = y.find(firstFrame);
-  pos = firstFrame - 1;
-
-  while (it == y.end()) {
-    it = y.find(pos);
-    pos--;
-  }
-
-  texPosArray[entityID].y = it->second;
-
-  it = scaleX.find(firstFrame);
-  pos = firstFrame - 1;
-
-  while (it == scaleX.end()) {
-    it = scaleX.find(pos);
-    pos--;
-  }
-
-  scale.x = it->second;
-
-  it = scaleY.find(firstFrame);
-  pos = firstFrame - 1;
-
-  while (it == scaleY.end()) {
-    it = scaleY.find(pos);
-    pos--;
-  }
-
-  scale.y = it->second;
-
-  if (rotationSprite.count(entityID) == 1) {
-    it = angleX.find(firstFrame);
-    pos = firstFrame - 1;
-
-    while (it == angleX.end()) {
-      it = angleX.find(pos);
-      pos--;
+  if (angleArray.count(entityID) == 1) {
+    for (unsigned int i = 0; i < angle.first.size(); i++) {
+      if (angle.first[i] <= firstFrame) {
+        index = i;
+      }
     }
 
-    rotationSprite[entityID].angle.x = it->second;
-
-    it = angleY.find(firstFrame);
-    pos = firstFrame - 1;
-
-    while (it == angleY.end()) {
-      it = angleY.find(pos);
-      pos--;
-    }
-
-    rotationSprite[entityID].angle.y = it->second;
-    rotationSprite[entityID].sprite.size = originalSize[entityID] * scale;
-
-    if (texRepo->getBySpriteId(rotationSprite[entityID].sprite.id) != nullptr) {
-      // printf("unlink sprite id: %d\n", spriteArray[entityID].id);
-      texRepo->getBySpriteId(rotationSprite[entityID].sprite.id)
-          ->removeLinkById(rotationSprite[entityID].sprite.id);
-    }
-
-    // Link new Texture to the sprite entitie
-    texRepo->getByTextureId(itInteger->second)
-        ->addLink(rotationSprite[entityID].sprite.id);
-    originalSize[entityID] =
-        Vec2(texRepo->getByTextureId(itInteger->second)->getWidth(),
-             texRepo->getByTextureId(itInteger->second)->getHeight());
-  } else {
-    spriteArray[entityID].size = originalSize[entityID] * scale;
-
-    if (texRepo->getBySpriteId(spriteArray[entityID].id) != nullptr) {
-      // printf("unlink sprite id: %d\n", spriteArray[entityID].id);
-      texRepo->getBySpriteId(spriteArray[entityID].id)
-          ->removeLinkById(spriteArray[entityID].id);
-    }
-    // Link new Texture to the sprite entitie
-    texRepo->getByTextureId(itInteger->second)
-        ->addLink(spriteArray[entityID].id);
-    originalSize[entityID] =
-        Vec2(texRepo->getByTextureId(itInteger->second)->getWidth(),
-             texRepo->getByTextureId(itInteger->second)->getHeight());
+    angleArray[entityID] = angle.second[index];
   }
   // printf("anim draw: %d\n", drawState);
   return 0;
@@ -295,8 +368,8 @@ void readInfo(std::ifstream& MyReadFile, std::string& insideArrow,
       for (u32 i = 0; i < texRepo->getTexturesCount(); i++) {
         if ((*texRepo->getAll())[i]->name == insideArrow) {
           textureFounded = true;
-          animationDataArray[animID].texture[countframes] =
-              (*texRepo->getAll())[i]->id;
+          animationDataArray[animID].texture.insert(
+              countframes, (*texRepo->getAll())[i]->id);
           break;
         }
       }
@@ -305,7 +378,7 @@ void readInfo(std::ifstream& MyReadFile, std::string& insideArrow,
         std::cout << " new i: " << insideArrow;
         texture = loadTexture(fileName);
 
-        animationDataArray[animID].texture[countframes] = texture->id;
+        animationDataArray[animID].texture.insert(countframes, texture->id);
         printf(" texture width: %d, height: %d\n", texture->getWidth(),
                texture->getHeight());
       }
@@ -345,44 +418,34 @@ void readInfo(std::ifstream& MyReadFile, std::string& insideArrow,
     } else if (insideArrow == "/t") {
       std::cout << std::endl;
 
-      if (beforeSx != sx) {
+      if (beforeSx != sx || beforeSY != sy) {
         beforeSx = sx;
-        animationDataArray[animID].scaleX[countframes] = sx;
-      }
-
-      if (beforeSY != sy) {
         beforeSY = sy;
-        animationDataArray[animID].scaleY[countframes] = sy;
+        animationDataArray[animID].scale.insert(countframes,
+                                                Tyra::Vec2(sx, sy));
       }
 
       if (beforeA != a) {
         beforeA = a;
-        animationDataArray[animID].alpha[countframes] = a;
+        animationDataArray[animID].alpha.insert(countframes, a * 128);
       }
 
-      if (beforeX != x) {
+      if (beforeX != x || beforeY != y) {
         beforeX = x;
-        animationDataArray[animID].x[countframes] = x;
-      }
-
-      if (beforeY != y) {
         beforeY = y;
-        animationDataArray[animID].y[countframes] = y;
+        animationDataArray[animID].position.insert(countframes, Vec2(x, y));
       }
 
       if (beforeDraw != draw) {
         beforeDraw = draw;
-        animationDataArray[animID].draw[countframes] = draw;
+        animationDataArray[animID].draw.insert(countframes, draw);
       }
 
-      if (beforeKx != kx) {
+      if (beforeKx != kx || beforeKY != ky) {
         beforeKx = kx;
-        animationDataArray[animID].angleX[countframes] = kx;
-      }
-
-      if (beforeKY != ky) {
         beforeKY = ky;
-        animationDataArray[animID].angleY[countframes] = ky;
+        animationDataArray[animID].angle.insert(countframes,
+                                                Tyra::Vec2(kx, ky));
       }
 
       countframes++;
@@ -397,7 +460,7 @@ void readInfo(std::ifstream& MyReadFile, std::string& insideArrow,
   }
 }
 
-void readReanimFiles(std::string nameID, std::string file) {
+void readReanimFiles(int nameID, std::string file) {
   std::string myText;
 
   // Read from the text file
@@ -432,13 +495,10 @@ void readReanimFiles(std::string nameID, std::string file) {
         useAnim = false;
       } else {
         animationDataArray[animID].draw.clear();
-        animationDataArray[animID].angleX.clear();
-        animationDataArray[animID].angleY.clear();
-        animationDataArray[animID].scaleX.clear();
-        animationDataArray[animID].scaleY.clear();
+        animationDataArray[animID].position.clear();
+        animationDataArray[animID].scale.clear();
+        animationDataArray[animID].angle.clear();
         animationDataArray[animID].alpha.clear();
-        animationDataArray[animID].x.clear();
-        animationDataArray[animID].y.clear();
         printf("borre la memoria\n");
       }
       animationDataArray[animID].name = insideArrow;
@@ -451,7 +511,7 @@ void readReanimFiles(std::string nameID, std::string file) {
   MyReadFile.close();
 }
 
-void loadAnimation(std::string animName) {
-  readReanimFiles(animName,
-                  Tyra::FileUtils::fromCwd("reanim/" + animName + ".reanim"));
+void loadAnimation(const AnimIndex::Animation animNameID) {
+  readReanimFiles(animNameID,
+                  Tyra::FileUtils::fromCwd("reanim/" + animString[animNameID] + ".reanim"));
 }

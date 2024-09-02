@@ -34,7 +34,6 @@ class FatherID {
 class Cursor {
  public:
   int id = -1;
-  Sprite sprite;
   Vec2 cursorTile;
   int cursorTimer = 0;
   float cursorSpeed = 1;
@@ -56,7 +55,13 @@ class Card {
   int seedShadowTimer;
   Plant_State_enum plant;
   int cost;
+  std::vector<int> plantID;
   void update();
+};
+
+class LawnMower {
+ public:
+  std::vector<int> id;
 };
 
 class BoxCollider {
@@ -75,25 +80,27 @@ class BoxCollider {
   float offsetY;
 };
 
-class RotationSprite {
- public:
-  Tyra::Sprite sprite;
-  Tyra::Vec2 angle;
-  void update(const int entityID);
-};
-
 class PlantsManager {
  public:
   void create();
   void update();
 };
 
-enum enumProyectile { normal, snow };
+enum enumProyectile { pea, snowPea, ExplosionPowie, ExplosionSpudow };
 
 class Proyectile {
  public:
   int id;
   enumProyectile type;
+  bool move();
+  void erase();
+};
+
+class Explosion {
+ public:
+  int id;
+  enumProyectile type;
+  void erase();
 };
 
 class PS2Timer {
@@ -113,32 +120,30 @@ extern Tyra::Engine* engine;
 extern Tyra::Renderer* renderer;
 extern const Tyra::PadJoy* leftJoy;
 extern Tyra::TextureRepository* texRepo;
-extern std::map<std::string, std::vector<int>> m_animID;
+extern std::unordered_map<int, std::vector<int>> m_animID;
 
 // sparse array
-extern std::map<int, Animation>
+extern ArrayKey<int, Animation>
     animationArray;  // Link the sprite with the texture
 extern std::unordered_map<int, AnimationData>
     animationDataArray;  // Save the animation textures
-extern std::map<int, FatherID> fatherIDArray;
-extern std::map<int, Tyra::Vec2> texPosArray;
+extern std::unordered_map<int, FatherID> fatherIDArray;
+extern ArrayKey<int, Tyra::Vec2> texPosArray;
 extern ArrayKey<int, Tyra::Vec2> posArray;
 extern ArrayKey<int, Tyra::Vec2> finalPosArray;
-extern std::map<int, Tyra::Sprite> spriteArray;
-extern std::map<int, Tyra::Sprite*> spritesNormalRender;
-extern std::vector<int> spriteNormalIdStopRender;
-extern std::vector<int> animationIdStopRender;
-extern std::map<int, RotationSprite> rotationSprite;
-extern ArrayKey<int, RotationSprite*> spritesRotateRender;
-extern std::vector<int> spritesRotateIdStopRender;
-extern std::map<int, Tyra::Vec2> originalSize;
-extern std::map<int, Tyra::Vec2> scaleTexture;
+extern ArrayKey<int, Tyra::Sprite> spriteArray;
+extern ArrayKey<int, int> spriteRenderIDArray;
+// extern std::vector<int> spriteNormalIdStopRender; useless maybe
+// extern std::vector<int> animationIdStopRender; useless maybe
+extern ArrayKey<int, Tyra::Vec2> angleArray;
+extern std::unordered_map<int, Tyra::Vec2> originalSize;
+extern std::unordered_map<int, Tyra::Vec2> scaleTexture;
 extern std::map<int, Tyra::Vec2> pointColliderArray;
 extern std::map<int, BoxCollider> boxColliderArray;
-extern std::map<int, PS2Timer> timerArray;
+extern ArrayKey<int, PS2Timer> timerArray;
 extern std::map<int, float> speedArray;
 extern std::map<int, int> damageArray;
-extern std::map<int, int> lifeArray;
+extern ArrayKey<int, int> lifeArray;
 extern std::map<int, Tyra::Vec2> pivot;
 extern std::map<int, Controller> controller;
 
@@ -148,15 +153,16 @@ extern std::vector<Zombie> zombie;
 extern std::vector<Sun> sun;
 extern std::vector<NaturalSun> naturalSun;
 extern std::vector<Proyectile> projectile;
+extern std::vector<Explosion> explosion;
 extern std::vector<Card> cards;
+extern std::vector<LawnMower> lawnMower;
 extern int player;
 extern std::map<int, Cursor> cursor;
 extern std::map<int, DeckCursor> deckCursor;
 
+extern int zombiescreated;
 extern bool zombieCreateRow[5];
 extern bool plantCreatedInMap[5][9];
 extern BoxCollider mapCollider[5][9];
 
 extern PlantsManager plantsManager;
-
-void createCard(Plant_State_enum typePlant, Vec2 pos, bool isVersusMode);

@@ -26,18 +26,10 @@ void speedDebugOptions() {
 
 void activateRender() {
   int id;
-  if (rotateFound == true) {
-    for (unsigned int i = 0; i < debugStopRenderRotateSprites.size(); i++) {
-      id = debugStopRenderRotateSprites.front();
-      spritesRotateRender[id] = &rotationSprite[id];
-      debugStopRenderRotateSprites.pop_back();
-    }
-  } else {
-    for (unsigned int i = 0; i < debugStopRenderNormalSprites.size(); i++) {
-      id = debugStopRenderNormalSprites.front();
-      spritesNormalRender[id] = &spriteArray[id];
-      debugStopRenderNormalSprites.pop_back();
-    }
+  for (unsigned int i = 0; i < debugStopRenderNormalSprites.size(); i++) {
+    id = debugStopRenderNormalSprites.front();
+    spriteRenderIDArray[id] = id;
+    debugStopRenderNormalSprites.pop_back();
   }
 }
 
@@ -85,7 +77,7 @@ void getPrevSprite(int& entitieID) {
   debugAlphaColor = debugSpritesType[entitieID]->color.a;
 }
 int DebugSpriteMode::init() {
-  if (spriteArray.size() == 0 && rotationSprite.size() == 0) {
+  if (spriteArray.first.size() == 0) {
     // ERROR MENU
     if (engine->pad.getClicked().Circle) {
       debugAnimation = false;
@@ -98,14 +90,9 @@ int DebugSpriteMode::init() {
     startSpriteDebug = false;
 
     // Get all normal and rotated sprites
-    std::map<int, Sprite>::iterator it;
-    for (it = spriteArray.begin(); it != spriteArray.end(); it++) {
-      debugSpritesType[it->first] = &it->second;
-    }
-
-    std::map<int, RotationSprite>::iterator it2;
-    for (it2 = rotationSprite.begin(); it2 != rotationSprite.end(); it2++) {
-      debugSpritesType[it2->first] = &it2->second.sprite;
+    // std::unordered_map<int, Sprite>::iterator it;
+    for (unsigned int i = 0; i < spriteArray.first.size(); i++) {
+      debugSpritesType[spriteArray.first[i]] = &spriteArray.second[i];
     }
 
     debugEntityId = debugSpritesType.begin()->first;
@@ -159,7 +146,7 @@ void DebugSpriteMode::firstMenu() {
     if (animationArray.count(debugEntityId) == 1) {
       animationFound = true;
     }
-    if (rotationSprite.count(debugEntityId) == 1) {
+    if (angleArray.count(debugEntityId) == 1) {
       rotateFound = true;
     }
   } else if (engine->pad.getClicked().Circle) {
@@ -210,8 +197,8 @@ int getAngle(){
   if(rotateFound == false){
     return 1;
   }
-  d_angleX = &rotationSprite[debugEntityId].angle.x;
-  d_angleY = &rotationSprite[debugEntityId].angle.y;
+  d_angleX = &angleArray[debugEntityId].x;
+  d_angleY = &angleArray[debugEntityId].y;
   return 0;
 }
 
@@ -253,11 +240,8 @@ void DebugSpriteMode::secondMenu(){
   } else if (engine->pad.getClicked().R3) {
     hideSprite = !hideSprite;
     if (hideSprite == true) {
-      if (rotateFound == true) {
-        spritesRotateRender.erase(debugEntityId);
-        debugStopRenderRotateSprites.push_back(debugEntityId);
-      } else {
-        spritesNormalRender.erase(debugEntityId);
+      if (rotateFound == false) {
+        spriteRenderIDArray.erase(debugEntityId);
         debugStopRenderNormalSprites.push_back(debugEntityId);
       }
     } else {
@@ -287,7 +271,7 @@ void DebugSpriteMode::secondMenu(){
         posArray[debugEntityId].y -= padSpeed;
       } else if (sizeMode == false) {
         *d_angleY += padSpeed;
-        rotationSprite[debugEntityId].angle.y = *d_angleY;
+        angleArray[debugEntityId].y = *d_angleY;
       } else {
         originalSize[debugEntityId].y -= padSpeed;
         if (animationDataArray[animationArray[debugEntityId].animID].texture.count(
@@ -308,7 +292,7 @@ void DebugSpriteMode::secondMenu(){
         posArray[debugEntityId].y += padSpeed;
       } else if (sizeMode == false) {
         *d_angleY -= padSpeed;
-        rotationSprite[debugEntityId].angle.y = *d_angleY;
+        angleArray[debugEntityId].y = *d_angleY;
       } else {
         originalSize[debugEntityId].y += padSpeed;
         if (animationDataArray[animationArray[debugEntityId].animID].texture.count(
@@ -335,7 +319,7 @@ void DebugSpriteMode::secondMenu(){
         posArray[debugEntityId].x -= padSpeed;
       } else if (sizeMode == false) {
         *d_angleX -= padSpeed;
-        rotationSprite[debugEntityId].angle.x = *d_angleX;
+        angleArray[debugEntityId].x = *d_angleX;
       } else {
         originalSize[debugEntityId].x -= padSpeed;
         Tyra::Texture* texture =
@@ -355,7 +339,7 @@ void DebugSpriteMode::secondMenu(){
         posArray[debugEntityId].x += padSpeed;
       } else if (sizeMode == false) {
         *d_angleX += padSpeed;
-        rotationSprite[debugEntityId].angle.x = *d_angleX;
+        angleArray[debugEntityId].x = *d_angleX;
       } else {
         originalSize[debugEntityId].x += padSpeed;
         Tyra::Texture* texture =
@@ -497,7 +481,7 @@ void DebugSpriteMode::drawSecondMenu(){
       std::string animSize =
           "Total textures: " +
           std::to_string(animationDataArray[animationArray[debugEntityId].animID]
-                             .texture.size());
+                             .texture.first.size());
 
       engine->font.drawText(&myFont, textKey, 30, 120, 16, black);
 

@@ -9,21 +9,21 @@ bool startAnimationDebug = true;
 void subMenu(Tyra::Pad& pad, Tyra::Font& font, int& entitieID) {
   // TODO: Fix this texpos
   Tyra::Vec2* texPos;
-  texPos->x = animationDataArray[animationArray[entitieID].animID]
-                     .x[animationArray[entitieID].currentFrame];
+  texPos = &animationDataArray[animationArray[entitieID].animID]
+                     .position[animationArray[entitieID].currentFrame];
 
   if (pad.getClicked().L1) {
     if (animationArray[entitieID].currentFrame > 0) {
       animationArray[entitieID].currentFrame--;
     } else {
       animationArray[entitieID].currentFrame =
-          animationDataArray[animationArray[entitieID].animID].texture.size() - 1;
+          animationDataArray[animationArray[entitieID].animID].texture.first.size() - 1;
     }
     animManager.debugChangeFrame(entitieID, animationArray[entitieID].currentFrame);
   } else if (pad.getClicked().R1) {
     animationArray[entitieID].currentFrame++;
     if (animationArray[entitieID].currentFrame >=
-        animationDataArray[animationArray[entitieID].animID].texture.size()) {
+        animationDataArray[animationArray[entitieID].animID].texture.first.size()) {
       animationArray[entitieID].currentFrame = 0;
     }
     animManager.debugChangeFrame(entitieID, animationArray[entitieID].currentFrame);
@@ -67,7 +67,7 @@ void subMenu(Tyra::Pad& pad, Tyra::Font& font, int& entitieID) {
     std::string animSize =
         "Total textures: " +
         std::to_string(
-            animationDataArray[animationArray[entitieID].animID].texture.size());
+            animationDataArray[animationArray[entitieID].animID].texture.first.size());
 
     std::string textKey =
         "Key: " + std::to_string(animationArray[entitieID].currentFrame);
@@ -115,24 +115,25 @@ void menuDebugAnimation(Tyra::Pad& pad, Tyra::Font& font, int& entitieID) {
     } else if (menuUpOptionLeftJoy(pad) || menuRightOptionLeftJoy(pad)) {
       spriteArray[entitieID].color.a = 128.0f;
 
-      std::map<int, Animation>::iterator it = animationArray.find(entitieID);
+      // fix this
+      // std::map<int, Animation>::iterator it = animationArray.find(entitieID);
 
-      if (std::next(it)->first == animationArray.end()->first) {
-        entitieID = animationArray.begin()->first;
-      } else {
-        entitieID = std::next(it)->first;
-      }
+      // if (std::next(it)->first == animationArray.end()->first) {
+      //   entitieID = animationArray.begin()->first;
+      // } else {
+      //   entitieID = std::next(it)->first;
+      // }
 
     } else if (menuDownOptionLeftJoy(pad) || menuLeftOptionLeftJoy(pad)) {
       spriteArray[entitieID].color.a = 128.0f;
+    // fix this
+    //   std::map<int, Animation>::iterator it = animationArray.find(entitieID);
 
-      std::map<int, Animation>::iterator it = animationArray.find(entitieID);
-
-      if (entitieID == animationArray.begin()->first) {
-        entitieID = animationArray.rbegin()->first;
-      } else {
-        entitieID = std::prev(it)->first;
-      }
+    //   if (entitieID == animationArray.begin()->first) {
+    //     entitieID = animationArray.rbegin()->first;
+    //   } else {
+    //     entitieID = std::prev(it)->first;
+    //   }
     }
     engine->font.drawText(&myFont, "PRESS X FOR SELECT THE TEXTURE", 30, 400,
                           16, black);

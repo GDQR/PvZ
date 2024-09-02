@@ -1,7 +1,7 @@
 #pragma once
 #include <tyra>
 #include <vector>
-enum Zombie_State_enum { NoneZombie, ZombieNormal };
+enum Zombie_State_enum { NoneZombie, normalZombie, flagZombie, coneheadZombie, poleVaulterZombie, bucketHeadZombie };
 
 class Zombie {
  private:
@@ -16,14 +16,15 @@ class Zombie {
   std::vector<int> id;
   bool attack = false;
   bool damaged = false;
-  bool debug = false;
+  bool explosion = false;
   void newZombie(Zombie_State_enum newType);
+  bool explosionState();
   int move();
   void animation(const int entityID, const int animID);
-  void attackPlant();
+  int attackPlant();
   void damage(const int entityID);
   int normalColor();
   bool erase();
 };
 
-void createZombie(Tyra::Vec2 pos);
+void createZombie(Tyra::Vec2 pos, const Zombie_State_enum type);

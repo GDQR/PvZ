@@ -6,6 +6,8 @@ using Tyra::FileUtils;
 
 Tyra::Texture* projectilePea;
 Tyra::Texture* projectileSnowPea;
+Tyra::Texture* projectileExplosionPowie;
+Tyra::Texture* projectileExplosionSpudow;
 
 void loadSprite(Sprite* sprite) {
   sprite->mode = Tyra::MODE_STRETCH;
@@ -27,7 +29,7 @@ void loadSprite(Sprite* sprite, Tyra::SpriteMode mode, Vec2 position,
 }
 
 int createTexture(int id, std::string fileImage) {
-  TYRA_ASSERT(!(spriteArray.find(id) == spriteArray.end()), "Entitie id: ", id,
+  TYRA_ASSERT(spriteArray.count(id) == 1, "Entitie id: ", id,
               "Is NULL, use <<CreateSprite>> function");
   std::string findTexture = FileUtils::getFilenameFromPath(fileImage);
 
@@ -42,12 +44,21 @@ int createTexture(int id, std::string fileImage) {
   return 0;
 }
 
-void createTextureRotate(int id, std::string fileImage) {
-  Tyra::Texture* texture = loadTexture(fileImage);
-  TYRA_ASSERT(!(rotationSprite.find(id) == rotationSprite.end()),
-              "Entitie id: ", id, "Is NULL, use <<CreateSprite>> function");
-  texture->addLink(rotationSprite[id].sprite.id);
-}
+// int createTextureJPGResize(int id, std::string fileImage) {
+//   TYRA_ASSERT(!(spriteArray.find(id) == spriteArray.end()), "Entitie id: ", id,
+//               "Is NULL, use <<CreateSprite>> function");
+//   std::string findTexture = FileUtils::getFilenameFromPath(fileImage);
+
+//   for (u32 i = 0; i < texRepo->getTexturesCount(); i++) {
+//     if ((*texRepo->getAll())[i]->name == findTexture) {
+//       (*texRepo->getAll())[i]->addLink(spriteArray[id].id);
+//       return 1;
+//     }
+//   }
+//   Tyra::Texture* texture = loadTexture(fileImage);
+//   texture->addLink(spriteArray[id].id);
+//   return 0;
+// }
 
 void loadTexture(Sprite* sprite, std::string fileImage) {
   /**
@@ -126,4 +137,6 @@ void copyTexture(Sprite* sprite1, Sprite* sprite2) {
 void loadProjectile() {
   projectilePea = loadTexture("images/ProjectilePea.png");
   projectileSnowPea = loadTexture("images/ProjectileSnowPea.png");
+  projectileExplosionPowie = loadTexture("particles/ExplosionPowie.png");
+  projectileExplosionSpudow = loadTexture("particles/ExplosionSpudow.png");
 }
