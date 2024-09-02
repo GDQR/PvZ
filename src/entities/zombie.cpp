@@ -36,7 +36,7 @@ void Zombie::animation(const int entityID, const int animID) {
         animationArray[entityID].draw = (int)enumDraw::noDraw;
         setSprite(entityID, animationArray[entityID].draw);
         deleteAnimation(entityID);
-        animationIdStopRender.push_back(entityID);
+        // animationIdStopRender.push_back(entityID);
         // printf("encontre anim_bucket o anim_cone\n");
       }
       break;
@@ -59,7 +59,7 @@ void Zombie::animation(const int entityID, const int animID) {
         animationArray[entityID].draw = (int)enumDraw::noDraw;
         setSprite(entityID, animationArray[entityID].draw);
         deleteAnimation(entityID);
-        animationIdStopRender.push_back(entityID);
+        // animationIdStopRender.push_back(entityID);
         // printf("encontre anim_bucket o anim_cone\n");
       }
       break;
@@ -79,7 +79,7 @@ void Zombie::animation(const int entityID, const int animID) {
         animationArray[entityID].draw = (int)enumDraw::noDraw;
         setSprite(entityID, animationArray[entityID].draw);
         deleteAnimation(entityID);
-        animationIdStopRender.push_back(entityID);
+        // animationIdStopRender.push_back(entityID);
       }
       break;
     case Zombie_State_enum::bucketHeadZombie:
@@ -98,7 +98,7 @@ void Zombie::animation(const int entityID, const int animID) {
         animationArray[entityID].draw = (int)enumDraw::noDraw;
         setSprite(entityID, animationArray[entityID].draw);
         deleteAnimation(entityID);
-        animationIdStopRender.push_back(entityID);
+        // animationIdStopRender.push_back(entityID);
       }
       break;
     default:

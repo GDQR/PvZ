@@ -163,7 +163,7 @@ void setSprite(const int entityID, const int draw) {
   if (draw == -1) {
     // spritesNormalRender.erase(entityID);
     spriteRenderIDArray.erase(entityID);
-    spriteNormalIdStopRender.push_back(entityID);
+    // spriteNormalIdStopRender.push_back(entityID);
   } else if (spriteRenderIDArray.count(entityID) == 0) {
     spriteRenderIDArray.insert(entityID, 0);
     // spritesNormalRender[entityID] = &spriteArray[entityID];

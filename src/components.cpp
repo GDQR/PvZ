@@ -19,7 +19,7 @@ ArrayKey<int, Tyra::Vec2> finalPosArray(enumComponents::finalPos);
 ArrayKey<int, Tyra::Sprite> spriteArray(enumComponents::sprite);
 ArrayKey<int, int> spriteRenderIDArray(enumComponents::spriteRender);
 // std::vector<int> spriteNormalIdStopRender;
-std::vector<int> animationIdStopRender;
+// std::vector<int> animationIdStopRender;
 ArrayKey<int, Tyra::Vec2> angleArray(enumComponents::angle);
 std::unordered_map<int, Tyra::Vec2> originalSize;
 std::unordered_map<int, Tyra::Vec2> scaleTexture;

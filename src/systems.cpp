@@ -341,9 +341,6 @@ void ExplosionManager::zombieCollision() {
       if (boxColliderArray[it->id].collision(&boxColliderArray[it2->id[0]]) == true) {
 
         // damage zombie
-        it2->damage(it->id);
-
-        // printf("zombie id: %d\n",it2->id[0]);
         lifeArray[it2->id[0]] -= damageArray[it->id];
 
         if(lifeArray[it2->id[0]] <= 0 && it2->explosion == false ){
