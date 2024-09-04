@@ -325,6 +325,7 @@ void createPlant(Plant_State_enum typePlant, const int row, const int column) {
     plant[plantPos].row = row;
     plant[plantPos].column = column;
     plant[plantPos].father = Entities::newID();
+    fatherIDArray.insert(plant[plantPos].father, FatherID());
     printf("plant father: %d\n", plant[plantPos].father);
 
     Tyra::Vec2 pos(mapCollider[row][column].x, mapCollider[row][column].y);

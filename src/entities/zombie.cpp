@@ -444,6 +444,8 @@ void createZombie(Tyra::Vec2 pos, const Zombie_State_enum type) {
   zombie[id].newZombie(type);
   zombie[id].father = Entities::newID();
   posArray.insert(zombie[id].father, pos);
+  
+  fatherIDArray.insert(zombie[id].father, FatherID());
   printf("zombie father id: %d\n", zombie[id].father);
 
   if (type == Zombie_State_enum::normalZombie) {

@@ -12,7 +12,7 @@ Tyra::TextureRepository* texRepo;
 std::unordered_map<int, std::vector<int>> m_animID;
 ArrayKey<int, Animation> animationArray(enumComponents::animation);
 std::unordered_map<int, AnimationData> animationDataArray;
-std::unordered_map<int, FatherID> fatherIDArray;
+ArrayKey<int, FatherID> fatherIDArray(enumComponents::fatherID);
 ArrayKey<int, Tyra::Vec2> posArray(enumComponents::pos);
 ArrayKey<int, Tyra::Vec2> texPosArray(enumComponents::texPos);
 ArrayKey<int, Tyra::Vec2> finalPosArray(enumComponents::finalPos);
@@ -394,8 +394,7 @@ int Animation::debugAnim(const int entitieID) {
 void FatherID::update(const int entityID) {
   for (unsigned int i = 0; i < id.size(); i++) {
     // finalPos += fatherPos
-    finalPosArray[id[i]].x += posArray[entityID].x;
-    finalPosArray[id[i]].y += posArray[entityID].y;
+    finalPosArray[id[i]] += posArray[entityID];
   }
 }
 

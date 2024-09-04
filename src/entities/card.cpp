@@ -6,6 +6,7 @@ void createCardPeashotter(std::vector<int>& plantID, const Tyra::Vec2 pos) {
 
   plantID.push_back(Entities::newID());
   posArray.insert(plantID[0], pos);
+  fatherIDArray.insert(plantID[0], FatherID());
 
   for (unsigned int i = 0;
        i < m_animID[AnimIndex::Peashooter].size(); i++) {
@@ -26,6 +27,8 @@ void createCardSunFlower(std::vector<int>& plantID, const Tyra::Vec2 pos) {
 
   plantID.push_back(Entities::newID());
   posArray.insert(plantID[0], pos);
+  fatherIDArray.insert(plantID[0], FatherID());
+
   for (unsigned int i = 0; i < m_animID[AnimIndex::SunFlower].size();
        i++) {
     entityID = Entities::newID();
@@ -42,6 +45,8 @@ void createCardCherryBomb(std::vector<int>& plantID, const Tyra::Vec2 pos) {
 
   plantID.push_back(Entities::newID());
   posArray.insert(plantID[0], pos);
+  fatherIDArray.insert(plantID[0], FatherID());
+
   for (unsigned int i = 0;
        i < m_animID[AnimIndex::CherryBomb].size(); i++) {
     entityID = Entities::newID();

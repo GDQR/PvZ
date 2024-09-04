@@ -163,9 +163,8 @@ void RendererSprites::resetFinalPos(){
 }
 
 void RendererSprites::updateChildPos() {
-  std::unordered_map<int, FatherID>::iterator it;
-  for (it = fatherIDArray.begin(); it != fatherIDArray.end(); it++) {
-    it->second.update(it->first);
+  for (unsigned int i=0; i < fatherIDArray.first.size(); i++) {
+    fatherIDArray.second[i].update(fatherIDArray.first[i]);
   }
 }
 
@@ -493,6 +492,7 @@ void createLawnMower(const Tyra::Vec2 pos) {
   LawnMower entity;
   entity.id.push_back(Entities::newID());
   posArray.insert(entity.id[0], pos);
+  fatherIDArray.insert(entity.id[0], FatherID());
   int entityID;
   int animID;
   for(unsigned int i=0; i < m_animID[AnimIndex::LawnMower].size(); i++){

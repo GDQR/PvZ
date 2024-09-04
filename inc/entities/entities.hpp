@@ -12,7 +12,8 @@ enum enumComponents {
   spriteRender,
   animation,
   timer,
-  life
+  life,
+  fatherID
 };
 
 class Entities {

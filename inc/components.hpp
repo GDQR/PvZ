@@ -10,10 +10,6 @@
 #include "entities/zombie.hpp"
 #include "entities/sun.hpp"
 
-// enum enumAnimation {
-//   zombieWalk,
-//   zombieNormalAttack
-// };
 // enum enumCommands {
 //   level1,
 //   debug
@@ -127,7 +123,7 @@ extern ArrayKey<int, Animation>
     animationArray;  // Link the sprite with the texture
 extern std::unordered_map<int, AnimationData>
     animationDataArray;  // Save the animation textures
-extern std::unordered_map<int, FatherID> fatherIDArray;
+extern ArrayKey<int, FatherID> fatherIDArray;
 extern ArrayKey<int, Tyra::Vec2> texPosArray;
 extern ArrayKey<int, Tyra::Vec2> posArray;
 extern ArrayKey<int, Tyra::Vec2> finalPosArray;
