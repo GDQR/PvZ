@@ -295,11 +295,12 @@ void PlantsManager::update() {
 int ProjectileManager::update() {
   std::vector<Proyectile>::iterator it = projectile.begin();
   std::vector<Zombie>::iterator it2;
+
+  std::vector<int> eraseProjectileID;
   while (it != projectile.end()) {
-    for (it2 = zombie.begin(); it2 != zombie.end();) {
-      if (boxColliderArray[it->id].collision(&boxColliderArray[it2->id[0]]) == false){
-        it2++;
-      }else{
+    for (it2 = zombie.begin(); it2 != zombie.end(); it2++) {
+      if (boxColliderArray[it->id].collision(&boxColliderArray[it2->id[0]]) == true){
+        eraseProjectileID.push_back(it->id);
         it2->damage(it->id);
         if(it->type == enumProyectile::snowPea){
           speedArray[it2->id[0]] = 0.5f;
@@ -309,17 +310,24 @@ int ProjectileManager::update() {
         if (it2->erase() == true) {
           zombie.erase(it2);
         }
+        break;
+      }
+    }
+    it++;
+  }
+  for(unsigned i=0;i < eraseProjectileID.size(); i++){
+    for(it = projectile.begin(); it != projectile.end(); it++){
+      if(eraseProjectileID[i] == it->id){
         // delete projectile
         it->erase();
         it = projectile.erase(it);
-        it2 = zombie.begin();
         projectilesCreated--;
-        if(it == projectile.end()){
-          return 1;
-        }
+        break;
       }
     }
-
+  }
+  it = projectile.begin();
+  while(it != projectile.end()){
     if (it->move() == false){
       it++;
     }else{
