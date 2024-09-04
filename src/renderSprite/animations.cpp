@@ -190,13 +190,15 @@ void loadAnimationStates() {
 }
 
 void AnimationData::loadAnimation(const int entityID, const int animID,
+                                  const Tyra::Vec2 scaleTextures,
                                   enumAnimationState animationState) {
-  loadAnimation(entityID, animID,
+  loadAnimation(entityID, animID, scaleTextures,
                 animationStateVector[animationState].firstFrame,
                 animationStateVector[animationState].lastFrame);
 }
 
-void AnimationData::loadAnimation(const int entityID, const int animID,
+void AnimationData::loadAnimation(const int entityID, const int animID, 
+                                  const Tyra::Vec2 scaleTextures,
                                   const int firstFrame, const int lastFrame) {
   bool rotateSprite = false;
 
@@ -222,7 +224,7 @@ void AnimationData::loadAnimation(const int entityID, const int animID,
 
   texPosArray.insert(entityID, Tyra::Vec2());
 
-  scaleTexture[entityID] = Vec2(1, 1);
+  scaleTexture[entityID] = scaleTextures;
 
   activeAnimation(entityID, firstFrame, lastFrame);
 

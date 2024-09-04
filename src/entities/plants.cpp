@@ -30,7 +30,7 @@ void createPeashotter(const int id, const Tyra::Vec2 pos) {
     // printf("plant ID: %d\n", entityID);
     // printf("animID: %d\n", animID);
     newFatherID(father, &entityID);
-    animationDataArray[animID].loadAnimation(entityID, animID, 80, 104);
+    animationDataArray[animID].loadAnimation(entityID, animID, Tyra::Vec2(0.8f,0.8f), 80, 104);
     // animationDataArray[animID].activeAnimation(entityID, 80, 104);
     // printf("draw: %d\n", animationArray[entityID].draw);
     // if (animationDataArray[animID].name == "anim_blink" ||
@@ -92,7 +92,7 @@ void createSunflower(const int id, const Tyra::Vec2 pos) {
     printf("animID: %d\n", animID);
     newFatherID(&plant[id].father, &entityID);
     animationDataArray[animID].loadAnimation(
-        entityID, animID, 5, animationDataArray[animID].maxFrame);
+        entityID, animID, Tyra::Vec2(1,1), 5, animationDataArray[animID].maxFrame);
     // animationDataArray[animID].activeAnimation(entityID, 5,
     // animationDataArray[animID].maxFrame);
     // if (animationDataArray[animID].name == "anim_blink") {
@@ -135,7 +135,7 @@ void createCherryBomb(const int id, const Tyra::Vec2 pos) {
     printf("animID: %d\n", animID);
     newFatherID(&plant[id].father, &entityID);
     animationDataArray[animID].loadAnimation(
-        entityID, animID, enumAnimationState::explodeCherryBomb);
+        entityID, animID, Tyra::Vec2(1,1), enumAnimationState::explodeCherryBomb);
   }
   printf("lastframe: %d\n", animationArray[plant[id].id[0]].lastFrame);
 
@@ -159,7 +159,7 @@ void createWallnut(const int id, const Tyra::Vec2 pos) {
     printf("plant ID: %d\n", entityID);
     printf("animID: %d\n", animID);
     newFatherID(&plant[id].father, &entityID);
-    animationDataArray[animID].loadAnimation(entityID, animID, 1, 17);
+    animationDataArray[animID].loadAnimation(entityID, animID, Tyra::Vec2(1,1), 1, 17);
     // animationDataArray[animID].activeAnimation(entityID, 1, 17);
   }
 
@@ -187,7 +187,7 @@ void createPotatoMine(const int id, const Tyra::Vec2 pos) {
     printf("plant ID: %d\n", entityID);
     printf("animID: %d\n", animID);
     newFatherID(&plant[id].father, &entityID);
-    animationDataArray[animID].loadAnimation(entityID, animID, 1, 1);
+    animationDataArray[animID].loadAnimation(entityID, animID, Tyra::Vec2(1,1), 1, 1);
   }
 
   // Life
@@ -219,7 +219,7 @@ void createSnowPea(const int id, const Tyra::Vec2 pos) {
     printf("plant ID: %d\n", entityID);
     printf("animID: %d\n", animID);
     newFatherID(&plant[id].father, &entityID);
-    animationDataArray[animID].loadAnimation(entityID, animID, 80, 104);
+    animationDataArray[animID].loadAnimation(entityID, animID, Tyra::Vec2(1,1), 80, 104);
     // animationDataArray[animID].activeAnimation(entityID, 80, 104);
   }
 
@@ -254,7 +254,7 @@ void createChomper(const int id, const Tyra::Vec2 pos) {
     // printf("plant ID: %d\n", entityID);
     // printf("animID: %d\n", animID);
     newFatherID(&plant[id].father, &entityID);
-    animationDataArray[animID].loadAnimation(entityID, animID, 1, 25);
+    animationDataArray[animID].loadAnimation(entityID, animID, Tyra::Vec2(1,1), 1, 25);
     // animationDataArray[animID].activeAnimation(entityID, 1, 25);
   }
 
@@ -291,7 +291,7 @@ void createRepeater(const int id, const Tyra::Vec2 pos) {
     printf("plant ID: %d\n", entityID);
     printf("animID: %d\n", animID);
     newFatherID(&plant[id].father, &entityID);
-    animationDataArray[animID].loadAnimation(entityID, animID, 80, 104);
+    animationDataArray[animID].loadAnimation(entityID, animID, Tyra::Vec2(1,1), 80, 104);
     // animationDataArray[animID].activeAnimation(entityID, 80, 104);
   }
 

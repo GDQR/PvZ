@@ -267,7 +267,7 @@ void createNormalZombie(const int id, Tyra::Vec2 pos) {
     // printf("Zombie ID: %d\n", entityID);
     // printf("animID: %d\n", animID);
     newFatherID(&zombie[id].father, &entityID);
-    animationDataArray[animID].loadAnimation(entityID, animID,
+    animationDataArray[animID].loadAnimation(entityID, animID, Tyra::Vec2(1,1),
                                              normalZombieWalk);
     // animationDataArray[animID].setAnimationState(entityID, normalZombieWalk);
     // animationArray[entityID].draw = true;
@@ -304,7 +304,7 @@ void createFlagZombie(const int id, Tyra::Vec2 pos) {
     // printf("Zombie ID: %d\n", entityID);
     // printf("animID: %d\n", animID);
     newFatherID(&zombie[id].father, &entityID);
-    animationDataArray[animID].loadAnimation(entityID, animID,
+    animationDataArray[animID].loadAnimation(entityID, animID, Tyra::Vec2(1,1),
                                              normalZombieWalk);
     // animationDataArray[animID].setAnimationState(entityID, normalZombieWalk);
     // animationArray[entityID].draw = true;
@@ -341,7 +341,7 @@ void createConeheadZombie(const int id, Tyra::Vec2 pos) {
     // printf("Zombie ID: %d\n", entityID);
     // printf("animID: %d\n", animID);
     newFatherID(&zombie[id].father, &entityID);
-    animationDataArray[animID].loadAnimation(entityID, animID,
+    animationDataArray[animID].loadAnimation(entityID, animID, Tyra::Vec2(1,1),
                                              normalZombieWalk);
     // animationDataArray[animID].setAnimationState(entityID, normalZombieWalk);
     // animationArray[entityID].draw = true;
@@ -379,7 +379,7 @@ void createPoleVaulterZombie(const int id, Tyra::Vec2 pos) {
     // printf("animID: %d\n", animID);
     newFatherID(&zombie[id].father, &entityID);
     animationDataArray[animID].loadAnimation(
-        entityID, animID, enumAnimationState::poleVaulterWalk);
+        entityID, animID, Tyra::Vec2(1,1), enumAnimationState::poleVaulterWalk);
     // animationDataArray[animID].setAnimationState(entityID, normalZombieWalk);
     // animationArray[entityID].draw = true;
     zombie[id].animation(entityID, animID);
@@ -415,7 +415,7 @@ void createBucketheadZombie(const int id, Tyra::Vec2 pos) {
     // printf("Zombie ID: %d\n", entityID);
     // printf("animID: %d\n", animID);
     newFatherID(&zombie[id].father, &entityID);
-    animationDataArray[animID].loadAnimation(entityID, animID,
+    animationDataArray[animID].loadAnimation(entityID, animID, Tyra::Vec2(0.9f,0.9f),
                                              normalZombieWalk);
     // animationDataArray[animID].setAnimationState(entityID, normalZombieWalk);
     // animationArray[entityID].draw = true;

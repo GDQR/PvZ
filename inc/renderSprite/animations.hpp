@@ -21,7 +21,7 @@ struct AnimIndex {
     Blover,
     Cabbagepult,
     Cactus,
-    Spikeweed, //caltrop
+    Spikeweed,  // caltrop
     Cattail,
     CherryBomb,
     Chomper,
@@ -29,7 +29,7 @@ struct AnimIndex {
     CoffeeBean,
     Coin_gold,
     Coin_silver,
-    Kernelpult, // Cornpult
+    Kernelpult,  // Cornpult
     CrazyDave,
     Credits_AnyHour,
     Credits_BigBrain,
@@ -76,13 +76,13 @@ struct AnimIndex {
     Magnetshroom,
     Marigold,
     Melonpult,
-    Peashooter, // PeashooterSingle
-    Repeater, // Peashotter
+    Peashooter,  // PeashooterSingle
+    Repeater,    // Peashotter
     Plantern,
     PoolCleaner,
     Portal_Circle,
     Portal_Square,
-    FlowerPot, // Pot
+    FlowerPot,  // Pot
     PotatoMine,
     puff,
     PuffShroom,
@@ -212,8 +212,10 @@ class AnimationData {
   LinearArrayKey<unsigned int, float> alpha;
   LinearArrayKey<unsigned int, int> draw;
   void loadAnimation(const int entityID, const int animID,
+                     const Tyra::Vec2 scaleTextures,
                      enumAnimationState animationState);
-  void loadAnimation(const int entityID, const int animID, const int firstFrame,
+  void loadAnimation(const int entityID, const int animID,
+                     const Tyra::Vec2 scaleTextures, const int firstFrame,
                      const int lastFrame);
   int activeAnimation(const int entityID, const unsigned int firstFrame,
                       const unsigned int lastFrame);

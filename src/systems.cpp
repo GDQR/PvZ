@@ -510,7 +510,7 @@ void createLawnMower(const Tyra::Vec2 pos) {
     // printf("plant ID: %d\n", entityID);
     // printf("animID: %d\n", animID);
     newFatherID(&entity.id[0], &entityID);
-    animationDataArray[animID].loadAnimation(entityID, animID, 1, 1);
+    animationDataArray[animID].loadAnimation(entityID, animID, Tyra::Vec2(0.7f, 0.7f), 1, 1);
   }
 
   // HitBox

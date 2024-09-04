@@ -314,7 +314,6 @@ void Animation::updateSprites(const int entityID) {
     // Link new Texture to the sprite entitie
     texRepo->getByTextureId(animationDataArray[animID].texture.second[myindex])
         ->addLink(spriteArray[entityID].id);
-    // TODO: ver mejor esto, jode al escalar
     originalSize[entityID] = Vec2(
         texRepo
             ->getByTextureId(animationDataArray[animID].texture.second[myindex])
@@ -340,7 +339,7 @@ void Animation::updateSprites(const int entityID) {
   if (myindex != -1) {
     spriteArray[entityID].size =
         originalSize[entityID] *
-        animationDataArray[animID].scale.second[myindex];
+        animationDataArray[animID].scale.second[myindex] * scaleTexture.at(entityID);
   }
 }
 
