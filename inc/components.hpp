@@ -133,8 +133,8 @@ extern ArrayKey<int, int> spriteRenderIDArray;
 // extern std::vector<int> spriteNormalIdStopRender; useless maybe
 // extern std::vector<int> animationIdStopRender; useless maybe
 extern ArrayKey<int, Tyra::Vec2> angleArray;
-extern std::unordered_map<int, Tyra::Vec2> originalSize;
-extern std::unordered_map<int, Tyra::Vec2> scaleTexture;
+extern std::unordered_map<int, Tyra::Vec2> originalSize; // Is the size of the Texture animation
+extern std::unordered_map<int, Tyra::Vec2> scaleTexture; // This multiply the size of the texture animation
 extern std::unordered_map<int, Tyra::Vec2> pointColliderArray;
 extern std::unordered_map<int, BoxCollider> boxColliderArray;
 extern ArrayKey<int, PS2Timer> timerArray;
