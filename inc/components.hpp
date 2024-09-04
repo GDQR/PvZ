@@ -67,7 +67,8 @@ class BoxCollider {
   BoxCollider(float x, float y, float width, float height, float offsetX,
               float offsetY);
   void move(const int entityID);
-  bool collision(BoxCollider* box);
+  bool collision(const BoxCollider* box);
+  bool pointCollision(const Tyra::Vec2* point);
   float x;
   float y;
   float width;
@@ -134,8 +135,8 @@ extern ArrayKey<int, int> spriteRenderIDArray;
 extern ArrayKey<int, Tyra::Vec2> angleArray;
 extern std::unordered_map<int, Tyra::Vec2> originalSize;
 extern std::unordered_map<int, Tyra::Vec2> scaleTexture;
-extern std::map<int, Tyra::Vec2> pointColliderArray;
-extern std::map<int, BoxCollider> boxColliderArray;
+extern std::unordered_map<int, Tyra::Vec2> pointColliderArray;
+extern std::unordered_map<int, BoxCollider> boxColliderArray;
 extern ArrayKey<int, PS2Timer> timerArray;
 extern std::map<int, float> speedArray;
 extern std::map<int, int> damageArray;

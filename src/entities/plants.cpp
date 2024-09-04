@@ -393,26 +393,9 @@ int Plant::attack() {
   }
 
   std::vector<Zombie>::iterator it;
-
-  for (it = zombie.begin(); it < zombie.end(); ) {
-    if (type == PeaShotter || type == SnowPea || type == Repeater) {
-      //  printf("vec plant %f,%f. vec zombi %f,%f,%f,%f\n",
-      //  pointColliderArray[*plant[i].body[0]].x,
-      //  pointColliderArray[*plant[i].body[0]].y,
-      //  boxColliderArray[*zombie[j].body[0]].x,
-      //  boxColliderArray[*zombie[j].body[0]].y,
-      //  boxColliderArray[*zombie[j].body[0]].x +
-      //  boxColliderArray[*zombie[j].body[0]].width,
-      //  boxColliderArray[*zombie[j].body[0]].y +
-      //  boxColliderArray[*zombie[j].body[0]].height)
-      if (pointColliderArray[father].x <
-              boxColliderArray[it->id[0]].x +
-                  boxColliderArray[it->id[0]].width &&
-          pointColliderArray[father].y > boxColliderArray[it->id[0]].y &&
-          pointColliderArray[father].y <
-              boxColliderArray[it->id[0]].y +
-                  boxColliderArray[it->id[0]].height) {
-        // printf("hay un zombi en frente\n");
+  if (type == PeaShotter || type == SnowPea || type == Repeater) {
+    for (it = zombie.begin(); it != zombie.end(); it++) {
+      if (boxColliderArray[it->id[0]].pointCollision(&pointColliderArray[father])) {
         if (timerArray[father].counterMS < timerArray[father].maxMS) {
           timerArray[father].addMSinCounter();
         } else if (stopAnimation == false) {
@@ -432,24 +415,21 @@ int Plant::attack() {
             }
           }
         }
-        it = zombie.end();
-      }else{
-        it++;
+        break;
       }
-    }else if(type == Chomper){
-      printf("chomper estoy\n");
-      if(timerArray[father].maxMS == 0 && boxColliderArray[id[0]].collision(&boxColliderArray[it->id[0]]) == true){
-        printf("eat zombie\n");
+    }
+  } else if (type == Chomper) {
+    for (it = zombie.begin(); it != zombie.end();) {
+      if (timerArray[father].maxMS == 0 && 
+          boxColliderArray[id[0]].collision(&boxColliderArray[it->id[0]]) == 
+              true) {
         timerArray[father].maxMS = 42000;
         it->damage(father);
         it->erase();
         it = zombie.erase(it);
       }else{
         it++;
-        
       }
-    } else {
-      it++;
     }
   }
   return 0;

@@ -23,8 +23,8 @@ ArrayKey<int, int> spriteRenderIDArray(enumComponents::spriteRender);
 ArrayKey<int, Tyra::Vec2> angleArray(enumComponents::angle);
 std::unordered_map<int, Tyra::Vec2> originalSize;
 std::unordered_map<int, Tyra::Vec2> scaleTexture;
-std::map<int, Tyra::Vec2> pointColliderArray;
-std::map<int, BoxCollider> boxColliderArray;
+std::unordered_map<int, Tyra::Vec2> pointColliderArray;
+std::unordered_map<int, BoxCollider> boxColliderArray;
 ArrayKey<int, PS2Timer> timerArray(enumComponents::timer);
 std::map<int, float> speedArray;
 std::map<int, int> damageArray;
@@ -144,9 +144,16 @@ void BoxCollider::move(const int entityID) {
 /*
  * @return True if collision exist
  */
-bool BoxCollider::collision(BoxCollider* box) {
+bool BoxCollider::collision(const BoxCollider* box) {
   if (x + width >= box->x && box->x + box->width >= x && y + height >= box->y &&
       box->y + box->height >= y) {
+    return true;
+  }
+  return false;
+}
+
+bool BoxCollider::pointCollision(const Tyra::Vec2* point) {
+  if (point->x < x + width && point->y > y && point->y < y + height) {
     return true;
   }
   return false;
