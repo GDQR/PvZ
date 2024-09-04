@@ -268,9 +268,6 @@ int AnimationData::activeAnimation(const int entityID,
     newTexture->addLink(spriteID);
     originalSize[entityID] =
         Vec2(newTexture->getWidth(), newTexture->getHeight());
-    scaleTexture[entityID] =
-        Vec2(originalSize[entityID].x / newTexture->getWidth(),
-             originalSize[entityID].y / newTexture->getHeight());
   }
 
   for (unsigned int i = 0; i < position.first.size(); i++) {
@@ -279,7 +276,7 @@ int AnimationData::activeAnimation(const int entityID,
     }
   }
 
-  texPosArray[entityID] = position.second[index];
+  texPosArray[entityID] = position.second[index] * scaleTexture[entityID];
 
   for (unsigned int i = 0; i < scale.first.size(); i++) {
     if (scale.first[i] <= firstFrame) {
@@ -287,7 +284,7 @@ int AnimationData::activeAnimation(const int entityID,
     }
   }
 
-  spriteArray[entityID].size = originalSize[entityID] * scale.second[index];
+  spriteArray[entityID].size = originalSize[entityID] * scaleTexture[entityID] * scale.second[index];
 
   for (unsigned int i = 0; i < alpha.first.size(); i++) {
     if (alpha.first[i] <= firstFrame) {

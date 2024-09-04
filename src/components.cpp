@@ -304,23 +304,19 @@ void Animation::activeDrawNormalSprites(const int entityID) {
 void Animation::updateSprites(const int entityID) {
   int myindex = animationDataArray[animID].texture.getIndex(currentFrame);
   if (myindex != -1) {
+    Tyra::Texture* texture = texRepo->getBySpriteId(spriteArray[entityID].id);
     // Unlink Texture from the sprite entitie
-    if (texRepo->getBySpriteId(spriteArray[entityID].id) != nullptr) {
+    if (texture != nullptr) {
       // printf("unlink sprite id: %d\n", spriteArray[entityID].id);
-      texRepo->getBySpriteId(spriteArray[entityID].id)
-          ->removeLinkById(spriteArray[entityID].id);
+      texture->removeLinkById(spriteArray[entityID].id);
     }
 
     // Link new Texture to the sprite entitie
-    texRepo->getByTextureId(animationDataArray[animID].texture.second[myindex])
-        ->addLink(spriteArray[entityID].id);
+    texture = texRepo->getByTextureId(animationDataArray[animID].texture.second[myindex]);
+        texture->addLink(spriteArray[entityID].id);
     originalSize[entityID] = Vec2(
-        texRepo
-            ->getByTextureId(animationDataArray[animID].texture.second[myindex])
-            ->getWidth(),
-        texRepo
-            ->getByTextureId(animationDataArray[animID].texture.second[myindex])
-            ->getHeight());
+        texture->getWidth(),
+        texture->getHeight());
   }
   myindex = animationDataArray[animID].position.getIndex(currentFrame);
   // printf("currentFrame: %d\n",currentFrame);
