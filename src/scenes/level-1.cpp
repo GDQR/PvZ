@@ -76,7 +76,8 @@ void Level1::init() {
   // createPlant(cards[deckCursor[player].pos].plant, 2,8);
   createZombie(Vec2(mapCollider[2][8].x, mapCollider[2][8].y), Zombie_State_enum::bucketHeadZombie);
   loadProjectile();
-  engine->font.loadFont(&myFont, "Fonts/roboto-Bold.ttf");
+  // createPlant(cards[1].plant, 2,8);
+  engine->font.loadFont(&myFont, 32, "Fonts/roboto-Bold.ttf");
   // renderer->core.setFrameLimit(false);
   // sunManager.create(Vec2(277, 77), sunCost::normalSun, false);
 }
@@ -167,7 +168,7 @@ void Level1::update() {
   renderSprites.update();
 
   renderDebugSpritesManager.update();
-  engine->font.drawText(&myFont, std::to_string(sunCounter), 30, 30, 16,
+  engine->font.drawText(&myFont, std::to_string(sunCounter).c_str(), 30, 30, 16,
                         Color(255, 255, 255, 128));
 
   if (debugMenu == true) {

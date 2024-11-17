@@ -119,9 +119,9 @@ void DebugSpriteMode::drawMenu() {
   if (hideText == false) {
     std::string textId = "Entitie ID: " + std::to_string(debugEntityId);
 
-    engine->font.drawText(&myFont, textId, 30, 80, 16,
+    engine->font.drawText(&myFont, textId.c_str(), 30, 80, 16,
                           Tyra::Color(0, 0, 0, 128));
-    engine->font.drawText(&myFont, d_name, 30, 100, 16,
+    engine->font.drawText(&myFont, d_name.c_str(), 30, 100, 16,
                           Tyra::Color(0, 0, 0, 128));
 
     engine->font.drawText(&myFont, "PRESS O FOR GO BACK", 30, 420, 16,
@@ -449,28 +449,28 @@ void DebugSpriteMode::drawSecondMenu(){
           "Position: " + std::to_string(posArray[debugEntityId].x) + ", " +
           std::to_string(posArray[debugEntityId].y);
 
-      engine->font.drawText(&myFont, position, 30, 140, 16,
+      engine->font.drawText(&myFont, position.c_str(), 30, 140, 16,
                             Tyra::Color(0, 0, 0, 128));
     } else if (sizeMode == false) {
       std::string angle = "Angle: " + std::to_string(*d_angleX) + "," +
                           std::to_string(*d_angleY);
-      engine->font.drawText(&myFont, angle, 30, 140, 16,
+      engine->font.drawText(&myFont, angle.c_str(), 30, 140, 16,
                             Tyra::Color(0, 0, 0, 128));
     } else {
       std::string size = "Size: " + std::to_string(originalSize[debugEntityId].x) +
                          ", " + std::to_string(originalSize[debugEntityId].y);
-      engine->font.drawText(&myFont, size, 30, 140, 16,
+      engine->font.drawText(&myFont, size.c_str(), 30, 140, 16,
                             Tyra::Color(0, 0, 0, 128));
     }
 
     std::string texPosition = "Texture Position: " + std::to_string(*d_texPosX) +
                               ", " + std::to_string(*d_texPosY);
-    engine->font.drawText(&myFont, texPosition, 30, 160, 16,
+    engine->font.drawText(&myFont, texPosition.c_str(), 30, 160, 16,
                           Tyra::Color(0, 0, 0, 128));
 
     std::string textScale =
         "Scale: " + std::to_string(debugSpritesType[debugEntityId]->scale);
-    engine->font.drawText(&myFont, textScale, 30, 180, 16,
+    engine->font.drawText(&myFont, textScale.c_str(), 30, 180, 16,
                           Tyra::Color(0, 0, 0, 128));
 
     // animation
@@ -483,9 +483,9 @@ void DebugSpriteMode::drawSecondMenu(){
           std::to_string(animationDataArray[animationArray[debugEntityId].animID]
                              .texture.first.size());
 
-      engine->font.drawText(&myFont, textKey, 30, 120, 16, black);
+      engine->font.drawText(&myFont, textKey.c_str(), 30, 120, 16, black);
 
-      engine->font.drawText(&myFont, animSize, 30, 200, 16, black);
+      engine->font.drawText(&myFont, animSize.c_str(), 30, 200, 16, black);
       engine->font.drawText(&myFont, "PRESS X FOR PLAY/STOP ANIMATION", 30, 280,
                             16, black);
       // general y anim

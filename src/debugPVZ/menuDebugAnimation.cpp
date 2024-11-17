@@ -72,12 +72,12 @@ void subMenu(Tyra::Pad& pad, Tyra::Font& font, int& entitieID) {
     std::string textKey =
         "Key: " + std::to_string(animationArray[entitieID].currentFrame);
 
-    engine->font.drawText(&myFont, textKey, 30, 120, 16, black);
-    engine->font.drawText(&myFont, position, 30, 140, 16,
+    engine->font.drawText(&myFont, textKey.c_str(), 30, 120, 16, black);
+    engine->font.drawText(&myFont, position.c_str(), 30, 140, 16,
                           Tyra::Color(0, 0, 0, 128));
-    engine->font.drawText(&myFont, texPosition, 30, 160, 16,
+    engine->font.drawText(&myFont, texPosition.c_str(), 30, 160, 16,
                           Tyra::Color(0, 0, 0, 128));
-    engine->font.drawText(&myFont, animSize, 30, 180, 16, black);
+    engine->font.drawText(&myFont, animSize.c_str(), 30, 180, 16, black);
 
     engine->font.drawText(&myFont, "PRESS L1 FOR Prev Texture", 30, 340, 16,
                           black);
@@ -148,9 +148,9 @@ void menuDebugAnimation(Tyra::Pad& pad, Tyra::Font& font, int& entitieID) {
         "Name Texture: " + renderer->getTextureRepository()
                                .getBySpriteId(spriteArray[entitieID].id)
                                ->name;
-    engine->font.drawText(&myFont, textId, 30, 80, 16,
+    engine->font.drawText(&myFont, textId.c_str(), 30, 80, 16,
                           Tyra::Color(0, 0, 0, 128));
-    engine->font.drawText(&myFont, name, 30, 100, 16,
+    engine->font.drawText(&myFont, name.c_str(), 30, 100, 16,
                           Tyra::Color(0, 0, 0, 128));
 
     engine->font.drawText(&myFont, "PRESS O FOR GO BACK", 30, 420, 16, black);
