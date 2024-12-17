@@ -26,8 +26,8 @@ std::unordered_map<int, Tyra::Vec2> scaleTexture;
 std::unordered_map<int, Tyra::Vec2> pointColliderArray;
 std::unordered_map<int, BoxCollider> boxColliderArray;
 ArrayKey<int, PS2Timer> timerArray(enumComponents::timer);
-std::map<int, float> speedArray;
-std::map<int, int> damageArray;
+std::unordered_map<int, float> speedArray;
+std::unordered_map<int, int> damageArray;
 ArrayKey<int, int> lifeArray(enumComponents::life);
 std::map<int, Tyra::Vec2> pivot;
 std::map<int, Controller> controller;
@@ -45,7 +45,8 @@ std::map<int, Cursor> cursor;
 std::map<int, DeckCursor> deckCursor;
 
 int zombiescreated;
-bool zombieCreateRow[5];
+ZombieRow zombieCreateRow[5];
+bool mapEnable[5];
 bool plantCreatedInMap[5][9];
 BoxCollider mapCollider[5][9];
 
@@ -70,10 +71,9 @@ void createSpriteRotate(int id, Tyra::SpriteMode mode, Tyra::Vec2 position,
 }
 
 void deleteSprite(const int entityID) {
-  if (texRepo->getBySpriteId(spriteArray[entityID].id) != nullptr) {
-    engine->renderer.getTextureRepository()
-        .getBySpriteId(spriteArray[entityID].id)
-        ->removeLinkById(spriteArray[entityID].id);
+  Tyra::Texture* textureID = texRepo->getBySpriteId(spriteArray[entityID].id);
+  if (textureID != nullptr) {
+    textureID->removeLinkById(spriteArray[entityID].id);
   }
   
   if(spriteArray.count(entityID) == 1){

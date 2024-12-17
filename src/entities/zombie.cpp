@@ -184,7 +184,8 @@ int Zombie::attackPlant() {
 void Zombie::damage(const int entityID) {
   damaged = true;
   lifeArray[id[0]] -= damageArray[entityID];
-  for (unsigned int j = 0; j < id.size(); j++) {
+  unsigned int size = id.size();
+  for (unsigned int j = 0; j < size; j++) {
     if (animationArray.count(id[j]) == 1) {
       // printf("anim attack id: %d\n",m_animID["Zombie"][j]);
       spriteArray[id[j]].color = Tyra::Color(255, 255, 255, 128);
@@ -226,9 +227,9 @@ int Zombie::normalColor() {
 bool Zombie::erase() {
   if (lifeArray[id[0]] <= 0) {
     deletePosArray(father);
-
-    for (unsigned int i = 0; i < m_animID[AnimIndex::Zombie].size();
-         i++) {
+    
+    unsigned int animSize = m_animID[AnimIndex::Zombie].size();
+    for (unsigned int i = 0; i < animSize; i++) {
       deletePosArray(id[i]);
       deleteFinalPosArray(id[i]);
       deleteFatherIDChild(&father, &id[i]);
@@ -462,4 +463,43 @@ void createZombie(Tyra::Vec2 pos, const Zombie_State_enum type) {
 
   zombiesCreated++;
   TYRA_LOG("Zombie Debug Created");
+}
+
+int waves = 1;
+int zombiesLeftForWave = 2;
+
+int timerZombies = 0;
+int maxZombies = 5; // this is used for when you win the level
+// para terminar un nivel se usa el tiempo, hay un tiempo determinado por eso la barra sigue moviendose
+// procedimiento
+// crea zombie
+// espera
+// se termina el tiempo y crea otro zombie
+// espera
+// el tiempo es igual al tiempo que transcurre una oleada
+// se crean varios zombies
+// al crear varios zombies se puede hacer un limite para que no esten todos en una fila
+void createZombieMain(){
+  // printf("timerZombies: %d\n",timerZombies);
+  if (timerZombies > 0) {
+    timerZombies--;
+  } else {
+    if (zombiescreated < maxZombies) {
+      int row = rand() % 5;
+      while (zombieCreateRow[row].zombiesInRow == zombieCreateRow[row].maxZombiesInRow) {
+        row = rand() % 5;
+      }
+      // TODO: hacer que se elimine esto cuando se elimine un zombie o tal vez no
+      zombieCreateRow[row].zombiesInRow++;
+
+      createZombie(Vec2(mapCollider[row][8].x, mapCollider[row][8].y), Zombie_State_enum::coneheadZombie);
+      
+      if(maxZombies - zombiescreated != zombiesLeftForWave){
+        timerZombies = 60;
+      }else{
+        timerZombies = 30;
+      }
+      zombiescreated++;
+    }
+  }
 }

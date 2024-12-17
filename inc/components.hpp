@@ -113,6 +113,12 @@ class PS2Timer {
   void addMSinCounter();
 };
 
+class ZombieRow {
+ public:
+  int zombiesInRow = 0;
+  int maxZombiesInRow = 0;
+};
+
 extern Tyra::Engine* engine;
 extern Tyra::Renderer* renderer;
 extern const Tyra::PadJoy* leftJoy;
@@ -133,13 +139,15 @@ extern ArrayKey<int, int> spriteRenderIDArray;
 // extern std::vector<int> spriteNormalIdStopRender; useless maybe
 // extern std::vector<int> animationIdStopRender; useless maybe
 extern ArrayKey<int, Tyra::Vec2> angleArray;
-extern std::unordered_map<int, Tyra::Vec2> originalSize; // Is the size of the Texture animation
-extern std::unordered_map<int, Tyra::Vec2> scaleTexture; // This multiply the size of the texture animation
+extern std::unordered_map<int, Tyra::Vec2>
+    originalSize;  // Is the size of the Texture animation
+extern std::unordered_map<int, Tyra::Vec2>
+    scaleTexture;  // This multiply the size of the texture animation
 extern std::unordered_map<int, Tyra::Vec2> pointColliderArray;
 extern std::unordered_map<int, BoxCollider> boxColliderArray;
 extern ArrayKey<int, PS2Timer> timerArray;
-extern std::map<int, float> speedArray;
-extern std::map<int, int> damageArray;
+extern std::unordered_map<int, float> speedArray;
+extern std::unordered_map<int, int> damageArray;
 extern ArrayKey<int, int> lifeArray;
 extern std::map<int, Tyra::Vec2> pivot;
 extern std::map<int, Controller> controller;
@@ -158,7 +166,8 @@ extern std::map<int, Cursor> cursor;
 extern std::map<int, DeckCursor> deckCursor;
 
 extern int zombiescreated;
-extern bool zombieCreateRow[5];
+extern ZombieRow zombieCreateRow[5];
+extern bool mapEnable[5];
 extern bool plantCreatedInMap[5][9];
 extern BoxCollider mapCollider[5][9];
 
