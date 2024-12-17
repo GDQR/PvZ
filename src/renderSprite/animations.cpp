@@ -358,10 +358,10 @@ void readInfo(std::ifstream& MyReadFile, std::string& insideArrow,
     if (insideArrow == "f") {
       readTag(MyReadFile, insideArrow, state);
       draw = std::stoi(insideArrow);
-      std::cout << " draw: " << draw;
+      // std::cout << " draw: " << draw;
     } else if (insideArrow == "i") {
       readTag(MyReadFile, insideArrow, state);
-      std::cout << " i: " << insideArrow;
+      // std::cout << " i: " << insideArrow;
       insideArrow.erase(0, 13);  // delete "IMAGE_REANIM_" from string
       insideArrow += ".png";
       for (u32 i = 0; i < texRepo->getTexturesCount(); i++) {
@@ -374,12 +374,12 @@ void readInfo(std::ifstream& MyReadFile, std::string& insideArrow,
       }
       if (textureFounded == false) {
         fileName = "reanim/" + insideArrow;
-        std::cout << " new i: " << insideArrow;
+        // std::cout << " new i: " << insideArrow;
         texture = loadTexture(fileName);
 
         animationDataArray[animID].texture.insert(countframes, texture->id);
-        printf(" texture width: %d, height: %d\n", texture->getWidth(),
-               texture->getHeight());
+        // printf(" texture width: %d, height: %d\n", texture->getWidth(),
+        //        texture->getHeight());
       }
       textureFounded = false;
       useAnim = true;
@@ -387,35 +387,35 @@ void readInfo(std::ifstream& MyReadFile, std::string& insideArrow,
                                       // simbolo(?) igual con y
       readTag(MyReadFile, insideArrow, state);
       x = std::stof(insideArrow);
-      std::cout << " X: " << x;
+      // std::cout << " X: " << x;
     } else if (insideArrow == "y") {
       readTag(MyReadFile, insideArrow, state);
       y = std::stof(insideArrow);
-      std::cout << " Y: " << y;
+      // std::cout << " Y: " << y;
     } else if (insideArrow == "kx") {  // kx son los grados del angulo
       readTag(MyReadFile, insideArrow, state);
-      std::cout << " KX: " << insideArrow;
+      // std::cout << " KX: " << insideArrow;
       kx = std::stof(insideArrow);
     } else if (insideArrow == "ky") {  // ky son los grados del angulo
       readTag(MyReadFile, insideArrow, state);
-      std::cout << " KY: " << insideArrow;
+      // std::cout << " KY: " << insideArrow;
       ky = std::stof(insideArrow);
     } else if (insideArrow == "sx") {  // es la escala de la imagen
       readTag(MyReadFile, insideArrow, state);
-      std::cout << " SX: " << insideArrow;
+      // std::cout << " SX: " << insideArrow;
       sx = std::stof(insideArrow);
     } else if (insideArrow == "sy") {  // es la escala de la imagen
       readTag(MyReadFile, insideArrow, state);
-      std::cout << " SY: " << insideArrow;
+      // std::cout << " SY: " << insideArrow;
       sy = std::stof(insideArrow);
     } else if (insideArrow == "a") {
       readTag(MyReadFile, insideArrow, state);
-      std::cout << " a: " << insideArrow;
+      // std::cout << " a: " << insideArrow;
       a = std::stof(insideArrow);
     } else if (insideArrow == "t") {
-      std::cout << "Frame " << countframes << ":";
+      // std::cout << "Frame " << countframes << ":";
     } else if (insideArrow == "/t") {
-      std::cout << std::endl;
+      // std::cout << std::endl;
 
       if (beforeSx != sx || beforeSY != sy) {
         beforeSx = sx;
@@ -481,11 +481,11 @@ void readReanimFiles(int nameID, std::string file) {
       readTag(MyReadFile, insideArrow, state);
 
       intValue = std::stoi(insideArrow);
-      std::cout << "Los FPS son: " << intValue << std::endl;
+      // std::cout << "Los FPS son: " << intValue << std::endl;
 
     } else if (insideArrow == "name") {
       readTag(MyReadFile, insideArrow, state);
-      std::cout << "Name: " << insideArrow << std::endl;
+      // std::cout << "Name: " << insideArrow << std::endl;
       if (useAnim == true) {
         m_animID[nameID].push_back(maxAnimID);
         animID = maxAnimID;
@@ -498,11 +498,11 @@ void readReanimFiles(int nameID, std::string file) {
         animationDataArray[animID].scale.clear();
         animationDataArray[animID].angle.clear();
         animationDataArray[animID].alpha.clear();
-        printf("borre la memoria\n");
+        // printf("borre la memoria\n");
       }
       animationDataArray[animID].name = insideArrow;
 
-      std::cout << "animID: " << animID << std::endl;
+      // std::cout << "animID: " << animID << std::endl;
       readInfo(MyReadFile, insideArrow, useAnim, animID, state);
     }
   }
