@@ -270,7 +270,7 @@ void ZombiesManager::update() {
 
 void PlantsManager::create(){
   if (debugMode == false) {
-    if (zombieCreateRow[(int)cursor[player].cursorTile.x] == true) {
+    if (mapEnable[(int)cursor[player].cursorTile.x] == true) {
       if (sunCounter >= cards[deckCursor[player].pos].cost &&
           plantsCreated < maxPlants && timerArray[cards[deckCursor[player].pos].seedShadowTimer].counterMS >= timerArray[cards[deckCursor[player].pos].seedShadowTimer].maxMS) {
         sunCounter -= cards[deckCursor[player].pos].cost;
@@ -297,25 +297,29 @@ int ProjectileManager::update() {
   std::vector<Zombie>::iterator it2;
 
   std::vector<int> eraseProjectileID;
-  while (it != projectile.end()) {
-    for (it2 = zombie.begin(); it2 != zombie.end(); it2++) {
+  // printf("1 proj end: %d\n",projectile.end());
+  auto size = projectile.end();
+  auto zombieSize = zombie.end();
+  while (it != size) {
+    for (it2 = zombie.begin(); it2 != zombieSize; it2++) {
       if (boxColliderArray[it->id].collision(&boxColliderArray[it2->id[0]]) == true){
         eraseProjectileID.push_back(it->id);
         it2->damage(it->id);
-        if(it->type == enumProyectile::snowPea){
-          speedArray[it2->id[0]] = 0.5f;
-        }
         // printf("zombie id: %d\n",it2->id[0]);
         // delete zombie
         if (it2->erase() == true) {
           zombie.erase(it2);
+          zombieSize = zombie.end();
+        }else if(it->type == enumProyectile::snowPea){
+          speedArray[it2->id[0]] = 0.5f;
         }
         break;
       }
     }
     it++;
   }
-  for(unsigned i=0;i < eraseProjectileID.size(); i++){
+  unsigned int eraseSize = eraseProjectileID.size();
+  for(unsigned i=0;i < eraseSize; i++){
     for(it = projectile.begin(); it != projectile.end(); it++){
       if(eraseProjectileID[i] == it->id){
         // delete projectile
@@ -370,6 +374,9 @@ void ExplosionManager::zombieCollision() {
           int animID;
           for (unsigned int j = 0; j < m_animID[AnimIndex::Zombie_charred].size(); j++) {
             if (animationArray.count(it2->id[j]) == 1) {
+              if(angleArray.count(it2->id[j]) == 1){
+                angleArray[it2->id[j]] = Vec2(0.0f, 0.0f);
+              }
               animID = m_animID[AnimIndex::Zombie_charred][j];
               animationArray[it2->id[j]].animID = animID;
               animationArray[it2->id[j]].framesCounter = 0;
@@ -464,7 +471,7 @@ void newFatherID(int* fatherID, int* childID) {
   fatherIDArray[*fatherID].id.push_back(*childID);
 }
 
-void deleteFatherIDChild(int* fatherID, int* childID) {
+void deleteFatherIDChild(const int* fatherID,const int* childID) {
   std::vector<int>::iterator it =
       find(fatherIDArray[*fatherID].id.begin(),
            fatherIDArray[*fatherID].id.end(), *childID);
