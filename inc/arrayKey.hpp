@@ -94,7 +94,7 @@ void ArrayKey<Key, Type>::clear() {
 
 template <class Key, class Type>
 void ArrayKey<Key, Type>::erase(const Key& key) {
-  unsigned int index;
+  unsigned int index = first.size();
   for (unsigned int i = 0; i < first.size(); i++) {
     if (first[i] == key) {
       index = i;
