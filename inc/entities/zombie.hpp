@@ -28,3 +28,4 @@ class Zombie {
 };
 
 void createZombie(Tyra::Vec2 pos, const Zombie_State_enum type);
+void createZombieMain();
