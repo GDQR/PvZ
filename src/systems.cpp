@@ -571,8 +571,6 @@ void createLawnMower(const Tyra::Vec2 pos) {
   lawnMower.push_back(entity);
 }
 
-bool rewardExist = false;
-int reward;
 void rewardLevel1(Tyra::Vec2 pos){
   std::vector<int> plantID;
   reward = Entities::newID();

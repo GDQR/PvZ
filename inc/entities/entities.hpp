@@ -2,6 +2,9 @@
 
 #include <vector>
 #include <unordered_map>
+#include "plants.hpp"
+#include "sun.hpp"
+#include "zombie.hpp"
 
 enum enumComponents {
   pos,
@@ -35,3 +38,12 @@ class Entities {
   static unsigned int getComponent(const unsigned int id,
                               const unsigned int componentID);
 };
+
+const int maxPlants = 5 * 9;
+extern Plant plant[maxPlants];
+extern std::vector<Sun> sun;
+extern std::vector<NaturalSun> naturalSun;
+extern std::vector<Zombie> zombie;
+extern int player;
+extern int reward;
+extern bool rewardExist;

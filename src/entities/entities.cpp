@@ -1,5 +1,9 @@
 #include <entities/entities.hpp>
 #include <stdio.h>
+
+bool rewardExist = false;
+int reward;
+
 unsigned int Entities::counter = 0;
 std::vector<unsigned int> Entities::aliveEntities;
 std::vector<unsigned int> Entities::deadEntities;

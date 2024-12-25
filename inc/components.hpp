@@ -6,9 +6,6 @@
 #include "debugPVZ/debug.hpp"
 #include "renderSprite/textures.hpp"
 #include "renderSprite/animations.hpp"
-#include "entities/plants.hpp"
-#include "entities/zombie.hpp"
-#include "entities/sun.hpp"
 
 // enum enumCommands {
 //   level1,
@@ -152,16 +149,10 @@ extern ArrayKey<int, int> lifeArray;
 extern std::map<int, Tyra::Vec2> pivot;
 extern std::map<int, Controller> controller;
 
-const int maxPlants = 5 * 9;
-extern Plant plant[maxPlants];
-extern std::vector<Zombie> zombie;
-extern std::vector<Sun> sun;
-extern std::vector<NaturalSun> naturalSun;
 extern std::vector<Proyectile> projectile;
 extern std::vector<Explosion> explosion;
 extern std::vector<Card> cards;
 extern std::vector<LawnMower> lawnMower;
-extern int player;
 extern std::map<int, Cursor> cursor;
 extern std::map<int, DeckCursor> deckCursor;
 
