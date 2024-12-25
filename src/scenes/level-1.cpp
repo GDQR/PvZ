@@ -106,7 +106,6 @@ void Level1::update() {
     }
   }
 
-
   if (stopAnimation == false) {
     projectileManager.update();
     zombiesManager.update();
@@ -130,19 +129,12 @@ void Level1::update() {
 
   // shoot zombies
   plantsManager.update();
+  
+  createZombieMain();
 
-  if (timerZombies > 0) {
-    timerZombies--;
-  } else {
-    if (zombiescreated < 1) {
-      int row = rand() % 5;
-      while (zombieCreateRow[row] == false) {
-        row = rand() % 5;
-      }
-
-      // createDebugZombie(Vec2(mapCollider[row][8].x, mapCollider[row][8].y));
-      timerZombies = 60;
-      zombiescreated++;
+  if(rewardExist == true){
+    if(boxColliderArray[cursor[player].id].collision(&boxColliderArray[reward])){
+      printf("delete reward\n");
     }
   }
 

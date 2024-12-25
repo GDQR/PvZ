@@ -224,8 +224,11 @@ int Zombie::normalColor() {
   return 0;
 }
 
+int zombiesDefeated = 0;
 bool Zombie::erase() {
   if (lifeArray[id[0]] <= 0) {
+    zombiesDefeated++;
+    createReward(posArray[father]);
     deletePosArray(father);
     
     unsigned int animSize = m_animID[AnimIndex::Zombie].size();

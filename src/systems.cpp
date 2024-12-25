@@ -526,3 +526,42 @@ void createLawnMower(const Tyra::Vec2 pos) {
   createDebugBoxCollider(entity.id[0], Tyra::MODE_STRETCH);
   lawnMower.push_back(entity);
 }
+
+bool rewardExist = false;
+int reward;
+void rewardLevel1(Tyra::Vec2 pos){
+  std::vector<int> plantID;
+  reward = Entities::newID();
+  int id;
+  int animID;
+
+  createSprite(reward, Tyra::MODE_REPEAT, pos, Vec2(50, 70));
+  createTexture(reward, "UI/Seeds.png");
+  spriteArray[reward].offset.x = 100;
+
+  plantID.push_back(Entities::newID());
+  posArray.insert(plantID[0], pos);
+  fatherIDArray.insert(plantID[0], FatherID());
+
+  for (unsigned int i = 0; i < m_animID[AnimIndex::SunFlower].size(); i++) {
+    id = Entities::newID();
+    plantID.push_back(id);
+    animID = m_animID[AnimIndex::SunFlower][i];
+    newFatherID(&plantID[0], &id);
+    animationDataArray[animID].loadAnimation(id, animID,
+                                             Tyra::Vec2(0.6f, 0.6f), 8, 8);
+  }
+  boxColliderArray[reward] =
+      BoxCollider(pos.x, pos.y, 28, 38);
+      
+  
+  createDebugBoxCollider(reward, Tyra::MODE_STRETCH);
+  rewardExist = true;
+}
+
+void createReward(Tyra::Vec2 pos){
+  if(maxZombies == zombiesDefeated ){
+    printf("crear premio\n");
+    rewardLevel1(pos);
+  }
+}

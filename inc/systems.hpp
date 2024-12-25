@@ -54,6 +54,8 @@ extern ExplosionManager explosionManager;
 extern RendererSprites renderSprites;
 extern RendererDebugSpritesManager renderDebugSpritesManager;
 extern ZombiesManager zombiesManager;
+extern int reward;
+extern bool rewardExist;
 
 void newPlayer(int* player);
 void newProjectile(Tyra::Vec2 position, const int damage,
@@ -69,6 +71,8 @@ void createSpriteRotate(int id, Tyra::SpriteMode mode, Tyra::Vec2 position,
                         Tyra::Vec2 size, const Tyra::Vec2 angle);
 void createLawnMower(const Tyra::Vec2 pos);
 void createCard(Plant_State_enum typePlant, Vec2 pos, bool isVersusMode);
+void createCardSunFlower(std::vector<int>& plantID, const Tyra::Vec2 pos);
+void createReward(Tyra::Vec2 pos);
 void drawCardCost();
 void deleteFatherIDChild(const int* fatherID, const int* childID);
 void deleteFatherID(const int* entityID);
