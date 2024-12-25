@@ -404,6 +404,50 @@ void ExplosionManager::zombieCollision() {
   }
 }
 
+void createSprite(int id, Tyra::SpriteMode mode, Tyra::Vec2 position,
+                  Tyra::Vec2 size) {
+  spriteArray.insert(id, Sprite());
+  posArray.insert(id, position);
+  finalPosArray.insert(id, Vec2(0, 0));
+  loadSprite(&spriteArray[id], mode, Vec2(0.0f, 0.0f), size);
+  spriteRenderIDArray.insert(id, 0);
+}
+
+void createSpriteRotate(int id, Tyra::SpriteMode mode, Tyra::Vec2 position,
+                        Tyra::Vec2 size, const Tyra::Vec2 angle) {
+  angleArray.insert(id, angle);
+  createSprite(id, mode, position, size);
+}
+
+void deleteSprite(const int entityID) {
+  Tyra::Texture* textureID = texRepo->getBySpriteId(spriteArray[entityID].id);
+  if (textureID != nullptr) {
+    textureID->removeLinkById(spriteArray[entityID].id);
+  }
+  
+  if(spriteArray.count(entityID) == 1){
+    spriteArray.erase(entityID);
+  }
+
+  if(spriteRenderIDArray.count(entityID) == 1){
+    spriteRenderIDArray.erase(entityID);
+  }
+  if (angleArray.count(entityID) == 1) {
+    angleArray.erase(entityID);
+  }
+}
+void deleteAnimation(const int entityID) { animationArray.erase(entityID); }
+
+void deletePosArray(const int entityID) {
+  posArray.erase(entityID);
+}
+void deleteFinalPosArray(const int entityID){
+  finalPosArray.erase(entityID);
+}
+
+void deleteTexPosArray(const int entityID) { texPosArray.erase(entityID); }
+
+
 void newPlayer(int* player){
   static int countPlayer = 0;
   *player = Entities::newID();
