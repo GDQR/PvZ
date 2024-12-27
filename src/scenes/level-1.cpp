@@ -90,8 +90,9 @@ void Level1::init() {
       map[i][j] = Entities::newID();
     }
   }
+  mapEnable[2] = true;
   // createPlant(cards[2].plant, 2,7);
-  zombieCreateRow[2] = true;
+  zombieCreateRow[2].maxZombiesInRow = 10;
   zombiescreated = 0;
   newCursor(&player, Vec2(mapCollider[0][0].x, mapCollider[0][0].y + 30));
   newDeckCursor(&player,
