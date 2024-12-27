@@ -507,7 +507,6 @@ void newProjectile(Vec2 position, const int damage, const enumProyectile project
   }
 }
 
-// TODO: Fix this for potato mine
 void newExplosion(Vec2 position, Vec2 size, const int damage, const enumProyectile projectileType){
   if (explosionsCreated < 100) {
     Explosion explosionData;
