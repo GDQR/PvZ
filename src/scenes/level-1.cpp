@@ -18,13 +18,13 @@ using namespace Tyra;
 int background; 
 int seedBank ;
 int zombieDebug; 
+int flagMeterTimer = 0;
+int emptyFlagMeter;
+int fullFlagMeter;
 
 int map[5][9];
 int xMap = 9;
 int yMap = 5;
-
-int timerZombies = 0;
-int maxZombies = 5;
 
 void Level1::init() {
   srand(time(NULL));
@@ -37,6 +37,8 @@ void Level1::init() {
   background = Entities::newID();
   seedBank = Entities::newID();
   zombieDebug = Entities::newID();
+  emptyFlagMeter = Entities::newID();
+  fullFlagMeter = Entities::newID();
   // load background
   createSprite(background, MODE_STRETCH, Vec2(-56, -1), Vec2(780, 524));
   createTexture(background, "Backgrounds/DAY Unsodded.png");
@@ -44,6 +46,27 @@ void Level1::init() {
   createSprite(seedBank, MODE_STRETCH, Vec2(63, 10),
                Vec2(512 / 1.5f, 128 / 1.5f));
   createTexture(seedBank, "UI/SeedBank.png");
+  
+  // posicion es 255, 410 lo mejor para el flag
+  createSprite(fullFlagMeter, MODE_REPEAT, Vec2(255, 410),
+               Vec2(158,24));
+  spriteArray[fullFlagMeter].scale = 1;
+  spriteArray[fullFlagMeter].offset.y = 27;
+  createTexture(fullFlagMeter, "Images/FlagMeter.png");
+  
+  createSprite(emptyFlagMeter, MODE_REPEAT, Vec2(255, 410),
+               Vec2(158,24));
+  spriteArray[emptyFlagMeter].scale = 1;
+  createTexture(emptyFlagMeter, "Images/FlagMeter.png");
+
+
+  // createSprite(emptyFlagMeter, MODE_STRETCH, Vec2(255, 410),
+  //              Vec2(512 / 1.5f, 128 / 1.5f));
+  // createTexture(emptyFlagMeter, "Images/FlagMeter.png");
+  
+  // createSprite(fullFlagMeter, MODE_STRETCH, Vec2(255, 410),
+  //              Vec2(512 / 1.5f, 128 / 1.5f));
+  // createTexture(fullFlagMeter, "Images/FlagMeter.png");
 
   bool isVersusMode = false;
   loadAnimation(AnimIndex::Peashooter);
@@ -136,6 +159,11 @@ void Level1::update() {
     if(boxColliderArray[cursor[player].id].collision(&boxColliderArray[reward.father])){
       eraseReward();
     }
+  }
+
+  if(spriteArray[emptyFlagMeter].size.x/*flagMeterTimer*/>0){
+    printf("size flag: %f\n",spriteArray[emptyFlagMeter].size.x);
+    spriteArray[emptyFlagMeter].size.x-- ;
   }
 
   renderer->beginFrame();
