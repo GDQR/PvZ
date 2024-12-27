@@ -13,6 +13,7 @@ RendererSprites renderSprites;
 RendererDebugSpritesManager renderDebugSpritesManager;
 ZombiesManager zombiesManager;
 PlantsManager plantsManager;
+RewardManager rewardManager;
 
 void PlayerControl::update(){
   std::map<int, Controller>::iterator it;
@@ -400,6 +401,14 @@ void ExplosionManager::zombieCollision() {
       }else{
         it2++;
       }
+    }
+  }
+}
+
+void RewardManager::update(){
+  if(rewardExist == true){
+    if(boxColliderArray[cursor[player].id].collision(&boxColliderArray[reward.father])){
+      eraseReward();
     }
   }
 }

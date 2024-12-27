@@ -156,11 +156,7 @@ void Level1::update() {
   
   createZombieMain();
 
-  if(rewardExist == true){
-    if(boxColliderArray[cursor[player].id].collision(&boxColliderArray[reward.father])){
-      eraseReward();
-    }
-  }
+  rewardManager.update();
 
   if(spriteArray[emptyFlagMeter].size.x/*flagMeterTimer*/>0){
     printf("size flag: %f\n",spriteArray[emptyFlagMeter].size.x);

@@ -47,6 +47,11 @@ class ExplosionManager {
   void zombieCollision();
 };
 
+class RewardManager {
+  public:
+  void update();
+};
+
 extern PlayerControl playerControl;
 extern AnimationManager animManager;
 extern ProjectileManager projectileManager;
@@ -54,6 +59,7 @@ extern ExplosionManager explosionManager;
 extern RendererSprites renderSprites;
 extern RendererDebugSpritesManager renderDebugSpritesManager;
 extern ZombiesManager zombiesManager;
+extern RewardManager rewardManager;
 
 void newPlayer(int* player);
 void newProjectile(Tyra::Vec2 position, const int damage,
