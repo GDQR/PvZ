@@ -64,6 +64,7 @@ void createCardWallnut(std::vector<int>& plantID, const Tyra::Vec2 pos) {
 
   plantID.push_back(Entities::newID());
   posArray.insert(plantID[0], pos);
+  fatherIDArray.insert(plantID[0], FatherID());
   for (unsigned int i = 0; i < m_animID[AnimIndex::Wallnut].size(); i++) {
     entityID = Entities::newID();
     plantID.push_back(entityID);
@@ -80,6 +81,7 @@ void createCardPotatoMine(std::vector<int>& plantID, const Tyra::Vec2 pos) {
 
   plantID.push_back(Entities::newID());
   posArray.insert(plantID[0], pos);
+  fatherIDArray.insert(plantID[0], FatherID());
   for (unsigned int i = 0; i < m_animID[AnimIndex::PotatoMine].size(); i++) {
     entityID = Entities::newID();
     plantID.push_back(entityID);
@@ -96,6 +98,7 @@ void createCardSnowPea(std::vector<int>& plantID, const Tyra::Vec2 pos) {
 
   plantID.push_back(Entities::newID());
   posArray.insert(plantID[0], pos);
+  fatherIDArray.insert(plantID[0], FatherID());
   for (unsigned int i = 0; i < m_animID[AnimIndex::SnowPea].size(); i++) {
     entityID = Entities::newID();
     plantID.push_back(entityID);
@@ -112,6 +115,7 @@ void createCardChomper(std::vector<int>& plantID, const Tyra::Vec2 pos) {
 
   plantID.push_back(Entities::newID());
   posArray.insert(plantID[0], pos);
+  fatherIDArray.insert(plantID[0], FatherID());
   for (unsigned int i = 0; i < m_animID[AnimIndex::Chomper].size(); i++) {
     entityID = Entities::newID();
     plantID.push_back(entityID);
@@ -128,6 +132,7 @@ void createCardRepeater(std::vector<int>& plantID, const Tyra::Vec2 pos) {
 
   plantID.push_back(Entities::newID());
   posArray.insert(plantID[0], pos);
+  fatherIDArray.insert(plantID[0], FatherID());
   for (unsigned int i = 0; i < m_animID[AnimIndex::Repeater].size(); i++) {
     entityID = Entities::newID();
     plantID.push_back(entityID);
