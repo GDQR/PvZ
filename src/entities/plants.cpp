@@ -461,9 +461,16 @@ void Plant::ability() {
     printf("potato timer: %lld\n", timerArray[father].counterMS);
     if (timerArray[father].counterMS < timerArray[father].maxMS){
       timerArray[father].addMSinCounter();
-    }else if(timerArray[father].maxMS == 15000){
-      timerArray[father].maxMS = 0;
-      newExplosion(posArray[father], Vec2(64, 64), 1800, enumProyectile::ExplosionSpudow);
+    }else{
+      printf("activar estado de explosion\n");
+      std::vector<Zombie>::iterator it = zombie.begin();
+      for(;it < zombie.end(); it++){
+        if(boxColliderArray[father].collision(&boxColliderArray[it->id[0]]) == true){
+          newExplosion(posArray[father], Vec2(64, 64), 1800, enumProyectile::ExplosionSpudow);
+          erase(); // TODO: arreglar la duracion de la palabra, esto hace que la palabra desaparezca de forma rapida
+          break;
+        }
+      }
     }
   } else if (type == Chomper){
     printf("maxMS: %lld\n",timerArray[father].maxMS);

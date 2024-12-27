@@ -348,10 +348,11 @@ int ProjectileManager::update() {
 void ExplosionManager::zombieCollision() {
   std::vector<Explosion>::iterator it;
   std::vector<Zombie>::iterator it2;
-  for (it = explosion.begin(); it < explosion.end(); it++) {
+  bool explode;
+  for (it = explosion.begin(); it < explosion.end();) {
+    explode = false;
     for (it2 = zombie.begin(); it2 < zombie.end(); ) {
       if (boxColliderArray[it->id].collision(&boxColliderArray[it2->id[0]]) == true) {
-
         // damage zombie
         lifeArray[it2->id[0]] -= damageArray[it->id];
 
@@ -389,18 +390,32 @@ void ExplosionManager::zombieCollision() {
         }
 
         // delete explosion
-        it->erase();
-        it = explosion.erase(it);
+        // if(it->type == enumProyectile::ExplosionSpudow){
+        //   it->erase();
+        //   it = explosion.erase(it);
+        //   explosionsCreated--;
+        // }else{
+          explode = true;
+        // }
 
-        // Break projectile loop if exist another zombie
-        if (it == explosion.end()) {
-          it2 = zombie.end();
-        }
+        // Break projectile loop if doesn't exist another projectile
+        // if (it == explosion.end()) {
+        //   it2 = zombie.end();
+        // }else{
+        //   it2++;
+        // }
+        it2++;
 
-        explosionsCreated--;
       }else{
         it2++;
       }
+    }
+    if(explode == true){
+      it->erase();
+      it = explosion.erase(it);
+      explosionsCreated--;
+    }else{
+      it++;
     }
   }
 }
