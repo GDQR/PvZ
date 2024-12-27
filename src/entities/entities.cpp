@@ -2,7 +2,7 @@
 #include <stdio.h>
 
 bool rewardExist = false;
-int reward;
+Reward reward;
 
 unsigned int Entities::counter = 0;
 std::vector<unsigned int> Entities::aliveEntities;

@@ -71,6 +71,7 @@ void createLawnMower(const Tyra::Vec2 pos);
 void createCard(Plant_State_enum typePlant, Tyra::Vec2 pos, bool isVersusMode);
 void createCardSunFlower(std::vector<int>& plantID, const Tyra::Vec2 pos);
 void createReward(Tyra::Vec2 pos);
+void eraseReward();
 void drawCardCost();
 void deleteFatherIDChild(const int* fatherID, const int* childID);
 void deleteFatherID(const int* entityID);

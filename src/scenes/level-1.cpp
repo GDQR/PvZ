@@ -133,8 +133,8 @@ void Level1::update() {
   createZombieMain();
 
   if(rewardExist == true){
-    if(boxColliderArray[cursor[player].id].collision(&boxColliderArray[reward])){
-      printf("delete reward\n");
+    if(boxColliderArray[cursor[player].id].collision(&boxColliderArray[reward.father])){
+      eraseReward();
     }
   }
 

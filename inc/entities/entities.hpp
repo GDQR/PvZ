@@ -5,6 +5,7 @@
 #include "plants.hpp"
 #include "sun.hpp"
 #include "zombie.hpp"
+#include "reward.hpp"
 
 enum enumComponents {
   pos,
@@ -45,5 +46,5 @@ extern std::vector<Sun> sun;
 extern std::vector<NaturalSun> naturalSun;
 extern std::vector<Zombie> zombie;
 extern int player;
-extern int reward;
+extern Reward reward;
 extern bool rewardExist;
