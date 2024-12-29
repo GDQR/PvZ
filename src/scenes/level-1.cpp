@@ -115,9 +115,7 @@ void Level1::update() {
     boxColliderArray[cursor[player].id].move(cursor[player].id);
   }
 
-  for (unsigned int i = 0; i < cards.size(); i++) {
-    cards[i].update();
-  }
+  cardManager.update();
 
   for (int i = 0; i < 5; i++) {
     for (int j = 0; j < 9; j++) {

@@ -14,6 +14,7 @@ RendererDebugSpritesManager renderDebugSpritesManager;
 ZombiesManager zombiesManager;
 PlantsManager plantsManager;
 RewardManager rewardManager;
+CardManager cardManager;
 
 void PlayerControl::update() {
   std::map<int, Controller>::iterator it;

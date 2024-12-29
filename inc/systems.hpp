@@ -53,6 +53,15 @@ class RewardManager {
   void update();
 };
 
+class CardManager{
+  public:
+  inline void update(){
+    for (Card &card: cards) {
+      card.update();
+    }
+  };
+};
+
 extern PlayerControl playerControl;
 extern AnimationManager animManager;
 extern ProjectileManager projectileManager;
@@ -61,6 +70,7 @@ extern RendererSprites renderSprites;
 extern RendererDebugSpritesManager renderDebugSpritesManager;
 extern ZombiesManager zombiesManager;
 extern RewardManager rewardManager;
+extern CardManager cardManager;
 
 void newPlayer(int* player);
 void newProjectile(Tyra::Vec2 position, const int damage,
