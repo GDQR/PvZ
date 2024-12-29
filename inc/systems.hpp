@@ -62,6 +62,17 @@ class CardManager{
   };
 };
 
+class PlantsManager {
+ public:
+  void create();
+  inline void update(){
+    for (Plant &onePlant: plant) {
+      onePlant.attack();
+      onePlant.ability();
+    }
+  };
+};
+
 extern PlayerControl playerControl;
 extern AnimationManager animManager;
 extern ProjectileManager projectileManager;
@@ -69,6 +80,7 @@ extern ExplosionManager explosionManager;
 extern RendererSprites renderSprites;
 extern RendererDebugSpritesManager renderDebugSpritesManager;
 extern ZombiesManager zombiesManager;
+extern PlantsManager plantsManager;
 extern RewardManager rewardManager;
 extern CardManager cardManager;
 

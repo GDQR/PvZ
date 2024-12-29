@@ -74,12 +74,6 @@ class BoxCollider {
   float offsetY;
 };
 
-class PlantsManager {
- public:
-  void create();
-  void update();
-};
-
 enum enumProyectile { pea, snowPea, ExplosionPowie, ExplosionSpudow };
 
 class Proyectile {
@@ -161,5 +155,3 @@ extern ZombieRow zombieCreateRow[5];
 extern bool mapEnable[5];
 extern bool plantCreatedInMap[5][9];
 extern BoxCollider mapCollider[5][9];
-
-extern PlantsManager plantsManager;

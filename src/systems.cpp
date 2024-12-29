@@ -307,13 +307,6 @@ void PlantsManager::create() {
   }
 }
 
-void PlantsManager::update() {
-  for (int i = 0; i < 45; i++) {
-    plant[i].attack();
-    plant[i].ability();
-  }
-}
-
 int ProjectileManager::update() {
   std::vector<Proyectile>::iterator it = projectile.begin();
   std::vector<Zombie>::iterator it2;
