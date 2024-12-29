@@ -176,7 +176,7 @@ void RendererSprites::updateTexture(){
     i++;
   } 
 }
-void RendererSprites::update() {
+void RendererSprites::updateRender() {
   for (auto it : spriteRenderIDArray.first) {
     spriteArray[it].position = finalPosArray[it];
     if(angleArray.count(it) == 1){
@@ -185,6 +185,13 @@ void RendererSprites::update() {
       renderer->renderer2D.render(spriteArray[it]);
     }
   }
+}
+
+void RendererSprites::update() {
+  resetFinalPos();
+  updateChildPos();
+  updateTexture();
+  updateRender();
 }
 
 void ZombiesManager::update() {

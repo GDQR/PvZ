@@ -165,23 +165,8 @@ void Level1::update() {
 
   renderer->beginFrame();
 
-  // atest_t atest;
-  // atest.enable = 0;
-  // atest.method = ATEST_METHOD_GREATER;
-  // atest.compval = 128;
-  // atest.keep = ATEST_KEEP_ALL;
-
-  // dtest_t dtest;
-  // dtest.enable =0;
-  // dtest.pass = 0;
-
-  // renderer->core.renderer2D.pixelTest(&atest,&dtest,ZTEST_METHOD_GREATER);
-
   // static u64 mytime = GetTimerSystemTime() / (kBUSCLK / CLOCKS_PER_SEC);
   
-  renderSprites.resetFinalPos();
-  renderSprites.updateChildPos();
-  renderSprites.updateTexture();
   renderSprites.update();
 
   renderDebugSpritesManager.update();

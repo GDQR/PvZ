@@ -27,6 +27,7 @@ class RendererSprites {
   void resetFinalPos();
   void updateChildPos();
   void updateTexture();
+  void updateRender();
   void update();
 };
 
