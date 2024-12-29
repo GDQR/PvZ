@@ -15,15 +15,15 @@ ZombiesManager zombiesManager;
 PlantsManager plantsManager;
 RewardManager rewardManager;
 
-void PlayerControl::update(){
+void PlayerControl::update() {
   std::map<int, Controller>::iterator it;
 
-  for(it = controller.begin(); it != controller.end(); it++){
+  for (it = controller.begin(); it != controller.end(); it++) {
     it->second.update(it->first);
   }
 }
 void AnimationManager::update() {
-  int i=0;
+  int i = 0;
   for (auto it : animationArray.first) {
     animationArray.second[i].update(it);
     i++;
@@ -37,11 +37,12 @@ void AnimationManager::debug() {
 }
 
 void AnimationManager::debugChangeFrame(const int entitieID, const int key) {
-
-  if (animationDataArray[animationArray[entitieID].animID].draw.count(animationArray[entitieID].currentFrame)) {
+  if (animationDataArray[animationArray[entitieID].animID].draw.count(
+          animationArray[entitieID].currentFrame)) {
     animationArray[entitieID].draw =
-        animationDataArray[animationArray[entitieID].animID].draw[animationArray[entitieID].currentFrame];
-    if (animationArray[entitieID].draw == (int) enumDraw::noDraw) {
+        animationDataArray[animationArray[entitieID].animID]
+            .draw[animationArray[entitieID].currentFrame];
+    if (animationArray[entitieID].draw == (int)enumDraw::noDraw) {
       if (texRepo->getBySpriteId(spriteArray[entitieID].id) != nullptr) {
         texRepo->getBySpriteId(spriteArray[entitieID].id)
             ->removeLinkById(spriteArray[entitieID].id);
@@ -59,12 +60,14 @@ void AnimationManager::debugChangeFrame(const int entitieID, const int key) {
     // Unlink Texture from the sprite entitie
     if (texRepo->getBySpriteId(spriteArray[entitieID].id) != nullptr) {
       texRepo->getBySpriteId(spriteArray[entitieID].id)
-        ->removeLinkById(spriteArray[entitieID].id);
+          ->removeLinkById(spriteArray[entitieID].id);
     }
 
     // Link new Texture to the sprite entitie
-    texRepo->getByTextureId(animationDataArray[animationArray[entitieID].animID]
-        .texture[animationArray[entitieID].currentFrame])->addLink(spriteArray[entitieID].id);
+    texRepo
+        ->getByTextureId(animationDataArray[animationArray[entitieID].animID]
+                             .texture[animationArray[entitieID].currentFrame])
+        ->addLink(spriteArray[entitieID].id);
   }
 
   if (animationDataArray[animationArray[entitieID].animID].position.count(
@@ -83,14 +86,16 @@ void AnimationManager::debugChangeFrame(const int entitieID, const int key) {
 
   if (animationDataArray[animationArray[entitieID].animID].scale.count(
           animationArray[entitieID].currentFrame) == 1) {
-    spriteArray[entitieID].size = originalSize[entitieID] * animationDataArray[animationArray[entitieID].animID]
+    spriteArray[entitieID].size =
+        originalSize[entitieID] *
+        animationDataArray[animationArray[entitieID].animID]
             .scale[animationArray[entitieID].currentFrame];
   }
 
   if (animationDataArray[animationArray[entitieID].animID].angle.count(
           animationArray[entitieID].currentFrame) == 1) {
     angleArray[entitieID] = animationDataArray[animationArray[entitieID].animID]
-                            .angle[animationArray[entitieID].currentFrame];
+                                .angle[animationArray[entitieID].currentFrame];
   }
 }
 
@@ -102,7 +107,8 @@ void RendererDebugSpritesManager::update() {
   for (it = dm_SpriteBoxCollider.begin(); it != dm_SpriteBoxCollider.end();
        it++) {
     // printf("key: %d. sprite ID: %d\n",it->first,it->second.id);
-    dm_SpriteBoxCollider[it->first].position = Vec2(boxColliderArray[it->first].x,boxColliderArray[it->first].y);  
+    dm_SpriteBoxCollider[it->first].position =
+        Vec2(boxColliderArray[it->first].x, boxColliderArray[it->first].y);
     renderer->renderer2D.render(dm_SpriteBoxCollider[it->first]);
   }
 
@@ -120,14 +126,16 @@ void RendererDebugSpritesManager::update() {
 
   //   renderer->renderer2D.render(dm_SpriteNormal[it->first]);
   // }
-  
+
   // TODO: delete this
   // for (it = dm_SpriteRotate.begin(); it != dm_SpriteRotate.end(); it++) {
   //   // printf("key: %d. sprite ID: %d\n", it->first, it->second.id);
 
-  //   dm_SpriteRotate[it->first].position = rotationSprite[it->first].sprite.position;
-  //   dm_SpriteRotate[it->first].scale = rotationSprite[it->first].sprite.scale;
-  //   dm_SpriteRotate[it->first].size = rotationSprite[it->first].sprite.size;
+  //   dm_SpriteRotate[it->first].position =
+  //   rotationSprite[it->first].sprite.position;
+  //   dm_SpriteRotate[it->first].scale =
+  //   rotationSprite[it->first].sprite.scale; dm_SpriteRotate[it->first].size =
+  //   rotationSprite[it->first].sprite.size;
 
   //   renderer->renderer2D.renderRotate(dm_SpriteRotate[it->first],
   //                                     rotationSprite[it->first].angle);
@@ -156,7 +164,7 @@ void RendererDebugSpritesManager::update() {
   // }
 }
 
-void RendererSprites::resetFinalPos(){
+void RendererSprites::resetFinalPos() {
   // std::map<int, Vec2>::iterator it;
   for (unsigned int i = 0; i < finalPosArray.second.size(); i++) {
     finalPosArray.second[i] = posArray[finalPosArray.first[i]];
@@ -164,24 +172,24 @@ void RendererSprites::resetFinalPos(){
 }
 
 void RendererSprites::updateChildPos() {
-  for (unsigned int i=0; i < fatherIDArray.first.size(); i++) {
+  for (unsigned int i = 0; i < fatherIDArray.first.size(); i++) {
     fatherIDArray.second[i].update(fatherIDArray.first[i]);
   }
 }
 
-void RendererSprites::updateTexture(){
-  int i=0;
+void RendererSprites::updateTexture() {
+  int i = 0;
   for (auto it : texPosArray.first) {
     finalPosArray[it] += texPosArray.second[i];
     i++;
-  } 
+  }
 }
 void RendererSprites::updateRender() {
   for (auto it : spriteRenderIDArray.first) {
     spriteArray[it].position = finalPosArray[it];
-    if(angleArray.count(it) == 1){
-      renderer->renderer2D.renderRotate(spriteArray[it],angleArray[it]);
-    }else{
+    if (angleArray.count(it) == 1) {
+      renderer->renderer2D.renderRotate(spriteArray[it], angleArray[it]);
+    } else {
       renderer->renderer2D.render(spriteArray[it]);
     }
   }
@@ -197,16 +205,16 @@ void RendererSprites::update() {
 void ZombiesManager::update() {
   std::vector<Zombie>::iterator it;
 
-  for (it = zombie.begin(); it < zombie.end(); ) {
-    if(it->explosion == false){
+  for (it = zombie.begin(); it < zombie.end();) {
+    if (it->explosion == false) {
       it->move();
       it->attackPlant();
       it->normalColor();
       it++;
-    }else{
-      if(it->explosionState() == true){
+    } else {
+      if (it->explosionState() == true) {
         it = zombie.erase(it);
-      }else{
+      } else {
         it++;
       }
     }
@@ -243,7 +251,9 @@ void ZombiesManager::update() {
 //         //  boxColliderArray[*zombie[j].body[0]].y +
 //         //  boxColliderArray[*zombie[j].body[0]].height);
 
-//         if (boxColliderArray[plant[i].id[0]].collision(&boxColliderArray[it->id[0]]) == true) {
+//         if
+//         (boxColliderArray[plant[i].id[0]].collision(&boxColliderArray[it->id[0]])
+//         == true) {
 //           it->attack = true;
 //           animationArray[it->id[0]].animID = zombieNormalAttack;
 //           if (it->attackTimer > 0) {
@@ -276,16 +286,19 @@ void ZombiesManager::update() {
 //   return 1;
 // }
 
-void PlantsManager::create(){
+void PlantsManager::create() {
   if (debugMode == false) {
     if (mapEnable[(int)cursor[player].cursorTile.x] == true) {
       if (sunCounter >= cards[deckCursor[player].pos].cost &&
-          plantsCreated < maxPlants && timerArray[cards[deckCursor[player].pos].seedShadowTimer].counterMS >= timerArray[cards[deckCursor[player].pos].seedShadowTimer].maxMS) {
+          plantsCreated < maxPlants &&
+          timerArray[cards[deckCursor[player].pos].seedShadowTimer].counterMS >=
+              timerArray[cards[deckCursor[player].pos].seedShadowTimer].maxMS) {
         sunCounter -= cards[deckCursor[player].pos].cost;
-        timerArray[cards[deckCursor[player].pos].seedShadowTimer].resetCounter();
+        timerArray[cards[deckCursor[player].pos].seedShadowTimer]
+            .resetCounter();
         spriteArray[cards[deckCursor[player].pos].seedShadowTimer].size.y = 70;
-        createPlant(cards[deckCursor[player].pos].plant, cursor[player].cursorTile.x,
-                    cursor[player].cursorTile.y);
+        createPlant(cards[deckCursor[player].pos].plant,
+                    cursor[player].cursorTile.x, cursor[player].cursorTile.y);
       } else {
         printf("can't create plants now\n");
       }
@@ -294,7 +307,7 @@ void PlantsManager::create(){
 }
 
 void PlantsManager::update() {
-  for(int i = 0; i < 45; i++){
+  for (int i = 0; i < 45; i++) {
     plant[i].attack();
     plant[i].ability();
   }
@@ -310,7 +323,8 @@ int ProjectileManager::update() {
   auto zombieSize = zombie.end();
   while (it != size) {
     for (it2 = zombie.begin(); it2 != zombieSize; it2++) {
-      if (boxColliderArray[it->id].collision(&boxColliderArray[it2->id[0]]) == true){
+      if (boxColliderArray[it->id].collision(&boxColliderArray[it2->id[0]]) ==
+          true) {
         eraseProjectileID.push_back(it->id);
         it2->damage(it->id);
         // printf("zombie id: %d\n",it2->id[0]);
@@ -318,7 +332,7 @@ int ProjectileManager::update() {
         if (it2->erase() == true) {
           zombie.erase(it2);
           zombieSize = zombie.end();
-        }else if(it->type == enumProyectile::snowPea){
+        } else if (it->type == enumProyectile::snowPea) {
           speedArray[it2->id[0]] = 0.5f;
         }
         break;
@@ -327,9 +341,9 @@ int ProjectileManager::update() {
     it++;
   }
   unsigned int eraseSize = eraseProjectileID.size();
-  for(unsigned i=0;i < eraseSize; i++){
-    for(it = projectile.begin(); it != projectile.end(); it++){
-      if(eraseProjectileID[i] == it->id){
+  for (unsigned i = 0; i < eraseSize; i++) {
+    for (it = projectile.begin(); it != projectile.end(); it++) {
+      if (eraseProjectileID[i] == it->id) {
         // delete projectile
         it->erase();
         it = projectile.erase(it);
@@ -339,10 +353,10 @@ int ProjectileManager::update() {
     }
   }
   it = projectile.begin();
-  while(it != projectile.end()){
-    if (it->move() == false){
+  while (it != projectile.end()) {
+    if (it->move() == false) {
       it++;
-    }else{
+    } else {
       // delete projectile
       printf("deleting projectile\n");
       it = projectile.erase(it);
@@ -358,12 +372,13 @@ void ExplosionManager::zombieCollision() {
   bool explode;
   for (it = explosion.begin(); it < explosion.end();) {
     explode = false;
-    for (it2 = zombie.begin(); it2 < zombie.end(); ) {
-      if (boxColliderArray[it->id].collision(&boxColliderArray[it2->id[0]]) == true) {
+    for (it2 = zombie.begin(); it2 < zombie.end();) {
+      if (boxColliderArray[it->id].collision(&boxColliderArray[it2->id[0]]) ==
+          true) {
         // damage zombie
         lifeArray[it2->id[0]] -= damageArray[it->id];
 
-        if(lifeArray[it2->id[0]] <= 0 && it2->explosion == false ){
+        if (lifeArray[it2->id[0]] <= 0 && it2->explosion == false) {
           printf("explosion state\n");
           it2->explosion = true;
           it2->damaged = false;
@@ -372,7 +387,8 @@ void ExplosionManager::zombieCollision() {
             if (animationArray.count(it2->id[j]) == 1) {
               // printf("id: %d\n",it2->id[j]);
               animationArray[it2->id[j]].draw = -1;
-              if (texRepo->getBySpriteId(spriteArray[it2->id[j]].id) != nullptr) {
+              if (texRepo->getBySpriteId(spriteArray[it2->id[j]].id) !=
+                  nullptr) {
                 // printf("unlink sprite id: %d\n", spriteArray[it2->id[j]].id);
                 texRepo->getBySpriteId(spriteArray[it2->id[j]].id)
                     ->removeLinkById(spriteArray[it2->id[j]].id);
@@ -381,17 +397,18 @@ void ExplosionManager::zombieCollision() {
             }
           }
           int animID;
-          for (unsigned int j = 0; j < m_animID[AnimIndex::Zombie_charred].size(); j++) {
+          for (unsigned int j = 0;
+               j < m_animID[AnimIndex::Zombie_charred].size(); j++) {
             if (animationArray.count(it2->id[j]) == 1) {
-              if(angleArray.count(it2->id[j]) == 1){
+              if (angleArray.count(it2->id[j]) == 1) {
                 angleArray[it2->id[j]] = Vec2(0.0f, 0.0f);
               }
               animID = m_animID[AnimIndex::Zombie_charred][j];
               animationArray[it2->id[j]].animID = animID;
               animationArray[it2->id[j]].framesCounter = 0;
               animationArray[it2->id[j]].setAnimation(normalZombieCharred);
-              animationDataArray[animID]
-              .setAnimationState(it2->id[j], normalZombieCharred);
+              animationDataArray[animID].setAnimationState(it2->id[j],
+                                                           normalZombieCharred);
             }
           }
         }
@@ -402,7 +419,7 @@ void ExplosionManager::zombieCollision() {
         //   it = explosion.erase(it);
         //   explosionsCreated--;
         // }else{
-          explode = true;
+        explode = true;
         // }
 
         // Break projectile loop if doesn't exist another projectile
@@ -413,23 +430,24 @@ void ExplosionManager::zombieCollision() {
         // }
         it2++;
 
-      }else{
+      } else {
         it2++;
       }
     }
-    if(explode == true){
+    if (explode == true) {
       it->erase();
       it = explosion.erase(it);
       explosionsCreated--;
-    }else{
+    } else {
       it++;
     }
   }
 }
 
-void RewardManager::update(){
-  if(rewardExist == true){
-    if(boxColliderArray[cursor[player].id].collision(&boxColliderArray[reward.father])){
+void RewardManager::update() {
+  if (rewardExist == true) {
+    if (boxColliderArray[cursor[player].id].collision(
+            &boxColliderArray[reward.father])) {
       eraseReward();
     }
   }
@@ -455,12 +473,12 @@ void deleteSprite(const int entityID) {
   if (textureID != nullptr) {
     textureID->removeLinkById(spriteArray[entityID].id);
   }
-  
-  if(spriteArray.count(entityID) == 1){
+
+  if (spriteArray.count(entityID) == 1) {
     spriteArray.erase(entityID);
   }
 
-  if(spriteRenderIDArray.count(entityID) == 1){
+  if (spriteRenderIDArray.count(entityID) == 1) {
     spriteRenderIDArray.erase(entityID);
   }
   if (angleArray.count(entityID) == 1) {
@@ -469,37 +487,33 @@ void deleteSprite(const int entityID) {
 }
 void deleteAnimation(const int entityID) { animationArray.erase(entityID); }
 
-void deletePosArray(const int entityID) {
-  posArray.erase(entityID);
-}
-void deleteFinalPosArray(const int entityID){
-  finalPosArray.erase(entityID);
-}
+void deletePosArray(const int entityID) { posArray.erase(entityID); }
+void deleteFinalPosArray(const int entityID) { finalPosArray.erase(entityID); }
 
 void deleteTexPosArray(const int entityID) { texPosArray.erase(entityID); }
 
-
-void newPlayer(int* player){
+void newPlayer(int* player) {
   static int countPlayer = 0;
   *player = Entities::newID();
   controller[*player].index = countPlayer;
   countPlayer++;
 }
 
-void newProjectile(Vec2 position, const int damage, const enumProyectile projectileType) {
+void newProjectile(Vec2 position, const int damage,
+                   const enumProyectile projectileType) {
   if (projectilesCreated < 100) {
     Proyectile projectileData;
     projectileData.id = Entities::newID();
     projectileData.type = projectileType;
-    
+
     projectile.insert(projectile.begin() + projectilesCreated, projectileData);
     int* id = &projectile[projectilesCreated].id;
 
     position.y -= 15.0f;
     createSprite(*id, Tyra::MODE_STRETCH, position, Vec2(31 / 1.6f, 31 / 1.6f));
-    if(projectileType == enumProyectile::pea) { 
-      projectilePea->addLink(spriteArray[*id].id); 
-    }else if(projectileType == enumProyectile::snowPea) {
+    if (projectileType == enumProyectile::pea) {
+      projectilePea->addLink(spriteArray[*id].id);
+    } else if (projectileType == enumProyectile::snowPea) {
       projectileSnowPea->addLink(spriteArray[*id].id);
     }
 
@@ -514,28 +528,29 @@ void newProjectile(Vec2 position, const int damage, const enumProyectile project
   }
 }
 
-void newExplosion(Vec2 position, Vec2 size, const int damage, const enumProyectile projectileType){
+void newExplosion(Vec2 position, Vec2 size, const int damage,
+                  const enumProyectile projectileType) {
   if (explosionsCreated < 100) {
     Explosion explosionData;
     explosionData.id = Entities::newID();
     explosionData.type = projectileType;
-    
+
     explosion.insert(explosion.begin() + explosionsCreated, explosionData);
     int* id = &explosion[explosionsCreated].id;
     // TODO: Fix position for sprite
-    createSprite(*id, Tyra::MODE_STRETCH, position-size/2/2, Vec2(256 / 1.6f, 256 / 1.6f));
+    createSprite(*id, Tyra::MODE_STRETCH, position - size / 2 / 2,
+                 Vec2(256 / 1.6f, 256 / 1.6f));
     if (projectileType == enumProyectile::ExplosionPowie) {
       projectileExplosionPowie->addLink(spriteArray[*id].id);
-    }else if (projectileType == enumProyectile::ExplosionSpudow){
+    } else if (projectileType == enumProyectile::ExplosionSpudow) {
       projectileExplosionSpudow->addLink(spriteArray[*id].id);
     }
-    position -= size/2/2;
+    position -= size / 2 / 2;
 
     // damage
     damageArray[*id] = damage;
     // hitbox
-    boxColliderArray[*id] =
-        BoxCollider(position.x, position.y, size.x, size.y);
+    boxColliderArray[*id] = BoxCollider(position.x, position.y, size.x, size.y);
     createDebugBoxCollider(*id, Tyra::MODE_STRETCH);
     explosionsCreated++;
   }
@@ -545,16 +560,14 @@ void newFatherID(int* fatherID, int* childID) {
   fatherIDArray[*fatherID].id.push_back(*childID);
 }
 
-void deleteFatherIDChild(const int* fatherID,const int* childID) {
+void deleteFatherIDChild(const int* fatherID, const int* childID) {
   std::vector<int>::iterator it =
       find(fatherIDArray[*fatherID].id.begin(),
            fatherIDArray[*fatherID].id.end(), *childID);
   fatherIDArray[*fatherID].id.erase(it);
 }
 
-void deleteFatherID(const int* entityID){
-  fatherIDArray.erase(*entityID);
-}
+void deleteFatherID(const int* entityID) { fatherIDArray.erase(*entityID); }
 
 void newCursor(int* player, Tyra::Vec2 pos) {
   // *cursor = Entities::newID();
@@ -562,7 +575,8 @@ void newCursor(int* player, Tyra::Vec2 pos) {
   printf("cursor id: %d\n", cursor[*player].id);
   createSprite(cursor[*player].id, Tyra::MODE_STRETCH, pos, Vec2(56, 48));
   createTexture(cursor[*player].id, "cursor6.png");
-  boxColliderArray[cursor[*player].id] = BoxCollider(pos.x, pos.y, 24, 24, 28 / 2, 24 / 2);
+  boxColliderArray[cursor[*player].id] =
+      BoxCollider(pos.x, pos.y, 24, 24, 28 / 2, 24 / 2);
   createDebugBoxCollider(cursor[*player].id, Tyra::MODE_STRETCH);
 }
 
@@ -584,19 +598,19 @@ void createLawnMower(const Tyra::Vec2 pos) {
   fatherIDArray.insert(entity.id[0], FatherID());
   int entityID;
   int animID;
-  for(unsigned int i=0; i < m_animID[AnimIndex::LawnMower].size(); i++){
+  for (unsigned int i = 0; i < m_animID[AnimIndex::LawnMower].size(); i++) {
     entityID = Entities::newID();
     entity.id.push_back(entityID);
     animID = m_animID[AnimIndex::LawnMower][i];
     // printf("plant ID: %d\n", entityID);
     // printf("animID: %d\n", animID);
     newFatherID(&entity.id[0], &entityID);
-    animationDataArray[animID].loadAnimation(entityID, animID, Tyra::Vec2(0.7f, 0.7f), 1, 1);
+    animationDataArray[animID].loadAnimation(entityID, animID,
+                                             Tyra::Vec2(0.7f, 0.7f), 1, 1);
   }
 
   // HitBox
-  boxColliderArray[entity.id[0]] =
-      BoxCollider(pos.x + 10, pos.y + 20, 28, 38);
+  boxColliderArray[entity.id[0]] = BoxCollider(pos.x + 10, pos.y + 20, 28, 38);
   createDebugBoxCollider(entity.id[0], Tyra::MODE_STRETCH);
   lawnMower.push_back(entity);
 }
