@@ -55,7 +55,7 @@ class RewardManager {
 
 class CardManager{
   public:
-  inline void update(){
+  inline void update(){ // implicitly inline i know, just i don't care
     for (Card &card: cards) {
       card.update();
     }
