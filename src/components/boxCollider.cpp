@@ -7,17 +7,8 @@ BoxCollider::BoxCollider(float x, float y, float width, float height) {
   this->width = width;
   this->height = height;
 }
-BoxCollider::BoxCollider(float x, float y, float width, float height,
-                         float offsetX, float offsetY) {
-  this->x = x;
-  this->y = y;
-  this->width = width;
-  this->height = height;
-  this->offsetX = offsetX;
-  this->offsetY = offsetY;
-}
 
-void BoxCollider::move(const int entityID) {
+void BoxCollider::move(const int entityID, float offsetX, float offsetY) {
   x = offsetX + posArray[entityID].x;
   y = offsetY + posArray[entityID].y;
 }

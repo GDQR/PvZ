@@ -61,17 +61,15 @@ class BoxCollider {
  public:
   BoxCollider();
   BoxCollider(float x, float y, float width, float height);
-  BoxCollider(float x, float y, float width, float height, float offsetX,
-              float offsetY);
-  void move(const int entityID);
+
+  void move(const int entityID, float offsetX, float offsetY);
   bool collision(const BoxCollider* box);
   bool pointCollision(const Tyra::Vec2* point);
   float x;
   float y;
   float width;
   float height;
-  float offsetX;
-  float offsetY;
+};
 };
 
 enum enumProyectile { pea, snowPea, ExplosionPowie, ExplosionSpudow };
