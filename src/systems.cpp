@@ -6,9 +6,8 @@ int projectilesCreated = 0;
 int explosionsCreated = 0;
 
 PlayerControl playerControl;
+BoxCollisionManager boxColliderManager;
 AnimationManager animManager;
-ProjectileManager projectileManager;
-ExplosionManager explosionManager;
 RendererSprites renderSprites;
 RendererDebugSpritesManager renderDebugSpritesManager;
 ZombiesManager zombiesManager;
@@ -25,7 +24,7 @@ void PlayerControl::update() {
 }
 void AnimationManager::update() {
   int i = 0;
-  for (auto it : animationArray.first) {
+  for (auto &it : animationArray.first) {
     animationArray.second[i].update(it);
     i++;
   }
@@ -307,7 +306,29 @@ void PlantsManager::create(int playerId) {
   }
 }
 
-int ProjectileManager::update() {
+void RewardManager::update() {
+  if (rewardExist == true) {
+    if (boxColliderArray[cursor[player].id].collision(
+            &boxColliderArray[reward.father])) {
+      eraseReward();
+    }
+  }
+}
+
+void BoxCollisionManager::mapCollision(){
+  for (int i = 0; i < 5; i++) {
+    for (int j = 0; j < 9; j++) {
+      if (boxColliderArray[cursor[player].id].collision(&mapCollider[i][j]) ==
+          true) {
+        cursor[player].cursorTile = Vec2(i, j);
+        i = 5;
+        j = 9;
+      }
+    }
+  }
+}
+
+int BoxCollisionManager::projectileZombieCollision(){
   std::vector<Proyectile>::iterator it = projectile.begin();
   std::vector<Zombie>::iterator it2;
 
@@ -360,7 +381,7 @@ int ProjectileManager::update() {
   return 0;
 }
 
-void ExplosionManager::zombieCollision() {
+void BoxCollisionManager::explosionZombieCollision(){
   std::vector<Explosion>::iterator it;
   std::vector<Zombie>::iterator it2;
   bool explode;
@@ -434,15 +455,6 @@ void ExplosionManager::zombieCollision() {
       explosionsCreated--;
     } else {
       it++;
-    }
-  }
-}
-
-void RewardManager::update() {
-  if (rewardExist == true) {
-    if (boxColliderArray[cursor[player].id].collision(
-            &boxColliderArray[reward.father])) {
-      eraseReward();
     }
   }
 }
@@ -569,8 +581,8 @@ void newCursor(int* player, Tyra::Vec2 pos) {
   printf("cursor id: %d\n", cursor[*player].id);
   createSprite(cursor[*player].id, Tyra::MODE_STRETCH, pos, Vec2(56, 48));
   createTexture(cursor[*player].id, "cursor6.png");
-  boxColliderArray[cursor[*player].id] =
-      BoxCollider(pos.x, pos.y, 24, 24, 28 / 2, 24 / 2);
+  boxColliderArray[cursor[*player].id] = BoxCollider(pos.x+28/2, pos.y+24/2, 24, 24);
+      // BoxCollider(pos.x, pos.y, 24, 24, 28 / 2, 24 / 2);
   createDebugBoxCollider(cursor[*player].id, Tyra::MODE_STRETCH);
 }
 

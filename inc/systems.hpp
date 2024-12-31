@@ -37,17 +37,6 @@ class ZombiesManager {
   void update();
 };
 
-class ProjectileManager {
- public:
-  int update();
-  void zombieCollision();
-};
-
-class ExplosionManager {
- public:
-  void zombieCollision();
-};
-
 class RewardManager {
   public:
   void update();
@@ -64,7 +53,7 @@ class CardManager{
 
 class PlantsManager {
  public:
-  void create();
+  void create(int playerId);
   inline void update(){
     for (Plant &onePlant: plant) {
       onePlant.attack();
@@ -73,10 +62,20 @@ class PlantsManager {
   };
 };
 
+class BoxCollisionManager{
+ public:
+ void mapCollision();
+ int projectileZombieCollision();
+ void explosionZombieCollision();
+ inline void update(){
+    mapCollision();
+    projectileZombieCollision();
+    explosionZombieCollision();
+ }
+};
+
 extern PlayerControl playerControl;
 extern AnimationManager animManager;
-extern ProjectileManager projectileManager;
-extern ExplosionManager explosionManager;
 extern RendererSprites renderSprites;
 extern RendererDebugSpritesManager renderDebugSpritesManager;
 extern ZombiesManager zombiesManager;

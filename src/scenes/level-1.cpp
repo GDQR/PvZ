@@ -107,7 +107,7 @@ void Level1::init() {
 }
 
 void Level1::update() {
-  // plantMovement();
+  boxColliderManager.update();
   playerControl.update();
 
   if (player != -1 && debugMode == false) {
@@ -117,19 +117,7 @@ void Level1::update() {
 
   cardManager.update();
 
-  for (int i = 0; i < 5; i++) {
-    for (int j = 0; j < 9; j++) {
-      if (boxColliderArray[cursor[player].id].collision(&mapCollider[i][j]) ==
-          true) {
-        cursor[player].cursorTile = Vec2(i, j);
-        i = 5;
-        j = 9;
-      }
-    }
-  }
-
   if (stopAnimation == false) {
-    projectileManager.update();
     zombiesManager.update();
     animManager.update();
   }
@@ -145,8 +133,6 @@ void Level1::update() {
 
   // printf("FPS: %d\n",engine->info.getFps()) ;
   // printf("ram: %f\n",engine->info.getAvailableRAM());
-  projectileManager.zombieCollision();
-  explosionManager.zombieCollision();
   // printf("texture free space: %f\n",engine->renderer.core.gs.vram.getFreeSpaceInMB());
 
   // shoot zombies
