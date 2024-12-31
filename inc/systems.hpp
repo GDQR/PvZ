@@ -75,6 +75,7 @@ class BoxCollisionManager{
 };
 
 extern PlayerControl playerControl;
+extern BoxCollisionManager boxColliderManager;
 extern AnimationManager animManager;
 extern RendererSprites renderSprites;
 extern RendererDebugSpritesManager renderDebugSpritesManager;
