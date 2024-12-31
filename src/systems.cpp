@@ -287,19 +287,19 @@ void ZombiesManager::update() {
 //   return 1;
 // }
 
-void PlantsManager::create() {
+void PlantsManager::create(int playerId) {
   if (debugMode == false) {
-    if (mapEnable[(int)cursor[player].cursorTile.x] == true) {
-      if (sunCounter >= cards[deckCursor[player].pos].cost &&
+    if (mapEnable[(int)cursor[playerId].cursorTile.x] == true) {
+      if (sunCounter >= cards[deckCursor[playerId].pos].cost &&
           plantsCreated < maxPlants &&
-          timerArray[cards[deckCursor[player].pos].seedShadowTimer].counterMS >=
-              timerArray[cards[deckCursor[player].pos].seedShadowTimer].maxMS) {
-        sunCounter -= cards[deckCursor[player].pos].cost;
-        timerArray[cards[deckCursor[player].pos].seedShadowTimer]
+          timerArray[cards[deckCursor[playerId].pos].seedShadowTimer].counterMS >=
+              timerArray[cards[deckCursor[playerId].pos].seedShadowTimer].maxMS) {
+        sunCounter -= cards[deckCursor[playerId].pos].cost;
+        timerArray[cards[deckCursor[playerId].pos].seedShadowTimer]
             .resetCounter();
-        spriteArray[cards[deckCursor[player].pos].seedShadowTimer].size.y = 70;
-        createPlant(cards[deckCursor[player].pos].plant,
-                    cursor[player].cursorTile.x, cursor[player].cursorTile.y);
+        spriteArray[cards[deckCursor[playerId].pos].seedShadowTimer].size.y = 70;
+        createPlant(cards[deckCursor[playerId].pos].plant,
+                    cursor[playerId].cursorTile.x, cursor[playerId].cursorTile.y);
       } else {
         printf("can't create plants now\n");
       }

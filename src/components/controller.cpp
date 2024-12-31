@@ -4,7 +4,7 @@
 void Controller::update(const int entityID) {
   if (engine->pad.getClicked().Cross) {
     // create plant
-    plantsManager.create();
+    plantsManager.create(entityID);
   }
   if (engine->pad.getClicked().DpadLeft) {
     deckCursor[entityID].moveLeft();
