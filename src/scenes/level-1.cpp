@@ -110,11 +110,6 @@ void Level1::update() {
   boxColliderManager.update();
   playerControl.update();
 
-  if (player != -1 && debugMode == false) {
-    cursor[player].move();
-    boxColliderArray[cursor[player].id].move(cursor[player].id);
-  }
-
   cardManager.update();
 
   if (stopAnimation == false) {
