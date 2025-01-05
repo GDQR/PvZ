@@ -13,4 +13,4 @@ jobs:
         source: '.'
         extensions: 'hpp,cpp'
         clangFormatVersion: 18
-        style: file
+        style: Google
