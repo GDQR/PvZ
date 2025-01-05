@@ -12,5 +12,5 @@ jobs:
       with:
         source: '.'
         extensions: 'hpp,cpp'
-        clangFormatVersion: 18
+        clangFormatVersion: 12
         style: Google
