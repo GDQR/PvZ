@@ -38,14 +38,14 @@ class ZombiesManager {
 };
 
 class RewardManager {
-  public:
+ public:
   void update();
 };
 
-class CardManager{
-  public:
-  inline void update(){ // implicitly inline i know, just i don't care
-    for (Card &card: cards) {
+class CardManager {
+ public:
+  inline void update() {  // implicitly inline i know, just i don't care
+    for (Card& card : cards) {
       card.update();
     }
   };
@@ -54,24 +54,25 @@ class CardManager{
 class PlantsManager {
  public:
   void create(int playerId);
-  inline void update(){
-    for (Plant &onePlant: plant) {
+  inline void update() {
+    for (Plant& onePlant : plant) {
       onePlant.attack();
       onePlant.ability();
     }
   };
 };
 
-class BoxCollisionManager{
+class BoxCollisionManager {
  public:
- void mapCollision();
- int projectileZombieCollision();
- void explosionZombieCollision();
- inline void update(){
+  void mapCollision();
+  int projectileZombieCollision();
+  void explosionZombieCollision();
+  //  void testUpdate();
+  inline void update() {
     mapCollision();
     projectileZombieCollision();
     explosionZombieCollision();
- }
+  }
 };
 
 extern PlayerControl playerControl;

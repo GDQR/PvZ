@@ -24,7 +24,7 @@ void PlayerControl::update() {
 }
 void AnimationManager::update() {
   int i = 0;
-  for (auto &it : animationArray.first) {
+  for (auto& it : animationArray.first) {
     animationArray.second[i].update(it);
     i++;
   }
@@ -291,14 +291,18 @@ void PlantsManager::create(int playerId) {
     if (mapEnable[(int)cursor[playerId].cursorTile.x] == true) {
       if (sunCounter >= cards[deckCursor[playerId].pos].cost &&
           plantsCreated < maxPlants &&
-          timerArray[cards[deckCursor[playerId].pos].seedShadowTimer].counterMS >=
-              timerArray[cards[deckCursor[playerId].pos].seedShadowTimer].maxMS) {
+          timerArray[cards[deckCursor[playerId].pos].seedShadowTimer]
+                  .counterMS >=
+              timerArray[cards[deckCursor[playerId].pos].seedShadowTimer]
+                  .maxMS) {
         sunCounter -= cards[deckCursor[playerId].pos].cost;
         timerArray[cards[deckCursor[playerId].pos].seedShadowTimer]
             .resetCounter();
-        spriteArray[cards[deckCursor[playerId].pos].seedShadowTimer].size.y = 70;
+        spriteArray[cards[deckCursor[playerId].pos].seedShadowTimer].size.y =
+            70;
         createPlant(cards[deckCursor[playerId].pos].plant,
-                    cursor[playerId].cursorTile.x, cursor[playerId].cursorTile.y);
+                    cursor[playerId].cursorTile.x,
+                    cursor[playerId].cursorTile.y);
       } else {
         printf("can't create plants now\n");
       }
@@ -315,7 +319,7 @@ void RewardManager::update() {
   }
 }
 
-void BoxCollisionManager::mapCollision(){
+void BoxCollisionManager::mapCollision() {
   for (int i = 0; i < 5; i++) {
     for (int j = 0; j < 9; j++) {
       if (boxColliderArray[cursor[player].id].collision(&mapCollider[i][j]) ==
@@ -328,7 +332,7 @@ void BoxCollisionManager::mapCollision(){
   }
 }
 
-int BoxCollisionManager::projectileZombieCollision(){
+int BoxCollisionManager::projectileZombieCollision() {
   std::vector<Proyectile>::iterator it = projectile.begin();
   std::vector<Zombie>::iterator it2;
 
@@ -381,7 +385,7 @@ int BoxCollisionManager::projectileZombieCollision(){
   return 0;
 }
 
-void BoxCollisionManager::explosionZombieCollision(){
+void BoxCollisionManager::explosionZombieCollision() {
   std::vector<Explosion>::iterator it;
   std::vector<Zombie>::iterator it2;
   bool explode;
@@ -458,6 +462,24 @@ void BoxCollisionManager::explosionZombieCollision(){
     }
   }
 }
+
+// void BoxCollisionManager::testUpdate(){
+//   unsigned int size = boxColliderArray.size();
+
+//   for(unsigned int i=0; i < size; i++){
+//     resultBoxCollider[i].idBoxCol.clear();
+//   }
+
+//   for(unsigned int i=0; i < size; i++){
+//     BoxCollider& box1 = boxColliderArray[i];
+//     for(unsigned int j=i+1; j < size; j++){
+//       if(box1.collision(&boxColliderArray[j]) == true){
+//         resultBoxCollider[i].idBoxCol.push_back(j);
+//         resultBoxCollider[j].idBoxCol.push_back(i);
+//       }
+//     }
+//   }
+// }
 
 void createSprite(int id, Tyra::SpriteMode mode, Tyra::Vec2 position,
                   Tyra::Vec2 size) {
@@ -581,8 +603,9 @@ void newCursor(int* player, Tyra::Vec2 pos) {
   printf("cursor id: %d\n", cursor[*player].id);
   createSprite(cursor[*player].id, Tyra::MODE_STRETCH, pos, Vec2(56, 48));
   createTexture(cursor[*player].id, "cursor6.png");
-  boxColliderArray[cursor[*player].id] = BoxCollider(pos.x+28/2, pos.y+24/2, 24, 24);
-      // BoxCollider(pos.x, pos.y, 24, 24, 28 / 2, 24 / 2);
+  boxColliderArray[cursor[*player].id] =
+      BoxCollider(pos.x + 28 / 2, pos.y + 24 / 2, 24, 24);
+  // BoxCollider(pos.x, pos.y, 24, 24, 28 / 2, 24 / 2);
   createDebugBoxCollider(cursor[*player].id, Tyra::MODE_STRETCH);
 }
 

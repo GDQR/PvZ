@@ -25,6 +25,7 @@ std::unordered_map<int, Tyra::Vec2> originalSize;
 std::unordered_map<int, Tyra::Vec2> scaleTexture;
 std::unordered_map<int, Tyra::Vec2> pointColliderArray;
 std::unordered_map<int, BoxCollider> boxColliderArray;
+std::unordered_map<int, TriggerBoxCollider> resultBoxCollider;
 ArrayKey<int, PS2Timer> timerArray(enumComponents::timer);
 std::unordered_map<int, float> speedArray;
 std::unordered_map<int, int> damageArray;
@@ -43,6 +44,7 @@ std::vector<LawnMower> lawnMower;
 int player;
 std::map<int, Cursor> cursor;
 std::map<int, DeckCursor> deckCursor;
+Tyra::Vec2 camera(0.0F, 0.0F);
 
 int zombiescreated;
 ZombieRow zombieCreateRow[5];

@@ -15,9 +15,9 @@ using namespace Tyra;
 
 #include <iostream>
 
-int background; 
-int seedBank ;
-int zombieDebug; 
+int background;
+int seedBank;
+int zombieDebug;
 int flagMeterTimer = 0;
 int emptyFlagMeter;
 int fullFlagMeter;
@@ -27,6 +27,7 @@ int xMap = 9;
 int yMap = 5;
 
 void Level1::init() {
+  // stapip.setRenderer(&renderer->core);
   srand(time(NULL));
   newPlayer(&player);
   loadPlantCost();
@@ -40,30 +41,29 @@ void Level1::init() {
   emptyFlagMeter = Entities::newID();
   fullFlagMeter = Entities::newID();
   // load background
-  createSprite(background, MODE_STRETCH, Vec2(-56, -1), Vec2(780, 524));
+  createSprite(background, MODE_STRETCH, Vec2(-56, -1),
+               Vec2(780, 524));  // Vec2(467, 200*2.9f)
+  // printf("posArray: %s\n",posArray[background].getPrint().c_str());
   createTexture(background, "Backgrounds/DAY Unsodded.png");
   // TODO: Fix size seedBank
   createSprite(seedBank, MODE_STRETCH, Vec2(63, 10),
                Vec2(512 / 1.5f, 128 / 1.5f));
   createTexture(seedBank, "UI/SeedBank.png");
-  
+
   // posicion es 255, 410 lo mejor para el flag
-  createSprite(fullFlagMeter, MODE_REPEAT, Vec2(255, 410),
-               Vec2(158,24));
+  createSprite(fullFlagMeter, MODE_REPEAT, Vec2(255, 410), Vec2(158, 24));
   spriteArray[fullFlagMeter].scale = 1;
   spriteArray[fullFlagMeter].offset.y = 27;
   createTexture(fullFlagMeter, "Images/FlagMeter.png");
-  
-  createSprite(emptyFlagMeter, MODE_REPEAT, Vec2(255, 410),
-               Vec2(158,24));
+
+  createSprite(emptyFlagMeter, MODE_REPEAT, Vec2(255, 410), Vec2(158, 24));
   spriteArray[emptyFlagMeter].scale = 1;
   createTexture(emptyFlagMeter, "Images/FlagMeter.png");
-
 
   // createSprite(emptyFlagMeter, MODE_STRETCH, Vec2(255, 410),
   //              Vec2(512 / 1.5f, 128 / 1.5f));
   // createTexture(emptyFlagMeter, "Images/FlagMeter.png");
-  
+
   // createSprite(fullFlagMeter, MODE_STRETCH, Vec2(255, 410),
   //              Vec2(512 / 1.5f, 128 / 1.5f));
   // createTexture(fullFlagMeter, "Images/FlagMeter.png");
@@ -74,10 +74,13 @@ void Level1::init() {
   loadAnimation(AnimIndex::CherryBomb);
   loadAnimation(AnimIndex::LawnMower);
   loadAnimation(AnimIndex::Zombie);
+  loadAnimation(AnimIndex::Zombie_charred);
   loadAnimation(AnimIndex::Sun);
   createCard(PeaShotter, Vec2(120, 10), isVersusMode);
   createCard(SunFlower, Vec2(180, 10), isVersusMode);
   createCard(CherryBomb, Vec2(240, 10), isVersusMode);
+  createLawnMower(Tyra::Vec2(0, 20));
+
   // loadTexture(&map[0][0],"asset_box.png"); // debug map
 
   for (int i = 0; i < 5; i++) {
@@ -96,9 +99,10 @@ void Level1::init() {
   zombiescreated = 0;
   newCursor(&player, Vec2(mapCollider[0][0].x, mapCollider[0][0].y + 30));
   newDeckCursor(&player,
-                Vec2(posArray[cards[deckCursor[player].pos].seed].x - 3, -10));  
+                Vec2(posArray[cards[deckCursor[player].pos].seed].x - 3, -10));
   // createPlant(cards[deckCursor[player].pos].plant, 2,8);
-  createZombie(Vec2(mapCollider[2][8].x, mapCollider[2][8].y), Zombie_State_enum::bucketHeadZombie);
+  // createZombie(Vec2(mapCollider[2][8].x, mapCollider[2][8].y),
+  // Zombie_State_enum::bucketHeadZombie);
   loadProjectile();
   // createPlant(cards[1].plant, 2,8);
   engine->font.loadFont(&myFont, 32, "Fonts/roboto-Bold.ttf");
@@ -108,6 +112,7 @@ void Level1::init() {
 
 void Level1::update() {
   boxColliderManager.update();
+  // boxColliderManager.testUpdate();
   playerControl.update();
 
   cardManager.update();
@@ -125,32 +130,38 @@ void Level1::update() {
     // sunManager.erase(cursor.id);
   }
 
-
   // printf("FPS: %d\n",engine->info.getFps()) ;
   // printf("ram: %f\n",engine->info.getAvailableRAM());
-  // printf("texture free space: %f\n",engine->renderer.core.gs.vram.getFreeSpaceInMB());
+  // printf("texture free space:
+  // %f\n",engine->renderer.core.gs.vram.getFreeSpaceInMB());
 
   // shoot zombies
   plantsManager.update();
-  
+
   createZombieMain();
 
   rewardManager.update();
 
-  if(spriteArray[emptyFlagMeter].size.x/*flagMeterTimer*/>0){
-    printf("size flag: %f\n",spriteArray[emptyFlagMeter].size.x);
-    spriteArray[emptyFlagMeter].size.x-- ;
+  if (spriteArray[emptyFlagMeter].size.x /*flagMeterTimer*/ > 0) {
+    // printf("size flag: %f\n",spriteArray[emptyFlagMeter].size.x);
+    spriteArray[emptyFlagMeter].size.x--;
   }
 
   renderer->beginFrame();
 
   // static u64 mytime = GetTimerSystemTime() / (kBUSCLK / CLOCKS_PER_SEC);
-  
+
   renderSprites.update();
+
+  // static u64 mytime2 = GetTimerSystemTime()/ (kBUSCLK / CLOCKS_PER_SEC);
+
+  // std::cout << "Time taken by function: "
+  //        << mytime2-mytime << " miliseconds" << std::endl;
 
   renderDebugSpritesManager.update();
   engine->font.drawText(&myFont, std::to_string(sunCounter).c_str(), 30, 30, 16,
                         Color(255, 255, 255, 128));
+  drawCardCost();
 
   if (debugMenu == true) {
     if (debugState == debugMain) {

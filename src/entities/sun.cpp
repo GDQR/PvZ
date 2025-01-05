@@ -8,13 +8,14 @@ int sunCounter = 1000;
 int sunTimer = 60 * 6;
 SunManager sunManager;
 
-void SunManager::create(Tyra::Vec2 position, sunCost cost, bool createdByPlant) {
+void SunManager::create(Tyra::Vec2 position, sunCost cost,
+                        bool createdByPlant) {
   sun.push_back(Sun());
   int indexpos = sun.size() - 1;
   sun[indexpos].cost = cost;
   sun[indexpos].father = Entities::newID();
   posArray.insert(sun[indexpos].father, position);
-  
+
   fatherIDArray.insert(sun[indexpos].father, FatherID());
 
   int entityID;
@@ -33,7 +34,8 @@ void SunManager::create(Tyra::Vec2 position, sunCost cost, bool createdByPlant) 
     animID = m_animID[AnimIndex::Sun][i];
 
     newFatherID(&sun[indexpos].father, &sun[indexpos].id[i]);
-    animationDataArray[animID].loadAnimation(entityID, animID, Tyra::Vec2(0.5f,0.5f), 1, 1);
+    animationDataArray[animID].loadAnimation(entityID, animID,
+                                             Tyra::Vec2(0.5f, 0.5f), 1, 1);
 
     animationArray[entityID].lastFrame = animationDataArray[animID].maxFrame;
   }
@@ -70,7 +72,7 @@ bool Sun::erase(const int cursorID) {
       deleteSprite(id[i]);
       deleteAnimation(id[i]);
       deleteTexPosArray(id[i]);
-      deleteFatherIDChild(&father,&id[i]);
+      deleteFatherIDChild(&father, &id[i]);
       Entities::deleteID(id[i]);
     }
 

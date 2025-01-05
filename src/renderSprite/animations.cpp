@@ -7,7 +7,7 @@
 
 std::string animString[AnimIndex::enumMax];
 
-void loadAnimString(){
+void loadAnimString() {
   animString[AnimIndex::Blover] = "Blover";
   animString[AnimIndex::Cabbagepult] = "Cabbagepult";
   animString[AnimIndex::Cactus] = "Cactus";
@@ -130,12 +130,14 @@ void loadAnimString(){
   animString[AnimIndex::Zombie_charred] = "Zombie_charred";
   animString[AnimIndex::Zombie_charred_catapult] = "Zombie_charred_catapult";
   animString[AnimIndex::Zombie_charred_digger] = "Zombie_charred_digger";
-  animString[AnimIndex::Zombie_charred_gargantuar] = "Zombie_charred_gargantuar";
+  animString[AnimIndex::Zombie_charred_gargantuar] =
+      "Zombie_charred_gargantuar";
   animString[AnimIndex::Zombie_charred_imp] = "Zombie_charred_imp";
   animString[AnimIndex::Zombie_charred_zamboni] = "Zombie_charred_zamboni";
   animString[AnimIndex::Zombie_credits_conehead] = "Zombie_credits_conehead";
   animString[AnimIndex::Zombie_credits_dance] = "Zombie_credits_dance";
-  animString[AnimIndex::Zombie_credits_screendoor] = "Zombie_credits_screendoor";
+  animString[AnimIndex::Zombie_credits_screendoor] =
+      "Zombie_credits_screendoor";
   animString[AnimIndex::Zombie_dancer] = "Zombie_dancer";
   animString[AnimIndex::Zombie_digger] = "Zombie_digger";
   animString[AnimIndex::Zombie_disco] = "Zombie_disco";
@@ -171,7 +173,7 @@ void setSprite(const int entityID, const int draw) {
   // printf("plant draw: %d\n", animationArray[entityID].draw);
 }
 
-AnimationState::AnimationState() {};
+AnimationState::AnimationState(){};
 AnimationState::AnimationState(const unsigned int firstFrame,
                                const unsigned int lastFrame) {
   this->firstFrame = firstFrame;
@@ -197,7 +199,7 @@ void AnimationData::loadAnimation(const int entityID, const int animID,
                 animationStateVector[animationState].lastFrame);
 }
 
-void AnimationData::loadAnimation(const int entityID, const int animID, 
+void AnimationData::loadAnimation(const int entityID, const int animID,
                                   const Tyra::Vec2 scaleTextures,
                                   const int firstFrame, const int lastFrame) {
   bool rotateSprite = false;
@@ -284,7 +286,8 @@ int AnimationData::activeAnimation(const int entityID,
     }
   }
 
-  spriteArray[entityID].size = originalSize[entityID] * scaleTexture[entityID] * scale.second[index];
+  spriteArray[entityID].size =
+      originalSize[entityID] * scaleTexture[entityID] * scale.second[index];
 
   for (unsigned int i = 0; i < alpha.first.size(); i++) {
     if (alpha.first[i] <= firstFrame) {
@@ -511,6 +514,7 @@ void readReanimFiles(int nameID, std::string file) {
 }
 
 void loadAnimation(const AnimIndex::Animation animNameID) {
-  readReanimFiles(animNameID,
-                  Tyra::FileUtils::fromCwd("reanim/" + animString[animNameID] + ".reanim"));
+  readReanimFiles(
+      animNameID,
+      Tyra::FileUtils::fromCwd("reanim/" + animString[animNameID] + ".reanim"));
 }

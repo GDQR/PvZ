@@ -1,6 +1,7 @@
 #include "components.hpp"
 #include "renderSprite/textures.hpp"
 #include "entities/plants.hpp"
+// #include "jpgResize.hpp"
 
 using Tyra::FileUtils;
 
@@ -45,7 +46,8 @@ int createTexture(int id, std::string fileImage) {
 }
 
 // int createTextureJPGResize(int id, std::string fileImage) {
-//   TYRA_ASSERT(!(spriteArray.find(id) == spriteArray.end()), "Entitie id: ", id,
+//   TYRA_ASSERT(!(spriteArray.find(id) == spriteArray.end()), "Entitie id: ",
+//   id,
 //               "Is NULL, use <<CreateSprite>> function");
 //   std::string findTexture = FileUtils::getFilenameFromPath(fileImage);
 

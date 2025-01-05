@@ -20,17 +20,17 @@ void createPeashotter(const int id, const Tyra::Vec2 pos) {
 
   int entityID;
   int animID;
-  
+
   int* father = &plant[id].father;
-  for (unsigned int i = 0;
-       i < m_animID[AnimIndex::Peashooter].size(); i++) {
+  for (unsigned int i = 0; i < m_animID[AnimIndex::Peashooter].size(); i++) {
     entityID = Entities::newID();
     plant[id].id.push_back(entityID);
     animID = m_animID[AnimIndex::Peashooter][i];
     // printf("plant ID: %d\n", entityID);
     // printf("animID: %d\n", animID);
     newFatherID(father, &entityID);
-    animationDataArray[animID].loadAnimation(entityID, animID, Tyra::Vec2(0.8f,0.8f), 80, 104);
+    animationDataArray[animID].loadAnimation(entityID, animID,
+                                             Tyra::Vec2(0.8f, 0.8f), 80, 104);
     // animationDataArray[animID].activeAnimation(entityID, 80, 104);
     // printf("draw: %d\n", animationArray[entityID].draw);
     // if (animationDataArray[animID].name == "anim_blink" ||
@@ -68,8 +68,7 @@ void createPeashotter(const int id, const Tyra::Vec2 pos) {
   timerArray[*father].maxMS = 1500;
 
   // HitBox
-  boxColliderArray[*father] =
-      BoxCollider(pos.x + 10, pos.y + 20, 28, 38);
+  boxColliderArray[*father] = BoxCollider(pos.x + 10, pos.y + 20, 28, 38);
   createDebugBoxCollider(*father, Tyra::MODE_STRETCH);
 
   // proyectile
@@ -83,8 +82,7 @@ void createSunflower(const int id, const Tyra::Vec2 pos) {
   int entityID;
   int animID;
 
-  for (unsigned int i = 0; i < m_animID[AnimIndex::SunFlower].size();
-       i++) {
+  for (unsigned int i = 0; i < m_animID[AnimIndex::SunFlower].size(); i++) {
     entityID = Entities::newID();
     plant[id].id.push_back(entityID);
     animID = m_animID[AnimIndex::SunFlower][i];
@@ -92,7 +90,8 @@ void createSunflower(const int id, const Tyra::Vec2 pos) {
     printf("animID: %d\n", animID);
     newFatherID(&plant[id].father, &entityID);
     animationDataArray[animID].loadAnimation(
-        entityID, animID, Tyra::Vec2(1,1), 5, animationDataArray[animID].maxFrame);
+        entityID, animID, Tyra::Vec2(0.8f, 0.8f), 5,
+        animationDataArray[animID].maxFrame);
     // animationDataArray[animID].activeAnimation(entityID, 5,
     // animationDataArray[animID].maxFrame);
     // if (animationDataArray[animID].name == "anim_blink") {
@@ -126,8 +125,7 @@ void createCherryBomb(const int id, const Tyra::Vec2 pos) {
   int entityID;
   int animID;
 
-  for (unsigned int i = 0;
-       i < m_animID[AnimIndex::CherryBomb].size(); i++) {
+  for (unsigned int i = 0; i < m_animID[AnimIndex::CherryBomb].size(); i++) {
     entityID = Entities::newID();
     plant[id].id.push_back(entityID);
     animID = m_animID[AnimIndex::CherryBomb][i];
@@ -135,7 +133,8 @@ void createCherryBomb(const int id, const Tyra::Vec2 pos) {
     printf("animID: %d\n", animID);
     newFatherID(&plant[id].father, &entityID);
     animationDataArray[animID].loadAnimation(
-        entityID, animID, Tyra::Vec2(1,1), enumAnimationState::explodeCherryBomb);
+        entityID, animID, Tyra::Vec2(1, 1),
+        enumAnimationState::explodeCherryBomb);
   }
   printf("lastframe: %d\n", animationArray[plant[id].id[0]].lastFrame);
 
@@ -151,15 +150,15 @@ void createWallnut(const int id, const Tyra::Vec2 pos) {
   int entityID;
   int animID;
 
-  for (unsigned int i = 0; i < m_animID[AnimIndex::Wallnut].size();
-       i++) {
+  for (unsigned int i = 0; i < m_animID[AnimIndex::Wallnut].size(); i++) {
     entityID = Entities::newID();
     plant[id].id.push_back(entityID);
     animID = m_animID[AnimIndex::Wallnut][i];
     printf("plant ID: %d\n", entityID);
     printf("animID: %d\n", animID);
     newFatherID(&plant[id].father, &entityID);
-    animationDataArray[animID].loadAnimation(entityID, animID, Tyra::Vec2(1,1), 1, 17);
+    animationDataArray[animID].loadAnimation(entityID, animID, Tyra::Vec2(1, 1),
+                                             1, 17);
     // animationDataArray[animID].activeAnimation(entityID, 1, 17);
   }
 
@@ -179,15 +178,15 @@ void createPotatoMine(const int id, const Tyra::Vec2 pos) {
   int entityID;
   int animID;
 
-  for (unsigned int i = 0;
-       i < m_animID[AnimIndex::PotatoMine].size(); i++) {
+  for (unsigned int i = 0; i < m_animID[AnimIndex::PotatoMine].size(); i++) {
     entityID = Entities::newID();
     plant[id].id.push_back(entityID);
     animID = m_animID[AnimIndex::PotatoMine][i];
     printf("plant ID: %d\n", entityID);
     printf("animID: %d\n", animID);
     newFatherID(&plant[id].father, &entityID);
-    animationDataArray[animID].loadAnimation(entityID, animID, Tyra::Vec2(1,1), 1, 1);
+    animationDataArray[animID].loadAnimation(entityID, animID, Tyra::Vec2(1, 1),
+                                             1, 1);
   }
 
   // Life
@@ -211,15 +210,15 @@ void createSnowPea(const int id, const Tyra::Vec2 pos) {
   int entityID;
   int animID;
 
-  for (unsigned int i = 0; i < m_animID[AnimIndex::SnowPea].size();
-       i++) {
+  for (unsigned int i = 0; i < m_animID[AnimIndex::SnowPea].size(); i++) {
     entityID = Entities::newID();
     plant[id].id.push_back(entityID);
     animID = m_animID[AnimIndex::SnowPea][i];
     printf("plant ID: %d\n", entityID);
     printf("animID: %d\n", animID);
     newFatherID(&plant[id].father, &entityID);
-    animationDataArray[animID].loadAnimation(entityID, animID, Tyra::Vec2(1,1), 80, 104);
+    animationDataArray[animID].loadAnimation(entityID, animID, Tyra::Vec2(1, 1),
+                                             80, 104);
     // animationDataArray[animID].activeAnimation(entityID, 80, 104);
   }
 
@@ -246,25 +245,25 @@ void createChomper(const int id, const Tyra::Vec2 pos) {
   int entityID;
   int animID;
 
-  for (unsigned int i = 0; i < m_animID[AnimIndex::Chomper].size();
-       i++) {
+  for (unsigned int i = 0; i < m_animID[AnimIndex::Chomper].size(); i++) {
     entityID = Entities::newID();
     plant[id].id.push_back(entityID);
     animID = m_animID[AnimIndex::Chomper][i];
     // printf("plant ID: %d\n", entityID);
     // printf("animID: %d\n", animID);
     newFatherID(&plant[id].father, &entityID);
-    animationDataArray[animID].loadAnimation(entityID, animID, Tyra::Vec2(1,1), 1, 25);
+    animationDataArray[animID].loadAnimation(entityID, animID, Tyra::Vec2(1, 1),
+                                             1, 25);
     // animationDataArray[animID].activeAnimation(entityID, 1, 25);
   }
 
   // Life
 
   lifeArray.insert(plant[id].father, 300);
-  
+
   timerArray.insert(plant[id].father, PS2Timer());
   timerArray[plant[id].father].maxMS = 0;
-  
+
   damageArray[plant[id].father] = 1600;
 
   // lifeBox
@@ -283,22 +282,22 @@ void createRepeater(const int id, const Tyra::Vec2 pos) {
   int entityID;
   int animID;
 
-  for (unsigned int i = 0;
-       i < m_animID[AnimIndex::Repeater].size(); i++) {
+  for (unsigned int i = 0; i < m_animID[AnimIndex::Repeater].size(); i++) {
     entityID = Entities::newID();
     plant[id].id.push_back(entityID);
     animID = m_animID[AnimIndex::Repeater][i];
     printf("plant ID: %d\n", entityID);
     printf("animID: %d\n", animID);
     newFatherID(&plant[id].father, &entityID);
-    animationDataArray[animID].loadAnimation(entityID, animID, Tyra::Vec2(1,1), 80, 104);
+    animationDataArray[animID].loadAnimation(entityID, animID, Tyra::Vec2(1, 1),
+                                             80, 104);
     // animationDataArray[animID].activeAnimation(entityID, 80, 104);
   }
 
   // Life
 
   lifeArray.insert(plant[id].father, 300);
-  
+
   timerArray.insert(plant[id].father, PS2Timer());
   timerArray[plant[id].father].maxMS = 1000;
   timerArray.insert(plant[id].id[0], PS2Timer());
@@ -319,7 +318,7 @@ void createPlant(Plant_State_enum typePlant, const int row, const int column) {
     plantCreatedInMap[row][column] = true;
 
     int plantPos = row * column + column;
-    printf("new plant pos:%d\n",plantPos);
+    printf("new plant pos:%d\n", plantPos);
 
     plant[plantPos].newPlant(typePlant);
     plant[plantPos].row = row;
@@ -383,9 +382,7 @@ void createPlant(Plant_State_enum typePlant, const int row, const int column) {
   }
 }
 
-void Plant::newPlant(Plant_State_enum newType) {
-  type = newType;
-}
+void Plant::newPlant(Plant_State_enum newType) { type = newType; }
 
 int Plant::attack() {
   if (type == NonePlant) {
@@ -395,7 +392,8 @@ int Plant::attack() {
   std::vector<Zombie>::iterator it;
   if (type == PeaShotter || type == SnowPea || type == Repeater) {
     for (it = zombie.begin(); it != zombie.end(); it++) {
-      if (boxColliderArray[it->id[0]].pointCollision(&pointColliderArray[father])) {
+      if (boxColliderArray[it->id[0]].pointCollision(
+              &pointColliderArray[father])) {
         if (timerArray[father].counterMS < timerArray[father].maxMS) {
           timerArray[father].addMSinCounter();
         } else if (stopAnimation == false) {
@@ -403,7 +401,8 @@ int Plant::attack() {
           if (type == PeaShotter) {
             newProjectile(pointColliderArray[father], 20, enumProyectile::pea);
           } else if (type == SnowPea) {
-            newProjectile(pointColliderArray[father], 20, enumProyectile::snowPea);
+            newProjectile(pointColliderArray[father], 20,
+                          enumProyectile::snowPea);
           } else if (type == Repeater) {
             newProjectile(pointColliderArray[father], 40, enumProyectile::pea);
             timerArray[id[0]].maxMS++;  // is used like a counter
@@ -420,14 +419,14 @@ int Plant::attack() {
     }
   } else if (type == Chomper) {
     for (it = zombie.begin(); it != zombie.end();) {
-      if (timerArray[father].maxMS == 0 && 
-          boxColliderArray[id[0]].collision(&boxColliderArray[it->id[0]]) == 
+      if (timerArray[father].maxMS == 0 &&
+          boxColliderArray[id[0]].collision(&boxColliderArray[it->id[0]]) ==
               true) {
         timerArray[father].maxMS = 42000;
         it->damage(father);
         it->erase();
         it = zombie.erase(it);
-      }else{
+      } else {
         it++;
       }
     }
@@ -448,7 +447,8 @@ void Plant::ability() {
   } else if (type == CherryBomb) {
     if (animationArray[id[0]].currentFrame == animationArray[id[0]].lastFrame) {
       printf("explode\n");
-      newExplosion(posArray[father], Vec2(256 / 1.6f, 256 / 1.6f), 1800, enumProyectile::ExplosionPowie);
+      newExplosion(posArray[father], Vec2(256 / 1.6f, 256 / 1.6f), 1800,
+                   enumProyectile::ExplosionPowie);
       erase();
     }
   } else if (type == Wallnut) {
@@ -459,26 +459,29 @@ void Plant::ability() {
     }
   } else if (type == PotatoMine) {
     printf("potato timer: %lld\n", timerArray[father].counterMS);
-    if (timerArray[father].counterMS < timerArray[father].maxMS){
+    if (timerArray[father].counterMS < timerArray[father].maxMS) {
       timerArray[father].addMSinCounter();
-    }else{
+    } else {
       printf("activar estado de explosion\n");
       std::vector<Zombie>::iterator it = zombie.begin();
-      for(;it < zombie.end(); it++){
-        if(boxColliderArray[father].collision(&boxColliderArray[it->id[0]]) == true){
-          newExplosion(posArray[father], Vec2(64, 64), 1800, enumProyectile::ExplosionSpudow);
-          erase(); // TODO: arreglar la duracion de la palabra, esto hace que la palabra desaparezca de forma rapida
+      for (; it < zombie.end(); it++) {
+        if (boxColliderArray[father].collision(&boxColliderArray[it->id[0]]) ==
+            true) {
+          newExplosion(posArray[father], Vec2(64, 64), 1800,
+                       enumProyectile::ExplosionSpudow);
+          erase();  // TODO: arreglar la duracion de la palabra, esto hace que
+                    // la palabra desaparezca de forma rapida
           break;
         }
       }
     }
-  } else if (type == Chomper){
-    printf("maxMS: %lld\n",timerArray[father].maxMS);
-    if(timerArray[father].counterMS < timerArray[father].maxMS){
-      printf("ms: %lld\n",timerArray[father].counterMS);
+  } else if (type == Chomper) {
+    printf("maxMS: %lld\n", timerArray[father].maxMS);
+    if (timerArray[father].counterMS < timerArray[father].maxMS) {
+      printf("ms: %lld\n", timerArray[father].counterMS);
       timerArray[father].addMSinCounter();
     }
-    if(timerArray[father].counterMS >= timerArray[father].maxMS){
+    if (timerArray[father].counterMS >= timerArray[father].maxMS) {
       timerArray[father].counterMS = 0;
       timerArray[father].maxMS = 0;
     }

@@ -172,8 +172,8 @@ int Zombie::attackPlant() {
       if (animationArray.count(id[j]) == 1) {
         // printf("anim attack id: %d\n",id[j]);
         animationArray[id[j]].setAnimation(normalZombieWalk);
-        animationDataArray[m_animID[AnimIndex::Zombie][j]]
-            .setAnimationState(id[j], normalZombieWalk);
+        animationDataArray[m_animID[AnimIndex::Zombie][j]].setAnimationState(
+            id[j], normalZombieWalk);
       }
     }
   }
@@ -194,7 +194,7 @@ void Zombie::damage(const int entityID) {
 }
 
 bool Zombie::explosionState() {
-  if(animationArray[id[0]].currentFrame == animationArray[id[0]].lastFrame){
+  if (animationArray[id[0]].currentFrame == animationArray[id[0]].lastFrame) {
     // printf("zombie id: %d\n",it2->id[0]);
     // delete zombie
     return erase();
@@ -230,7 +230,7 @@ bool Zombie::erase() {
     zombiesDefeated++;
     createReward(posArray[father]);
     deletePosArray(father);
-    
+
     unsigned int animSize = m_animID[AnimIndex::Zombie].size();
     for (unsigned int i = 0; i < animSize; i++) {
       deletePosArray(id[i]);
@@ -260,10 +260,8 @@ bool Zombie::erase() {
 void createNormalZombie(const int id, Tyra::Vec2 pos) {
   int entityID;
   int animID;
-  printf("zombie anim size: %d\n",
-         m_animID[AnimIndex::Zombie].size());
-  for (unsigned int i = 0; i < m_animID[AnimIndex::Zombie].size();
-       i++) {
+  printf("zombie anim size: %d\n", m_animID[AnimIndex::Zombie].size());
+  for (unsigned int i = 0; i < m_animID[AnimIndex::Zombie].size(); i++) {
     zombie[id].id.push_back(Entities::newID());
     entityID = zombie[id].id[i];
     animID = m_animID[AnimIndex::Zombie][i];
@@ -271,7 +269,7 @@ void createNormalZombie(const int id, Tyra::Vec2 pos) {
     // printf("Zombie ID: %d\n", entityID);
     // printf("animID: %d\n", animID);
     newFatherID(&zombie[id].father, &entityID);
-    animationDataArray[animID].loadAnimation(entityID, animID, Tyra::Vec2(1,1),
+    animationDataArray[animID].loadAnimation(entityID, animID, Tyra::Vec2(1, 1),
                                              normalZombieWalk);
     // animationDataArray[animID].setAnimationState(entityID, normalZombieWalk);
     // animationArray[entityID].draw = true;
@@ -297,10 +295,8 @@ void createNormalZombie(const int id, Tyra::Vec2 pos) {
 void createFlagZombie(const int id, Tyra::Vec2 pos) {
   int entityID;
   int animID;
-  printf("zombie anim size: %d\n",
-         m_animID[AnimIndex::Zombie].size());
-  for (unsigned int i = 0; i < m_animID[AnimIndex::Zombie].size();
-       i++) {
+  printf("zombie anim size: %d\n", m_animID[AnimIndex::Zombie].size());
+  for (unsigned int i = 0; i < m_animID[AnimIndex::Zombie].size(); i++) {
     zombie[id].id.push_back(Entities::newID());
     entityID = zombie[id].id[i];
     animID = m_animID[AnimIndex::Zombie][i];
@@ -308,7 +304,7 @@ void createFlagZombie(const int id, Tyra::Vec2 pos) {
     // printf("Zombie ID: %d\n", entityID);
     // printf("animID: %d\n", animID);
     newFatherID(&zombie[id].father, &entityID);
-    animationDataArray[animID].loadAnimation(entityID, animID, Tyra::Vec2(1,1),
+    animationDataArray[animID].loadAnimation(entityID, animID, Tyra::Vec2(1, 1),
                                              normalZombieWalk);
     // animationDataArray[animID].setAnimationState(entityID, normalZombieWalk);
     // animationArray[entityID].draw = true;
@@ -334,10 +330,8 @@ void createFlagZombie(const int id, Tyra::Vec2 pos) {
 void createConeheadZombie(const int id, Tyra::Vec2 pos) {
   int entityID;
   int animID;
-  printf("zombie anim size: %d\n",
-         m_animID[AnimIndex::Zombie].size());
-  for (unsigned int i = 0; i < m_animID[AnimIndex::Zombie].size();
-       i++) {
+  printf("zombie anim size: %d\n", m_animID[AnimIndex::Zombie].size());
+  for (unsigned int i = 0; i < m_animID[AnimIndex::Zombie].size(); i++) {
     zombie[id].id.push_back(Entities::newID());
     entityID = zombie[id].id[i];
     animID = m_animID[AnimIndex::Zombie][i];
@@ -345,7 +339,7 @@ void createConeheadZombie(const int id, Tyra::Vec2 pos) {
     // printf("Zombie ID: %d\n", entityID);
     // printf("animID: %d\n", animID);
     newFatherID(&zombie[id].father, &entityID);
-    animationDataArray[animID].loadAnimation(entityID, animID, Tyra::Vec2(1,1),
+    animationDataArray[animID].loadAnimation(entityID, animID, Tyra::Vec2(1, 1),
                                              normalZombieWalk);
     // animationDataArray[animID].setAnimationState(entityID, normalZombieWalk);
     // animationArray[entityID].draw = true;
@@ -373,8 +367,8 @@ void createPoleVaulterZombie(const int id, Tyra::Vec2 pos) {
   int animID;
   printf("zombie anim size: %d\n",
          m_animID[AnimIndex::Zombie_PoleVaulter].size());
-  for (unsigned int i = 0;
-       i < m_animID[AnimIndex::Zombie_PoleVaulter].size(); i++) {
+  for (unsigned int i = 0; i < m_animID[AnimIndex::Zombie_PoleVaulter].size();
+       i++) {
     zombie[id].id.push_back(Entities::newID());
     entityID = zombie[id].id[i];
     animID = m_animID[AnimIndex::Zombie_PoleVaulter][i];
@@ -383,7 +377,8 @@ void createPoleVaulterZombie(const int id, Tyra::Vec2 pos) {
     // printf("animID: %d\n", animID);
     newFatherID(&zombie[id].father, &entityID);
     animationDataArray[animID].loadAnimation(
-        entityID, animID, Tyra::Vec2(1,1), enumAnimationState::poleVaulterWalk);
+        entityID, animID, Tyra::Vec2(1, 1),
+        enumAnimationState::poleVaulterWalk);
     // animationDataArray[animID].setAnimationState(entityID, normalZombieWalk);
     // animationArray[entityID].draw = true;
     zombie[id].animation(entityID, animID);
@@ -408,10 +403,8 @@ void createPoleVaulterZombie(const int id, Tyra::Vec2 pos) {
 void createBucketheadZombie(const int id, Tyra::Vec2 pos) {
   int entityID;
   int animID;
-  printf("zombie anim size: %d\n",
-         m_animID[AnimIndex::Zombie].size());
-  for (unsigned int i = 0; i < m_animID[AnimIndex::Zombie].size();
-       i++) {
+  printf("zombie anim size: %d\n", m_animID[AnimIndex::Zombie].size());
+  for (unsigned int i = 0; i < m_animID[AnimIndex::Zombie].size(); i++) {
     zombie[id].id.push_back(Entities::newID());
     entityID = zombie[id].id[i];
     animID = m_animID[AnimIndex::Zombie][i];
@@ -419,8 +412,8 @@ void createBucketheadZombie(const int id, Tyra::Vec2 pos) {
     // printf("Zombie ID: %d\n", entityID);
     // printf("animID: %d\n", animID);
     newFatherID(&zombie[id].father, &entityID);
-    animationDataArray[animID].loadAnimation(entityID, animID, Tyra::Vec2(0.9f,0.9f),
-                                             normalZombieWalk);
+    animationDataArray[animID].loadAnimation(
+        entityID, animID, Tyra::Vec2(0.9f, 0.9f), normalZombieWalk);
     // animationDataArray[animID].setAnimationState(entityID, normalZombieWalk);
     // animationArray[entityID].draw = true;
     zombie[id].animation(entityID, animID);
@@ -448,7 +441,7 @@ void createZombie(Tyra::Vec2 pos, const Zombie_State_enum type) {
   zombie[id].newZombie(type);
   zombie[id].father = Entities::newID();
   posArray.insert(zombie[id].father, pos);
-  
+
   fatherIDArray.insert(zombie[id].father, FatherID());
   printf("zombie father id: %d\n", zombie[id].father);
 
@@ -460,7 +453,7 @@ void createZombie(Tyra::Vec2 pos, const Zombie_State_enum type) {
     createConeheadZombie(id, pos);
   } else if (type == Zombie_State_enum::poleVaulterZombie) {
     createPoleVaulterZombie(id, pos);
-  } else if (type == Zombie_State_enum::bucketHeadZombie){
+  } else if (type == Zombie_State_enum::bucketHeadZombie) {
     createBucketheadZombie(id, pos);
   }
 
@@ -472,34 +465,33 @@ int waves = 1;
 int zombiesLeftForWave = 2;
 
 int timerZombies = 0;
-int maxZombies = 5; // this is used for when you win the level
-// para terminar un nivel se usa el tiempo, hay un tiempo determinado por eso la barra sigue moviendose
-// procedimiento
-// crea zombie
-// espera
-// se termina el tiempo y crea otro zombie
-// espera
-// el tiempo es igual al tiempo que transcurre una oleada
-// se crean varios zombies
-// al crear varios zombies se puede hacer un limite para que no esten todos en una fila
-void createZombieMain(){
+int maxZombies = 5;  // this is used for when you win the level
+// para terminar un nivel se usa el tiempo, hay un tiempo determinado por eso la
+// barra sigue moviendose procedimiento crea zombie espera se termina el tiempo
+// y crea otro zombie espera el tiempo es igual al tiempo que transcurre una
+// oleada se crean varios zombies al crear varios zombies se puede hacer un
+// limite para que no esten todos en una fila
+void createZombieMain() {
   // printf("timerZombies: %d\n",timerZombies);
   if (timerZombies > 0) {
     timerZombies--;
   } else {
     if (zombiescreated < maxZombies) {
       int row = rand() % 5;
-      while (zombieCreateRow[row].zombiesInRow == zombieCreateRow[row].maxZombiesInRow) {
+      while (zombieCreateRow[row].zombiesInRow ==
+             zombieCreateRow[row].maxZombiesInRow) {
         row = rand() % 5;
       }
-      // TODO: hacer que se elimine esto cuando se elimine un zombie o tal vez no
+      // TODO: hacer que se elimine esto cuando se elimine un zombie o tal vez
+      // no
       zombieCreateRow[row].zombiesInRow++;
 
-      createZombie(Vec2(mapCollider[row][8].x, mapCollider[row][8].y), Zombie_State_enum::coneheadZombie);
-      
-      if(maxZombies - zombiescreated != zombiesLeftForWave){
+      createZombie(Vec2(mapCollider[row][8].x, mapCollider[row][8].y),
+                   Zombie_State_enum::coneheadZombie);
+
+      if (maxZombies - zombiescreated != zombiesLeftForWave) {
         timerZombies = 60;
-      }else{
+      } else {
         timerZombies = 30;
       }
       zombiescreated++;

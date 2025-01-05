@@ -16,7 +16,7 @@ int main() {
     game.loop();
     e.info.update();
   }
-  
+
   // SleepThread();
   return 0;
 }

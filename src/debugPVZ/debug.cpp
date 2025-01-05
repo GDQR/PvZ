@@ -75,10 +75,10 @@ void deactiveDebugMode() {
   }
 }
 
-void DebugMode::mainMenu(){
+void DebugMode::mainMenu() {
   crossOption = true;
-  if(debugState == debugMain){
-    if (padTimer <= 0) {  
+  if (debugState == debugMain) {
+    if (padTimer <= 0) {
       if (engine->pad.getPressed().DpadUp || leftJoy->v <= 100) {
         padTimer = 10;
         if (debugOption == 0) {
@@ -94,7 +94,7 @@ void DebugMode::mainMenu(){
           debugOption++;
         }
       }
-    }else{
+    } else {
       padTimer--;
     }
 
@@ -116,7 +116,7 @@ void DebugMode::mainMenu(){
     // animManager.debug();
   } else if (debugState == SpriteDebug) {
     spriteModeMenu();
-  } 
+  }
 }
 
 void DebugMode::drawMainMenu() {
@@ -152,11 +152,11 @@ void DebugMode::drawMainMenu() {
   engine->font.drawText(&myFont, "PRESS O FOR DESACTIVE", 30, 420, 16, black);
 }
 
-void DebugMode::spriteModeMenu(){
+void DebugMode::spriteModeMenu() {
   debugSpriteMode.init();
   debugSpriteMode.menu();
 }
-int DebugMode::drawSpriteModeMenu(){
+int DebugMode::drawSpriteModeMenu() {
   if (spriteArray.first.size() == 0) {
     // ERROR MENU
     engine->font.drawText(&myFont, "Sprites not found", 30, 80, 16, black);
@@ -173,9 +173,9 @@ int startDebugAnimationMode(Tyra::Pad& pad, Tyra::Font& font) {
   //   if (engine->pad.getClicked().Circle) {
   //     debugAnimation = false;
   //   }
-  //   engine->font.drawText(&myFont, "Animations not found", 30, 80, 16, black);
-  //   engine->font.drawText(&myFont, "PRESS O FOR GO BACK", 30, 320, 16, black);
-  //   return 1;
+  //   engine->font.drawText(&myFont, "Animations not found", 30, 80, 16,
+  //   black); engine->font.drawText(&myFont, "PRESS O FOR GO BACK", 30, 320,
+  //   16, black); return 1;
   // }
 
   // if (startAnimationDebug == true) {

@@ -22,7 +22,7 @@ class ArrayKey {
 };
 
 template <class Key, class Type>
-ArrayKey<Key, Type>::ArrayKey(enumComponents typeComponent){
+ArrayKey<Key, Type>::ArrayKey(enumComponents typeComponent) {
   type = typeComponent;
 }
 
@@ -39,7 +39,7 @@ Type& ArrayKey<Key, Type>::read(const Key key) {
 
 template <class Key, class Type>
 void ArrayKey<Key, Type>::insert(const Key key, const Type value) {
-  Entities::addComponent(key,type,first.size());
+  Entities::addComponent(key, type, first.size());
   first.push_back(key);
   second.push_back(value);
 }
@@ -52,7 +52,8 @@ void ArrayKey<Key, Type>::write(const Key key, const Type value) {
     }
   }
 
-  TYRA_ASSERT(!(true == true), "ERROR SEARCHING KEY, KEY NOT FOUNDED:", key,"COMPONENT:",type);
+  TYRA_ASSERT(!(true == true), "ERROR SEARCHING KEY, KEY NOT FOUNDED:", key,
+              "COMPONENT:", type);
 }
 
 template <class Key, class Type>
@@ -78,8 +79,10 @@ Type& ArrayKey<Key, Type>::operator[](const unsigned int& entityID) {
   //   }
   // }
   unsigned int pos = Entities::componentIndex[entityID][type];
-  if(pos >= second.size()){
-    TYRA_ASSERT(!(true == true), "ERROR SEARCHING KEY, KEY NOT FOUNDED:", entityID,"COMPONENT:",type);
+  if (pos >= second.size()) {
+    TYRA_ASSERT(!(true == true),
+                "ERROR SEARCHING KEY, KEY NOT FOUNDED:", entityID,
+                "COMPONENT:", type);
   }
 
   return second[pos];
@@ -100,7 +103,7 @@ void ArrayKey<Key, Type>::erase(const Key& key) {
       index = i;
       first.erase(first.begin() + index);
       second.erase(second.begin() + index);
-      Entities::removeComponent(key,type);
+      Entities::removeComponent(key, type);
       break;
     }
   }

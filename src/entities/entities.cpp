@@ -51,8 +51,8 @@ void Entities::removeComponent(const unsigned int id,
 }
 
 void Entities::clearComponent(const unsigned int componentID) {
-  for(unsigned int i=0;i<componentIndex.size();i++){
-    if(componentIndex[i].count(componentID)){
+  for (unsigned int i = 0; i < componentIndex.size(); i++) {
+    if (componentIndex[i].count(componentID)) {
       componentIndex[i].erase(componentID);
     }
   }

@@ -35,18 +35,22 @@ void activateRender() {
 
 void getNextFrame(int& entitieID) {
   animationArray[entitieID].currentFrame++;
-  if (animationArray[entitieID].currentFrame > animationArray[entitieID].lastFrame) {
-    animationArray[entitieID].currentFrame = animationArray[entitieID].firstFrame;
+  if (animationArray[entitieID].currentFrame >
+      animationArray[entitieID].lastFrame) {
+    animationArray[entitieID].currentFrame =
+        animationArray[entitieID].firstFrame;
   }
   animManager.debugChangeFrame(entitieID,
                                animationArray[entitieID].currentFrame);
 }
 
 void getPrevFrame(int& entitieID) {
-  if (animationArray[entitieID].currentFrame > animationArray[entitieID].firstFrame) {
+  if (animationArray[entitieID].currentFrame >
+      animationArray[entitieID].firstFrame) {
     animationArray[entitieID].currentFrame--;
   } else {
-    animationArray[entitieID].currentFrame = animationArray[entitieID].lastFrame;
+    animationArray[entitieID].currentFrame =
+        animationArray[entitieID].lastFrame;
   }
   animManager.debugChangeFrame(entitieID,
                                animationArray[entitieID].currentFrame);
@@ -124,8 +128,7 @@ void DebugSpriteMode::drawMenu() {
     engine->font.drawText(&myFont, d_name.c_str(), 30, 100, 16,
                           Tyra::Color(0, 0, 0, 128));
 
-    engine->font.drawText(&myFont, "PRESS O FOR GO BACK", 30, 420, 16,
-    black);
+    engine->font.drawText(&myFont, "PRESS O FOR GO BACK", 30, 420, 16, black);
   }
 }
 
@@ -142,7 +145,7 @@ void DebugSpriteMode::firstMenu() {
     isMainMenuActive = false;
     debugSpritesType[debugEntityId]->color.a = debugAlphaColor;
     printf("pase por el anim option\n");
-    printf("debugEntityId: %d\n",debugEntityId);
+    printf("debugEntityId: %d\n", debugEntityId);
     if (animationArray.count(debugEntityId) == 1) {
       animationFound = true;
     }
@@ -172,9 +175,9 @@ void DebugSpriteMode::drawFirstMenu() {
   if (renderer->getTextureRepository().getBySpriteId(
           debugSpritesType[debugEntityId]->id) != nullptr) {
     d_name = "Name Texture: " +
-           renderer->getTextureRepository()
-               .getBySpriteId(debugSpritesType[debugEntityId]->id)
-               ->name;
+             renderer->getTextureRepository()
+                 .getBySpriteId(debugSpritesType[debugEntityId]->id)
+                 ->name;
   } else {
     d_name = "Name Texture: frame without texture";
   }
@@ -183,8 +186,8 @@ void DebugSpriteMode::drawFirstMenu() {
                         black);
 }
 
-int getTexPos(){
-  if(animationFound == false){
+int getTexPos() {
+  if (animationFound == false) {
     return 1;
   }
   d_texPosX = &texPosArray[debugEntityId].x;
@@ -193,8 +196,8 @@ int getTexPos(){
   return 0;
 }
 
-int getAngle(){
-  if(rotateFound == false){
+int getAngle() {
+  if (rotateFound == false) {
     return 1;
   }
   d_angleX = &angleArray[debugEntityId].x;
@@ -202,7 +205,7 @@ int getAngle(){
   return 0;
 }
 
-void DebugSpriteMode::secondMenu(){
+void DebugSpriteMode::secondMenu() {
   drawState = enumDebugSpriteMode::secondMenu;
   getTexPos();
   getAngle();
@@ -219,7 +222,7 @@ void DebugSpriteMode::secondMenu(){
     if (animationFound == false) {
       posArray[debugEntityId].x -= *d_texPosX;
       posArray[debugEntityId].y -= *d_texPosY;
-      if(d_saveFramesCounter == false){
+      if (d_saveFramesCounter == false) {
         d_saveFramesCounter = true;
         animationArray[debugEntityId].framesCounter = d_framesCounter;
       }
@@ -274,8 +277,9 @@ void DebugSpriteMode::secondMenu(){
         angleArray[debugEntityId].y = *d_angleY;
       } else {
         originalSize[debugEntityId].y -= padSpeed;
-        if (animationDataArray[animationArray[debugEntityId].animID].texture.count(
-                animationArray[debugEntityId].currentFrame) == 0) {
+        if (animationDataArray[animationArray[debugEntityId].animID]
+                .texture.count(animationArray[debugEntityId].currentFrame) ==
+            0) {
           printf("no hay textura\n");
         }
         Tyra::Texture* texture =
@@ -295,8 +299,9 @@ void DebugSpriteMode::secondMenu(){
         angleArray[debugEntityId].y = *d_angleY;
       } else {
         originalSize[debugEntityId].y += padSpeed;
-        if (animationDataArray[animationArray[debugEntityId].animID].texture.count(
-                animationArray[debugEntityId].currentFrame) == 0) {
+        if (animationDataArray[animationArray[debugEntityId].animID]
+                .texture.count(animationArray[debugEntityId].currentFrame) ==
+            0) {
           printf("no hay textura\n");
         }
         Tyra::Texture* texture =
@@ -405,8 +410,8 @@ void DebugSpriteMode::secondMenu(){
               Vec2(originalSize[debugEntityId].x / texture->getWidth(),
                    originalSize[debugEntityId].y / texture->getHeight());
           // TODO: FIX this
-          // debugSpritesType[debugEntityId]->size = originalSize[debugEntityId] *
-          // animationDataArray[animationArray[debugEntityId].animID]
+          // debugSpritesType[debugEntityId]->size = originalSize[debugEntityId]
+          // * animationDataArray[animationArray[debugEntityId].animID]
           //     .scale[animationArray[debugEntityId].currentFrame];
         } else if (engine->pad.getPressed().R2 && sizeMode == true) {
           speedDebugOptions();
@@ -419,8 +424,8 @@ void DebugSpriteMode::secondMenu(){
               Vec2(originalSize[debugEntityId].x / texture->getWidth(),
                    originalSize[debugEntityId].y / texture->getHeight());
           // TODO: FIX this
-          // debugSpritesType[debugEntityId]->size = originalSize[debugEntityId] *
-          // animationDataArray[animationArray[debugEntityId].animID]
+          // debugSpritesType[debugEntityId]->size = originalSize[debugEntityId]
+          // * animationDataArray[animationArray[debugEntityId].animID]
           //     .scale[animationArray[debugEntityId].currentFrame];
         } else {
           padPressTimer = 0;
@@ -431,14 +436,14 @@ void DebugSpriteMode::secondMenu(){
   }
 
   if (animationFound == true && playAnimation == true) {
-    if(d_saveFramesCounter == true){
+    if (d_saveFramesCounter == true) {
       d_saveFramesCounter = false;
       d_framesCounter = animationArray[debugEntityId].framesCounter;
     }
     animationArray[debugEntityId].debugAnim(debugEntityId);
   }
 }
-void DebugSpriteMode::drawSecondMenu(){
+void DebugSpriteMode::drawSecondMenu() {
   if (hideText == false && isMainMenuActive == false) {
     if (rotateFound == true) {
       engine->font.drawText(&myFont, "PRESS A FOR ROTATION MODE", 30, 300, 16,
@@ -457,14 +462,16 @@ void DebugSpriteMode::drawSecondMenu(){
       engine->font.drawText(&myFont, angle.c_str(), 30, 140, 16,
                             Tyra::Color(0, 0, 0, 128));
     } else {
-      std::string size = "Size: " + std::to_string(originalSize[debugEntityId].x) +
-                         ", " + std::to_string(originalSize[debugEntityId].y);
+      std::string size =
+          "Size: " + std::to_string(originalSize[debugEntityId].x) + ", " +
+          std::to_string(originalSize[debugEntityId].y);
       engine->font.drawText(&myFont, size.c_str(), 30, 140, 16,
                             Tyra::Color(0, 0, 0, 128));
     }
 
-    std::string texPosition = "Texture Position: " + std::to_string(*d_texPosX) +
-                              ", " + std::to_string(*d_texPosY);
+    std::string texPosition =
+        "Texture Position: " + std::to_string(*d_texPosX) + ", " +
+        std::to_string(*d_texPosY);
     engine->font.drawText(&myFont, texPosition.c_str(), 30, 160, 16,
                           Tyra::Color(0, 0, 0, 128));
 
@@ -480,8 +487,9 @@ void DebugSpriteMode::drawSecondMenu(){
 
       std::string animSize =
           "Total textures: " +
-          std::to_string(animationDataArray[animationArray[debugEntityId].animID]
-                             .texture.first.size());
+          std::to_string(
+              animationDataArray[animationArray[debugEntityId].animID]
+                  .texture.first.size());
 
       engine->font.drawText(&myFont, textKey.c_str(), 30, 120, 16, black);
 

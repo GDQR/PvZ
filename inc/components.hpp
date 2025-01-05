@@ -70,6 +70,10 @@ class BoxCollider {
   float width;
   float height;
 };
+
+struct TriggerBoxCollider {
+ public:
+  std::vector<int> idBoxCol;
 };
 
 enum enumProyectile { pea, snowPea, ExplosionPowie, ExplosionSpudow };
@@ -134,6 +138,7 @@ extern std::unordered_map<int, Tyra::Vec2>
     scaleTexture;  // This multiply the size of the texture animation
 extern std::unordered_map<int, Tyra::Vec2> pointColliderArray;
 extern std::unordered_map<int, BoxCollider> boxColliderArray;
+extern std::unordered_map<int, TriggerBoxCollider> resultBoxCollider;
 extern ArrayKey<int, PS2Timer> timerArray;
 extern std::unordered_map<int, float> speedArray;
 extern std::unordered_map<int, int> damageArray;
@@ -153,3 +158,4 @@ extern ZombieRow zombieCreateRow[5];
 extern bool mapEnable[5];
 extern bool plantCreatedInMap[5][9];
 extern BoxCollider mapCollider[5][9];
+extern Tyra::Vec2 camera;

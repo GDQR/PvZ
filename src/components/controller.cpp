@@ -12,10 +12,11 @@ void Controller::update(const int entityID) {
   if (engine->pad.getClicked().DpadRight) {
     deckCursor[entityID].moveRight();
   }
-  
-  if(debugMode == false){
+
+  if (debugMode == false) {
     cursor[entityID].move();
-    boxColliderArray[cursor[entityID].id].move(cursor[entityID].id, 28/2, 24/2);
+    boxColliderArray[cursor[entityID].id].move(cursor[entityID].id, 28 / 2,
+                                               24 / 2);
   }
 
   if (engine->pad.getClicked().R1 && debugMode == false) {

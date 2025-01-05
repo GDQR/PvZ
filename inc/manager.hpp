@@ -4,8 +4,8 @@
 
 using namespace Tyra;
 
-class Manager{
-  public:
+class Manager {
+ public:
   /**
    * This function will be called once,
    * immediatly after initializing Tyra features

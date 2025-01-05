@@ -57,7 +57,7 @@ int LinearArrayKey<Key, Type>::count(const Key key) {
 }
 
 template <class Key, class Type>
-int LinearArrayKey<Key, Type>::getIndex(const Key key){
+int LinearArrayKey<Key, Type>::getIndex(const Key key) {
   for (unsigned int i = 0; i < first.size(); i++) {
     if (first[i] == key) {
       return i;

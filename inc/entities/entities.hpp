@@ -37,7 +37,7 @@ class Entities {
                               const unsigned int componentID);
   static void clearComponent(const unsigned int componentID);
   static unsigned int getComponent(const unsigned int id,
-                              const unsigned int componentID);
+                                   const unsigned int componentID);
 };
 
 const int maxPlants = 5 * 9;
