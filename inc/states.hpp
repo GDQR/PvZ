@@ -1,8 +1,9 @@
 #pragma once
 
 #include <iostream>
-#include <vector>
 #include <string>
+#include <vector>
+
 
 enum Game_States_enum { level1, level2, lastGameState };
 

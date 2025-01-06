@@ -1,7 +1,8 @@
-#include "entities/entities.hpp"
 #include "entities/zombie.hpp"
 #include "components.hpp"
+#include "entities/entities.hpp"
 #include "systems.hpp"
+
 
 int zombiesCreated = 0;
 

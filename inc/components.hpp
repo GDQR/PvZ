@@ -1,11 +1,12 @@
 #pragma once
-#include <tyra>
-#include <vector>
-#include <map>
 #include "arrayKey.hpp"
 #include "debugPVZ/debug.hpp"
-#include "renderSprite/textures.hpp"
 #include "renderSprite/animations.hpp"
+#include "renderSprite/textures.hpp"
+#include <map>
+#include <tyra>
+#include <vector>
+
 
 // enum enumCommands {
 //   level1,

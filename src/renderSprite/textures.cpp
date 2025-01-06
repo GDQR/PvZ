@@ -1,6 +1,7 @@
-#include "components.hpp"
 #include "renderSprite/textures.hpp"
+#include "components.hpp"
 #include "entities/plants.hpp"
+
 // #include "jpgResize.hpp"
 
 using Tyra::FileUtils;

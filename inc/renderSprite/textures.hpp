@@ -1,7 +1,8 @@
 #pragma once
+#include <string>
 #include <tyra>
 #include <vector>
-#include <string>
+
 
 using Tyra::Sprite;
 using Tyra::Vec2;

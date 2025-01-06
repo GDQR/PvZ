@@ -1,10 +1,11 @@
-#include "font/font.hpp"
 #include "debugPVZ/debug.hpp"
+#include "components.hpp"
 #include "debugPVZ/menuDebugAnimation.hpp"
 #include "debugPVZ/menuDebugSprite.hpp"
-#include "components.hpp"
+#include "font/font.hpp"
 #include <iostream>
 #include <iterator>
+
 
 unsigned int debugState = debugMain;
 unsigned int debugOption = 0;

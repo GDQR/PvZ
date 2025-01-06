@@ -1,8 +1,9 @@
 // File for all plants data
-#include "entities/entities.hpp"
 #include "entities/plants.hpp"
 #include "components.hpp"
+#include "entities/entities.hpp"
 #include "systems.hpp"
+
 
 int plantCost[enumMaxPlants];
 int plantRechargeTime[enumMaxRecharge];

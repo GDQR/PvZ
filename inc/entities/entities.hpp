@@ -1,11 +1,11 @@
 #pragma once
 
-#include <vector>
-#include <unordered_map>
 #include "plants.hpp"
+#include "reward.hpp"
 #include "sun.hpp"
 #include "zombie.hpp"
-#include "reward.hpp"
+#include <unordered_map>
+#include <vector>
 
 enum enumComponents {
   pos,

@@ -1,6 +1,7 @@
+#include "components.hpp"
 #include "font/font.hpp"
 #include "manager.hpp"
-#include "components.hpp"
+
 
 int main() {
   Tyra::Engine e;

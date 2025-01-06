@@ -1,6 +1,7 @@
 #pragma once
-#include <tyra>
 #include <string>
+#include <tyra>
+
 // this is usefull for the future, DONT DELETE
 class Font {
  public:

@@ -1,6 +1,7 @@
 #pragma once
-#include <tyra>
 #include "components.hpp"
+#include <tyra>
+
 
 class PlayerControl {
  public:

@@ -1,7 +1,8 @@
-#include "states.hpp"
-#include "scenes.hpp"
 #include "scenes/level-2.hpp"
 #include "components.hpp"
+#include "scenes.hpp"
+#include "states.hpp"
+
 
 void Level2::init() { printf("estoy en nivel 2\n"); }
 

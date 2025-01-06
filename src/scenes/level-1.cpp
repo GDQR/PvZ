@@ -1,16 +1,15 @@
-#include "font/font.hpp"
-#include "renderSprite/textures.hpp"
-#include "states.hpp"
-#include "scenes.hpp"
 #include "scenes/level-1.hpp"
-
-#include "entities/entities.hpp"
-
-#include "systems.hpp"
 #include "components.hpp"
 #include "debugPVZ/debug.hpp"
 #include "debugPVZ/menuDebugCommands.hpp"
+#include "entities/entities.hpp"
+#include "font/font.hpp"
+#include "renderSprite/textures.hpp"
+#include "scenes.hpp"
+#include "states.hpp"
+#include "systems.hpp"
 #include <stdlib.h>
+
 using namespace Tyra;
 
 #include <iostream>

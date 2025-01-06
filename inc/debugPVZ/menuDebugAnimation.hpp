@@ -1,6 +1,7 @@
 #pragma once
-#include <tyra>
 #include "debugPVZ/menuDebugCommands.hpp"
+#include <tyra>
+
 
 extern bool startAnimationDebug;
 

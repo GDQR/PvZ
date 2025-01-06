@@ -1,8 +1,9 @@
 #pragma once
-#include <iostream>
-#include <vector>
-#include <tyra>
 #include "entities/entities.hpp"
+#include <iostream>
+#include <tyra>
+#include <vector>
+
 
 template <class Key, class Type>
 class ArrayKey {

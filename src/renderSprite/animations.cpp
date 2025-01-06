@@ -1,9 +1,10 @@
 #include "renderSprite/animations.hpp"
-#include "renderSprite/textures.hpp"
-#include "entities/entities.hpp"
 #include "components.hpp"
+#include "entities/entities.hpp"
+#include "renderSprite/textures.hpp"
 #include "systems.hpp"
 #include <iostream>
+
 
 std::string animString[AnimIndex::enumMax];
 

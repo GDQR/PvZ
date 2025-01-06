@@ -1,11 +1,19 @@
 #pragma once
 #include <tyra>
 #include <vector>
-enum Zombie_State_enum { NoneZombie, normalZombie, flagZombie, coneheadZombie, poleVaulterZombie, bucketHeadZombie };
+enum Zombie_State_enum {
+  NoneZombie,
+  normalZombie,
+  flagZombie,
+  coneheadZombie,
+  poleVaulterZombie,
+  bucketHeadZombie
+};
 
 class Zombie {
  private:
   void createSpace();
+
  public:
   Zombie_State_enum type = NoneZombie;
 

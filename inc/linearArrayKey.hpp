@@ -1,7 +1,8 @@
 #pragma once
 #include <iostream>
-#include <vector>
 #include <tyra>
+#include <vector>
+
 
 template <class Key, class Type>
 class LinearArrayKey {

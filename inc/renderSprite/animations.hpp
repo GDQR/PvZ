@@ -1,9 +1,10 @@
 #pragma once
-#include <vector>
-#include <string>
-#include <unordered_map>
-#include <tyra>
 #include "linearArrayKey.hpp"
+#include <string>
+#include <tyra>
+#include <unordered_map>
+#include <vector>
+
 
 enum class enumDraw { draw = 0, noDraw = -1 };
 

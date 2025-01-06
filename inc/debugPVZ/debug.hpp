@@ -1,9 +1,16 @@
 #pragma once
-#include <tyra>
-#include <stdio.h>
 #include "../renderSprite/textures.hpp"
+#include <stdio.h>
+#include <tyra>
 
-enum debugModes {AnimationDebug, SpriteDebug, testDebug, debugModesSize, debugMain};
+
+enum debugModes {
+  AnimationDebug,
+  SpriteDebug,
+  testDebug,
+  debugModesSize,
+  debugMain
+};
 
 extern unsigned int debugState;
 extern unsigned int debugOption;
@@ -20,7 +27,7 @@ extern float d_texPosYNull;
 extern float* d_texPosY;
 extern float* d_scale;
 extern float d_angleXNull;
-extern float* d_angleX ;
+extern float* d_angleX;
 extern float d_angleYNull;
 extern float* d_angleY;
 extern bool d_hasScale;
@@ -45,11 +52,11 @@ extern Tyra::Texture* debugPointTexture;
 
 class DebugMode {
  public:
- bool startDebug = true;
- void mainMenu();
- void spriteModeMenu();
- void drawMainMenu();
- int drawSpriteModeMenu();
+  bool startDebug = true;
+  void mainMenu();
+  void spriteModeMenu();
+  void drawMainMenu();
+  int drawSpriteModeMenu();
 };
 
 extern DebugMode debugModeClass;
