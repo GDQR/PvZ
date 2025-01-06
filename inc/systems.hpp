@@ -75,6 +75,11 @@ class BoxCollisionManager {
   }
 };
 
+class CameraManager {
+ public:
+  void update();
+};
+
 extern PlayerControl playerControl;
 extern BoxCollisionManager boxColliderManager;
 extern AnimationManager animManager;

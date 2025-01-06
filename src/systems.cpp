@@ -481,6 +481,10 @@ void BoxCollisionManager::explosionZombieCollision() {
 //   }
 // }
 
+void CameraManager::update(){
+  
+}
+
 void createSprite(int id, Tyra::SpriteMode mode, Tyra::Vec2 position,
                   Tyra::Vec2 size) {
   spriteArray.insert(id, Sprite());
