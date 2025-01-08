@@ -44,7 +44,6 @@ std::vector<LawnMower> lawnMower;
 int player;
 std::map<int, Cursor> cursor;
 std::map<int, DeckCursor> deckCursor;
-Tyra::Vec2 camera(0.0F, 0.0F);
 
 int zombiescreated;
 ZombieRow zombieCreateRow[5];

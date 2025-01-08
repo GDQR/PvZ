@@ -1,6 +1,7 @@
 #include <entities/entities.hpp>
 #include <stdio.h>
 
+Tyra::Vec2 cameraPos(0.0f, 0.0f);
 bool rewardExist = false;
 Reward reward;
 

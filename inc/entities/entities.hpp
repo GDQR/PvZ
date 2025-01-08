@@ -48,3 +48,4 @@ extern std::vector<Zombie> zombie;
 extern int player;
 extern Reward reward;
 extern bool rewardExist;
+extern Tyra::Vec2 cameraPos;

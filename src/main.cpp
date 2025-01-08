@@ -2,7 +2,6 @@
 #include "font/font.hpp"
 #include "manager.hpp"
 
-
 int main() {
   Tyra::Engine e;
   engine = &e;

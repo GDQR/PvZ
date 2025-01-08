@@ -15,6 +15,7 @@ ZombiesManager zombiesManager;
 PlantsManager plantsManager;
 RewardManager rewardManager;
 CardManager cardManager;
+CameraManager cameraManager;
 
 void PlayerControl::update() {
   std::map<int, Controller>::iterator it;
@@ -200,6 +201,9 @@ void RendererSprites::update() {
   resetFinalPos();
   updateChildPos();
   updateTexture();
+  // if(true == true){
+  //   cameraManager.update();
+  // }
   updateRender();
 }
 
@@ -482,7 +486,16 @@ void BoxCollisionManager::explosionZombieCollision() {
 //   }
 // }
 
-void CameraManager::update() {}
+void CameraManager::update() {
+  if(cameraPos.x > -150){
+
+    cameraPos.x--;
+    
+  }
+  for(auto &it: finalPosArray.second){
+    it += cameraPos;
+  }
+}
 
 void createSprite(int id, Tyra::SpriteMode mode, Tyra::Vec2 position,
                   Tyra::Vec2 size) {

@@ -2,7 +2,6 @@
 #include "scenes.hpp"
 #include "states.hpp"
 
-
 int actualState;
 States states;
 Scene scene;

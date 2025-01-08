@@ -159,4 +159,3 @@ extern ZombieRow zombieCreateRow[5];
 extern bool mapEnable[5];
 extern bool plantCreatedInMap[5][9];
 extern BoxCollider mapCollider[5][9];
-extern Tyra::Vec2 camera;

@@ -90,6 +90,7 @@ extern ZombiesManager zombiesManager;
 extern PlantsManager plantsManager;
 extern RewardManager rewardManager;
 extern CardManager cardManager;
+extern CameraManager cameraManager;
 
 void newPlayer(int* player);
 void newProjectile(Tyra::Vec2 position, const int damage,

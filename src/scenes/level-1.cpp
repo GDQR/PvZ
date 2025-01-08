@@ -20,6 +20,7 @@ int zombieDebug;
 int flagMeterTimer = 0;
 int emptyFlagMeter;
 int fullFlagMeter;
+int seedChooser;
 
 int map[5][9];
 int xMap = 9;
@@ -39,6 +40,7 @@ void Level1::init() {
   zombieDebug = Entities::newID();
   emptyFlagMeter = Entities::newID();
   fullFlagMeter = Entities::newID();
+  seedChooser = Entities::newID();
   // load background
   createSprite(background, MODE_STRETCH, Vec2(-56, -1),
                Vec2(780, 524));  // Vec2(467, 200*2.9f)
@@ -58,6 +60,9 @@ void Level1::init() {
   createSprite(emptyFlagMeter, MODE_REPEAT, Vec2(255, 410), Vec2(158, 24));
   spriteArray[emptyFlagMeter].scale = 1;
   createTexture(emptyFlagMeter, "Images/FlagMeter.png");
+
+  // createSprite(seedChooser, MODE_REPEAT, Vec2(0, 0), Vec2(158, 24));
+  // createTexture(seedChooser, "Images/SeedChooser_Background.png");
 
   // createSprite(emptyFlagMeter, MODE_STRETCH, Vec2(255, 410),
   //              Vec2(512 / 1.5f, 128 / 1.5f));
@@ -110,40 +115,43 @@ void Level1::init() {
 }
 
 void Level1::update() {
-  boxColliderManager.update();
-  // boxColliderManager.testUpdate();
-  playerControl.update();
+  if (true == true) {
+  } else {
+    boxColliderManager.update();
+    // boxColliderManager.testUpdate();
+    playerControl.update();
 
-  cardManager.update();
+    cardManager.update();
 
-  if (stopAnimation == false) {
-    zombiesManager.update();
-    animManager.update();
-  }
-  if (debugMode == false) {
-    sunManager.updateNaturalSun();
-  }
+    if (stopAnimation == false) {
+      zombiesManager.update();
+      animManager.update();
+    }
+    if (debugMode == false) {
+      sunManager.updateNaturalSun();
+    }
 
-  if (stopAnimation == false) {
-    // sunManager.createByTime();
-    // sunManager.erase(cursor.id);
-  }
+    if (stopAnimation == false) {
+      // sunManager.createByTime();
+      // sunManager.erase(cursor.id);
+    }
 
-  // printf("FPS: %d\n",engine->info.getFps()) ;
-  // printf("ram: %f\n",engine->info.getAvailableRAM());
-  // printf("texture free space:
-  // %f\n",engine->renderer.core.gs.vram.getFreeSpaceInMB());
+    // printf("FPS: %d\n",engine->info.getFps()) ;
+    // printf("ram: %f\n",engine->info.getAvailableRAM());
+    // printf("texture free space:
+    // %f\n",engine->renderer.core.gs.vram.getFreeSpaceInMB());
 
-  // shoot zombies
-  plantsManager.update();
+    // shoot zombies
+    plantsManager.update();
 
-  createZombieMain();
+    createZombieMain();
 
-  rewardManager.update();
+    rewardManager.update();
 
-  if (spriteArray[emptyFlagMeter].size.x /*flagMeterTimer*/ > 0) {
-    // printf("size flag: %f\n",spriteArray[emptyFlagMeter].size.x);
-    spriteArray[emptyFlagMeter].size.x--;
+    if (spriteArray[emptyFlagMeter].size.x /*flagMeterTimer*/ > 0) {
+      // printf("size flag: %f\n",spriteArray[emptyFlagMeter].size.x);
+      spriteArray[emptyFlagMeter].size.x--;
+    }
   }
 
   renderer->beginFrame();
