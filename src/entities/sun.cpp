@@ -86,6 +86,7 @@ bool Sun::erase(const int cursorID) {
     }
 
     deleteFatherID(&father);
+    Entities::deleteID(father);
     sunsCreated--;
     return true;
   }

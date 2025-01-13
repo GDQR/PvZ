@@ -45,9 +45,9 @@ void eraseRewardLevel1() {
   }
   deleteSprite(reward.father);
   deleteFatherID(&reward.father);
-  Entities::deleteID(reward.father);
   boxColliderArray.erase(reward.father);
   deleteDebugBoxCollider(reward.father);
+  Entities::deleteID(reward.father);
   rewardExist = false;
 }
 

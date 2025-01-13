@@ -504,10 +504,10 @@ void Plant::erase() {
     }
 
     deleteSprite(*it);
-
     Entities::deleteID(*it);
-    id.erase(it);
+    it++;
   }
+  id.clear();
   if (type == PeaShotter) {
     timerArray.erase(father);
     deleteDebugPoint(father);

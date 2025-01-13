@@ -3,7 +3,7 @@
 #include <iostream>
 #include <tyra>
 #include <vector>
-
+#include <unordered_map>
 
 template <class Key, class Type>
 class ArrayKey {
@@ -12,14 +12,12 @@ class ArrayKey {
   enumComponents type;
   std::vector<Key> first;
   std::vector<Type> second;
-  Type& read(const Key key);
+  std::unordered_map<unsigned int, Key> fastKey;
   void insert(const Key key, const Type value);
-  void write(const Key key, const Type value);
-  int count(const unsigned int& entityID);
-  int countSafe(const Key key);
+  int count(const Key key);
   void clear();
   void erase(const Key& key);
-  Type& operator[](const unsigned int& entityID);
+  Type& operator[](const Key key);
 };
 
 template <class Key, class Type>
@@ -28,39 +26,16 @@ ArrayKey<Key, Type>::ArrayKey(enumComponents typeComponent) {
 }
 
 template <class Key, class Type>
-Type& ArrayKey<Key, Type>::read(const Key key) {
-  for (unsigned int i = 0; i < first.size(); i++) {
-    if (first[i] == key) {
-      return second[i];
-    }
-  }
-  TYRA_ASSERT(!(true == true), "ERROR SEARCHING KEY, KEY NOT FOUNDED:", key);
-  return *second.end();
-}
-
-template <class Key, class Type>
 void ArrayKey<Key, Type>::insert(const Key key, const Type value) {
-  Entities::addComponent(key, type, first.size());
+  fastKey[key] = first.size();
   first.push_back(key);
   second.push_back(value);
 }
 
 template <class Key, class Type>
-void ArrayKey<Key, Type>::write(const Key key, const Type value) {
-  for (unsigned int i = 0; i < first.size(); i++) {
-    if (first[i] == key) {
-      second[i] = value;
-    }
-  }
-
-  TYRA_ASSERT(!(true == true), "ERROR SEARCHING KEY, KEY NOT FOUNDED:", key,
-              "COMPONENT:", type);
-}
-
-template <class Key, class Type>
-int ArrayKey<Key, Type>::countSafe(const Key key) {
-  for (unsigned int i = 0; i < first.size(); i++) {
-    if (first[i] == key) {
+int ArrayKey<Key, Type>::count(const Key key) {
+  for (auto& id : first) {
+    if (id == key) {
       return 1;
     }
   }
@@ -68,48 +43,36 @@ int ArrayKey<Key, Type>::countSafe(const Key key) {
 }
 
 template <class Key, class Type>
-int ArrayKey<Key, Type>::count(const unsigned int& entityID) {
-  return Entities::componentIndex[entityID].count(type);
-}
-
-template <class Key, class Type>
-Type& ArrayKey<Key, Type>::operator[](const unsigned int& entityID) {
-  // for (unsigned int i = 0; i < first.size(); i++) {
-  //   if (first[i] == key) {
-  //     return second[i];
-  //   }
-  // }
-  unsigned int pos = Entities::componentIndex[entityID][type];
+Type& ArrayKey<Key, Type>::operator[](const Key entityID) {
+  unsigned int pos = fastKey[entityID];
   if (pos >= second.size()) {
     TYRA_ASSERT(!(true == true),
                 "ERROR SEARCHING KEY, KEY NOT FOUNDED:", entityID,
                 "COMPONENT:", type);
   }
-
   return second[pos];
 }
 
 template <class Key, class Type>
 void ArrayKey<Key, Type>::clear() {
-  Entities::clearComponent(type);
   first.clear();
   second.clear();
+  fastKey.clear();
 }
 
 template <class Key, class Type>
 void ArrayKey<Key, Type>::erase(const Key& key) {
-  unsigned int index = first.size();
-  for (unsigned int i = 0; i < first.size(); i++) {
+  unsigned int size = first.size();
+  for (unsigned int i = 0; i < size; i++) {
     if (first[i] == key) {
-      index = i;
-      first.erase(first.begin() + index);
-      second.erase(second.begin() + index);
-      Entities::removeComponent(key, type);
+      first.erase(first.begin() + i);
+      second.erase(second.begin() + i);
+      fastKey.erase(key);
+      size--;
+      for(unsigned int j = i; j< size; j++){
+        fastKey[first[j]] = j;
+      }
       break;
     }
-  }
-
-  for (unsigned int i = index; i < first.size(); i++) {
-    Entities::componentIndex[first[i]][type]--;
   }
 }

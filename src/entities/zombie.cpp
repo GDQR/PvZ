@@ -233,6 +233,11 @@ bool Zombie::erase() {
     deletePosArray(father);
 
     unsigned int animSize = m_animID[AnimIndex::Zombie].size();
+
+    lifeArray.erase(id[0]);
+    damageArray.erase(id[0]);
+    boxColliderArray.erase(id[0]);
+    deleteDebugBoxCollider(id[0]);
     for (unsigned int i = 0; i < animSize; i++) {
       deletePosArray(id[i]);
       deleteFinalPosArray(id[i]);
@@ -248,10 +253,6 @@ bool Zombie::erase() {
     }
     deleteFatherID(&father);
     Entities::deleteID(father);
-    lifeArray.erase(id[0]);
-    damageArray.erase(id[0]);
-    boxColliderArray.erase(id[0]);
-    deleteDebugBoxCollider(id[0]);
     zombiesCreated--;
     return true;
   }

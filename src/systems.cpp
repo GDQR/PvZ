@@ -187,7 +187,7 @@ void RendererSprites::updateTexture() {
   }
 }
 void RendererSprites::updateRender() {
-  for (auto it : spriteRenderIDArray.first) {
+  for (auto &it : spriteRenderIDArray.first) {
     spriteArray[it].position = finalPosArray[it];
     if (angleArray.count(it) == 1) {
       renderer->renderer2D.renderRotate(spriteArray[it], angleArray[it]);
@@ -369,6 +369,7 @@ int BoxCollisionManager::projectileZombieCollision() {
     for (it = projectile.begin(); it != projectile.end(); it++) {
       if (eraseProjectileID[i] == it->id) {
         // delete projectile
+        printf("deleting projectile\n");
         it->erase();
         it = projectile.erase(it);
         projectilesCreated--;
@@ -518,16 +519,11 @@ void deleteSprite(const int entityID) {
     textureID->removeLinkById(spriteArray[entityID].id);
   }
 
-  if (spriteArray.count(entityID) == 1) {
-    spriteArray.erase(entityID);
-  }
+  spriteArray.erase(entityID);
 
-  if (spriteRenderIDArray.count(entityID) == 1) {
-    spriteRenderIDArray.erase(entityID);
-  }
-  if (angleArray.count(entityID) == 1) {
-    angleArray.erase(entityID);
-  }
+  spriteRenderIDArray.erase(entityID);
+
+  angleArray.erase(entityID);
 }
 void deleteAnimation(const int entityID) { animationArray.erase(entityID); }
 
