@@ -338,32 +338,31 @@ void BoxCollisionManager::mapCollision() {
 }
 
 int BoxCollisionManager::projectileZombieCollision() {
-  std::vector<Proyectile>::iterator it = projectile.begin();
   std::vector<Zombie>::iterator it2;
 
   std::vector<int> eraseProjectileID;
   // printf("1 proj end: %d\n",projectile.end());
-  auto size = projectile.end();
   auto zombieSize = zombie.end();
-  while (it != size) {
+  for(auto &it: projectile){
     for (it2 = zombie.begin(); it2 != zombieSize; it2++) {
-      if (boxColliderArray[it->id].collision(&boxColliderArray[it2->id[0]]) ==
+      if (boxColliderArray[it.id].collision(&boxColliderArray[it2->id[0]]) ==
           true) {
-        eraseProjectileID.push_back(it->id);
-        it2->damage(it->id);
+        eraseProjectileID.push_back(it.id);
+        it2->damage(it.id);
         // printf("zombie id: %d\n",it2->id[0]);
         // delete zombie
         if (it2->erase() == true) {
           zombie.erase(it2);
           zombieSize = zombie.end();
-        } else if (it->type == enumProyectile::snowPea) {
+        } else if (it.type == enumProyectile::snowPea) {
           speedArray[it2->id[0]] = 0.5f;
         }
         break;
       }
     }
-    it++;
   }
+  
+  std::vector<Proyectile>::iterator it = projectile.begin();
   unsigned int eraseSize = eraseProjectileID.size();
   for (unsigned i = 0; i < eraseSize; i++) {
     for (it = projectile.begin(); it != projectile.end(); it++) {
