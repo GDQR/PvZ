@@ -7,12 +7,11 @@ States states;
 Scene scene;
 
 void Manager::init() {
-  for (int i = level1; i < lastGameState; i++) {
-    states.id.push_back(i);
+  for (int i = 0; i < lastGameState; i++) {
     states.isActive.push_back(false);
   }
 
-  actualState = states.id[0];
+  actualState = main;
   scene.setScene((Game_States_enum)actualState);
 }
 

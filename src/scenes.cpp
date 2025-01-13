@@ -3,6 +3,9 @@
 void Scene::init() {
   states.isActive[state] = true;
   switch (state) {
+    case main:
+      SelectorScreen::init();
+      break;
     case level1:
       Level1::init();
       break;
@@ -16,6 +19,9 @@ void Scene::init() {
 
 void Scene::update() {
   switch (state) {
+    case main:
+      SelectorScreen::update();
+      break;
     case level1:
       Level1::update();
       break;

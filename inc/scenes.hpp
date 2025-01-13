@@ -2,6 +2,12 @@
 #include "states.hpp"
 #include <tyra>
 
+class SelectorScreen {
+ public:
+  static void init();
+  static void update();
+};
+
 class Level1 {
  public:
   static void init();
