@@ -5,10 +5,13 @@
 
 Tyra::Engine* engine;
 Tyra::Renderer* renderer;
+Tyra::Renderer2D* renderer2D;
+Tyra::Pad* pad;
 const Tyra::PadJoy* leftJoy;
 Tyra::TextureRepository* texRepo;
 
 // sparse array
+std::vector<FrameCounter> frameCounterArray;
 std::unordered_map<int, std::vector<int>> m_animID;
 ArrayKey<int, Animation> animationArray(enumComponents::animation);
 std::unordered_map<int, AnimationData> animationDataArray;
@@ -24,26 +27,32 @@ ArrayKey<int, Tyra::Vec2> angleArray(enumComponents::angle);
 std::unordered_map<int, Tyra::Vec2> originalSize;
 std::unordered_map<int, Tyra::Vec2> scaleTexture;
 std::unordered_map<int, Tyra::Vec2> pointColliderArray;
-std::unordered_map<int, BoxCollider> boxColliderArray;
+std::unordered_map<int, int> boxColliderArrayID;
+std::unordered_map<int, std::vector<BoxCollider>> boxColliderArray;
+std::vector<BoxCollider> boxColliderZombie;
+std::vector<BoxCollider> boxColliderProyectile;
+std::vector<BoxCollider> boxColliderExplosion;
+std::vector<BoxCollider> boxColliderLawnmower;
 std::unordered_map<int, TriggerBoxCollider> resultBoxCollider;
 ArrayKey<int, PS2Timer> timerArray(enumComponents::timer);
 std::unordered_map<int, float> speedArray;
 std::unordered_map<int, int> damageArray;
 ArrayKey<int, int> lifeArray(enumComponents::life);
 std::map<int, Tyra::Vec2> pivot;
-std::map<int, Controller> controller;
+std::vector<Controller> controller;
 
 Plant plant[maxPlants];
 std::vector<Zombie> zombie;
+std::vector<Zombie> deadZombie;
+std::vector<Zombie> damagedZombie;
 std::vector<Sun> sun;
 std::vector<NaturalSun> naturalSun;
 std::vector<Proyectile> projectile;
 std::vector<Explosion> explosion;
 std::vector<Card> cards;
 std::vector<LawnMower> lawnMower;
-int player;
-std::map<int, Cursor> cursor;
-std::map<int, DeckCursor> deckCursor;
+std::vector<Cursor> cursor;
+std::vector<DeckCursor> deckCursor;
 
 int zombiescreated;
 ZombieRow zombieCreateRow[5];
@@ -51,6 +60,7 @@ bool mapEnable[5];
 bool plantCreatedInMap[5][9];
 BoxCollider mapCollider[5][9];
 
+Tyra::Sprite d_SpriteBoxCollider;
 std::map<int, Tyra::Sprite> dm_SpritePointCollider;
 std::map<int, Tyra::Sprite> dm_SpriteBoxCollider;
 std::map<int, Tyra::Sprite> dm_SpriteNormal;

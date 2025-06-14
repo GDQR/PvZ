@@ -9,6 +9,7 @@
 std::string animString[AnimIndex::enumMax];
 
 void loadAnimString() {
+  angleFrame.push_back(Tyra::Vec2(0,0));
   animString[AnimIndex::Blover] = "Blover";
   animString[AnimIndex::Cabbagepult] = "Cabbagepult";
   animString[AnimIndex::Cactus] = "Cactus";
@@ -203,21 +204,37 @@ void AnimationData::loadAnimation(const int entityID, const int animID,
 void AnimationData::loadAnimation(const int entityID, const int animID,
                                   const Tyra::Vec2 scaleTextures,
                                   const int firstFrame, const int lastFrame) {
-  bool rotateSprite = false;
-
-  for (unsigned int j = 1; j < maxFrame; j++) {
-    if (angle.count(j) == true) {
-      rotateSprite = true;
-      createSpriteRotate(entityID, Tyra::MODE_STRETCH, Vec2(0, 0),
-                         Vec2(128 / 1.6f, 128 / 1.6f), Vec2(0.0f, 0.0f));
-      break;
+  bool hasRotation = false;                                  
+  unsigned int dataSize;
+  for(unsigned int i=1;i<=maxFrame;i++){
+    std::vector<AnimationProperty>& animProp = property[i];
+    dataSize = animProp.size();
+    for(unsigned int j=0;j<dataSize;j++){
+      // printf("test animID:%d i:%d j:%d type:%d\n",animID,i,j,animProp[j].type);
+      if(animProp[j].type == ANIM_ROTATION){
+        i=maxFrame;
+        hasRotation = true;
+        break;
+      }
     }
   }
 
-  if (rotateSprite == false) {
+  if(hasRotation == true){
+    // printf("crear rotate\n");
+    createSpriteRotate(entityID, Tyra::MODE_STRETCH, Vec2(0, 0),
+                         Vec2(128 / 1.6f, 128 / 1.6f), Vec2(0.0f, 0.0f));
+  }else {
     createSprite(entityID, Tyra::MODE_STRETCH, Vec2(0, 0),
                  Vec2(128 / 1.6f, 128 / 1.6f));
   }
+
+  FrameCounter frameCounter;
+  frameCounter.entityID = entityID;
+  frameCounter.currentFrame = firstFrame;
+  frameCounter.firstFrame = firstFrame;
+  frameCounter.lastFrame = lastFrame;
+  frameCounter.animIndex = animID;
+  frameCounterArray.push_back(frameCounter);
 
   animationArray.insert(entityID, Animation(animID));
 
@@ -229,92 +246,106 @@ void AnimationData::loadAnimation(const int entityID, const int animID,
 
   scaleTexture[entityID] = scaleTextures;
 
-  activeAnimation(entityID, firstFrame, lastFrame);
+  activeAnimation(entityID, firstFrame, lastFrame,animID);
 
   // printf("termine\n\n");
 }
 
+std::vector<int> textureFrame;
+std::vector<Tyra::Vec2> positionFrame;
+std::vector<Tyra::Vec2> scaleFrame;
+std::vector<Tyra::Vec2> angleFrame;
+std::vector<float> alphaFrame;
+std::vector<int> drawFrame;
+
 int AnimationData::activeAnimation(const int entityID,
                                    const unsigned int firstFrame,
-                                   const unsigned int lastFrame) {
-  int index = 0;
-
-  for (unsigned int i = 0; i < draw.first.size(); i++) {
-    if (draw.first[i] <= firstFrame) {
-      index = i;
+                                   const unsigned int lastFrame,
+                                   int animID) {
+  bool drawPropertyFounded = false;
+  bool scalePropertyFounded = false;
+  bool posPropertyFounded = false;
+  bool alphaPropertyFounded = false;
+  bool texturePropertyFounded = false;
+  bool anglePropertyFounded = false;
+  int scaleIndex = -1;
+  int textureIndex = -1;
+  int posIndex = -1;
+  unsigned int dataSize;
+  
+  // printf("textureFrame size:%d\n",textureFrame.size());
+  // printf("textureFrame[0] size:%d\n",textureFrame[0].size());
+  
+  int counter = firstFrame;
+  while ((texturePropertyFounded == false || posPropertyFounded == false) && counter > 0){
+    std::vector<AnimationProperty>& animProp = property[counter];
+    dataSize = animProp.size();
+    //  printf("start entity: %d, animID: %d, Frame: %d\n",entityID,animID,counter);
+    for(unsigned int i=0; i<dataSize;i++){
+      if(animProp[i].type == ANIM_POSITION && posPropertyFounded == false){
+        posPropertyFounded = true;
+        posIndex = animProp[i].dataIndex;
+      }else if(animProp[i].type == ANIM_TEXTURE && texturePropertyFounded == false){
+        texturePropertyFounded = true;
+        textureIndex = animProp[i].dataIndex;
+      }else if(animProp[i].type == ANIM_SCALE && scalePropertyFounded == false){
+        scalePropertyFounded = true;
+        scaleIndex = animProp[i].dataIndex;
+      }else if(animProp[i].type == ANIM_ROTATION && anglePropertyFounded == false){
+        anglePropertyFounded = true;
+        angleArray[entityID] = angleFrame[animProp[i].dataIndex];
+      }else if(animProp[i].type == ANIM_ALPHA && alphaPropertyFounded == false){
+        alphaPropertyFounded = true;
+        spriteArray[entityID].color.a = alphaFrame[animProp[i].dataIndex];
+      }else if (animProp[i].type == ANIM_DRAW && drawPropertyFounded == false){
+        drawPropertyFounded = true;
+        // printf("draw: %d\n",drawFrame[animProp[i].dataIndex]);
+        if (drawFrame[animProp[i].dataIndex] == (int)enumDraw::noDraw) {
+          spriteRenderIDArray.erase(entityID);
+          // spriteNormalIdStopRender.push_back(entityID);
+        } else if (spriteRenderIDArray.count(entityID) == 0) {
+          spriteRenderIDArray.insert(entityID, 0);
+        }
+      }
     }
-  }
-
-  animationArray[entityID].draw = draw.second[index];
-  setSprite(entityID, draw.second[index]);
-  if (draw.second[index] == (int)enumDraw::noDraw) {
-    return 1;
-  }
-
-  for (unsigned int i = 0; i < texture.first.size(); i++) {
-    if (texture.first[i] <= firstFrame) {
-      index = i;
-    }
-  }
+    
+    counter--;
+  }                             
+  texPosArray[entityID] = positionFrame[posIndex] * scaleTexture[entityID];
 
   const int spriteID = spriteArray[entityID].id;
   Tyra::Texture* oldTexture = texRepo->getBySpriteId(spriteID);
-  Tyra::Texture* newTexture = texRepo->getByTextureId(texture.second[index]);
-
+  Tyra::Texture* newTexture = texRepo->getByTextureId(textureFrame[textureIndex]);
+  
   if (oldTexture != newTexture) {
+    // printf("texture id: %d\n",newTexture->id);
+    // printf("linking sprite id\n");
     if (oldTexture != nullptr) {
       // printf("unlink sprite id: %d\n", spriteArray[entityID].id);
       oldTexture->removeLinkById(spriteID);
     }
-
     // Link new Texture to the sprite entitie
     newTexture->addLink(spriteID);
+    spriteArray[entityID].textureID = newTexture->id;
     originalSize[entityID] =
         Vec2(newTexture->getWidth(), newTexture->getHeight());
+
   }
 
-  for (unsigned int i = 0; i < position.first.size(); i++) {
-    if (position.first[i] <= firstFrame) {
-      index = i;
-    }
-  }
-
-  texPosArray[entityID] = position.second[index] * scaleTexture[entityID];
-
-  for (unsigned int i = 0; i < scale.first.size(); i++) {
-    if (scale.first[i] <= firstFrame) {
-      index = i;
-    }
-  }
-
-  spriteArray[entityID].size =
-      originalSize[entityID] * scaleTexture[entityID] * scale.second[index];
-
-  for (unsigned int i = 0; i < alpha.first.size(); i++) {
-    if (alpha.first[i] <= firstFrame) {
-      index = i;
-    }
-  }
-
-  spriteArray[entityID].color.a = alpha.second[index];
-
-  if (angleArray.count(entityID) == 1) {
-    for (unsigned int i = 0; i < angle.first.size(); i++) {
-      if (angle.first[i] <= firstFrame) {
-        index = i;
-      }
-    }
-
-    angleArray[entityID] = angle.second[index];
-  }
-  // printf("anim draw: %d\n", drawState);
+  spriteArray[entityID].size = 
+          originalSize[entityID] * scaleTexture[entityID] * scaleFrame[scaleIndex];
+  
+  // printf("scale:\n");
+  // scaleFrame[scaleIndex].print();
+  // printf("original  size:\n");
+  // originalSize[entityID].print();
   return 0;
 }
 
 void AnimationData::setAnimationState(const int entityID,
                                       enumAnimationState animationState) {
   activeAnimation(entityID, animationStateVector[animationState].firstFrame,
-                  animationStateVector[animationState].lastFrame);
+                  animationStateVector[animationState].lastFrame,0);
 }
 
 void readTag(std::ifstream& MyReadFile, std::string& string, char& state) {
@@ -341,9 +372,9 @@ void readInfo(std::ifstream& MyReadFile, std::string& insideArrow,
   float x = 0;
   float beforeY = -400;
   float y = 0;
-  float beforeKx = -400;
+  float beforeKx = 0;
   float kx = 0.0f;
-  float beforeKY = -400;
+  float beforeKY = 0;
   float ky = 0.0f;
   float beforeSx = -400;
   float sx = 1.0f;
@@ -353,9 +384,11 @@ void readInfo(std::ifstream& MyReadFile, std::string& insideArrow,
   float a = 1.0f;
   int beforeDraw = -2;
   int draw = 0;
-  int countframes = 1;
+  unsigned int countframes = 1;
   Tyra::Texture* texture = nullptr;
   std::string fileName;
+  AnimationProperty property;
+  bool hasRotation = false;
 
   while (finish == false) {
     readTag(MyReadFile, insideArrow, state);
@@ -371,8 +404,12 @@ void readInfo(std::ifstream& MyReadFile, std::string& insideArrow,
       for (u32 i = 0; i < texRepo->getTexturesCount(); i++) {
         if ((*texRepo->getAll())[i]->name == insideArrow) {
           textureFounded = true;
-          animationDataArray[animID].texture.insert(
-              countframes, (*texRepo->getAll())[i]->id);
+
+          textureFrame.push_back((*texRepo->getAll())[i]->id);
+          property.dataIndex = textureFrame.size()-1;
+          property.type = EnumAnimationProperty::ANIM_TEXTURE;
+          animationDataArray[animID].property[countframes].push_back(property);
+          printf("texture id: %d, type: %d, data:%d\n",(*texRepo->getAll())[i]->id,property.type,property.dataIndex);
           break;
         }
       }
@@ -380,10 +417,15 @@ void readInfo(std::ifstream& MyReadFile, std::string& insideArrow,
         fileName = "reanim/" + insideArrow;
         // std::cout << " new i: " << insideArrow;
         texture = loadTexture(fileName);
-
-        animationDataArray[animID].texture.insert(countframes, texture->id);
-        // printf(" texture width: %d, height: %d\n", texture->getWidth(),
-        //        texture->getHeight());
+        
+        textureFrame.push_back(texture->id);
+        property.dataIndex = textureFrame.size()-1;
+        property.type = EnumAnimationProperty::ANIM_TEXTURE;
+        animationDataArray[animID].property[countframes].push_back(property);
+        printf("texture id: %d, type: %d, data:%d\n",texture->id,property.type,property.dataIndex);
+        // printf("framesData animID: %d, frame: %d\n",framesData.animID,framesData.frame);
+        // // printf(" texture width: %d, height: %d\n", texture->getWidth(),
+        // //        texture->getHeight());
       }
       textureFounded = false;
       useAnim = true;
@@ -422,33 +464,67 @@ void readInfo(std::ifstream& MyReadFile, std::string& insideArrow,
       // std::cout << std::endl;
 
       if (beforeSx != sx || beforeSY != sy) {
+        // if(countframes-1 >= scaleFrame.size()){
+        //   std::vector<FramesData> data;
+        //   scaleFrame.push_back(data);
+        // }
         beforeSx = sx;
         beforeSY = sy;
-        animationDataArray[animID].scale.insert(countframes,
-                                                Tyra::Vec2(sx, sy));
+        scaleFrame.push_back(Tyra::Vec2(sx, sy));
+        property.dataIndex = scaleFrame.size()-1;
+        property.type = EnumAnimationProperty::ANIM_SCALE;
+        animationDataArray[animID].property[countframes].push_back(property);
+        // framesData.animID = animID;
+        // framesData.frame = animationDataArray[animID].scale.size();
+        // animationDataArray[animID].scale.push_back(Tyra::Vec2(sx, sy));
+        // scaleFrame[countframes-1].push_back(framesData);
+        // animVec2.data.x = sx;
+        // animVec2.data.y = sy;
+        // animVec2.frame = countframes;
+        // animationDataArray[animID].scale.push_back(animVec2);
+        // animationDataArray[animID].scale.insert(countframes,
+        //                                         Tyra::Vec2(sx, sy));
       }
 
       if (beforeA != a) {
         beforeA = a;
-        animationDataArray[animID].alpha.insert(countframes, a * 128);
+        alphaFrame.push_back(a*128);
+        property.dataIndex = alphaFrame.size() - 1;
+        property.type = ANIM_ALPHA;
+        animationDataArray[animID].property[countframes].push_back(property);
       }
 
       if (beforeX != x || beforeY != y) {
         beforeX = x;
         beforeY = y;
-        animationDataArray[animID].position.insert(countframes, Vec2(x, y));
+        positionFrame.push_back(Tyra::Vec2(x, y));
+        property.dataIndex = positionFrame.size()-1;
+        property.type = EnumAnimationProperty::ANIM_POSITION;
+        animationDataArray[animID].property[countframes].push_back(property);
       }
 
       if (beforeDraw != draw) {
         beforeDraw = draw;
-        animationDataArray[animID].draw.insert(countframes, draw);
+        drawFrame.push_back(draw);
+        property.dataIndex = drawFrame.size()-1;
+        property.type = ANIM_DRAW;
+        animationDataArray[animID].property[countframes].push_back(property);
+        printf("frame: %d, data: %d\n",countframes,draw);
+        // animInt.data = draw;
+        // animInt.frame = countframes;
+        // animationDataArray[animID].draw.push_back(animInt);
+        // animationDataArray[animID].draw.insert(countframes, draw);
       }
 
       if (beforeKx != kx || beforeKY != ky) {
         beforeKx = kx;
         beforeKY = ky;
-        animationDataArray[animID].angle.insert(countframes,
-                                                Tyra::Vec2(kx, ky));
+        angleFrame.push_back(Tyra::Vec2(kx, ky));
+        property.dataIndex = angleFrame.size()-1;
+        property.type = EnumAnimationProperty::ANIM_ROTATION;
+        animationDataArray[animID].property[countframes].push_back(property);
+        hasRotation = true;
+        // printf("animID: %d, frame:%d, type:%d, index:%d\n",animID,countframes,property.type,property.dataIndex);
       }
 
       countframes++;
@@ -456,6 +532,23 @@ void readInfo(std::ifstream& MyReadFile, std::string& insideArrow,
       // countTrack++;
       // std::cout << "Total frames from track " << countTrack << ": "
       //           << countframes << std::endl;
+      
+      if(hasRotation == true){
+        bool hasRotationProperty = false;
+        for(unsigned int i=0;i<animationDataArray[animID].property[1].size();i++){
+          if(animationDataArray[animID].property[1][i].type == ANIM_ROTATION){
+            hasRotationProperty = true;
+            break;
+          }
+        }
+        if(hasRotationProperty == false){
+          // printf("cree rotacion propiedad\n");
+          property.dataIndex = 0;
+          property.type = ANIM_ROTATION;
+          animationDataArray[animID].property[1].push_back(property);
+        }
+      }
+       
       animationDataArray[animID].maxFrame = countframes - 1;
       countframes = 1;
       finish = true;
@@ -496,16 +589,14 @@ void readReanimFiles(int nameID, std::string file) {
         animationDataArray[animID] = AnimationData();
         maxAnimID++;
         useAnim = false;
-      } else {
-        animationDataArray[animID].draw.clear();
-        animationDataArray[animID].position.clear();
-        animationDataArray[animID].scale.clear();
-        animationDataArray[animID].angle.clear();
-        animationDataArray[animID].alpha.clear();
-        // printf("borre la memoria\n");
+      }else{
+        animationDataArray[animID].property.clear();
       }
-      animationDataArray[animID].name = insideArrow;
-
+      // printf("inside arrow: %s\n",insideArrow.c_str());
+      int size = insideArrow.size()+1;
+      char* name = (char*) malloc(size*sizeof(char));
+      strcpy(name, insideArrow.c_str());
+      animationDataArray[animID].name = name;
       // std::cout << "animID: " << animID << std::endl;
       readInfo(MyReadFile, insideArrow, useAnim, animID, state);
     }
@@ -518,4 +609,21 @@ void loadAnimation(const AnimIndex::Animation animNameID) {
   readReanimFiles(
       animNameID,
       Tyra::FileUtils::fromCwd("reanim/" + animString[animNameID] + ".reanim"));
+}
+
+void SetAnimationToEntity(std::vector<int>& ids, int& father, AnimIndex::Animation anim, Tyra::Vec2 size, int firstFrame, int lastFrame){
+  int animSize = m_animID[anim].size();
+  int entityID = -1;
+  int animID;
+  for (unsigned int i = 0; i < animSize; i++) {
+    ids.push_back(Entities::newID());
+
+    entityID = ids[i];
+    animID = m_animID[anim][i];
+
+    newFatherID(&father, &ids[i]);
+    animationDataArray[animID].loadAnimation(entityID, animID, size, firstFrame, lastFrame);
+
+    animationArray[entityID].lastFrame = animationDataArray[animID].maxFrame;
+  }
 }

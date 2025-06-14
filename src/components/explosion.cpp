@@ -5,7 +5,7 @@ void Explosion::erase() {
   deleteSprite(id);
   deletePosArray(id);
   deleteFinalPosArray(id);
-  boxColliderArray.erase(id);
+  // boxColliderArray.erase(id);
   deleteDebugBoxCollider(id);
   Entities::deleteID(id);
 }

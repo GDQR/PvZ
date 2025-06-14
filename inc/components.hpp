@@ -15,8 +15,8 @@
 
 class Controller {
  public:
-  unsigned int index;
-  void update(const int entityID);
+  unsigned int playerID;
+  void update();
 };
 
 class FatherID {
@@ -49,6 +49,7 @@ class Card {
   int seedShadowTimer;
   Plant_State_enum plant;
   int cost;
+  int textID;
   std::vector<int> plantID;
   void update();
 };
@@ -58,14 +59,28 @@ class LawnMower {
   std::vector<int> id;
 };
 
+enum BoxColliderEnum {
+  BOXCOLLIDER_PLAYER,
+  BOXCOLLIDER_MAP,
+  BOXCOLLIDER_PLANT,
+  BOXCOLLIDER_ZOMBIE,
+  BOXCOLLIDER_PROYECTILE,
+  BOXCOLLIDER_EXPLOSION,
+  BOXCOLLIDER_LAWNMOWER,
+  BOXCOLLIDER_SUN,
+  BOXCOLLIDER_REWARD
+};
+
 class BoxCollider {
  public:
   BoxCollider();
+  BoxCollider(int id, float x, float y, float width, float height);
   BoxCollider(float x, float y, float width, float height);
 
   void move(const int entityID, float offsetX, float offsetY);
   bool collision(const BoxCollider* box);
   bool pointCollision(const Tyra::Vec2* point);
+  int id;
   float x;
   float y;
   float width;
@@ -97,12 +112,12 @@ class Explosion {
 class PS2Timer {
  public:
   PS2Timer();
-  u64 lastTime;
-  u64 actualTime;
-  u64 counterMS = 0;
-  u64 maxMS = 1000;
+  u32 lastTime;
+  u32 actualTime;
+  u32 counterMS = 0;
+  u32 maxMS = 1000;
   void setLastTime();
-  u64 getTimeInMS();
+  u32 getTimeInMS();
   void resetCounter();
   void addMSinCounter();
 };
@@ -115,11 +130,14 @@ class ZombieRow {
 
 extern Tyra::Engine* engine;
 extern Tyra::Renderer* renderer;
+extern Tyra::Renderer2D* renderer2D;
+extern Tyra::Pad* pad;
 extern const Tyra::PadJoy* leftJoy;
 extern Tyra::TextureRepository* texRepo;
 extern std::unordered_map<int, std::vector<int>> m_animID;
 
 // sparse array
+extern std::vector<FrameCounter> frameCounterArray;
 extern ArrayKey<int, Animation>
     animationArray;  // Link the sprite with the texture
 extern std::unordered_map<int, AnimationData>
@@ -138,24 +156,32 @@ extern std::unordered_map<int, Tyra::Vec2>
 extern std::unordered_map<int, Tyra::Vec2>
     scaleTexture;  // This multiply the size of the texture animation
 extern std::unordered_map<int, Tyra::Vec2> pointColliderArray;
-extern std::unordered_map<int, BoxCollider> boxColliderArray;
+extern std::unordered_map<int, int> boxColliderArrayID;
+extern std::unordered_map<int, std::vector<BoxCollider>> boxColliderArray;
+extern std::vector<BoxCollider> boxColliderZombie;
+extern std::vector<BoxCollider> boxColliderProyectile;
+extern std::vector<BoxCollider> boxColliderExplosion;
+extern std::vector<BoxCollider> boxColliderLawnmower;
 extern std::unordered_map<int, TriggerBoxCollider> resultBoxCollider;
 extern ArrayKey<int, PS2Timer> timerArray;
 extern std::unordered_map<int, float> speedArray;
 extern std::unordered_map<int, int> damageArray;
 extern ArrayKey<int, int> lifeArray;
 extern std::map<int, Tyra::Vec2> pivot;
-extern std::map<int, Controller> controller;
+extern std::vector<Controller> controller;
 
 extern std::vector<Proyectile> projectile;
 extern std::vector<Explosion> explosion;
 extern std::vector<Card> cards;
 extern std::vector<LawnMower> lawnMower;
-extern std::map<int, Cursor> cursor;
-extern std::map<int, DeckCursor> deckCursor;
+extern std::vector<Cursor> cursor;
+extern std::vector<DeckCursor> deckCursor;
 
 extern int zombiescreated;
 extern ZombieRow zombieCreateRow[5];
 extern bool mapEnable[5];
 extern bool plantCreatedInMap[5][9];
+extern int map[5][9];
 extern BoxCollider mapCollider[5][9];
+
+extern int sunCounterText;

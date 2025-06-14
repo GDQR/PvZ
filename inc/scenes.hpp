@@ -6,11 +6,19 @@ class SelectorScreen {
  public:
   static void init();
   static void update();
+  static void Levels();
+  static void BG();        // Background
+  static void BGLeft();    // Background Left
+  static void BGCenter();  // Background Center
+  static void BGRight();   // Background Right
+  static void OptionHighlight(int option, int previousOption);
 };
 
 class Level1 {
  public:
   static void init();
+  static void initAnimation();
+  static void loopAnimation();
   static void update();
   static void destroy();  // tal vez sea innecesario, ahora que lo pienso es una
                           // optimizacion prematura la puta madre
@@ -19,16 +27,28 @@ class Level1 {
 class Level2 {
  public:
   static void init();
+  static void initAnimation();
+  static void loopAnimation();
   static void update();
   static void destroy();  // tal vez sea innecesario, ahora que lo pienso es una
                           // optimizacion prematura la puta madre
 };
 
-class Scene {
+class Level3 {
  public:
-  Scene() { state = (Game_States_enum)actualState; }
-  Game_States_enum state;
-  void init();
-  void update();
-  void setScene(Game_States_enum newState) { state = newState; };
+  static void init();
+  static void update();
+};
+
+class Level4 {
+ public:
+  static void init();
+  static void update();
+};
+
+
+class Level5 {
+ public:
+  static void init();
+  static void update();
 };

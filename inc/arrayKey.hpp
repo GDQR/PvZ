@@ -34,12 +34,13 @@ void ArrayKey<Key, Type>::insert(const Key key, const Type value) {
 
 template <class Key, class Type>
 int ArrayKey<Key, Type>::count(const Key key) {
-  for (auto& id : first) {
-    if (id == key) {
-      return 1;
-    }
-  }
-  return 0;
+  // for (auto& id : first) {
+  //   if (id == key) {
+  //     return 1;
+  //   }
+  // }
+  // return 0;
+  return fastKey.count(key);
 }
 
 template <class Key, class Type>

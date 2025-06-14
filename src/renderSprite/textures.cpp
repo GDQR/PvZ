@@ -11,6 +11,8 @@ Tyra::Texture* projectileSnowPea;
 Tyra::Texture* projectileExplosionPowie;
 Tyra::Texture* projectileExplosionSpudow;
 
+const char* seedChooserTexture = "SeedChooser_Background";
+
 void loadSprite(Sprite* sprite) {
   sprite->mode = Tyra::MODE_STRETCH;
   sprite->position = Tyra::Vec2(0, 0);
@@ -37,11 +39,13 @@ int createTexture(int id, std::string fileImage) {
 
   for (u32 i = 0; i < texRepo->getTexturesCount(); i++) {
     if ((*texRepo->getAll())[i]->name == findTexture) {
+      spriteArray[id].textureID = (*texRepo->getAll())[i]->id;
       (*texRepo->getAll())[i]->addLink(spriteArray[id].id);
       return 1;
     }
   }
   Tyra::Texture* texture = loadTexture(fileImage);
+  spriteArray[id].textureID = texture->id;
   texture->addLink(spriteArray[id].id);
   return 0;
 }
@@ -100,6 +104,7 @@ void loadTexture(Sprite* sprite, std::string fileImage) {
 
   /** Let's assign this texture to sprite. */
   texture->addLink(sprite->id);
+  sprite->textureID = texture->id;
 
   TYRA_LOG("Texture loaded!");
 }
@@ -112,16 +117,16 @@ void loadTexture(int spriteID, std::string fileImage) {
   auto* texture = textureRepository.add(filepath);
 
   texture->addLink(spriteArray[spriteID].id);
+  spriteArray[spriteID].textureID = texture->id;
 
   TYRA_LOG("Texture loaded!");
 }
 
 Tyra::Texture* loadTexture(std::string fileImage) {
-  auto& textureRepository = renderer->getTextureRepository();
 
   auto filepath = FileUtils::fromCwd(fileImage);
 
-  Tyra::Texture* texture = textureRepository.add(filepath);
+  Tyra::Texture* texture = texRepo->add(filepath);
 
   return texture;
 }
@@ -129,10 +134,11 @@ Tyra::Texture* loadTexture(std::string fileImage) {
 void copyTexture(Sprite* sprite1, Sprite* sprite2) {
   auto& textureRepository = renderer->getTextureRepository();
 
-  auto* texture = textureRepository.getBySpriteId(sprite1->id);
+  auto* texture = textureRepository.getBySpriteId(sprite1->textureID);
 
   /** Let's assign this texture to sprite. */
   texture->addLink(sprite2->id);
+  sprite2->textureID = texture->id;
 
   TYRA_LOG("Texture loaded!");
 }

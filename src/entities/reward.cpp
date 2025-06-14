@@ -2,6 +2,7 @@
 #include "systems.hpp"
 #include <tyra>
 
+using namespace Entity;
 void rewardLevel1(Tyra::Vec2 pos) {
   reward.father = Entities::newID();
   int id;
@@ -21,9 +22,9 @@ void rewardLevel1(Tyra::Vec2 pos) {
     animationDataArray[animID].loadAnimation(id, animID, Tyra::Vec2(0.6f, 0.6f),
                                              8, 8);
   }
-  boxColliderArray[reward.father] = BoxCollider(pos.x, pos.y, 28, 38);
+  createBoxCollider(reward.father,BoxColliderEnum::BOXCOLLIDER_REWARD,BoxCollider(pos.x, pos.y, 28, 38));
 
-  createDebugBoxCollider(reward.father, Tyra::MODE_STRETCH);
+  createDebugBoxCollider(reward.father,BoxColliderEnum::BOXCOLLIDER_REWARD, Tyra::MODE_STRETCH);
   rewardExist = true;
 }
 
@@ -45,7 +46,7 @@ void eraseRewardLevel1() {
   }
   deleteSprite(reward.father);
   deleteFatherID(&reward.father);
-  boxColliderArray.erase(reward.father);
+  // boxColliderArray.erase(reward.father);
   deleteDebugBoxCollider(reward.father);
   Entities::deleteID(reward.father);
   rewardExist = false;

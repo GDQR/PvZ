@@ -1,7 +1,7 @@
 #pragma once
 #include <tyra>
 #include <vector>
-enum Zombie_State_enum {
+enum Zombie_State_enum{
   NoneZombie,
   normalZombie,
   flagZombie,
@@ -10,18 +10,23 @@ enum Zombie_State_enum {
   bucketHeadZombie
 };
 
+struct ZombieAnimation{
+  int id;
+  std::vector<int> entity;
+};
+
+extern std::vector<ZombieAnimation> zombieAnims;
+
 class Zombie {
  private:
   void createSpace();
 
  public:
-  Zombie_State_enum type = NoneZombie;
-
-  int timer = 0;
   int attackTimer = 0;
 
   int father;
-  std::vector<int> id;
+  int boxColliderID;
+  Zombie_State_enum type = NoneZombie;
   bool attack = false;
   bool damaged = false;
   bool explosion = false;

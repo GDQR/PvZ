@@ -1,6 +1,13 @@
 #include "components.hpp"
 
 BoxCollider::BoxCollider() {}
+BoxCollider::BoxCollider(int id, float x, float y, float width, float height) {
+  this->id = id;
+  this->x = x;
+  this->y = y;
+  this->width = width;
+  this->height = height;
+}
 BoxCollider::BoxCollider(float x, float y, float width, float height) {
   this->x = x;
   this->y = y;
@@ -29,4 +36,8 @@ bool BoxCollider::pointCollision(const Tyra::Vec2* point) {
     return true;
   }
   return false;
+}
+
+BoxCollider& searchBoxCollider(int type,int id){
+  return boxColliderArray[type][boxColliderArrayID[id]];
 }

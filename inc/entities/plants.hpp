@@ -70,6 +70,7 @@ enum Plant_State_enum {
   NonePlant
 };
 
+extern std::vector<int> plantCollisionID;
 class Plant {
  public:
   std::vector<int> id;
@@ -80,11 +81,10 @@ class Plant {
   int column;
   void newPlant(Plant_State_enum newType);
   int attack();
-  void ability();
   void erase();
 };
 
-void createPlant(Plant_State_enum typePlant, const int row, const int column);
+void createPlant(Plant_State_enum typePlant, const int row, const int column, int cost);
 void loadPlantCost();
 void loadPlantRechargeTime();
 int getPlantCost(Plant_State_enum typePlant);

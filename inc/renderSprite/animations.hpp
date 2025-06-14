@@ -202,16 +202,77 @@ class Animation {
   unsigned int lastFrame = 1;
 };
 
+struct FrameOut {
+ int entityID;
+ int animIndex;
+ int frame;
+};
+
+class FrameCounter {
+ public:
+  int update();
+  
+  int entityID;
+  unsigned int animIndex;
+  unsigned int framesCounter = 0;
+  unsigned int currentFrame = 1;
+  unsigned int framesSpeed = 20;
+  unsigned int firstFrame = 1;
+  unsigned int lastFrame = 1;
+};
+
+struct FramesData{
+  int animID;
+  int frame;
+};
+
+extern std::vector<int> textureFrame;
+extern std::vector<Tyra::Vec2> positionFrame;
+extern std::vector<Tyra::Vec2> scaleFrame;
+extern std::vector<Tyra::Vec2> angleFrame;
+extern std::vector<float> alphaFrame;
+extern std::vector<int> drawFrame;
+// extern std::vector<std::vector<FramesData>> textureFrame;
+// extern std::vector<std::vector<FramesData>> positionFrame;
+// extern std::vector<std::vector<FramesData>> scaleFrame;
+// extern std::vector<std::vector<FramesData>> angleFrame;
+// std::vector<std::vector<int>> positionFrame;
+// std::vector<std::vector<int>> scaleFrame;
+// std::vector<std::vector<int>> angleFrame;
+// std::vector<std::vector<int>> alphaFrame;
+// std::vector<std::vector<int>> drawFrame;
+enum EnumAnimationProperty{
+  ANIM_TEXTURE,
+  ANIM_POSITION,
+  ANIM_ROTATION,
+  ANIM_SCALE,
+  ANIM_ALPHA,
+  ANIM_DRAW
+};
+
+struct AnimationProperty{
+ int dataIndex;
+ EnumAnimationProperty type;
+};
+
 class AnimationData {
  public:
+  std::unordered_map<unsigned int,std::vector<AnimationProperty>> property;
   unsigned int maxFrame;
-  std::string name;
-  LinearArrayKey<unsigned int, int> texture;
-  LinearArrayKey<unsigned int, Tyra::Vec2> position;
-  LinearArrayKey<unsigned int, Tyra::Vec2> scale;
-  LinearArrayKey<unsigned int, Tyra::Vec2> angle;
-  LinearArrayKey<unsigned int, float> alpha;
-  LinearArrayKey<unsigned int, int> draw;
+  const char* name;
+  // std::vector<
+  // std::vector<int> texture;
+  // std::vector<Tyra::Vec2> position;
+  // std::vector<Tyra::Vec2> scale;
+  // std::vector<Tyra::Vec2> angle;
+  // std::vector<float> alpha;
+  // std::vector<int> draw;
+  // LinearArrayKey<unsigned int, int> texture;
+  // LinearArrayKey<unsigned int, Tyra::Vec2> position;
+  // LinearArrayKey<unsigned int, Tyra::Vec2> scale;
+  // LinearArrayKey<unsigned int, Tyra::Vec2> angle;
+  // LinearArrayKey<unsigned int, float> alpha;
+  // LinearArrayKey<unsigned int, int> draw;
   void loadAnimation(const int entityID, const int animID,
                      const Tyra::Vec2 scaleTextures,
                      enumAnimationState animationState);
@@ -219,7 +280,7 @@ class AnimationData {
                      const Tyra::Vec2 scaleTextures, const int firstFrame,
                      const int lastFrame);
   int activeAnimation(const int entityID, const unsigned int firstFrame,
-                      const unsigned int lastFrame);
+                      const unsigned int lastFrame, int animID);
   void setAnimationState(const int entityID, enumAnimationState animationState);
 };
 
@@ -230,3 +291,4 @@ void setSprite(const int entityID, const int draw);
 void loadAnimString();
 void loadAnimationStates();
 void loadAnimation(const AnimIndex::Animation animNameID);
+void SetAnimationToEntity(std::vector<int>& ids, int& father, AnimIndex::Animation anim, Tyra::Vec2 size, int firstFrame, int lastFrame);

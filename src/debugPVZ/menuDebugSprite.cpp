@@ -277,11 +277,11 @@ void DebugSpriteMode::secondMenu() {
         angleArray[debugEntityId].y = *d_angleY;
       } else {
         originalSize[debugEntityId].y -= padSpeed;
-        if (animationDataArray[animationArray[debugEntityId].animID]
-                .texture.count(animationArray[debugEntityId].currentFrame) ==
-            0) {
-          printf("no hay textura\n");
-        }
+        // if (animationDataArray[animationArray[debugEntityId].animID]
+        //         .texture.count(animationArray[debugEntityId].currentFrame) ==
+        //     0) {
+        //   printf("no hay textura\n");
+        // }
         Tyra::Texture* texture =
             engine->renderer.getTextureRepository().getBySpriteId(
                 debugSpritesType[debugEntityId]->id);
@@ -299,11 +299,11 @@ void DebugSpriteMode::secondMenu() {
         angleArray[debugEntityId].y = *d_angleY;
       } else {
         originalSize[debugEntityId].y += padSpeed;
-        if (animationDataArray[animationArray[debugEntityId].animID]
-                .texture.count(animationArray[debugEntityId].currentFrame) ==
-            0) {
-          printf("no hay textura\n");
-        }
+        // if (animationDataArray[animationArray[debugEntityId].animID]
+        //         .texture.count(animationArray[debugEntityId].currentFrame) ==
+        //     0) {
+        //   printf("no hay textura\n");
+        // }
         Tyra::Texture* texture =
             engine->renderer.getTextureRepository().getBySpriteId(
                 debugSpritesType[debugEntityId]->id);
@@ -485,11 +485,11 @@ void DebugSpriteMode::drawSecondMenu() {
       std::string textKey =
           "Key: " + std::to_string(animationArray[debugEntityId].currentFrame);
 
-      std::string animSize =
-          "Total textures: " +
-          std::to_string(
-              animationDataArray[animationArray[debugEntityId].animID]
-                  .texture.first.size());
+      std::string animSize = "";
+          // "Total textures: " +
+          // std::to_string(
+          //     animationDataArray[animationArray[debugEntityId].animID]
+          //         .texture.first.size());
 
       engine->font.drawText(&myFont, textKey.c_str(), 30, 120, 16, black);
 

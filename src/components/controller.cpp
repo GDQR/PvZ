@@ -1,25 +1,27 @@
 #include "components.hpp"
 #include "systems.hpp"
 
-void Controller::update(const int entityID) {
-  if (engine->pad.getClicked().Cross) {
+void Controller::update() {
+  if (pad->getClicked().Cross) {
     // create plant
-    plantsManager.create(entityID);
+    printf("press cross\n");
+    plantsManager.create(playerID);
   }
-  if (engine->pad.getClicked().DpadLeft) {
-    deckCursor[entityID].moveLeft();
+  if (pad->getClicked().DpadLeft) {
+    deckCursor[playerID].moveLeft();
   }
-  if (engine->pad.getClicked().DpadRight) {
-    deckCursor[entityID].moveRight();
+  if (pad->getClicked().DpadRight) {
+    deckCursor[playerID].moveRight();
   }
 
   if (debugMode == false) {
-    cursor[entityID].move();
-    boxColliderArray[cursor[entityID].id].move(cursor[entityID].id, 28 / 2,
+    cursor[playerID].move();
+    boxColliderArray[BOXCOLLIDER_PLAYER]
+    [boxColliderArrayID[cursor[playerID].id]].move(cursor[playerID].id, 28 / 2,
                                                24 / 2);
   }
 
-  if (engine->pad.getClicked().R1 && debugMode == false) {
+  if (pad->getClicked().R1 && debugMode == false) {
     debugMode = true;
     debugMenu = true;
     printf("\nDEBUG MODE ACTIVE\n");

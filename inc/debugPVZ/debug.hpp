@@ -67,7 +67,7 @@ void loadDebugTextures();
 
 void createDebugSprite(const int id, Tyra::SpriteMode mode);
 void createDebugSpritePivot(const int id, Tyra::SpriteMode mode);
-void createDebugBoxCollider(const int id, Tyra::SpriteMode mode);
+void createDebugBoxCollider(const int id, const int type, Tyra::SpriteMode mode);
 void createDebugBoxFill(const int id, Tyra::SpriteMode mode, Vec2 pos,
                         Vec2 size);
 void createDebugPoint(const int id, Tyra::SpriteMode mode);

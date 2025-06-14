@@ -1,5 +1,6 @@
 #include "systems.hpp"
 #include "font/font.hpp"
+#include <string>
 
 void createCardPeashotter(std::vector<int>& plantID, const Tyra::Vec2 pos) {
   int entityID;
@@ -8,11 +9,13 @@ void createCardPeashotter(std::vector<int>& plantID, const Tyra::Vec2 pos) {
   plantID.push_back(Entities::newID());
   posArray.insert(plantID[0], pos);
   fatherIDArray.insert(plantID[0], FatherID());
-
+  printf("card peashotter\n");
   for (unsigned int i = 0; i < m_animID[AnimIndex::Peashooter].size(); i++) {
     entityID = Entities::newID();
     plantID.push_back(entityID);
     animID = m_animID[AnimIndex::Peashooter][i];
+    printf("entity[%d]: %d\n",i,entityID);
+    printf("anim: %d\n",animID);
     newFatherID(&plantID[0], &entityID);
     animationDataArray[animID].loadAnimation(entityID, animID,
                                              Tyra::Vec2(0.6f, 0.6f), 80, 80);
@@ -180,6 +183,10 @@ void createCard(const Plant_State_enum typePlant, const Tyra::Vec2 pos,
 
   card.cost = getPlantCost(typePlant);
 
+  std::string text;
+  text = std::to_string(card.cost);
+  card.textID = CreateTextData(text,pos.x+10,pos.y + 55,FontPicoID);
+
   if (typePlant == Plant_State_enum::PeaShotter) {
     createCardPeashotter(card.plantID, Vec2(pos.x, pos.y));
   } else if (typePlant == Plant_State_enum::SunFlower) {
@@ -199,13 +206,4 @@ void createCard(const Plant_State_enum typePlant, const Tyra::Vec2 pos,
   }
 
   cards.push_back(card);
-}
-
-void drawCardCost() {
-  for (unsigned int i = 0; i < cards.size(); i++) {
-    engine->font.drawText(&myFont, std::to_string(cards[i].cost).c_str(),
-                          spriteArray[cards[i].seed].position.x,
-                          spriteArray[cards[i].seed].position.y + 68, 16,
-                          black);
-  }
 }

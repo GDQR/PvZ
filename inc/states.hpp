@@ -4,15 +4,10 @@
 #include <string>
 #include <vector>
 
+enum Game_States_enum {main, level1, level2, level3, level4, level5, lastGameState };
 
-enum Game_States_enum {main, level1, level2, lastGameState };
-
-// estructura que guarda los nombres de los diferentes estados/niveles
-// funciona como una escena/scene
 struct States {
-  std::vector<std::string> name;
   std::vector<bool> isActive;
 };
 
-extern States states;
-extern int actualState;
+void setScene(Game_States_enum newState);
