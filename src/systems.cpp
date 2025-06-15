@@ -19,6 +19,7 @@ CardManager cardManager;
 CameraManager cameraManager;
 FontManager fontManager;
 FrameManager frameManager;
+LawnMoverManager lawnMoverManager;
 
 void PlayerControl::update() {
   for (Controller& joystick: controller){
@@ -687,6 +688,15 @@ void BoxCollisionManager::lawnCollision(){
       // printf("loop 1\n");
   }
   // printf("fin loop\n");
+  
+  for(int& col: lawnMoverEraseID){
+    for(LawnMower& lawnMowerEntity : lawnMower){
+      if(col == lawnMowerEntity.id[0]){
+        lawnMowerEntity.canMove = true;
+        break;
+      }
+    }
+  }
 
   unsigned int size;
   unsigned int sizeProyectile;
@@ -755,6 +765,12 @@ void BoxCollisionManager::testUpdate(){
   //     }
   //   }
   // }
+}
+
+void LawnMoverManager::update(){
+  for(LawnMower& lawnMowerEntity: lawnMower){
+    lawnMowerEntity.move();
+  }
 }
 
 void CameraManager::update() {
@@ -927,7 +943,7 @@ void createLawnMower(const Tyra::Vec2 pos) {
   }
 
   // HitBox
-  createBoxCollider(entity.id[0],BOXCOLLIDER_LAWNMOWER, BoxCollider(entity.id[0],pos.x + 10, pos.y + 20, 28, 38));
+  createBoxCollider(entity.id[0],BOXCOLLIDER_LAWNMOWER, BoxCollider(entity.id[0],pos.x + 10, pos.y + 20, 45, 38));
   createDebugBoxCollider(entity.id[0],BoxColliderEnum::BOXCOLLIDER_LAWNMOWER, Tyra::MODE_STRETCH);
   lawnMower.push_back(entity);
 }

@@ -236,7 +236,8 @@ void Level1::update() {
     // printf("ram: %f\n",engine->info.getAvailableRAM());
     // printf("texture free space:
     // %f\n",engine->renderer.core.gs.vram.getFreeSpaceInMB());
-
+    
+    lawnMoverManager.update();
     // shoot zombies
     plantsManager.update();
 

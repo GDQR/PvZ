@@ -80,6 +80,11 @@ class BoxCollisionManager {
   }
 };
 
+class LawnMoverManager{
+  public:
+  void update();
+};
+
 class CameraManager {
  public:
   void update();
@@ -102,6 +107,7 @@ extern CardManager cardManager;
 extern CameraManager cameraManager;
 extern FontManager fontManager;
 extern FrameManager frameManager;
+extern LawnMoverManager lawnMoverManager;
 
 void newPlayer(int* player);
 void newProjectile(Tyra::Vec2 position, const int damage,

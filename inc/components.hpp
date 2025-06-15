@@ -57,6 +57,8 @@ class Card {
 class LawnMower {
  public:
   std::vector<int> id;
+  bool canMove = false;
+  void move();
 };
 
 enum BoxColliderEnum {
