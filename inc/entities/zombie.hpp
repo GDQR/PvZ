@@ -33,7 +33,6 @@ class Zombie {
   void newZombie(Zombie_State_enum newType);
   bool explosionState();
   int move();
-  void animation(const int entityID, const int animID);
   int attackPlant();
   void damage(const int entityID);
   int normalColor();
@@ -42,6 +41,7 @@ class Zombie {
 
 void createZombie(Tyra::Vec2 pos, const Zombie_State_enum type);
 void createZombieMain();
+void SetZombieAnimation(const int entityID, const int animID, const Zombie_State_enum type);
 
 extern int maxZombies;
 extern int zombiesDefeated;

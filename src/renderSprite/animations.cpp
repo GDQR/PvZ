@@ -627,3 +627,20 @@ void SetAnimationToEntity(std::vector<int>& ids, int& father, AnimIndex::Animati
     animationArray[entityID].lastFrame = animationDataArray[animID].maxFrame;
   }
 }
+
+void SetAnimationToEntity(std::vector<int>& ids, int& father, AnimIndex::Animation anim, Tyra::Vec2 size, enumAnimationState animState){
+  size_t animSize = m_animID[anim].size();
+  int entityID = -1;
+  int animID;
+  for (size_t i = 0; i < animSize; i++) {
+    ids.push_back(Entities::newID());
+
+    entityID = ids[i];
+    animID = m_animID[anim][i];
+
+    newFatherID(&father, &ids[i]);
+    animationDataArray[animID].loadAnimation(entityID, animID, size, animationStateVector[animState].firstFrame, animationStateVector[animState].lastFrame);
+
+    animationArray[entityID].lastFrame = animationDataArray[animID].maxFrame;
+  }
+}
