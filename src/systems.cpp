@@ -199,6 +199,7 @@ void RendererDebugSpritesManager::update() {
   debugSprite.mode =  Tyra::MODE_STRETCH;
   debugSprite.color = Tyra::Color(0,255,0,128);
   debugBoxTexture->addLink(debugSprite.id);
+  debugSprite.textureID = debugBoxTexture->id;
   std::vector<BoxCollider> vec;
   vec = boxColliderArray[BOXCOLLIDER_PLAYER];
   for (unsigned int i = 0; i < vec.size();i++){
