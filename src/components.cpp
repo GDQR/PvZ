@@ -29,6 +29,7 @@ std::unordered_map<int, Tyra::Vec2> scaleTexture;
 std::unordered_map<int, Tyra::Vec2> pointColliderArray;
 std::unordered_map<int, int> boxColliderArrayID;
 std::unordered_map<int, std::vector<BoxCollider>> boxColliderArray;
+std::vector<BoxCollider> boxColliderPlant;
 std::vector<BoxCollider> boxColliderZombie;
 std::vector<BoxCollider> boxColliderProyectile;
 std::vector<BoxCollider> boxColliderExplosion;

@@ -59,6 +59,7 @@ class PlantsManager {
   void create(int playerId);
   inline void update() {
     for (Plant& onePlant : plant) {
+      onePlant.erase();
       onePlant.attack();
     }
   };
@@ -70,12 +71,14 @@ class BoxCollisionManager {
   int projectileZombieCollision();
   void explosionZombieCollision();
   void lawnCollision();
+  void plantZombieCollision();
   void testUpdate();
   inline void update() {
     // testUpdate();
     mapCollision();
-    projectileZombieCollision();
+    // projectileZombieCollision();
     explosionZombieCollision();
+    plantZombieCollision();
     lawnCollision();
   }
 };

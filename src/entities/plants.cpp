@@ -23,9 +23,9 @@ void createPeashotter(const int id, const Tyra::Vec2 pos) {
   int entityID;
   int animID;
 
-  int* father = &plant[id].father;
+  int& father = plant[id].father;
   
-  SetAnimationToEntity(plant[id].id,plant[id].father,AnimIndex::Peashooter,Tyra::Vec2(0.8f, 0.8f), 80, 104);
+  SetAnimationToEntity(plant[id].id,father,AnimIndex::Peashooter,Tyra::Vec2(0.8f, 0.8f), 80, 104);
   // for (unsigned int i = 0; i < m_animID[AnimIndex::Peashooter].size(); i++) {
   //   entityID = Entities::newID();
   //   plant[id].id.push_back(entityID);
@@ -66,18 +66,18 @@ void createPeashotter(const int id, const Tyra::Vec2 pos) {
 
   // Life
 
-  lifeArray.insert(*father, 300);
+  lifeArray.insert(father, 300);
 
-  timerArray.insert(*father, PS2Timer());
-  timerArray[*father].maxMS = 1500;
+  timerArray.insert(father, PS2Timer());
+  timerArray[father].maxMS = 1500;
 
   // HitBox
-  createBoxCollider(*father, BoxColliderEnum::BOXCOLLIDER_PLANT, BoxCollider(pos.x + 10, pos.y + 20, 28, 38));
-  createDebugBoxCollider(*father, BoxColliderEnum::BOXCOLLIDER_PLANT, Tyra::MODE_STRETCH);
+  createBoxCollider(father, BoxColliderEnum::BOXCOLLIDER_PLANT, BoxCollider(father, pos.x + 10, pos.y + 20, 28, 38));
+  createDebugBoxCollider(father, BoxColliderEnum::BOXCOLLIDER_PLANT, Tyra::MODE_STRETCH);
 
   // proyectile
-  pointColliderArray[*father] = Tyra::Vec2(pos.x + 40, pos.y + 25);
-  createDebugPoint(*father, Tyra::MODE_STRETCH);
+  pointColliderArray[father] = Tyra::Vec2(pos.x + 40, pos.y + 25);
+  createDebugPoint(father, Tyra::MODE_STRETCH);
 }
 
 void createSunflower(const int id, const Tyra::Vec2 pos) {
@@ -587,50 +587,57 @@ int Plant::attack() {
 }
 
 void Plant::erase() {
-  printf("erase plant\n");
-  plantCreatedInMap[row][column] = false;
-  deletePosArray(father);
-  std::vector<int>::iterator it = id.begin();
-  while (it != id.end()) {
-    deletePosArray(*it);
-    deleteFinalPosArray(*it);
-    deleteTexPosArray(*it);
-    deleteFatherIDChild(&father, &*it);
-    if (animationArray.count(*it)) {
-      deleteAnimation(*it);
-    }
-    for(unsigned int j=0; j< frameCounterArray.size();j++){
-      if(frameCounterArray[j].entityID == *it){
-        frameCounterArray.erase(frameCounterArray.begin() + j);
-        break;
+  if(lifeArray.count(father) == 0){
+    return;
+  }
+  
+  if(lifeArray[father] <= 0 && type != NonePlant){
+    printf("erase plant\n");
+    printf("type: %d\n",type);
+    plantCreatedInMap[row][column] = false;
+    deletePosArray(father);
+    std::vector<int>::iterator it = id.begin();
+    while (it != id.end()) {
+      deletePosArray(*it);
+      deleteFinalPosArray(*it);
+      deleteTexPosArray(*it);
+      deleteFatherIDChild(&father, &*it);
+      if (animationArray.count(*it)) {
+        deleteAnimation(*it);
       }
+      for(unsigned int j=0; j< frameCounterArray.size();j++){
+        if(frameCounterArray[j].entityID == *it){
+          frameCounterArray.erase(frameCounterArray.begin() + j);
+          break;
+        }
+      }
+
+      deleteSprite(*it);
+      Entities::deleteID(*it);
+      it++;
+    }
+    id.clear();
+    if (type == PeaShotter) {
+      timerArray.erase(father);
+      deleteDebugPoint(father);
+    } else if (type == SunFlower) {
+      timerArray.erase(father);
+    } else if (type == SnowPea) {
+      deleteDebugPoint(father);
+    } else if (type == Repeater) {
+      deleteDebugPoint(father);
+    }
+    deleteFatherID(&father);
+
+    if (type != CherryBomb) {
+      lifeArray.erase(father);
     }
 
-    deleteSprite(*it);
-    Entities::deleteID(*it);
-    it++;
+    deleteDebugBoxCollider(father);
+    Entities::deleteID(father);
+    type = NonePlant;
+    plantsCreated--;
   }
-  id.clear();
-  if (type == PeaShotter) {
-    timerArray.erase(father);
-    deleteDebugPoint(father);
-  } else if (type == SunFlower) {
-    timerArray.erase(father);
-  } else if (type == SnowPea) {
-    deleteDebugPoint(father);
-  } else if (type == Repeater) {
-    deleteDebugPoint(father);
-  }
-  deleteFatherID(&father);
-
-  if (type != CherryBomb) {
-    lifeArray.erase(father);
-  }
-
-  deleteDebugBoxCollider(father);
-  Entities::deleteID(father);
-  type = NonePlant;
-  plantsCreated--;
 }
 
 void loadPlantCost() {

@@ -247,6 +247,15 @@ void createDebugBoxCollider(const int id, const int type, Tyra::SpriteMode mode)
         break;
       }
     }
+  } else if(type == BOXCOLLIDER_PLANT){
+    for(BoxCollider& box: boxColliderPlant){
+      if(box.id == id){
+        loadSprite(&dm_SpriteBoxCollider[id], mode,
+             Vec2(box.x, box.y),
+             Vec2(box.width, box.height));
+        break;
+      }
+    }
   }
   else{
 

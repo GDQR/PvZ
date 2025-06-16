@@ -644,3 +644,30 @@ void SetAnimationToEntity(std::vector<int>& ids, int& father, AnimIndex::Animati
     animationArray[entityID].lastFrame = animationDataArray[animID].maxFrame;
   }
 }
+
+void ChangeAnimationEntity(std::vector<int>& ids, AnimIndex::Animation anim, enumAnimationState animState){
+  unsigned int frameIndex = 0;
+  for(size_t i=0;i<frameCounterArray.size();i++){
+    if(frameCounterArray[i].entityID == ids[0]){
+      frameIndex = i;
+      break;
+    }
+  }
+  for(size_t i=frameIndex;i<frameIndex+ids.size();i++){
+    frameCounterArray[i].currentFrame = animationStateVector[animState].firstFrame;
+    frameCounterArray[i].firstFrame = frameCounterArray[i].currentFrame;
+    frameCounterArray[i].lastFrame = animationStateVector[animState].lastFrame;
+  }
+  
+  std::vector<int>& anim_2 = m_animID[anim];
+  for(size_t i=0; i< anim_2.size();i++){
+    animationDataArray[anim_2[i]].activeAnimation(ids[i],animationStateVector[animState].firstFrame,animationStateVector[animState].lastFrame, anim_2[i]);
+  }
+  
+  //TODO: esto debe estar separado para las animaciones de los zombies
+  if(anim == AnimIndex::Zombie){
+    for(size_t i=0; i< anim_2.size();i++){
+      SetZombieAnimation(ids[i],anim_2[i],Zombie_State_enum::coneheadZombie);
+    }
+  }
+}

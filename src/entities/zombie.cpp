@@ -123,6 +123,10 @@ int Zombie::move() {
   // printf("maxMS: %llu\n",timerArray[father].maxMS);
   // lifeArray[father] = 0;
   // erase();
+  if(attack == true){
+   return 1; 
+  }
+
   PS2Timer& timer = timerArray[father];
   // sizeof(ArrayKey<int,PS2Timer>)
   if (timer.counterMS < timer.maxMS) {

@@ -160,6 +160,7 @@ extern std::unordered_map<int, Tyra::Vec2>
 extern std::unordered_map<int, Tyra::Vec2> pointColliderArray;
 extern std::unordered_map<int, int> boxColliderArrayID;
 extern std::unordered_map<int, std::vector<BoxCollider>> boxColliderArray;
+extern std::vector<BoxCollider> boxColliderPlant;
 extern std::vector<BoxCollider> boxColliderZombie;
 extern std::vector<BoxCollider> boxColliderProyectile;
 extern std::vector<BoxCollider> boxColliderExplosion;

@@ -735,6 +735,75 @@ void BoxCollisionManager::lawnCollision(){
   }
 }
 
+void BoxCollisionManager::plantZombieCollision(){
+  std::vector<int> plantEraseID;
+  std::vector<int> zombieEraseID;
+
+  for(BoxCollider &it: boxColliderZombie){
+    for(BoxCollider &it2: boxColliderPlant){
+      if(it.collision(&it2) == true){
+        // printf("colision\n");
+        zombieEraseID.push_back(it.id);
+        plantEraseID.push_back(it2.id);
+        break;
+      }
+    }
+      // printf("loop 1\n");
+  }
+
+  unsigned int size;
+  unsigned int sizeProyectile;
+  
+  size = zombieEraseID.size();
+
+  // for(size_t i=0;i<size;i++){
+  //   printf("plant erase[%d]: %d\n",i,zombieEraseID[i]);
+  // }
+
+  size = 45;
+  bool zombieNotFound;
+  while (zombieEraseID.size() > 0)
+  {  
+    zombieNotFound = false;
+    // printf("zombie erase size: %d\n",zombieEraseID.size());
+    sizeProyectile = zombieEraseID.size()-1;
+    for(unsigned int i=0; i < size; i++){
+      // printf("box collider:%d searched:%d\n",plant[i].father,plantEraseID[sizeProyectile]);
+      if(plant[i].father == plantEraseID[sizeProyectile]){
+        // printf("zombie colision\n");
+        int zombieID=0;
+        for(size_t j=0;j<zombie.size();j++){
+          if(zombie[j].boxColliderID == zombieEraseID[sizeProyectile]){
+            if(zombie[j].attack == false){
+              zombie[j].attack = true;
+              for(unsigned int k=0 ; k < zombieAnims.size(); k++){
+                printf("seaching\n");
+                if(zombieAnims[k].id == zombie[j].father){
+                  printf("encontre\n");
+                  ChangeAnimationEntity(zombieAnims[k].entity,AnimIndex::Zombie,enumAnimationState::normalZombieAttack);
+                  break;
+                }
+              }
+            }
+            zombieID = zombie[j].father;
+            break;
+          }
+        }
+        // lifeArray[plantEraseID[sizeProyectile]] -= damageArray[zombieID];
+        // printf("plant life: %d\n",lifeArray[plantEraseID[sizeProyectile]]);
+        // plant[i].damage(proyectileEraseID[sizeProyectile]);
+        // proyectileEraseID.erase(proyectileEraseID.begin() + zombieEraseID.size()-1);
+        zombieEraseID.erase(zombieEraseID.begin() + sizeProyectile);
+        zombieNotFound = true;
+        break;
+      } 
+    }
+    if(zombieNotFound == false){
+      zombieEraseID.erase(zombieEraseID.begin() + sizeProyectile);
+    }
+  }
+}
+
 void BoxCollisionManager::testUpdate(){
   unsigned int size = boxColliderArray.size();
 
@@ -817,6 +886,8 @@ void createBoxCollider(int id, BoxColliderEnum type, BoxCollider collider){
     boxColliderExplosion.push_back(collider);
   } else if(type == BOXCOLLIDER_LAWNMOWER){
     boxColliderLawnmower.push_back(collider);
+  } else if(type == BOXCOLLIDER_PLANT){
+    boxColliderPlant.push_back(collider);
   } else{
     // boxColliderArray[id] = collider;
     boxColliderArrayID[id] = boxColliderArray[type].size();
