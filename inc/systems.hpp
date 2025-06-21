@@ -76,7 +76,7 @@ class BoxCollisionManager {
   inline void update() {
     // testUpdate();
     mapCollision();
-    // projectileZombieCollision();
+    projectileZombieCollision();
     explosionZombieCollision();
     plantZombieCollision();
     lawnCollision();

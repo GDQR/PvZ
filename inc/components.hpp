@@ -130,6 +130,11 @@ class ZombieRow {
   int maxZombiesInRow = 0;
 };
 
+struct ResponseCollisionZombiePlant{
+  int zombieID;
+  int plantID;
+};
+
 extern Tyra::Engine* engine;
 extern Tyra::Renderer* renderer;
 extern Tyra::Renderer2D* renderer2D;
@@ -165,6 +170,7 @@ extern std::vector<BoxCollider> boxColliderZombie;
 extern std::vector<BoxCollider> boxColliderProyectile;
 extern std::vector<BoxCollider> boxColliderExplosion;
 extern std::vector<BoxCollider> boxColliderLawnmower;
+extern std::vector<ResponseCollisionZombiePlant> responseCollisionZombiePlant;
 extern std::unordered_map<int, TriggerBoxCollider> resultBoxCollider;
 extern ArrayKey<int, PS2Timer> timerArray;
 extern std::unordered_map<int, float> speedArray;

@@ -595,6 +595,12 @@ void Plant::erase() {
     printf("erase plant\n");
     printf("type: %d\n",type);
     plantCreatedInMap[row][column] = false;
+    for(unsigned int i=0; i<boxColliderPlant.size();i++){
+      if(boxColliderPlant[i].id == father){
+        boxColliderPlant.erase(boxColliderPlant.begin()+i);
+        break;
+      }
+    }
     deletePosArray(father);
     std::vector<int>::iterator it = id.begin();
     while (it != id.end()) {

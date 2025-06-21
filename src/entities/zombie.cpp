@@ -149,102 +149,49 @@ int Zombie::move() {
 }
 
 int Zombie::attackPlant() {
-  // for (int i = 0; i < 45; i++) {
-  //   if (plant[i].type == NonePlant) {
-  //     continue;
-  //   }
-  //   if (boxColliderArray[plant[i].father].collision(&boxColliderArray[boxColliderID]) ==
-  //       true) {
-  //     if (attack == false) {
-  //       attack = true;
-  //       unsigned int size = zombieAnims.size();
-  //       // for(int i=0; i < size; i++){
-  //       //   if (zombieAnims[i].id == father) {
-  //       //     for(int j=0; j < zombieAnims[i].entity.size(); j++){
-  //       //       if (animationArray.count(zombieAnims[i].entity[j]) == 1) {
-  //       //         // printf("anim attack id: %d\n",m_animID["Zombie"][j]);
-  //       //         animationArray[zombieAnims[i].entity[j]].setAnimation(normalZombieAttack);
-  //       //         animationDataArray[m_animID[AnimIndex::Zombie][j]].setAnimationState(
-  //       //         zombieAnims[i].entity[j], normalZombieAttack);
-  //       //       }
-  //       //     }
-  //       //   }
-  //       // }
-  //       // for (unsigned int j = 0; j < id.size(); j++) {
-  //       //   if (animationArray.count(id[j]) == 1) {
-  //       //     animationArray[id[j]].setAnimation(normalZombieAttack);
-  //       //     // printf("anim attack id: %d\n",m_animID["Zombie"][j]);
-  //       //     animationDataArray[m_animID[AnimIndex::Zombie][j]]
-  //       //         .setAnimationState(id[j], normalZombieAttack);
-  //       //   }
-  //       // }
-  //     }
+  int searchIndex = responseCollisionZombiePlant.size();
+  int size = searchIndex;
+  for(int i=0;i<size;i++){
+    if(responseCollisionZombiePlant[i].zombieID == boxColliderID){
+      searchIndex = i;
+      break;
+    }
+  }
 
-  //     if (attackTimer > 0) {
-  //       attackTimer--;
-  //     } else {
-  //       attackTimer = 80;
-  //       if (lifeArray.count(plant[i].father) == 1) {
-  //         printf("comiendo planta\n");
-  //         lifeArray[plant[i].father] -= damageArray[father];
-  //         if (lifeArray[plant[i].father] <= 0) {
-  //           printf("borre planta id: %d\n", plant[i].father);
-  //           plant[i].erase();
-  //           attack = false;
-  //           unsigned int size = zombieAnims.size();
-  //           // for(int i=0; i < size; i++){
-  //           //   if (zombieAnims[i].id == father) {
-  //           //     for(int j=0; j < zombieAnims[i].entity.size(); j++){
-  //           //       if (animationArray.count(zombieAnims[i].entity[j]) == 1) {
-  //           //         // printf("anim attack id: %d\n",m_animID["Zombie"][j]);
-  //           //         animationArray[zombieAnims[i].entity[j]].setAnimation(normalZombieWalk);
-  //           //         animationDataArray[m_animID[AnimIndex::Zombie][j]].setAnimationState(
-  //           //         zombieAnims[i].entity[j], normalZombieWalk);
-  //           //       }
-  //           //     }
-  //           //     // animationArray[zombieAnims[i].entity[0]].animID = zombieWalk;
-  //           //   }
-  //           // }
-  //           // for (unsigned int j = 0; j < id.size(); j++) {
-  //           //   if (animationArray.count(id[j]) == 1) {
-  //           //     // printf("anim attack id: %d\n",id[j]);
-  //           //     animationArray[id[j]].setAnimation(normalZombieWalk);
-  //           //     animationDataArray[m_animID[AnimIndex::Zombie][j]]
-  //           //         .setAnimationState(id[j], normalZombieWalk);
-  //           //   }
-  //           // }
-  //           // animationArray[id[0]].animID = zombieWalk;
-  //         }
-  //       }
-  //     }
-  //     return 0;
-  //   }
-  // }
+  if(size == searchIndex){
+    if(attack==true){
+      for(unsigned int k=0 ; k < zombieAnims.size(); k++){
+        if(zombieAnims[k].id == father){
+          attack = false;
+          ChangeAnimationEntity(zombieAnims[k].entity,AnimIndex::Zombie,enumAnimationState::normalZombieWalk);
+        }
+      }
+    }
+    return 0;
+  }
 
-  // if (attack == true) {
-  //   attack = false;
-  //   // unsigned int size = zombieAnims.size();
-  //   // for(int i=0; i < size; i++){
-  //   //   if (zombieAnims[i].id == father) {
-  //   //     for(int j=0; j < zombieAnims[i].entity.size(); j++){
-  //   //       if (animationArray.count(zombieAnims[i].entity[j]) == 1) {
-  //   //         // printf("anim attack id: %d\n",m_animID["Zombie"][j]);
-  //   //         animationArray[zombieAnims[i].entity[j]].setAnimation(normalZombieWalk);
-  //   //         animationDataArray[m_animID[AnimIndex::Zombie][j]].setAnimationState(
-  //   //         zombieAnims[i].entity[j], normalZombieWalk);
-  //   //       }
-  //   //     }
-  //   //   }
-  //   // }
-  //   // for (unsigned int j = 0; j < id.size(); j++) {
-  //   //   if (animationArray.count(id[j]) == 1) {
-  //   //     // printf("anim attack id: %d\n",id[j]);
-  //   //     animationArray[id[j]].setAnimation(normalZombieWalk);
-  //   //     animationDataArray[m_animID[AnimIndex::Zombie][j]].setAnimationState(
-  //   //         id[j], normalZombieWalk);
-  //   //   }
-  //   // }
-  // }
+  for(unsigned int k=0 ; k < zombieAnims.size(); k++){
+    // printf("seaching\n");
+    if(zombieAnims[k].id == father){
+      // printf("encontre\n");
+      if(attack == false){
+        attack = true;
+        ChangeAnimationEntity(zombieAnims[k].entity,AnimIndex::Zombie,enumAnimationState::normalZombieAttack);
+      }else {
+        for(size_t m=0;m<frameCounterArray.size();m++){
+          if(frameCounterArray[m].entityID == zombieAnims[k].entity[0]){
+            if(frameCounterArray[m].framesCounter == 0 && (frameCounterArray[m].currentFrame == 144 || frameCounterArray[m].currentFrame == 164)){
+              // printf("currentFrame: %d\n",frameCounterArray[m].currentFrame);
+              lifeArray[responseCollisionZombiePlant[searchIndex].plantID] -= damageArray[father];
+              // printf("plant life: %d\n",lifeArray[responseCollisionZombiePlant[searchIndex].plantID]);
+            }
+            break;
+          }
+        }
+      }
+      break;
+    }
+  }
 
   return 1;
 }
@@ -444,7 +391,7 @@ void createNormalZombie(const int id, const int fatherID, Tyra::Vec2 pos) {
   // TODO: change apparence when has 100 of life
 
   // damage
-  damageArray[zombie[id].father] = 100;
+  damageArray[zombie[id].father] = 50;
 
   // speed
   speedArray[zombie[id].father] = 1;
@@ -475,7 +422,7 @@ void createFlagZombie(const int id, const int fatherID, Tyra::Vec2 pos) {
   // TODO: change apparence when has 100 of life
 
   // damage
-  damageArray[zombie[id].father] = 100;
+  damageArray[zombie[id].father] = 50;
 
   // speed
   speedArray[zombie[id].father] = 1;
@@ -505,7 +452,7 @@ void createConeheadZombie(const int id, const int fatherID, Tyra::Vec2 pos) {
   // TODO: change apparence when has 100 of life
 
   // damage
-  damageArray[fatherID] = 100;
+  damageArray[fatherID] = 50;
 
   // speed
   speedArray[fatherID] = 1;

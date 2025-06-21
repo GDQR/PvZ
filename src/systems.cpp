@@ -379,6 +379,7 @@ void ZombiesManager::update() {
   for(Zombie& it: zombie){
     if(it.type != NoneZombie){
     it.move();
+    it.attackPlant();
     }
   }
   // std::vector<Zombie>::iterator it;
@@ -736,15 +737,16 @@ void BoxCollisionManager::lawnCollision(){
 }
 
 void BoxCollisionManager::plantZombieCollision(){
-  std::vector<int> plantEraseID;
-  std::vector<int> zombieEraseID;
+  responseCollisionZombiePlant.clear();
 
+  ResponseCollisionZombiePlant res;
   for(BoxCollider &it: boxColliderZombie){
     for(BoxCollider &it2: boxColliderPlant){
       if(it.collision(&it2) == true){
         // printf("colision\n");
-        zombieEraseID.push_back(it.id);
-        plantEraseID.push_back(it2.id);
+        res.plantID = it2.id;
+        res.zombieID = it.id;
+        responseCollisionZombiePlant.push_back(res);
         break;
       }
     }
