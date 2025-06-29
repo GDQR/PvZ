@@ -20,7 +20,6 @@ int seedBank;
 int zombieDebug;
 int flagMeterTimer = 0;
 int emptyFlagMeter;
-int fullFlagMeter;
 int seedChooser;
 int sunCounterText = 0;
 static int awardBackground;
@@ -49,22 +48,30 @@ void Level1::init() {
   zombieDebug = Entities::newID();
   emptyFlagMeter = Entities::newID();
   fullFlagMeter = Entities::newID();
+  zombieFlagMeter = Entities::newID();
   seedChooser = Entities::newID();
   awardBackground = Entities::newID();
   // // TODO: Fix size seedBank
-  // createSprite(seedBank, MODE_STRETCH, Vec2(63, 10),
-  //              Vec2(512 / 1.5f, 128 / 1.5f));
-  // createTexture(seedBank, "UI/SeedBank.png");
+  createSprite(seedBank, MODE_STRETCH, Vec2(63, 10),
+               Vec2(512 / 1.5f, 128 / 1.5f));
+  createTexture(seedBank, IMG_seedBank);
 
-  // // posicion es 255, 410 lo mejor para el flag
-  // createSprite(fullFlagMeter, MODE_REPEAT, Vec2(255, 410), Vec2(158, 24));
-  // spriteArray[fullFlagMeter].scale = 1;
-  // spriteArray[fullFlagMeter].offset.y = 27;
-  // createTexture(fullFlagMeter, "Images/FlagMeter.png");
+  
+  createSprite(emptyFlagMeter, MODE_REPEAT, Vec2(255, 410), Vec2(158, 24));
+  spriteArray[emptyFlagMeter].scale = 1;
+  createTexture(emptyFlagMeter, IMG_FlagMeter);
+  
+  createSprite(fullFlagMeter, MODE_REPEAT, Vec2(255, 410), Vec2(158, 24));
+  spriteArray[fullFlagMeter].scale = 1;
+  spriteArray[fullFlagMeter].offset.y = 27;
+  spriteArray[fullFlagMeter].size.x = 0;
+  // spriteArray[fullFlagMeter].flipHorizontal = true;
+  createTexture(fullFlagMeter, IMG_FlagMeter);
 
-  // createSprite(emptyFlagMeter, MODE_REPEAT, Vec2(255, 410), Vec2(158, 24));
-  // spriteArray[emptyFlagMeter].scale = 1;
-  // createTexture(emptyFlagMeter, "Images/FlagMeter.png");
+
+  createSprite(zombieFlagMeter, MODE_REPEAT, Vec2(405, 410), Vec2(28, 25)); //pos(255,410) es el final
+  spriteArray[zombieFlagMeter].scale = 1;
+  createTexture(zombieFlagMeter, IMG_FlagMeterParts);
 
   bool isVersusMode = false;
   loadAnimation(AnimIndex::Peashooter);

@@ -7,3 +7,7 @@ extern const char* background2;
 extern const char* AwardScreen_Back;
 extern const char* IMG_sod1row;
 extern const char* IMG_sod1row_;
+extern const char* IMG_seeds;
+extern const char* IMG_seedBank;
+extern const char* IMG_FlagMeter;
+extern const char* IMG_FlagMeterParts;
