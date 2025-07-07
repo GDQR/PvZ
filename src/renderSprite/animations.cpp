@@ -164,7 +164,7 @@ void loadAnimString() {
 }
 
 void setSprite(const int entityID, const int draw) {
-  if (draw == -1) {
+  if (spriteRenderIDArray.count(entityID) == 1 && draw == -1) {
     // spritesNormalRender.erase(entityID);
     spriteRenderIDArray.erase(entityID);
     // spriteNormalIdStopRender.push_back(entityID);
@@ -300,11 +300,19 @@ int AnimationData::activeAnimation(const int entityID,
       }else if (animProp[i].type == ANIM_DRAW && drawPropertyFounded == false){
         drawPropertyFounded = true;
         // printf("draw: %d\n",drawFrame[animProp[i].dataIndex]);
-        if (drawFrame[animProp[i].dataIndex] == (int)enumDraw::noDraw) {
+        if (spriteRenderIDArray.count(entityID) == 1 && drawFrame[animProp[i].dataIndex] == (int)enumDraw::noDraw) {
           spriteRenderIDArray.erase(entityID);
           // spriteNormalIdStopRender.push_back(entityID);
         } else if (spriteRenderIDArray.count(entityID) == 0) {
           spriteRenderIDArray.insert(entityID, 0);
+          int renderSize = spriteRenderIDArray.first.size();
+          for(int j=renderSize-1;j>1;j--){
+            if(spriteRenderIDArray.first[j] > spriteRenderIDArray.first[j-1]){   
+              int aux= spriteRenderIDArray.first[j];
+              spriteRenderIDArray.first[j] = spriteRenderIDArray.first[j-1];
+              spriteRenderIDArray.first[j-1] = aux;
+            }
+          }
         }
       }
     }
@@ -612,10 +620,10 @@ void loadAnimation(const AnimIndex::Animation animNameID) {
 }
 
 void SetAnimationToEntity(std::vector<int>& ids, int& father, AnimIndex::Animation anim, Tyra::Vec2 size, int firstFrame, int lastFrame){
-  int animSize = m_animID[anim].size();
+  size_t animSize = m_animID[anim].size();
   int entityID = -1;
   int animID;
-  for (unsigned int i = 0; i < animSize; i++) {
+  for (size_t i = 0; i < animSize; i++) {
     ids.push_back(Entities::newID());
 
     entityID = ids[i];
@@ -640,6 +648,23 @@ void SetAnimationToEntity(std::vector<int>& ids, int& father, AnimIndex::Animati
 
     newFatherID(&father, &ids[i]);
     animationDataArray[animID].loadAnimation(entityID, animID, size, animationStateVector[animState].firstFrame, animationStateVector[animState].lastFrame);
+
+    // animationArray[entityID].lastFrame = animationDataArray[animID].maxFrame;
+  }
+}
+
+void SetAnimationToEntity(std::vector<int>& ids, int& father, AnimIndex::Animation anim, Tyra::Vec2 size, int firstFrame){
+  size_t animSize = m_animID[anim].size();
+  int entityID = -1;
+  int animID;
+  for (size_t i = 0; i < animSize; i++) {
+    ids.push_back(Entities::newID());
+
+    entityID = ids[i];
+    animID = m_animID[anim][i];
+
+    newFatherID(&father, &ids[i]);
+    animationDataArray[animID].loadAnimation(entityID, animID, size, firstFrame,animationDataArray[animID].maxFrame);
 
     animationArray[entityID].lastFrame = animationDataArray[animID].maxFrame;
   }

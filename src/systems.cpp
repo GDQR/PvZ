@@ -97,16 +97,22 @@ void FrameManager::update(){
         } else if(animProp[j].type == ANIM_ALPHA){
           spriteArray[frameArray[i].entityID].color.a = alphaFrame[animProp[j].dataIndex];
         } else if (animProp[j].type == ANIM_DRAW){
-          // if(frameArray[i].animIndex == 102){
-
-          // printf("entity:%d, animID: %d, frame: %d\n",frameArray[i].entityID,frameArray[i].animIndex,frameArray[i].frame);
-          // printf("draw: %d\n",drawFrame[animProp[j].dataIndex] );
-          // }
-          if (drawFrame[animProp[j].dataIndex] == (int)enumDraw::noDraw) {
+          if (spriteRenderIDArray.count(frameArray[i].entityID) == 1 && drawFrame[animProp[j].dataIndex] == (int)enumDraw::noDraw) {
             spriteRenderIDArray.erase(frameArray[i].entityID);
             // spriteNormalIdStopRender.push_back(entityID);
-          } else if (spriteRenderIDArray.count(frameArray[i].entityID) == 0) {
+          } else if (spriteRenderIDArray.count(frameArray[i].entityID) == 0 && drawFrame[animProp[j].dataIndex] == (int)enumDraw::draw) {
             spriteRenderIDArray.insert(frameArray[i].entityID, 0);
+            int renderSize = spriteRenderIDArray.first.size();
+            // printf("sorting\n");
+            for(int j=renderSize-1;j>1;j--){
+              if(spriteRenderIDArray.first[j] < spriteRenderIDArray.first[j-1]){          
+                // printf("pos1: %d\n",spriteRenderIDArray.first[j]);
+                // printf("pos2: %d\n",spriteRenderIDArray.first[j-1]);
+                int aux= spriteRenderIDArray.first[j];
+                spriteRenderIDArray.first[j] = spriteRenderIDArray.first[j-1];
+                spriteRenderIDArray.first[j-1] = aux;
+              }
+            }
           }
         }
       }
@@ -751,58 +757,6 @@ void BoxCollisionManager::plantZombieCollision(){
       }
     }
       // printf("loop 1\n");
-  }
-
-  unsigned int size;
-  unsigned int sizeProyectile;
-  
-  size = zombieEraseID.size();
-
-  // for(size_t i=0;i<size;i++){
-  //   printf("plant erase[%d]: %d\n",i,zombieEraseID[i]);
-  // }
-
-  size = 45;
-  bool zombieNotFound;
-  while (zombieEraseID.size() > 0)
-  {  
-    zombieNotFound = false;
-    // printf("zombie erase size: %d\n",zombieEraseID.size());
-    sizeProyectile = zombieEraseID.size()-1;
-    for(unsigned int i=0; i < size; i++){
-      // printf("box collider:%d searched:%d\n",plant[i].father,plantEraseID[sizeProyectile]);
-      if(plant[i].father == plantEraseID[sizeProyectile]){
-        // printf("zombie colision\n");
-        int zombieID=0;
-        for(size_t j=0;j<zombie.size();j++){
-          if(zombie[j].boxColliderID == zombieEraseID[sizeProyectile]){
-            if(zombie[j].attack == false){
-              zombie[j].attack = true;
-              for(unsigned int k=0 ; k < zombieAnims.size(); k++){
-                printf("seaching\n");
-                if(zombieAnims[k].id == zombie[j].father){
-                  printf("encontre\n");
-                  ChangeAnimationEntity(zombieAnims[k].entity,AnimIndex::Zombie,enumAnimationState::normalZombieAttack);
-                  break;
-                }
-              }
-            }
-            zombieID = zombie[j].father;
-            break;
-          }
-        }
-        // lifeArray[plantEraseID[sizeProyectile]] -= damageArray[zombieID];
-        // printf("plant life: %d\n",lifeArray[plantEraseID[sizeProyectile]]);
-        // plant[i].damage(proyectileEraseID[sizeProyectile]);
-        // proyectileEraseID.erase(proyectileEraseID.begin() + zombieEraseID.size()-1);
-        zombieEraseID.erase(zombieEraseID.begin() + sizeProyectile);
-        zombieNotFound = true;
-        break;
-      } 
-    }
-    if(zombieNotFound == false){
-      zombieEraseID.erase(zombieEraseID.begin() + sizeProyectile);
-    }
   }
 }
 

@@ -182,7 +182,13 @@ int Zombie::attackPlant() {
           if(frameCounterArray[m].entityID == zombieAnims[k].entity[0]){
             if(frameCounterArray[m].framesCounter == 0 && (frameCounterArray[m].currentFrame == 144 || frameCounterArray[m].currentFrame == 164)){
               // printf("currentFrame: %d\n",frameCounterArray[m].currentFrame);
-              lifeArray[responseCollisionZombiePlant[searchIndex].plantID] -= damageArray[father];
+              for(size_t j=0;j<45;j++){
+                if(plant[j].father == responseCollisionZombiePlant[searchIndex].plantID){
+                  plant[j].damage(father);
+                  break;
+                }
+              }
+              // lifeArray[] -= damageArray[father];
               // printf("plant life: %d\n",lifeArray[responseCollisionZombiePlant[searchIndex].plantID]);
             }
             break;
@@ -201,17 +207,25 @@ void Zombie::damage(const int entityID) {
   lifeArray[father] -= damageArray[entityID];
   printf("lifeArray: %d\n",lifeArray[father]);
   // damagedZombie.push_back()
-  // unsigned int size = zombieAnims.size();
-  // for(int i=0; i < size; i++){
-  //   if (zombieAnims[i].id == father) {
-  //     for(int j=0; j < zombieAnims[i].entity.size(); j++){
-  //       if (animationArray.count(zombieAnims[i].entity[j]) == 1) {
-  //         // printf("anim attack id: %d\n",m_animID["Zombie"][j]);
-  //         spriteArray[zombieAnims[i].entity[j]].color = Tyra::Color(255, 255, 255, 128);
-  //       }
-  //     }
-  //   }
-  // }
+  size_t size = zombieAnims.size();
+  unsigned int indexAnim = size;
+  for(size_t i=0; i < size; i++){
+    if (zombieAnims[i].id == father) {
+      indexAnim = i;
+      break;
+    }
+  }
+
+  if(indexAnim == size) { return; }
+
+  std::vector<int>& animEntity = zombieAnims[indexAnim].entity;
+  size = animEntity.size();
+  for(size_t i=0; i < size; i++){
+    if (animationArray.count(animEntity[i]) == 1) {
+      // printf("anim attack id: %d\n",m_animID["Zombie"][j]);
+      spriteArray[animEntity[i]].color = Tyra::Color(255, 255, 255, 128);
+    }
+  }
   // unsigned int size = id.size();
   // for (unsigned int j = 0; j < size; j++) {
   //   if (animationArray.count(id[j]) == 1) {
@@ -243,58 +257,34 @@ int Zombie::normalColor() {
   if (damaged == false) {
     return 1;
   }
-  // for(int i=0; i < zombieAnims.size(); i++){
-  //   if(zombieAnims[i].id == father){
-  //     // int id = zombieAnims[i].entity.size()-1;
-  //     std::vector<int> ids = zombieAnims[i].entity;
-  //     unsigned int size = ids.size();
-  //     for (unsigned int j = 0; j < size; j++) {
-  //       if (animationArray.count(ids[j]) == 1) {
-  //         if (spriteArray.count(ids[j]) == 1) {
-  //           if (spriteArray[ids[j]].color.r > 128.0f &&
-  //               spriteArray[ids[j]].color.g > 128.0f &&
-  //               spriteArray[ids[j]].color.b > 128.0f) {
-  //             spriteArray[ids[j]].color -= 5;
-  //             spriteArray[ids[j]].color.a = 128;
-  //           } else {
-  //             damaged = false;
-  //           }
-  //         }
-  //       }
-  //     }
-  //   }
-  // }
-      // for (unsigned int j = 0; j < zombieAnims[i].entity.size(); j++) {
-      //   if (animationArray.count(id[j]) == 1) {
-      //     if (spriteArray.count(id[j]) == 1) {
-      //       if (spriteArray[id[j]].color.r > 128.0f &&
-      //           spriteArray[id[j]].color.g > 128.0f &&
-      //           spriteArray[id[j]].color.b > 128.0f) {
-      //         spriteArray[id[j]].color -= 5;
-      //         spriteArray[id[j]].color.a = 128;
-      //       } else {
-      //         damaged = false;
-      //       }
-      //     }
-      //   }
-      // }
-    // }
-  // }
-  
-  // for (unsigned int j = 0; j < id.size(); j++) {
-  //   if (animationArray.count(id[j]) == 1) {
-  //     if (spriteArray.count(id[j]) == 1) {
-  //       if (spriteArray[id[j]].color.r > 128.0f &&
-  //           spriteArray[id[j]].color.g > 128.0f &&
-  //           spriteArray[id[j]].color.b > 128.0f) {
-  //         spriteArray[id[j]].color -= 5;
-  //         spriteArray[id[j]].color.a = 128;
-  //       } else {
-  //         damaged = false;
-  //       }
-  //     }
-  //   }
-  // }
+  size_t size = zombieAnims.size();
+  unsigned int indexAnim = size;
+  for(size_t i=0; i < size; i++){
+    if (zombieAnims[i].id == father) {
+      indexAnim = i;
+      break;
+    }
+  }
+
+  if(indexAnim == size) { return 1; }
+
+  std::vector<int>& ids = zombieAnims[indexAnim].entity;
+  size = ids.size();
+  for(size_t i=0; i < size; i++){
+    if (animationArray.count(ids[i]) == 1) {
+      // printf("anim attack id: %d\n",m_animID["Zombie"][j]);
+      Tyra::Sprite& animSprite = spriteArray[ids[i]];
+      animSprite.color.r -= 5;
+      animSprite.color.g -= 5;
+      animSprite.color.b -= 5;
+      if(animSprite.color.r < 128.0f){
+        animSprite.color.r = 128.0f;
+        animSprite.color.g = 128.0f;
+        animSprite.color.b = 128.0f;
+        damaged = false;
+      }
+    }
+  }
   return 0;
 }
 

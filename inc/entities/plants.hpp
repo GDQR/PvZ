@@ -71,16 +71,27 @@ enum Plant_State_enum {
 };
 
 extern std::vector<int> plantCollisionID;
+
+struct PlantAnimation{
+  int id;
+  std::vector<int> entity;
+};
+
+extern std::vector<PlantAnimation> plantAnims;
+
 class Plant {
  public:
-  std::vector<int> id;
+  // std::vector<int> id;
 
   Plant_State_enum type = NonePlant;
   int father;
   int row;
   int column;
+  bool damaged = false;
   void newPlant(Plant_State_enum newType);
   int attack();
+  void damage(const int entityID);
+  int normalColor();
   void erase();
 };
 
