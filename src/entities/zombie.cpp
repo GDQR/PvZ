@@ -50,7 +50,7 @@ void SetZombieAnimation(const int entityID, const int animID, const Zombie_State
       (strcmp(animationDataArray[animID].name, Zombie_innerarm_screendoor)==0) ||
       (strcmp(animationDataArray[animID].name, Zombie_flaghand)==0)) {
         animationArray[entityID].draw = (int)enumDraw::noDraw;
-        setSprite(entityID, animationArray[entityID].draw);
+        setSprite(entityID, (int)enumDraw::noDraw);
         deleteAnimation(entityID);
         // animationIdStopRender.push_back(entityID);
         // printf("encontre anim_bucket o anim_cone\n");

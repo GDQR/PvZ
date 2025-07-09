@@ -168,9 +168,16 @@ void setSprite(const int entityID, const int draw) {
     // spritesNormalRender.erase(entityID);
     spriteRenderIDArray.erase(entityID);
     // spriteNormalIdStopRender.push_back(entityID);
-  } else if (spriteRenderIDArray.count(entityID) == 0) {
+  } else if (spriteRenderIDArray.count(entityID) == 0 && draw == 0) {
     spriteRenderIDArray.insert(entityID, 0);
-    // spritesNormalRender[entityID] = &spriteArray[entityID];
+    int renderSize = spriteRenderIDArray.first.size();
+    for(int j=renderSize-1;j>1;j--){
+      if(spriteRenderIDArray.first[j] < spriteRenderIDArray.first[j-1]){         
+        int aux= spriteRenderIDArray.first[j];
+        spriteRenderIDArray.first[j] = spriteRenderIDArray.first[j-1];
+        spriteRenderIDArray.first[j-1] = aux;
+      }
+    }
   }
   // printf("plant draw: %d\n", animationArray[entityID].draw);
 }
@@ -246,7 +253,7 @@ void AnimationData::loadAnimation(const int entityID, const int animID,
 
   scaleTexture[entityID] = scaleTextures;
 
-  activeAnimation(entityID, firstFrame, lastFrame,animID);
+  activeAnimation(entityID, firstFrame, lastFrame);
 
   // printf("termine\n\n");
 }
@@ -260,8 +267,7 @@ std::vector<int> drawFrame;
 
 int AnimationData::activeAnimation(const int entityID,
                                    const unsigned int firstFrame,
-                                   const unsigned int lastFrame,
-                                   int animID) {
+                                   const unsigned int lastFrame) {
   bool drawPropertyFounded = false;
   bool scalePropertyFounded = false;
   bool posPropertyFounded = false;
@@ -300,20 +306,7 @@ int AnimationData::activeAnimation(const int entityID,
       }else if (animProp[i].type == ANIM_DRAW && drawPropertyFounded == false){
         drawPropertyFounded = true;
         // printf("draw: %d\n",drawFrame[animProp[i].dataIndex]);
-        if (spriteRenderIDArray.count(entityID) == 1 && drawFrame[animProp[i].dataIndex] == (int)enumDraw::noDraw) {
-          spriteRenderIDArray.erase(entityID);
-          // spriteNormalIdStopRender.push_back(entityID);
-        } else if (spriteRenderIDArray.count(entityID) == 0) {
-          spriteRenderIDArray.insert(entityID, 0);
-          int renderSize = spriteRenderIDArray.first.size();
-          for(int j=renderSize-1;j>1;j--){
-            if(spriteRenderIDArray.first[j] > spriteRenderIDArray.first[j-1]){   
-              int aux= spriteRenderIDArray.first[j];
-              spriteRenderIDArray.first[j] = spriteRenderIDArray.first[j-1];
-              spriteRenderIDArray.first[j-1] = aux;
-            }
-          }
-        }
+        setSprite(entityID,drawFrame[animProp[i].dataIndex]);
       }
     }
     
@@ -353,7 +346,7 @@ int AnimationData::activeAnimation(const int entityID,
 void AnimationData::setAnimationState(const int entityID,
                                       enumAnimationState animationState) {
   activeAnimation(entityID, animationStateVector[animationState].firstFrame,
-                  animationStateVector[animationState].lastFrame,0);
+                  animationStateVector[animationState].lastFrame);
 }
 
 void readTag(std::ifstream& MyReadFile, std::string& string, char& state) {
@@ -671,13 +664,18 @@ void SetAnimationToEntity(std::vector<int>& ids, int& father, AnimIndex::Animati
 }
 
 void ChangeAnimationEntity(std::vector<int>& ids, AnimIndex::Animation anim, enumAnimationState animState){
-  unsigned int frameIndex = 0;
+  unsigned int frameIndex = frameCounterArray.size();
   for(size_t i=0;i<frameCounterArray.size();i++){
     if(frameCounterArray[i].entityID == ids[0]){
       frameIndex = i;
       break;
     }
   }
+
+  if(frameIndex == frameCounterArray.size()){
+    return;
+  }
+
   for(size_t i=frameIndex;i<frameIndex+ids.size();i++){
     frameCounterArray[i].currentFrame = animationStateVector[animState].firstFrame;
     frameCounterArray[i].firstFrame = frameCounterArray[i].currentFrame;
@@ -686,7 +684,7 @@ void ChangeAnimationEntity(std::vector<int>& ids, AnimIndex::Animation anim, enu
   
   std::vector<int>& anim_2 = m_animID[anim];
   for(size_t i=0; i< anim_2.size();i++){
-    animationDataArray[anim_2[i]].activeAnimation(ids[i],animationStateVector[animState].firstFrame,animationStateVector[animState].lastFrame, anim_2[i]);
+    animationDataArray[anim_2[i]].activeAnimation(ids[i],animationStateVector[animState].firstFrame,animationStateVector[animState].lastFrame);
   }
   
   //TODO: esto debe estar separado para las animaciones de los zombies

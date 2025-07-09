@@ -280,7 +280,7 @@ class AnimationData {
                      const Tyra::Vec2 scaleTextures, const int firstFrame,
                      const int lastFrame);
   int activeAnimation(const int entityID, const unsigned int firstFrame,
-                      const unsigned int lastFrame, int animID);
+                      const unsigned int lastFrame);
   void setAnimationState(const int entityID, enumAnimationState animationState);
 };
 
