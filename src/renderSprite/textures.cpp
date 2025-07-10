@@ -1,6 +1,7 @@
 #include "renderSprite/textures.hpp"
 #include "components.hpp"
 #include "entities/plants.hpp"
+#include "imageFiles.hpp"
 
 // #include "jpgResize.hpp"
 
@@ -10,6 +11,8 @@ Tyra::Texture* projectilePea;
 Tyra::Texture* projectileSnowPea;
 Tyra::Texture* projectileExplosionPowie;
 Tyra::Texture* projectileExplosionSpudow;
+Tyra::Texture* TEX_Wallnut_cracked1;
+Tyra::Texture* TEX_Wallnut_cracked2;
 
 const char* seedChooserTexture = "SeedChooser_Background";
 
@@ -148,4 +151,6 @@ void loadProjectile() {
   projectileSnowPea = loadTexture("images/ProjectileSnowPea.png");
   projectileExplosionPowie = loadTexture("particles/ExplosionPowie.png");
   projectileExplosionSpudow = loadTexture("particles/ExplosionSpudow.png");
+  TEX_Wallnut_cracked1 = loadTexture(IMG_Wallnut_cracked1);  
+  TEX_Wallnut_cracked2 = loadTexture(IMG_Wallnut_cracked2);
 }

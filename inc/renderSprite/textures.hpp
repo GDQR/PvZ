@@ -7,6 +7,9 @@
 using Tyra::Sprite;
 using Tyra::Vec2;
 
+extern Tyra::Texture* TEX_Wallnut_cracked1;
+extern Tyra::Texture* TEX_Wallnut_cracked2;
+
 void loadSprite(Sprite* sprite);
 void loadSprite(Sprite* sprite, Vec2 size);
 void loadSprite(Sprite* sprite, Tyra::SpriteMode mode, Vec2 position,

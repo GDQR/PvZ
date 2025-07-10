@@ -11,3 +11,5 @@ extern const char* IMG_seeds;
 extern const char* IMG_seedBank;
 extern const char* IMG_FlagMeter;
 extern const char* IMG_FlagMeterParts;
+extern const char* IMG_Wallnut_cracked1;
+extern const char* IMG_Wallnut_cracked2;

@@ -411,10 +411,50 @@ int Plant::attack() {
       // erase();
     }
   } else if (type == Wallnut) {
-    if (lifeArray[father] <= 2667) {
+    if (lifeArray[father] <= 1333) {
       printf("change animation\n");
-    } else if (lifeArray[father] <= 1333) {
+      for(size_t i=0; i<plantAnims.size();i++){
+        if(plantAnims[i].id == father){
+          const int spriteID = spriteArray[plantAnims[i].entity[0]].id;
+          Tyra::Texture* oldTexture = texRepo->getBySpriteId(spriteID);
+          if (oldTexture != TEX_Wallnut_cracked2) {
+            // printf("link sprite\n");
+            if (oldTexture != nullptr) {
+              // printf("unlink sprite id: %d\n", spriteArray[frameArray[i].entityID].id);
+              oldTexture->removeLinkById(spriteID);
+            }
+          
+            // Link new Texture to the sprite entitie
+            TEX_Wallnut_cracked2->addLink(spriteID);
+            spriteArray[plantAnims[i].entity[0]].textureID = TEX_Wallnut_cracked2->id;
+            originalSize[plantAnims[i].entity[0]] =
+                Vec2(TEX_Wallnut_cracked2->getWidth(), TEX_Wallnut_cracked2->getHeight());
+          }
+          break;
+        }
+      }
+    } else if (lifeArray[father] <= 2667) {
       printf("change animation\n");
+      for(size_t i=0; i<plantAnims.size();i++){
+        if(plantAnims[i].id == father){
+          const int spriteID = spriteArray[plantAnims[i].entity[0]].id;
+          Tyra::Texture* oldTexture = texRepo->getBySpriteId(spriteID);
+          if (oldTexture != TEX_Wallnut_cracked1) {
+            // printf("link sprite\n");
+            if (oldTexture != nullptr) {
+              // printf("unlink sprite id: %d\n", spriteArray[frameArray[i].entityID].id);
+              oldTexture->removeLinkById(spriteID);
+            }
+          
+            // Link new Texture to the sprite entitie
+            TEX_Wallnut_cracked1->addLink(spriteID);
+            spriteArray[plantAnims[i].entity[0]].textureID = TEX_Wallnut_cracked1->id;
+            originalSize[plantAnims[i].entity[0]] =
+                Vec2(TEX_Wallnut_cracked1->getWidth(), TEX_Wallnut_cracked1->getHeight());
+          }
+          break;
+        }
+      }
     }
   } else if (type == PotatoMine) {
     PS2Timer& potatoTimer = timerArray[father];

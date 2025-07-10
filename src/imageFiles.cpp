@@ -11,3 +11,5 @@ const char* IMG_seeds = "IMAGES/Seeds.png";
 const char* IMG_seedBank = "IMAGES/SeedBank.png";
 const char* IMG_FlagMeter = "IMAGES/FlagMeter.png";
 const char* IMG_FlagMeterParts = "IMAGES/FlagMeterParts.png";
+const char* IMG_Wallnut_cracked1 = "REANIM/Wallnut_cracked1.png";
+const char* IMG_Wallnut_cracked2 = "REANIM/Wallnut_cracked2.png";
