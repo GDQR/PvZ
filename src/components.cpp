@@ -34,6 +34,7 @@ std::vector<BoxCollider> boxColliderZombie;
 std::vector<BoxCollider> boxColliderProyectile;
 std::vector<BoxCollider> boxColliderExplosion;
 std::vector<BoxCollider> boxColliderLawnmower;
+std::vector<ResponseCollisionProjectile> responseCollisionZombieProjectile;
 std::vector<ResponseCollisionZombiePlant> responseCollisionZombiePlant;
 std::unordered_map<int, TriggerBoxCollider> resultBoxCollider;
 ArrayKey<int, PS2Timer> timerArray(enumComponents::timer);

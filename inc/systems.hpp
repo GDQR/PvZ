@@ -61,14 +61,21 @@ class PlantsManager {
     for (Plant& onePlant : plant) {
       onePlant.erase();
       onePlant.attack();
+      onePlant.normalColor();
     }
   };
+};
+
+extern int projectilesCreated;
+class ProjectileManager {
+  public:
+  void update();
 };
 
 class BoxCollisionManager {
  public:
   void mapCollision();
-  int projectileZombieCollision();
+  void projectileZombieCollision();
   void explosionZombieCollision();
   void lawnCollision();
   void plantZombieCollision();
@@ -105,6 +112,7 @@ extern RendererSprites renderSprites;
 extern RendererDebugSpritesManager renderDebugSpritesManager;
 extern ZombiesManager zombiesManager;
 extern PlantsManager plantsManager;
+extern ProjectileManager projectileManager;
 extern RewardManager rewardManager;
 extern CardManager cardManager;
 extern CameraManager cameraManager;

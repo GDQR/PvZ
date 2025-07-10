@@ -100,6 +100,7 @@ class Proyectile {
  public:
   int id;
   enumProyectile type;
+  bool attack();
   bool move();
   void erase();
 };
@@ -128,6 +129,11 @@ class ZombieRow {
  public:
   int zombiesInRow = 0;
   int maxZombiesInRow = 0;
+};
+
+struct ResponseCollisionProjectile{
+  int projectileID;
+  int zombieID;
 };
 
 struct ResponseCollisionZombiePlant{
@@ -170,6 +176,7 @@ extern std::vector<BoxCollider> boxColliderZombie;
 extern std::vector<BoxCollider> boxColliderProyectile;
 extern std::vector<BoxCollider> boxColliderExplosion;
 extern std::vector<BoxCollider> boxColliderLawnmower;
+extern std::vector<ResponseCollisionProjectile> responseCollisionZombieProjectile;
 extern std::vector<ResponseCollisionZombiePlant> responseCollisionZombiePlant;
 extern std::unordered_map<int, TriggerBoxCollider> resultBoxCollider;
 extern ArrayKey<int, PS2Timer> timerArray;

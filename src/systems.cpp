@@ -14,6 +14,7 @@ RendererSprites renderSprites;
 RendererDebugSpritesManager renderDebugSpritesManager;
 ZombiesManager zombiesManager;
 PlantsManager plantsManager;
+ProjectileManager projectileManager;
 RewardManager rewardManager;
 CardManager cardManager;
 CameraManager cameraManager;
@@ -546,87 +547,21 @@ void BoxCollisionManager::mapCollision() {
   // printf("cursor i:%f j:%f\n",cursor[Entity::player.id].cursorTile.x,cursor[Entity::player.id].cursorTile.y);
 }
 
-int BoxCollisionManager::projectileZombieCollision() {
-  std::vector<int> proyectileEraseID;
-  std::vector<int> zombieEraseID;
+void BoxCollisionManager::projectileZombieCollision() {
+  responseCollisionZombieProjectile.clear();
+
+  ResponseCollisionProjectile res;
 
   for(BoxCollider &it: boxColliderProyectile){
     for(BoxCollider &it2: boxColliderZombie){
       if(it.collision(&it2) == true){
-        // printf("colision\n");
-        proyectileEraseID.push_back(it.id);
-        zombieEraseID.push_back(it2.id);
-        break;
-      }
-    }
-      // printf("loop 1\n");
-  }
-  // printf("fin loop\n");
-
-  unsigned int size;
-  unsigned int sizeProyectile;
-  
-  size = zombieEraseID.size();
-
-  for(size_t i=0;i<size;i++){
-    printf("zombie erase[%d]: %d\n",i,zombieEraseID[i]);
-  }
-
-  size = zombie.size();
-  bool zombieNotFound;
-  while (zombieEraseID.size() > 0)
-  {  
-    zombieNotFound = false;
-    // printf("zombie erase size: %d\n",zombieEraseID.size());
-    sizeProyectile = zombieEraseID.size()-1;
-    for(unsigned int i=0; i < size; i++){
-      // printf("box collider:%d searched:%d\n",zombie[i].boxColliderID,zombieEraseID[sizeProyectile]);
-      if(zombie[i].boxColliderID == zombieEraseID[sizeProyectile]){
-        // printf("zombie colision\n");
-        zombie[i].damage(proyectileEraseID[sizeProyectile]);
-        if(zombie[i].erase() == true){
-          zombie.erase(zombie.begin()+i);
-        }
-         /*else if (proyectile.type == enumProyectile::snowPea) {
-          speedArray[zombie[i].father] = 0.5f;
-        }*/
-        // proyectileEraseID.erase(proyectileEraseID.begin() + zombieEraseID.size()-1);
-        zombieEraseID.erase(zombieEraseID.begin() + sizeProyectile);
-        zombieNotFound = true;
-        break;
-      } 
-    }
-    if(zombieNotFound == false){
-      zombieEraseID.erase(zombieEraseID.begin() + sizeProyectile);
-    }
-  }
-
-  size = projectile.size();
-  // printf("size moveproyecile: %d\n",size);
-  for(unsigned int i=0;i < size;i++){
-    // printf("move: %d\n",i);
-    if(projectile[i].move() == true){
-      // printf("new size: %d\n",size);
-      proyectileEraseID.push_back(projectile[i].id);
-    }
-  }
-  
-  while(proyectileEraseID.size() > 0 ){
-    size = projectile.size();
-    sizeProyectile = proyectileEraseID.size()-1;
-    for(unsigned int i=0;i < size;i++){
-      if(proyectileEraseID[sizeProyectile] == projectile[i].id){
-        projectile[i].erase();
-        projectile[i] = projectile[size-1];
-        projectile.erase(projectile.begin() + size-1);
-        proyectileEraseID.erase(proyectileEraseID.begin()+sizeProyectile);
-        projectilesCreated--;
+        res.projectileID = it.id;
+        res.zombieID = it2.id;
+        responseCollisionZombieProjectile.push_back(res);
         break;
       }
     }
   }
-
-  return 0;
 }
 
 void BoxCollisionManager::explosionZombieCollision() {
@@ -825,7 +760,8 @@ void createSprite(int id, Tyra::SpriteMode mode, Tyra::Vec2 position,
   posArray.insert(id, position);
   finalPosArray.insert(id, Vec2(0, 0));
   loadSprite(&spriteArray[id], mode, Vec2(0.0f, 0.0f), size);
-  spriteRenderIDArray.insert(id, 0);
+  // spriteRenderIDArray.insert(id, 0);
+  setSprite(id,(int)enumDraw::draw);
 }
 
 void createSpriteRotate(int id, Tyra::SpriteMode mode, Tyra::Vec2 position,
@@ -885,25 +821,25 @@ void newProjectile(Vec2 position, const int damage,
     projectileData.id = Entities::newID();
     projectileData.type = projectileType;
 
-    projectile.insert(projectile.begin() + projectilesCreated, projectileData);
-    int* id = &projectile[projectilesCreated].id;
+    projectile.push_back(projectileData);
+    int& id = projectile[projectile.size()-1].id; //projectile[projectilesCreated].id;
 
     position.y -= 15.0f;
-    createSprite(*id, Tyra::MODE_STRETCH, position, Vec2(31 / 1.6f, 31 / 1.6f));
+    createSprite(id, Tyra::MODE_STRETCH, position, Vec2(31 / 1.6f, 31 / 1.6f));
     if (projectileType == enumProyectile::pea) {
-      projectilePea->addLink(spriteArray[*id].id);
-      spriteArray[*id].textureID = projectilePea->id;
+      projectilePea->addLink(spriteArray[id].id);
+      spriteArray[id].textureID = projectilePea->id;
     } else if (projectileType == enumProyectile::snowPea) {
-      projectileSnowPea->addLink(spriteArray[*id].id);
-      spriteArray[*id].textureID = projectileSnowPea->id;
+      projectileSnowPea->addLink(spriteArray[id].id);
+      spriteArray[id].textureID = projectileSnowPea->id;
     }
 
     // damage
-    damageArray[*id] = damage;
+    damageArray[id] = damage;
     // hitbox
-    createBoxCollider(*id,BoxColliderEnum::BOXCOLLIDER_PROYECTILE,BoxCollider(*id,posArray[*id].x, posArray[*id].y, spriteArray[*id].size.x,
-                    spriteArray[*id].size.y));
-    createDebugBoxCollider(*id,BoxColliderEnum::BOXCOLLIDER_PROYECTILE, Tyra::MODE_STRETCH);
+    createBoxCollider(id,BoxColliderEnum::BOXCOLLIDER_PROYECTILE,BoxCollider(id,posArray[id].x, posArray[id].y, spriteArray[id].size.x,
+                    spriteArray[id].size.y));
+    createDebugBoxCollider(id,BoxColliderEnum::BOXCOLLIDER_PROYECTILE, Tyra::MODE_STRETCH);
     projectilesCreated++;
   }
 }

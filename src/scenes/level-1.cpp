@@ -250,6 +250,8 @@ void Level1::update() {
 
     createZombieMain();
 
+    projectileManager.update();
+
     rewardManager.update();
 
     // if (spriteArray[emptyFlagMeter].size.x /*flagMeterTimer*/ > 0) {
