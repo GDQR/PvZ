@@ -235,7 +235,7 @@ void createChomper(const int id, const Tyra::Vec2 pos) {
   damageArray[plant[id].father] = 1600;
 
   // lifeBox
-  createBoxCollider(plant[id].father, BoxColliderEnum::BOXCOLLIDER_PLANT, BoxCollider(pos.x + 10, pos.y + 20, 28, 38));
+  createBoxCollider(plant[id].father, BoxColliderEnum::BOXCOLLIDER_PLANT, BoxCollider(father, pos.x + 10, pos.y + 20, 28, 38));
   // HitBox
   // createBoxCollider(plant[id].id[0], BoxColliderEnum::BOXCOLLIDER_PLANT, BoxCollider(pos.x + 30, pos.y + 20, 28, 38));
   createDebugBoxCollider(plant[id].father, BoxColliderEnum::BOXCOLLIDER_PLANT, Tyra::MODE_STRETCH);

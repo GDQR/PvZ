@@ -2,6 +2,7 @@
 #include "font/font.hpp"
 #include "manager.hpp"
 #include "systems.hpp"
+#include "text.hpp"
 
 int main() {
   Tyra::Engine e;
@@ -11,6 +12,7 @@ int main() {
   pad = &e.pad;
   leftJoy = &e.pad.getLeftJoyPad();
   texRepo = &engine->renderer.getTextureRepository();
+  ReadTextFile();
   // loadFonts();
   Manager game;
   game.init();

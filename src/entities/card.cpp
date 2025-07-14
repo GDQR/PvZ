@@ -1,5 +1,6 @@
 #include "systems.hpp"
 #include "font/font.hpp"
+#include "imageFiles.hpp"
 #include <string>
 
 void createCardPeashotter(std::vector<int>& plantID, const Tyra::Vec2 pos) {
@@ -154,11 +155,11 @@ void createCard(const Plant_State_enum typePlant, const Tyra::Vec2 pos,
   card.seedShadowTimer = Entities::newID();
 
   createSprite(card.seed, Tyra::MODE_REPEAT, pos, Vec2(50, 70));
-  createTexture(card.seed, "UI/Seeds.png");
+  createTexture(card.seed, IMG_seeds);
   spriteArray[card.seed].offset.x = 100;
 
   createSprite(card.seedShadow, Tyra::MODE_REPEAT, pos, Vec2(50, 70));
-  createTexture(card.seedShadow, "UI/Seeds.png");
+  createTexture(card.seedShadow, IMG_seeds);
   spriteArray[card.seedShadow].color = Tyra::Color(0.0F, 0.0F, 0.0F, 60.0F);
 
   // TODO: hacer que el seedshadowtimer aparezca despues del "start set plant"
@@ -167,7 +168,7 @@ void createCard(const Plant_State_enum typePlant, const Tyra::Vec2 pos,
   // costo de soles es mayor
 
   createSprite(card.seedShadowTimer, Tyra::MODE_REPEAT, pos, Vec2(50, 70));
-  createTexture(card.seedShadowTimer, "UI/Seeds.png");
+  createTexture(card.seedShadowTimer, IMG_seeds);
   spriteArray[card.seedShadowTimer].color =
       Tyra::Color(0.0F, 0.0F, 0.0F, 60.0F);
 

@@ -510,6 +510,56 @@ int getLetterPos(int* charlist, int letter) {
     }
   }
   return letter;
+
+int getCodepoint(const char* text, unsigned int* bytes) {
+  /* UTF-8 more info in https://en.wikipedia.org/wiki/UTF-8
+    Code point ↔ UTF-8 conversion
+    First code and last code point are in hexadecimal.
+    If use 2 bytes or more, from the byte 2 they need to be 10xxxxxx until
+    the last byte used. The "x" means can be 1 or 0.
+    |----------------------------------------------------------------------|
+    |First code point |Last code point |Byte 1  |Byte 2  |Byte 3  |Byte 4  |
+    |(0000-0000)      |(0000-007F)     |0xxxxxxx|nothing |nothing |nothing |
+    |(0000-0080)      |(0000-07FF)     |110xxxxx|10xxxxxx|nothing |nothing |
+    |(0000-0800)      |(0000-FFFF)     |1110xxxx|10xxxxxx|10xxxxxx|nothing |
+    |(0001-0000)      |(0010-FFFF)     |11110xxx|10xxxxxx|10xxxxxx|10xxxxxx|
+    |----------------------------------------------------------------------|
+    0x80 = 1000-0000
+    0xC0 = 1100-0000
+    0xE0 = 1110-0000
+    0xF0 = 1111-0000
+    0xF8 = 1111-1000
+  */
+
+  int codepoint = 0x3f;  // char '?'
+  *bytes = 1;
+
+  // 0x00 minimum value allowed, 0x80 minimum value NOT allowed
+  if (0x00 == (0x80 & (unsigned char) text[0])) {
+    codepoint = text[0];
+  }  // 0xC0 minimum value allowed, 0xE0 minimum value NOT allowed
+  else if (0xC0 == (0xE0 & (unsigned char) text[0])) {
+    if ((text[1] & 0xC0) == 0x80) {  // verify that it is 10xxxxxx.
+      codepoint = (((unsigned char) text[0] ^ 0xC0) << 6) | (((unsigned char)text[1] ^ 0x80));
+      *bytes = 2;
+    }
+  }  // 0xE0 minimum value allowed, 0xF0 minimum value NOT allowed
+  else if (0xE0 == (0xF0 & text[0])) {
+    if ((text[1] & 0xC0) == 0x80 && (text[2] & 0xC0) == 0x80) {
+      codepoint = (((unsigned char)text[0] ^ 0xE0) << 12) | (((unsigned char)text[1] ^ 0x80) << 6) |
+                  (((unsigned char)text[2] ^ 0x80));
+      *bytes = 3;
+    }
+  }  // 0xF0 minimum value allowed, 0xF8 minimum value NOT allowed
+  else if (0xF0 == (0xF8 & text[0])) {
+    if ((text[1] & 0xC0) == 0x80 && (text[2] & 0xC0) == 0x80 &&
+        (text[3] & 0xC0) == 0x80) {
+      codepoint = (((unsigned char)text[0] ^ 0xF0) << 18) | (((unsigned char)text[1] ^ 0x80) << 12) |
+                  (((unsigned char)text[2] ^ 0x80) << 6) | (((unsigned char)text[3] ^ 0x80));
+      *bytes = 4;
+    }
+  }
+  return codepoint;
 }
 
 void drawText(FontData* font, std::string text, float x, float y) {
@@ -529,16 +579,16 @@ void drawText(FontData* font, std::string text, float x, float y) {
   texture->addLink(spriteFont.id);
   spriteFont.textureID = texture->id;
   // renderer->renderer2D.render(spriteFont);
+  unsigned int indexGlyph = 0;
   for (unsigned int i = 0; i < maxLetters; i++) {
-    // printf("text: %c\n", (unsigned char)text[i]);
-    ascii = getLetterPos(font->charlist, text[i]);
-    // printf("text: %d\n", ascii);
-    if (ascii == ' ') {
+    // printf("text: %c,%d\n", (unsigned char)codepoints[i],codepoints[i]);
+    if (codepoints[i] == ' ') {
       offsetX += font->spaceWidth;
-    } else if (ascii == '\n') {
+    } else if (codepoints[i] == '\n') {
       offsetY += font->spaceHeight;
       offsetX = 0;
     } else {
+      ascii = getLetterPos(font->charlist, codepoints[i]);
       spriteFont.position.x = x + offsetX;
       spriteFont.position.y = y + offsetY;
       spriteFont.offset.x = font->rectlist[ascii].val[0];
@@ -547,6 +597,7 @@ void drawText(FontData* font, std::string text, float x, float y) {
       spriteFont.size.y = font->rectlist[ascii].val[3];
       // printf("offset\n");
       // spriteFont.offset.print();
+      // printf("text: %d\n", ascii);
       // printf("size\n");
       // spriteFont.size.print();
       renderer->renderer2D.render(spriteFont);
