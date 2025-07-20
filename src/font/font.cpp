@@ -509,7 +509,13 @@ int getLetterPos(int* charlist, int letter) {
       return i;
     }
   }
-  return letter;
+  for (unsigned int i = 0; i < 160; i++){
+    if(' ' == charlist[i]){
+      return i;
+    }
+  }
+  return 0;
+}
 
 int getCodepoint(const char* text, unsigned int* bytes) {
   /* UTF-8 more info in https://en.wikipedia.org/wiki/UTF-8
@@ -580,6 +586,14 @@ void drawText(FontData* font, std::string text, float x, float y) {
   spriteFont.textureID = texture->id;
   // renderer->renderer2D.render(spriteFont);
   unsigned int indexGlyph = 0;
+  std::vector<int> codepoints;
+  for (unsigned int i = 0; i < maxLetters;) {
+    codepoints.push_back(getCodepoint(&text[i], &indexGlyph));
+    i += indexGlyph;
+  }
+  // sizeof(font->offsetlist);
+  maxLetters = codepoints.size();
+  // printf("maxletters 2: %d\n",maxLetters);
   for (unsigned int i = 0; i < maxLetters; i++) {
     // printf("text: %c,%d\n", (unsigned char)codepoints[i],codepoints[i]);
     if (codepoints[i] == ' ') {

@@ -191,7 +191,6 @@ void createPotatoMine(const int id, const Tyra::Vec2 pos) {
 void createSnowPea(const int id, const Tyra::Vec2 pos) {
   printf("size: %d\n", m_animID[AnimIndex::SnowPea].size());
 
-  int entityID;
   int& father = plant[id].father;
   PlantAnimation anim;
   anim.id = father;
@@ -270,7 +269,7 @@ void createRepeater(const int id, const Tyra::Vec2 pos) {
   createDebugBoxCollider(plant[id].father, BoxColliderEnum::BOXCOLLIDER_PLANT, Tyra::MODE_STRETCH);
 }
 
-void createPlant(Plant_State_enum typePlant, const int row, const int column, int cost) {
+bool createPlant(Plant_State_enum typePlant, const int row, const int column, int cost) {
   if (plantCreatedInMap[row][column] == false) {
     plantCreatedInMap[row][column] = true;
 
@@ -332,9 +331,12 @@ void createPlant(Plant_State_enum typePlant, const int row, const int column, in
     plantsCreated++;
     // printf("estoy en tile %f,%f\n",cursorTile.x,cursorTile.y);
     // printf("plantas creadas: %d\n",plantsCreated);
-  } else {
-    printf("no se puede crear aqui, ya existe una planta\n");
-  }
+    return true;
+  } 
+
+  printf("no se puede crear aqui, ya existe una planta\n");
+  
+  return false;
 }
 
 void Plant::newPlant(Plant_State_enum newType) { type = newType; }

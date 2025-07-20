@@ -95,7 +95,7 @@ class Plant {
   void erase();
 };
 
-void createPlant(Plant_State_enum typePlant, const int row, const int column, int cost);
+bool createPlant(Plant_State_enum typePlant, const int row, const int column, int cost);
 void loadPlantCost();
 void loadPlantRechargeTime();
 int getPlantCost(Plant_State_enum typePlant);

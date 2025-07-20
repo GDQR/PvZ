@@ -141,6 +141,11 @@ struct ResponseCollisionZombiePlant{
   int plantID;
 };
 
+struct ResponseCollisionSunCursor{
+  int sunID;
+  int cursorID;
+};
+
 extern Tyra::Engine* engine;
 extern Tyra::Renderer* renderer;
 extern Tyra::Renderer2D* renderer2D;
@@ -176,6 +181,8 @@ extern std::vector<BoxCollider> boxColliderZombie;
 extern std::vector<BoxCollider> boxColliderProyectile;
 extern std::vector<BoxCollider> boxColliderExplosion;
 extern std::vector<BoxCollider> boxColliderLawnmower;
+extern std::vector<BoxCollider> boxColliderSun;
+extern std::vector<BoxCollider> boxColliderPlayer;
 extern std::vector<ResponseCollisionProjectile> responseCollisionZombieProjectile;
 extern std::vector<ResponseCollisionZombiePlant> responseCollisionZombiePlant;
 extern std::unordered_map<int, TriggerBoxCollider> resultBoxCollider;

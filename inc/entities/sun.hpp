@@ -9,7 +9,7 @@ class Sun {
   int father;
   std::vector<int> id;
   int cost;
-  bool erase(const int cursorID);
+  void erase(const int cursorID);
 };
 
 class NaturalSun {
@@ -20,6 +20,7 @@ class NaturalSun {
 
 class SunManager {
  public:
+  void update();
   void create(Tyra::Vec2 position, sunCost cost, bool createdByPlant);
   void createByTime();
   void erase(const int cursorID);

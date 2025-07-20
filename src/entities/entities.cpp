@@ -23,7 +23,7 @@ void Player::initCursor(Tyra::Vec2 cursorPos){
   newCursor.id = Entities::newID();
   createSprite(newCursor.id, Tyra::MODE_STRETCH, cursorPos, Vec2(56, 48));
   createTexture(newCursor.id, "cursor6.png");
-  createBoxCollider(newCursor.id, BoxColliderEnum::BOXCOLLIDER_PLAYER, BoxCollider(cursorPos.x + 28 / 2, cursorPos.y + 24 / 2, 24, 24));
+  createBoxCollider(newCursor.id, BoxColliderEnum::BOXCOLLIDER_PLAYER, BoxCollider(newCursor.id,cursorPos.x + 28 / 2, cursorPos.y + 24 / 2, 24, 24));
   createDebugBoxCollider(newCursor.id, BoxColliderEnum::BOXCOLLIDER_PLAYER, Tyra::MODE_STRETCH);
 
   cursor.push_back(newCursor);

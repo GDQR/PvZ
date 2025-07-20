@@ -1,6 +1,7 @@
 #include "entities/sun.hpp"
 #include "components.hpp"
 #include "entities/entities.hpp"
+#include "font/font.hpp"
 #include "systems.hpp"
 
 
@@ -10,140 +11,95 @@ int sunTimer = 60 * 6;
 SunManager sunManager;
 
 void SunManager::create(Tyra::Vec2 position, sunCost cost,
-                        bool createdByPlant) {                      
-  sun.push_back(Sun());
-  int indexpos = sun.size() - 1;
-  sun[indexpos].cost = cost;
-  sun[indexpos].father = Entities::newID();
-  posArray.insert(sun[indexpos].father, position);
+                        bool createdByPlant) {  
+  Sun newSun;           
+  newSun.cost = cost;
+  newSun.father = Entities::newID();
+  posArray.insert(newSun.father, position);
 
-  fatherIDArray.insert(sun[indexpos].father, FatherID());
-
-  // int entityID = -1;
-  // int animID;
+  fatherIDArray.insert(newSun.father, FatherID());
 
   if (createdByPlant == false) {
-    int naturalSunID = naturalSun.size();
-    naturalSun.push_back(NaturalSun());
-    naturalSun[naturalSunID].father = sun[indexpos].father;
+    NaturalSun newNaturalSun;
+    newNaturalSun.father = newSun.father;
+    naturalSun.push_back(newNaturalSun);
   }
   
-  SetAnimationToEntity(sun[indexpos].id,sun[indexpos].father,AnimIndex::Sun,Tyra::Vec2(0.5f, 0.5f), 1, 12);
-  // for (unsigned int i = 0; i < m_animID[AnimIndex::Sun].size(); i++) {
-  //   sun[indexpos].id.push_back(Entities::newID());
+  SetAnimationToEntity(newSun.id,newSun.father,AnimIndex::Sun,Tyra::Vec2(0.5f, 0.5f), 1, 12);
 
-  //   entityID = sun[indexpos].id[i];
-  //   animID = m_animID[AnimIndex::Sun][i];
-
-  //   newFatherID(&sun[indexpos].father, &sun[indexpos].id[i]);
-  //   animationDataArray[animID].loadAnimation(entityID, animID,
-  //                                            Tyra::Vec2(0.5f, 0.5f), 1, 12);
-
-  //   animationArray[entityID].lastFrame = animationDataArray[animID].maxFrame;
-  // }
-
-  // createDebugSprite(sun[indexpos].id[0], Tyra::MODE_STRETCH);
-  // createDebugSprite(sun[indexpos].id[1], Tyra::MODE_STRETCH);
-  // createDebugSprite(sun[indexpos].id[2], Tyra::MODE_STRETCH);
-
-  // createDebugSpritePivot(sun[indexpos].id[0], Tyra::MODE_STRETCH);
-  // createDebugSpritePivot(sun[indexpos].id[1], Tyra::MODE_STRETCH);
-  // createDebugSpritePivot(sun[indexpos].id[2], Tyra::MODE_STRETCH);
-
-  // printf("sun hitbox id: %d\n", sun[indexpos].id[0]);
   // HitBox
-  createBoxCollider(sun[indexpos].father,BoxColliderEnum::BOXCOLLIDER_SUN,BoxCollider(position.x+ texPosArray[sun[indexpos].id[0]].x,
-                  position.y+ texPosArray[sun[indexpos].id[0]].y, 32, 32));
-  // createBoxCollider(sun[indexpos].father,BoxColliderEnum::BOXCOLLIDER_SUN,BoxCollider(position.x + texPosArray[entityID].x,
-  //                 position.y + texPosArray[entityID].y, 32, 32));
-  // createDebugBoxCollider(sun[indexpos].father, Tyra::MODE_STRETCH);
+  createBoxCollider(newSun.father,BoxColliderEnum::BOXCOLLIDER_SUN,BoxCollider(newSun.father, position.x-16,
+                  position.y-16, 32, 32));
+  createDebugBoxCollider(newSun.father, BoxColliderEnum::BOXCOLLIDER_SUN, Tyra::MODE_STRETCH);
 
   sunsCreated++;
-  // sun.push_back(Sun());
-  // int indexpos = sun.size() - 1;
-  // sun[indexpos].cost = cost;
-  // sun[indexpos].father = Entities::newID();
-  // posArray.insert(sun[indexpos].father, position);
-
-  // fatherIDArray.insert(sun[indexpos].father, FatherID());
-
-  // int entityID;
-  // int animID;
-
-  // if (createdByPlant == false) {
-  //   int naturalSunID = naturalSun.size();
-  //   naturalSun.push_back(NaturalSun());
-  //   naturalSun[naturalSunID].father = sun[indexpos].father;
-  // }
-
-  // for (unsigned int i = 0; i < m_animID[AnimIndex::Sun].size(); i++) {
-  //   sun[indexpos].id.push_back(Entities::newID());
-
-  //   entityID = sun[indexpos].id[i];
-  //   animID = m_animID[AnimIndex::Sun][i];
-
-  //   newFatherID(&sun[indexpos].father, &sun[indexpos].id[i]);
-  //   animationDataArray[animID].loadAnimation(entityID, animID,
-  //                                            Tyra::Vec2(0.5f, 0.5f), 1, 1);
-
-  //   animationArray[entityID].lastFrame = animationDataArray[animID].maxFrame;
-  // }
-
-  // createDebugSprite(sun[indexpos].id[0], Tyra::MODE_STRETCH);
-  // createDebugSprite(sun[indexpos].id[1], Tyra::MODE_STRETCH);
-  // createDebugSprite(sun[indexpos].id[2], Tyra::MODE_STRETCH);
-
-  // createDebugSpritePivot(sun[indexpos].id[0], Tyra::MODE_STRETCH);
-  // createDebugSpritePivot(sun[indexpos].id[1], Tyra::MODE_STRETCH);
-  // createDebugSpritePivot(sun[indexpos].id[2], Tyra::MODE_STRETCH);
-
-  // // printf("sun hitbox id: %d\n", sun[indexpos].id[0]);
-  // // HitBox
-  // createBoxCollider(sun[indexpos].father,BoxCollider(position.x + texPosArray[entityID].x,
-  //                 position.y + texPosArray[entityID].y, 32, 32));
-  // createDebugBoxCollider(sun[indexpos].father, Tyra::MODE_STRETCH);
-
-  // sunsCreated++;
+  sun.push_back(newSun);
 }
 
-bool Sun::erase(const int cursorID) {
-  // if (boxColliderArray[cursorID].collision(&boxColliderArray[father])) {
-  //   printf("Deleting sun\n");
-  //   sunCounter += cost;
+void SunManager::update(){
+  if (debugMode == false) {
+    updateNaturalSun();
+  }
 
-  //   boxColliderArray.erase(father);
-  //   deleteDebugBoxCollider(father);
+  if (stopAnimation == false) {
+    createByTime();
+    erase(cursor[0].id);
+  }
+}
 
-  //   for (unsigned int i = 0; i < m_animID[AnimIndex::Sun].size(); i++) {
-  //     deleteDebugSprite(id[i]);
-  //     deleteDebugSpritePivot(id[i]);
-  //     deleteSprite(id[i]);
-  //     deleteAnimation(id[i]);
-  //     deleteTexPosArray(id[i]);
-  //     deleteFatherIDChild(&father, &id[i]);
-  //     Entities::deleteID(id[i]);
-  //   }
+void Sun::erase(const int cursorID) {
+    printf("Deleting sun\n");
+    sunCounter += cost;
+    textArray[sunCounterText].text = std::to_string(sunCounter);
 
-  //   // delete natural sun if exists
-  //   for (unsigned int i = 0; i < naturalSun.size(); i++) {
-  //     if (naturalSun[i].father == father) {
-  //       naturalSun.erase(naturalSun.begin() + i);
-  //       break;
-  //     }
-  //   }
+    for(size_t i=0; i<boxColliderSun.size();i++){
+      if(boxColliderSun[i].id == father){
+        boxColliderSun.erase(boxColliderSun.begin() + i);
+      }
+    }
+    
+    int size;
+    while (id.size() > 0) {
+      size = id.size()-1;
+      // deleteDebugSprite(id[i]);
+      // deleteDebugSpritePivot(id[i]);
+      deleteSprite(id[size]);
+      deleteAnimation(id[size]);
+      deleteTexPosArray(id[size]);
+      deleteFatherIDChild(&father, &id[size]);
+      for(size_t j=0; j<frameCounterArray.size();j++){
+        if(frameCounterArray[j].entityID == id[size]){
+          frameCounterArray.erase(frameCounterArray.begin() + j);
+        }
+      }
+      Entities::deleteID(id[size]);
+      id.erase(id.begin()+size);
+    }
 
-  //   deleteFatherID(&father);
-  //   Entities::deleteID(father);
-  //   sunsCreated--;
-  //   return true;
-  // }
-  return false;
+    // delete natural sun if exists
+    for (unsigned int i = 0; i < naturalSun.size(); i++) {
+      if (naturalSun[i].father == father) {
+        naturalSun.erase(naturalSun.begin() + i);
+        break;
+      }
+    }
+
+    deletePosArray(father);
+    deleteFatherID(&father);
+    Entities::deleteID(father);
+    sunsCreated--;
 }
 
 void NaturalSun::move() {
-  if (posArray[father].y < 370) {
-    posArray[father].y++;
-    // boxColliderArray[father].y++;
+  Tyra::Vec2& pos = posArray[father];
+  if (pos.y < 370) {
+    pos.y++;
+    for(size_t i=0;i<boxColliderSun.size();i++){
+      if(boxColliderSun[i].id == father){
+        boxColliderSun[i].y++;
+        break;
+      }
+    }
   }
 }
 
@@ -157,18 +113,22 @@ void SunManager::createByTime() {
     create(Vec2(x, 10), sunCost::normalSun, false);
   }
 }
+
 void SunManager::erase(const int cursorID) {
-  for (std::vector<Sun>::iterator it = sun.begin(); it != sun.end();) {
-    if (it->erase(cursorID) == true) {
-      it = sun.erase(it);
-    } else {
-      it++;
+  size_t size = responseCollisionSunCursor.size();
+  size_t sunSize;
+  for(size_t i=0; i < size; i++){
+    sunSize = sun.size();
+    for(size_t j=0;j< sunSize;j++){
+      if(sun[j].father == responseCollisionSunCursor[i].sunID){
+        sun[j].erase(responseCollisionSunCursor[i].cursorID);
+        break;
+      }
     }
   }
 }
 void SunManager::updateNaturalSun() {
-  for (std::vector<NaturalSun>::iterator it = naturalSun.begin();
-       it != naturalSun.end(); it++) {
-    it->move();
+  for (NaturalSun& sun: naturalSun){
+    sun.move();
   }
 }

@@ -79,6 +79,7 @@ class BoxCollisionManager {
   void explosionZombieCollision();
   void lawnCollision();
   void plantZombieCollision();
+  void sunCollision();
   void testUpdate();
   inline void update() {
     // testUpdate();
@@ -87,6 +88,7 @@ class BoxCollisionManager {
     explosionZombieCollision();
     plantZombieCollision();
     lawnCollision();
+    sunCollision();
   }
 };
 

@@ -15,8 +15,7 @@ void createCardPeashotter(std::vector<int>& plantID, const Tyra::Vec2 pos) {
     entityID = Entities::newID();
     plantID.push_back(entityID);
     animID = m_animID[AnimIndex::Peashooter][i];
-    printf("entity[%d]: %d\n",i,entityID);
-    printf("anim: %d\n",animID);
+
     newFatherID(&plantID[0], &entityID);
     animationDataArray[animID].loadAnimation(entityID, animID,
                                              Tyra::Vec2(0.6f, 0.6f), 80, 80);
@@ -151,42 +150,11 @@ void createCard(const Plant_State_enum typePlant, const Tyra::Vec2 pos,
                 const bool isVersusMode) {
   Card card;
   card.seed = Entities::newID();
-  card.seedShadow = Entities::newID();
-  card.seedShadowTimer = Entities::newID();
+  printf("seed ID:%d\n",card.seed);
 
   createSprite(card.seed, Tyra::MODE_REPEAT, pos, Vec2(50, 70));
   createTexture(card.seed, IMG_seeds);
   spriteArray[card.seed].offset.x = 100;
-
-  createSprite(card.seedShadow, Tyra::MODE_REPEAT, pos, Vec2(50, 70));
-  createTexture(card.seedShadow, IMG_seeds);
-  spriteArray[card.seedShadow].color = Tyra::Color(0.0F, 0.0F, 0.0F, 60.0F);
-
-  // TODO: hacer que el seedshadowtimer aparezca despues del "start set plant"
-  // cuando el startwitoutwait sea verdadero
-  // y crear un efecto para cuando el seed shadow (lo de arriba) se va porque el
-  // costo de soles es mayor
-
-  createSprite(card.seedShadowTimer, Tyra::MODE_REPEAT, pos, Vec2(50, 70));
-  createTexture(card.seedShadowTimer, IMG_seeds);
-  spriteArray[card.seedShadowTimer].color =
-      Tyra::Color(0.0F, 0.0F, 0.0F, 60.0F);
-
-  timerArray.insert(card.seedShadowTimer, PS2Timer());
-  timerArray[card.seedShadowTimer].maxMS = 0;
-  // getPlantRechargeTime(typePlant, isVersusMode);
-  if (startWithoutWait(typePlant, isVersusMode) == true) {
-    timerArray[card.seedShadowTimer].counterMS =
-        timerArray[card.seedShadowTimer].maxMS;
-  }
-
-  card.plant = typePlant;
-
-  card.cost = getPlantCost(typePlant);
-
-  std::string text;
-  text = std::to_string(card.cost);
-  card.textID = CreateTextData(text,pos.x+10,pos.y + 55,FontPicoID);
 
   if (typePlant == Plant_State_enum::PeaShotter) {
     createCardPeashotter(card.plantID, Vec2(pos.x, pos.y));
@@ -205,6 +173,44 @@ void createCard(const Plant_State_enum typePlant, const Tyra::Vec2 pos,
   } else if (typePlant == Plant_State_enum::Repeater) {
     createCardRepeater(card.plantID, Vec2(pos.x, pos.y));
   }
+  
+  card.seedShadow = Entities::newID();
+  card.seedShadowTimer = Entities::newID();
+  printf("seedShadow ID:%d\n",card.seedShadow);
+  printf("seedShadowTimer ID:%d\n",card.seedShadowTimer);
+
+  createSprite(card.seedShadow, Tyra::MODE_REPEAT, pos, Vec2(50, 70));
+  createTexture(card.seedShadow, IMG_seeds);
+  spriteArray[card.seedShadow].offset.x = 100;
+  spriteArray[card.seedShadow].color = Tyra::Color(0.0F, 0.0F, 0.0F, 60.0F);
+
+  // TODO: hacer que el seedshadowtimer aparezca despues del "start set plant"
+  // cuando el startwitoutwait sea verdadero
+  // y crear un efecto para cuando el seed shadow (lo de arriba) se va porque el
+  // costo de soles es mayor
+
+  createSprite(card.seedShadowTimer, Tyra::MODE_REPEAT, pos, Vec2(50.0f, 70.0f));
+  createTexture(card.seedShadowTimer, IMG_seeds);
+  spriteArray[card.seedShadowTimer].offset.x = 100;
+  spriteArray[card.seedShadowTimer].color =
+      Tyra::Color(0.0F, 0.0F, 0.0F, 60.0F);
+  
+  PS2Timer timer;
+  timer.maxMS = getPlantRechargeTime(typePlant, isVersusMode);
+  if (startWithoutWait(typePlant, isVersusMode) == true) {
+    printf("empece sin esperar\n");
+    timer.counterMS = timer.maxMS;
+  }
+  
+  timerArray.insert(card.seedShadowTimer, timer);
+
+  card.plant = typePlant;
+
+  card.cost = getPlantCost(typePlant);
+
+  std::string text;
+  text = std::to_string(card.cost);
+  card.textID = CreateTextData(text,pos.x+10,pos.y + 55,FontPicoID);
 
   cards.push_back(card);
 }

@@ -16,8 +16,10 @@ void Controller::update() {
 
   if (debugMode == false) {
     cursor[playerID].move();
-    boxColliderArray[BOXCOLLIDER_PLAYER]
-    [boxColliderArrayID[cursor[playerID].id]].move(cursor[playerID].id, 28 / 2,
+    
+    for(size_t i=0; i < boxColliderPlayer.size();i++){
+      if(boxColliderPlayer[i].id ==cursor[playerID].id){
+        boxColliderPlayer[i].move(cursor[playerID].id, 28 / 2,
                                                24 / 2);
   }
 
