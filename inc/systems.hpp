@@ -136,7 +136,6 @@ void createSpriteRotate(int id, Tyra::SpriteMode mode, Tyra::Vec2 position,
 void createBoxCollider(int id, BoxColliderEnum type, BoxCollider collider);
 void createLawnMower(const Tyra::Vec2 pos);
 void createCard(Plant_State_enum typePlant, Tyra::Vec2 pos, bool isVersusMode);
-void createCardSunFlower(std::vector<int>& plantID, const Tyra::Vec2 pos);
 void createReward(Tyra::Vec2 pos);
 void eraseReward();
 void deleteFatherIDChild(const int* fatherID, const int* childID);

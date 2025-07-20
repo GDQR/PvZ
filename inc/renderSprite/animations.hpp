@@ -260,19 +260,6 @@ class AnimationData {
   std::unordered_map<unsigned int,std::vector<AnimationProperty>> property;
   unsigned int maxFrame;
   const char* name;
-  // std::vector<
-  // std::vector<int> texture;
-  // std::vector<Tyra::Vec2> position;
-  // std::vector<Tyra::Vec2> scale;
-  // std::vector<Tyra::Vec2> angle;
-  // std::vector<float> alpha;
-  // std::vector<int> draw;
-  // LinearArrayKey<unsigned int, int> texture;
-  // LinearArrayKey<unsigned int, Tyra::Vec2> position;
-  // LinearArrayKey<unsigned int, Tyra::Vec2> scale;
-  // LinearArrayKey<unsigned int, Tyra::Vec2> angle;
-  // LinearArrayKey<unsigned int, float> alpha;
-  // LinearArrayKey<unsigned int, int> draw;
   void loadAnimation(const int entityID, const int animID,
                      const Tyra::Vec2 scaleTextures,
                      enumAnimationState animationState);
@@ -291,6 +278,7 @@ void setSprite(const int entityID, const int draw);
 void loadAnimString();
 void loadAnimationStates();
 void loadAnimation(const AnimIndex::Animation animNameID);
+void SetOneSpriteAnimationToEntity(std::vector<int>& ids, int& father, AnimIndex::Animation anim, Tyra::Vec2 size, int frame);
 void SetAnimationToEntity(std::vector<int>& ids, int& father, AnimIndex::Animation anim, Tyra::Vec2 size, int firstFrame, int lastFrame);
 void SetAnimationToEntity(std::vector<int>& ids, int& father, AnimIndex::Animation anim, Tyra::Vec2 size, enumAnimationState animState);
 void SetAnimationToEntity(std::vector<int>& ids, int& father, AnimIndex::Animation anim, Tyra::Vec2 size, int firstFrame);

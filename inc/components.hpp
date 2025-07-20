@@ -50,7 +50,7 @@ class Card {
   Plant_State_enum plant;
   int cost;
   int textID;
-  std::vector<int> plantID;
+  int plantID;
   void update();
 };
 
