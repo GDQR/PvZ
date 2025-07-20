@@ -49,11 +49,7 @@ void SetZombieAnimation(const int entityID, const int animID, const Zombie_State
       (strcmp(animationDataArray[animID].name, anim_tongue)==0) ||
       (strcmp(animationDataArray[animID].name, Zombie_innerarm_screendoor)==0) ||
       (strcmp(animationDataArray[animID].name, Zombie_flaghand)==0)) {
-        animationArray[entityID].draw = (int)enumDraw::noDraw;
         setSprite(entityID, (int)enumDraw::noDraw);
-        deleteAnimation(entityID);
-        // animationIdStopRender.push_back(entityID);
-        // printf("encontre anim_bucket o anim_cone\n");
       }
       break;
     case Zombie_State_enum::flagZombie:
@@ -70,11 +66,7 @@ void SetZombieAnimation(const int entityID, const int animID, const Zombie_State
         (strcmp(animationDataArray[animID].name, anim_innerarm1)==0) ||
         (strcmp(animationDataArray[animID].name, anim_innerarm2)==0) ||
         (strcmp(animationDataArray[animID].name, anim_innerarm3)==0)) {
-        animationArray[entityID].draw = (int)enumDraw::noDraw;
-        setSprite(entityID, animationArray[entityID].draw);
-        deleteAnimation(entityID);
-        // animationIdStopRender.push_back(entityID);
-        // printf("encontre anim_bucket o anim_cone\n");
+        setSprite(entityID, (int)enumDraw::noDraw);
       }
       break;
     case Zombie_State_enum::coneheadZombie:
@@ -89,10 +81,7 @@ void SetZombieAnimation(const int entityID, const int animID, const Zombie_State
           (strcmp(animationDataArray[animID].name, Zombie_duckytube)==0) ||
           (strcmp(animationDataArray[animID].name, Zombie_innerarm_screendoor)==0) ||
           (strcmp(animationDataArray[animID].name, Zombie_flaghand)==0)) {
-        animationArray[entityID].draw = (int)enumDraw::noDraw;
-        setSprite(entityID, animationArray[entityID].draw);
-        deleteAnimation(entityID);
-        // animationIdStopRender.push_back(entityID);
+        setSprite(entityID, (int)enumDraw::noDraw);
       }
       break;
     case Zombie_State_enum::bucketHeadZombie:
@@ -107,10 +96,7 @@ void SetZombieAnimation(const int entityID, const int animID, const Zombie_State
           (strcmp(animationDataArray[animID].name, Zombie_duckytube)==0) ||
           (strcmp(animationDataArray[animID].name, Zombie_innerarm_screendoor)==0) ||
           (strcmp(animationDataArray[animID].name, Zombie_flaghand)==0)) {
-        animationArray[entityID].draw = (int)enumDraw::noDraw;
-        setSprite(entityID, animationArray[entityID].draw);
-        deleteAnimation(entityID);
-        // animationIdStopRender.push_back(entityID);
+        setSprite(entityID, (int)enumDraw::noDraw);
       }
       break;
     default:
@@ -221,7 +207,7 @@ void Zombie::damage(const int entityID) {
   std::vector<int>& animEntity = zombieAnims[indexAnim].entity;
   size = animEntity.size();
   for(size_t i=0; i < size; i++){
-    if (animationArray.count(animEntity[i]) == 1) {
+    if (spriteRenderIDArray.count(animEntity[i]) == 1) {
       // printf("anim attack id: %d\n",m_animID["Zombie"][j]);
       spriteArray[animEntity[i]].color = Tyra::Color(255, 255, 255, 128);
     }
@@ -271,7 +257,7 @@ int Zombie::normalColor() {
   std::vector<int>& ids = zombieAnims[indexAnim].entity;
   size = ids.size();
   for(size_t i=0; i < size; i++){
-    if (animationArray.count(ids[i]) == 1) {
+    if (spriteRenderIDArray.count(ids[i]) == 1) {
       // printf("anim attack id: %d\n",m_animID["Zombie"][j]);
       Tyra::Sprite& animSprite = spriteArray[ids[i]];
       animSprite.color.r -= 5;
@@ -324,9 +310,6 @@ bool Zombie::erase() {
           deleteFinalPosArray(zomAnim.entity[animSize]);
           deleteFatherIDChild(&father, &zomAnim.entity[animSize]);
           deleteSprite(zomAnim.entity[animSize]);
-          if (animationArray.count(zomAnim.entity[animSize]) == 1) {
-            deleteAnimation(zomAnim.entity[animSize]);
-          }
           deleteTexPosArray(zomAnim.entity[animSize]);
           for(unsigned int j=0; j< frameCounterArray.size();j++){
             if(frameCounterArray[j].entityID == zomAnim.entity[animSize]){

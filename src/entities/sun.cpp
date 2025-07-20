@@ -64,7 +64,6 @@ void Sun::erase(const int cursorID) {
       // deleteDebugSprite(id[i]);
       // deleteDebugSpritePivot(id[i]);
       deleteSprite(id[size]);
-      deleteAnimation(id[size]);
       deleteTexPosArray(id[size]);
       deleteFatherIDChild(&father, &id[size]);
       for(size_t j=0; j<frameCounterArray.size();j++){

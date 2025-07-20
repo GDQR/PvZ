@@ -623,7 +623,7 @@ void Plant::damage(const int entityID){
   std::vector<int>& animEntity = plantAnims[indexAnim].entity;
   size = animEntity.size();
   for(size_t i=0; i < size; i++){
-    if (animationArray.count(animEntity[i]) == 1) {
+    if (spriteRenderIDArray.count(animEntity[i]) == 1) {
       // printf("anim attack id: %d\n",m_animID["Zombie"][j]);
       spriteArray[animEntity[i]].color = Tyra::Color(255, 255, 255, 128);
     }
@@ -649,7 +649,7 @@ int Plant::normalColor(){
   std::vector<int>& ids = plantAnims[indexAnim].entity;
   size = ids.size();
   for(size_t i=0; i < size; i++){
-    if (animationArray.count(ids[i]) == 1) {
+    if (spriteRenderIDArray.count(ids[i]) == 1) {
       // printf("anim attack id: %d\n",m_animID["Zombie"][j]);
       Tyra::Sprite& animSprite = spriteArray[ids[i]];
       animSprite.color.r -= 5;
@@ -696,9 +696,6 @@ void Plant::erase() {
       deleteFinalPosArray(*it);
       deleteTexPosArray(*it);
       deleteFatherIDChild(&father, &*it);
-      if (animationArray.count(*it)) {
-        deleteAnimation(*it);
-      }
       for(unsigned int j=0; j< frameCounterArray.size();j++){
         if(frameCounterArray[j].entityID == *it){
           frameCounterArray.erase(frameCounterArray.begin() + j);

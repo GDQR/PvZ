@@ -34,26 +34,9 @@ void activateRender() {
 }
 
 void getNextFrame(int& entitieID) {
-  animationArray[entitieID].currentFrame++;
-  if (animationArray[entitieID].currentFrame >
-      animationArray[entitieID].lastFrame) {
-    animationArray[entitieID].currentFrame =
-        animationArray[entitieID].firstFrame;
-  }
-  animManager.debugChangeFrame(entitieID,
-                               animationArray[entitieID].currentFrame);
 }
 
 void getPrevFrame(int& entitieID) {
-  if (animationArray[entitieID].currentFrame >
-      animationArray[entitieID].firstFrame) {
-    animationArray[entitieID].currentFrame--;
-  } else {
-    animationArray[entitieID].currentFrame =
-        animationArray[entitieID].lastFrame;
-  }
-  animManager.debugChangeFrame(entitieID,
-                               animationArray[entitieID].currentFrame);
 }
 void getNextSprite(int& entitieID) {
   debugSpritesType[entitieID]->color.a = debugAlphaColor;
@@ -146,9 +129,6 @@ void DebugSpriteMode::firstMenu() {
     debugSpritesType[debugEntityId]->color.a = debugAlphaColor;
     printf("pase por el anim option\n");
     printf("debugEntityId: %d\n", debugEntityId);
-    if (animationArray.count(debugEntityId) == 1) {
-      animationFound = true;
-    }
     if (angleArray.count(debugEntityId) == 1) {
       rotateFound = true;
     }
@@ -224,7 +204,6 @@ void DebugSpriteMode::secondMenu() {
       posArray[debugEntityId].y -= *d_texPosY;
       if (d_saveFramesCounter == false) {
         d_saveFramesCounter = true;
-        animationArray[debugEntityId].framesCounter = d_framesCounter;
       }
     }
     d_texPosX = &d_texPosXNull;
@@ -436,11 +415,11 @@ void DebugSpriteMode::secondMenu() {
   }
 
   if (animationFound == true && playAnimation == true) {
-    if (d_saveFramesCounter == true) {
-      d_saveFramesCounter = false;
-      d_framesCounter = animationArray[debugEntityId].framesCounter;
-    }
-    animationArray[debugEntityId].debugAnim(debugEntityId);
+    // if (d_saveFramesCounter == true) {
+    //   d_saveFramesCounter = false;
+    //   d_framesCounter = animationArray[debugEntityId].framesCounter;
+    // }
+    // animationArray[debugEntityId].debugAnim(debugEntityId);
   }
 }
 void DebugSpriteMode::drawSecondMenu() {
@@ -482,8 +461,8 @@ void DebugSpriteMode::drawSecondMenu() {
 
     // animation
     if (animationFound == true) {
-      std::string textKey =
-          "Key: " + std::to_string(animationArray[debugEntityId].currentFrame);
+      // std::string textKey =
+      //     "Key: " + std::to_string(animationArray[debugEntityId].currentFrame);
 
       std::string animSize = "";
           // "Total textures: " +
@@ -491,7 +470,7 @@ void DebugSpriteMode::drawSecondMenu() {
           //     animationDataArray[animationArray[debugEntityId].animID]
           //         .texture.first.size());
 
-      engine->font.drawText(&myFont, textKey.c_str(), 30, 120, 16, black);
+      // engine->font.drawText(&myFont, textKey.c_str(), 30, 120, 16, black);
 
       engine->font.drawText(&myFont, animSize.c_str(), 30, 200, 16, black);
       engine->font.drawText(&myFont, "PRESS X FOR PLAY/STOP ANIMATION", 30, 280,

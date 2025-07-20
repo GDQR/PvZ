@@ -141,7 +141,6 @@ void eraseReward();
 void deleteFatherIDChild(const int* fatherID, const int* childID);
 void deleteFatherID(const int* entityID);
 void deleteSprite(const int entityID);
-void deleteAnimation(const int entityID);
 void deletePosArray(const int entityID);
 void deleteFinalPosArray(const int entityID);
 void deleteTexPosArray(const int entityID);

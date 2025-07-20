@@ -13,7 +13,6 @@ Tyra::TextureRepository* texRepo;
 // sparse array
 std::vector<FrameCounter> frameCounterArray;
 std::unordered_map<int, std::vector<int>> m_animID;
-ArrayKey<int, Animation> animationArray(enumComponents::animation);
 std::unordered_map<int, AnimationData> animationDataArray;
 ArrayKey<int, FatherID> fatherIDArray(enumComponents::fatherID);
 ArrayKey<int, Tyra::Vec2> posArray(enumComponents::pos);

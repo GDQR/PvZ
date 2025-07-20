@@ -156,8 +156,6 @@ extern std::unordered_map<int, std::vector<int>> m_animID;
 
 // sparse array
 extern std::vector<FrameCounter> frameCounterArray;
-extern ArrayKey<int, Animation>
-    animationArray;  // Link the sprite with the texture
 extern std::unordered_map<int, AnimationData>
     animationDataArray;  // Save the animation textures
 extern ArrayKey<int, FatherID> fatherIDArray;

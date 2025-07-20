@@ -38,9 +38,6 @@ void eraseRewardLevel1() {
 
     deleteSprite(reward.id[i]);
 
-    if (animationArray.count(reward.id[i]) == 1) {
-      deleteAnimation(reward.id[i]);
-    }
     for(size_t j=0; j<frameCounterArray.size();j++){
       if(frameCounterArray[j].entityID == reward.id[i]){
         frameCounterArray.erase(frameCounterArray.begin() + j);
