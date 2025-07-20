@@ -208,31 +208,28 @@ void RendererDebugSpritesManager::update() {
   debugBoxTexture->addLink(debugSprite.id);
   debugSprite.textureID = debugBoxTexture->id;
   std::vector<BoxCollider> vec;
-  vec = boxColliderArray[BOXCOLLIDER_PLAYER];
-  for (unsigned int i = 0; i < vec.size();i++){
+
+  for (BoxCollider& box: boxColliderPlayer){
     // printf("key: %d. sprite ID: %d\n",it->first,it->second.id);
     debugSprite.position =
-        Vec2(vec[i].x, vec[i].y);
-    debugSprite.size = Vec2(vec[i].width, vec[i].height);
+        Vec2(box.x, box.y);
+    debugSprite.size = Vec2(box.width, box.height);
     renderer->renderer2D.render(debugSprite);
   }
 
-  vec = boxColliderArray[BOXCOLLIDER_PLANT];
-  for (unsigned int i = 0; i < vec.size();i++){
+  for (BoxCollider& box: boxColliderPlant){
     // printf("key: %d. sprite ID: %d\n",it->first,it->second.id);
     debugSprite.position =
-        Vec2(vec[i].x, vec[i].y);
-    debugSprite.size = Vec2(vec[i].width, vec[i].height);
+        Vec2(box.x, box.y);
+    debugSprite.size = Vec2(box.width, box.height);
     renderer->renderer2D.render(debugSprite);
   }
 
-  
-  vec = boxColliderArray[BOXCOLLIDER_SUN];
-  for (unsigned int i = 0; i < vec.size();i++){
+  for (BoxCollider& box: boxColliderSun){
     // printf("key: %d. sprite ID: %d\n",it->first,it->second.id);
     debugSprite.position =
-        Vec2(vec[i].x, vec[i].y);
-    debugSprite.size = Vec2(vec[i].width, vec[i].height);
+        Vec2(box.x, box.y);
+    debugSprite.size = Vec2(box.width, box.height);
     renderer->renderer2D.render(debugSprite);
   }
 
@@ -260,70 +257,14 @@ void RendererDebugSpritesManager::update() {
     renderer->renderer2D.render(debugSprite);
   }
 
+  for (BoxCollider& box: boxColliderLawnmower){
+    // printf("key: %d. sprite ID: %d\n",it->first,it->second.id);
+    debugSprite.position = Vec2(box.x, box.y);
+    debugSprite.size = Vec2(box.width, box.height);
+    renderer->renderer2D.render(debugSprite);
+  }
+
   debugBoxTexture->removeLinkById(debugSprite.id);
-
-  // std::map<int, Sprite>::iterator it;
-  // auto& textureRepository = renderer->getTextureRepository();
-
-  // printf("debug size: %d\n",debugSpriteBoxCollider.size());
-  // for (it = dm_SpriteBoxCollider.begin(); it != dm_SpriteBoxCollider.end();
-  //      it++) {
-  //   // printf("key: %d. sprite ID: %d\n",it->first,it->second.id);
-  //   dm_SpriteBoxCollider[it->first].position =
-  //       Vec2(boxColliderArray[it->first].x, boxColliderArray[it->first].y);
-  //   renderer->renderer2D.render(dm_SpriteBoxCollider[it->first]);
-  // }
-
-  // for (it = dm_SpritePointCollider.begin(); it != dm_SpritePointCollider.end();
-  //      it++) {
-  //   // printf("key: %d. sprite ID: %d\n",it->first,it->second.id);
-  //   renderer->renderer2D.render(dm_SpritePointCollider[it->first]);
-  // }
-
-  // for (it = dm_SpriteNormal.begin(); it != dm_SpriteNormal.end(); it++) {
-  //   // printf("key: %d. sprite ID: %d\n",it->first,it->second.id);
-  //   dm_SpriteNormal[it->first].position = spriteArray[it->first].position;
-  //   dm_SpriteNormal[it->first].scale = spriteArray[it->first].scale;
-  //   dm_SpriteNormal[it->first].size = spriteArray[it->first].size;
-
-  //   renderer->renderer2D.render(dm_SpriteNormal[it->first]);
-  // }
-
-  // TODO: delete this
-  // for (it = dm_SpriteRotate.begin(); it != dm_SpriteRotate.end(); it++) {
-  //   // printf("key: %d. sprite ID: %d\n", it->first, it->second.id);
-
-  //   dm_SpriteRotate[it->first].position =
-  //   rotationSprite[it->first].sprite.position;
-  //   dm_SpriteRotate[it->first].scale =
-  //   rotationSprite[it->first].sprite.scale; dm_SpriteRotate[it->first].size =
-  //   rotationSprite[it->first].sprite.size;
-
-  //   renderer->renderer2D.renderRotate(dm_SpriteRotate[it->first],
-  //                                     rotationSprite[it->first].angle);
-  // }
-
-  // for (it = dm_SpriteNormalPivot.begin(); it != dm_SpriteNormalPivot.end();
-  //      it++) {
-  //   // printf("key: %d. sprite ID: %d\n",it->first,it->second.id);
-  //   dm_SpriteNormalPivot[it->first].position =
-  //   spriteArray[it->first].position; dm_SpriteNormalPivot[it->first].scale =
-  //   spriteArray[it->first].scale;
-
-  //   renderer->renderer2D.render(dm_SpriteNormalPivot[it->first]);
-  // }
-
-  // for (it = dm_SpriteRotatePivot.begin(); it != dm_SpriteRotatePivot.end();
-  //      it++) {
-  //   // printf("pase\n");
-  //   // printf("key: %d. sprite ID: %d\n", it->first, it->second.id);
-
-  //   dm_SpriteRotatePivot[it->first].position =
-  //       rotationSprite[it->first].position;
-
-  //   renderer->renderer2D.renderRotate(dm_SpriteRotatePivot[it->first],
-  //                                     angles[it->first]);
-  // }
 }
 
 void RendererSprites::resetFinalPos() {
@@ -387,6 +328,7 @@ void ZombiesManager::update() {
     if(it.type != NoneZombie){
     it.move();
     it.attackPlant();
+    it.normalColor();
     }
   }
   // std::vector<Zombie>::iterator it;
@@ -473,22 +415,20 @@ void ZombiesManager::update() {
 
 void PlantsManager::create(int playerId) {
   if (debugMode == false) {
+    Card& card = cards[deckCursor[playerId].pos];
     if (mapEnable[(int)cursor[playerId].cursorTile.x] == true) {
-      if (sunCounter >= cards[deckCursor[playerId].pos].cost &&
+      PS2Timer& timer = timerArray[card.seedShadowTimer];
+      if (sunCounter >= card.cost &&
           plantsCreated < maxPlants &&
-          timerArray[cards[deckCursor[playerId].pos].seedShadowTimer]
-                  .counterMS >=
-              timerArray[cards[deckCursor[playerId].pos].seedShadowTimer]
-                  .maxMS) {
-        // sunCounter -= cards[deckCursor[playerId].pos].cost;
-        // textArray[sunCounterText].text = std::to_string(sunCounter);
-        timerArray[cards[deckCursor[playerId].pos].seedShadowTimer]
-            .resetCounter();
-        spriteArray[cards[deckCursor[playerId].pos].seedShadowTimer].size.y =
-            70;
-        createPlant(cards[deckCursor[playerId].pos].plant,
+          timer.counterMS >= timer.maxMS) {
+        if(createPlant(card.plant,
                     cursor[playerId].cursorTile.x,
-                    cursor[playerId].cursorTile.y,cards[deckCursor[playerId].pos].cost);
+                    cursor[playerId].cursorTile.y,card.cost) == true){
+          timerArray[card.seedShadowTimer].resetCounter();
+          Tyra::Sprite& spr = spriteArray[card.seedShadowTimer];
+          spr.size.x = 50;
+          spr.size.y = 70;
+        }
       } else {
         printf("can't create plants now\n");
       }
@@ -498,7 +438,14 @@ void PlantsManager::create(int playerId) {
 
 void RewardManager::update() {
   if (rewardExist == true) {
-    if (searchBoxCollider(BOXCOLLIDER_PLAYER,cursor[Entity::player.id].id).collision(
+    BoxCollider boxPlayer;
+    for(size_t i=0; i < boxColliderPlayer.size();i++){
+      if(boxColliderPlayer[i].id == cursor[Entity::player.id].id){
+        boxPlayer = boxColliderPlayer[i];
+        break;
+      }
+    }
+    if (boxPlayer.collision(
       &searchBoxCollider(BOXCOLLIDER_REWARD,Entity::reward.father))) {
       eraseReward();
       
@@ -513,26 +460,16 @@ void RewardManager::update() {
       }
     }
   }
-  // if (rewardExist == true) {
-  //   if (boxColliderArray[BOXCOLLIDER_PLAYER][boxColliderArrayID[cursor[Entity::player.id].id]].collision(
-  //           &boxColliderArray[Entity::reward.father])) {
-  //     eraseReward();
-      
-  //     // load award
-  //     JpgScaleData textures2 = JpgImageScale::load(Tyra::FileUtils::fromCwd(AwardScreen_Back).c_str(),TextureScale::Tex128,TextureScale::Tex128);
-  //     SetBigImage(&Entity::awardbackground, &textures2,Tyra::SpriteMode::MODE_STRETCH,0,0,81,95);
-
-  //     while (textures2.data.size()!=0)
-  //     {
-  //       delete textures2.data[0];
-  //       textures2.data.erase(textures2.data.begin()+0);
-  //     }
-  //   }
-  // }
 }
 
 void BoxCollisionManager::mapCollision() {
-  BoxCollider boxColPlayer = boxColliderArray[BOXCOLLIDER_PLAYER][boxColliderArrayID[cursor[Entity::player.id].id]];
+  BoxCollider boxColPlayer;
+  for(size_t i=0;i<boxColliderPlayer.size();i++){
+    if(boxColliderPlayer[i].id == cursor[Entity::player.id].id){
+      boxColPlayer = boxColliderPlayer[i];
+      break;
+    }
+  }
   std::vector<BoxCollider> vec = boxColliderArray[BOXCOLLIDER_MAP];
   for (int i = 0; i < 5; i++) {
     for (int j = 0; j < 9; j++) {
@@ -695,6 +632,24 @@ void BoxCollisionManager::plantZombieCollision(){
   }
 }
 
+void BoxCollisionManager::sunCollision(){
+  responseCollisionSunCursor.clear();
+  
+  ResponseCollisionSunCursor res;
+  for(BoxCollider &it: boxColliderPlayer){
+    for(BoxCollider &it2: boxColliderSun){
+      if(it.collision(&it2) == true){
+        // printf("colision\n");
+        res.sunID = it2.id;
+        res.cursorID = it.id;
+        responseCollisionSunCursor.push_back(res);
+        break;
+      }
+    }
+      // printf("loop 1\n");
+  }
+}
+
 void BoxCollisionManager::testUpdate(){
   unsigned int size = boxColliderArray.size();
 
@@ -780,6 +735,10 @@ void createBoxCollider(int id, BoxColliderEnum type, BoxCollider collider){
     boxColliderLawnmower.push_back(collider);
   } else if(type == BOXCOLLIDER_PLANT){
     boxColliderPlant.push_back(collider);
+  } else if(type == BOXCOLLIDER_SUN){
+    boxColliderSun.push_back(collider);
+  } else if(type == BOXCOLLIDER_PLAYER){
+    boxColliderPlayer.push_back(collider);
   } else{
     // boxColliderArray[id] = collider;
     boxColliderArrayID[id] = boxColliderArray[type].size();
@@ -797,8 +756,10 @@ void deleteSprite(const int entityID) {
   spriteArray.erase(entityID);
 
   spriteRenderIDArray.erase(entityID);
-
-  angleArray.erase(entityID);
+  
+  if(angleArray.count(entityID) == 1){
+    angleArray.erase(entityID);
+  }
 }
 void deleteAnimation(const int entityID) { animationArray.erase(entityID); }
 
@@ -918,7 +879,8 @@ void SetBigImage(BackgroundEntity* entity, JpgScaleData* textures, Tyra::SpriteM
 
   for(unsigned int i=0;i<textures->data.size();i++){
     entity->id.push_back(Entities::newID());
-    printf("pos x,y: %f,%f\n",j*width+(j)+x,k*height+k+y);
+    printf("reward big[%d] id: %d\n",i,entity->id[i]);
+    // printf("pos x,y: %f,%f\n",j*width+(j)+x,k*height+k+y);
     createSprite(entity->id[i], mode, Vec2(j*width+(j)+x, k*height+k+y),
                Vec2(width, height));
                //award

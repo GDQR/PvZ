@@ -41,6 +41,12 @@ void eraseRewardLevel1() {
     if (animationArray.count(reward.id[i]) == 1) {
       deleteAnimation(reward.id[i]);
     }
+    for(size_t j=0; j<frameCounterArray.size();j++){
+      if(frameCounterArray[j].entityID == reward.id[i]){
+        frameCounterArray.erase(frameCounterArray.begin() + j);
+        break;
+      }
+    }
     deleteTexPosArray(reward.id[i]);
     Entities::deleteID(reward.id[i]);
   }

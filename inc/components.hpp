@@ -185,6 +185,7 @@ extern std::vector<BoxCollider> boxColliderSun;
 extern std::vector<BoxCollider> boxColliderPlayer;
 extern std::vector<ResponseCollisionProjectile> responseCollisionZombieProjectile;
 extern std::vector<ResponseCollisionZombiePlant> responseCollisionZombiePlant;
+extern std::vector<ResponseCollisionSunCursor> responseCollisionSunCursor;
 extern std::unordered_map<int, TriggerBoxCollider> resultBoxCollider;
 extern ArrayKey<int, PS2Timer> timerArray;
 extern std::unordered_map<int, float> speedArray;

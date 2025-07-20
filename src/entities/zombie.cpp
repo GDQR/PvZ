@@ -301,6 +301,7 @@ bool Zombie::erase() {
  
     lifeArray.erase(father);
     damageArray.erase(father);
+    speedArray.erase(father);
     
     // boxColliderArray.erase(boxColliderID);
     for(unsigned int i=0; i<boxColliderZombie.size();i++){
@@ -336,7 +337,8 @@ bool Zombie::erase() {
           Entities::deleteID(zomAnim.entity[animSize]);
           animSize--;
         }
-        i = zombieAnims.size();
+        zombieAnims.erase(zombieAnims.begin() + i);
+        break;
       }
     }
 
