@@ -526,7 +526,7 @@ void ReadFontImage(FontData* font, Tyra::TextureAtlas* textureAtlasFont, const c
   spriteFont.size = Vec2(textureData2->width, textureData2->height);
   spriteFont.mode = Tyra::SpriteMode::MODE_REPEAT;
 
-  // free(textureData->data);
+  free(textureData->data);
 }
 
 void loadFonts() {
@@ -708,8 +708,6 @@ void drawText(FontData* font, std::string text, float x, float y) {
   // sizeof(font->offsetlist);
   maxLetters = codepoints.size();
   // printf("maxletters 2: %d\n",maxLetters);
-  static bool show=true;
-  static int test=0;
   for (unsigned int i = 0; i < maxLetters; i++) {
     // printf("text: %c,%d\n", (unsigned char)codepoints[i],codepoints[i]);
     if (codepoints[i] == ' ') {
@@ -723,29 +721,11 @@ void drawText(FontData* font, std::string text, float x, float y) {
       spriteFont.position.y = y + offsetY;
       spriteFont.offset.x = font->rectlist[ascii].val[0];
       spriteFont.offset.y = font->rectlist[ascii].val[1];
-      // spriteFont.size.x = font->widthlist[ascii];
-      // spriteFont.size.x = font->rectlist[ascii].val[2] ;
       spriteFont.size.x = font->rectlist[ascii].val[2];
       spriteFont.size.y = font->rectlist[ascii].val[3] - font->offsetlist[ascii].val[1];
-      if(show == true){
-        printf("text: %c\n", codepoints[i]);
-        printf("position\n");
-        spriteFont.position.print();
-        printf("offset\n");
-        spriteFont.offset.print();
-        printf("size\n");
-        spriteFont.size.print();
-      }
-      
       renderer->renderer2D.render(spriteFont);
       offsetX += font->widthlist[ascii];
-      // offsetX += font->rectlist[ascii].val[2];
-      // offsetX += font->widthlist[ascii] + font->offsetlist[ascii].val[0] ;
     }
-  }
-  test++;
-  if(test == 3){
-    show = false;
   }
   texRepo->getByTextureId(font->textureID)->removeLinkById(spriteFont.id);
 }
