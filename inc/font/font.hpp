@@ -41,6 +41,7 @@ extern std::vector<TextData> textArray;
 extern std::vector<FontData> fonts;
 extern int FontPicoID;
 extern int FontBrianneTod12ID;
+extern int HouseofTerror16ID;
 extern Tyra::FontData myFont;
 extern Tyra::Color black;
 extern Tyra::Color orange;

@@ -7,9 +7,11 @@
 #include <malloc.h>
 #include <stdio.h>
 #include <stdlib.h>
+
 // Font font;
 int FontPicoID;
 int FontBrianneTod12ID;
+int HouseofTerror16ID;
 Tyra::FontData myFont;
 Tyra::Color black(0, 0, 0, 128);
 Tyra::Color orange(255.0f, 128, 0, 128);
@@ -60,6 +62,59 @@ struct Image {
 // static OffsetListFont offsetlist[160];
 // static int spaceWidth;
 // static int spaceHeight;
+
+Image CopyTexture4Bits(unsigned char* dataSrc, int srcWidth, int srcHeight,
+                       int x, int y, int width, int height) {
+  Image image;
+  image.width = width;
+  image.height = height;
+  image.data = static_cast<unsigned char*>(memalign(128, width * height/2));
+  // printf("image: %d,%d,%d,%d\n",x,y,width,height);
+  for (int i = 0; i < width * height/2; i++) {
+    image.data[i] = 0;
+  }
+
+  int k = 0;
+  int maxWidth = ceilf(((float)width/2));
+  // printf("maxWidth: %d\n",maxWidth + (x/2));
+  for (int i = y; i < height + y; i++) {
+    for (int j = x/2; j < maxWidth + (x/2); j++) {
+      // printf("pixel[%d]: %d=%d: %d\n",k,k,(i*(srcWidth/2))+j,dataSrc[(i * (srcWidth/2)) + j]);
+      image.data[k] = dataSrc[(i * (srcWidth/2)) + j];
+      k++;
+    }
+  }
+
+  return image;
+}
+
+
+void SaveImage4BitsInTexture(Image image, unsigned char* data,
+                        Tyra::TextureAtlas* atlas, unsigned int widthTexture,
+                        unsigned int heightTexture) {
+  int k = 0;
+  int maxWidth = ceilf(((float)image.width/2));
+
+  if (maxWidth + atlas->x > (widthTexture/2)) {
+    atlas->x = 0;
+    atlas->y += atlas->maxHeight;
+  }
+
+  if (image.height + atlas->y > heightTexture){
+    TYRA_TRAP("ERROR MAX TEXTURE");
+  }
+
+  // printf("save in x,y: %d,%d\n",atlas->x,atlas->y);
+
+  for (unsigned int i = atlas->y; i < image.height + atlas->y; i++) {
+    for (unsigned int j = atlas->x; j < maxWidth + atlas->x; j++) {
+      data[(i * (widthTexture/2)) + j] = image.data[k];
+      // printf("save pixel[%d]: %d\n",(i*(widthTexture/2))+j,k);
+      k++;
+    }
+  }
+}
+
 
 Image CopyTexture8Bits(unsigned char* dataSrc, int srcWidth, int srcHeight,
                        int x, int y, int width, int height) {
@@ -335,20 +390,68 @@ void ReadFontImage(FontData* font, Tyra::TextureAtlas* textureAtlasFont, const c
   Tyra::TextureBuilderData* textureData2 = new Tyra::TextureBuilderData();
   textureData2->width = 256;
   textureData2->height = 128;
+  
+  if (texture->core->bpp == Tyra::bpp4){
+    textureData2->width = 512;
+    textureData2->height = 512;
+    textureData2->data = static_cast<unsigned char*>(
+        memalign(128, textureData2->width * textureData2->height/2));
+    
+    for (int i = 0; i < textureData2->width * textureData2->height/2; i++) {
+      textureData2->data[i] = 0;
+    }
 
-  if (texture->core->bpp == Tyra::bpp8) {
-    // printf("pase 2\n");
+    textureData2->name = "copia";
+    textureData2->bpp = Tyra::bpp4;
+    textureData2->gsComponents = TEXTURE_COMPONENTS_RGBA;
+    textureData2->clutGsComponents = TEXTURE_COMPONENTS_RGBA;
+    textureData2->clutWidth = textureData->clutWidth;
+    textureData2->clutHeight = textureData->clutHeight;
+    textureData2->clutBpp = textureData->clutBpp;
+    
+    textureData2->clut = static_cast<unsigned char*>(
+      memalign(128, textureData2->clutWidth * textureData2->clutHeight*4));
+
+    textureData2->clut = textureData->clut;
+
+    // Convert the black color in transparent
+    for(int i=0; i<16*4;){
+      if( textureData2->clut[i] == 0 &&
+        textureData2->clut[i+1] == 0 &&
+        textureData2->clut[i+2] == 0 &&
+        textureData2->clut[i+3] == 128){
+          textureData2->clut[i+3] = 0;
+          break;
+        }
+      i=i+4;
+    }
+
+    for (int i = 0; i < 160; i++) {
+      Image image = CopyTexture4Bits(texture->core->data, texture->core->width,
+                                     texture->core->height, font->rectlist[i].val[0],
+                                     font->rectlist[i].val[1], font->rectlist[i].val[2],
+                                     font->rectlist[i].val[3]);
+
+      if (font->rectlist[i].val[3] > textureAtlasFont->maxHeight) {
+        textureAtlasFont->maxHeight += font->rectlist[i].val[3];
+      }
+
+      SaveImage4BitsInTexture(image, textureData2->data, textureAtlasFont,
+                         textureData2->width, textureData2->height);
+      font->rectlist[i].val[0] = textureAtlasFont->x*2;
+      font->rectlist[i].val[1] = textureAtlasFont->y;
+      int maxWidth = ceilf(((float)image.width/2));
+      textureAtlasFont->x += (maxWidth);
+      free(image.data);
+    }
+  }else if (texture->core->bpp == Tyra::bpp8) {
     textureData2->data = static_cast<unsigned char*>(
         memalign(128, textureData2->width * textureData2->height));
-        
-    // printf("pase 3\n");
-    // printf("ram: %f\n",engine->info.getAvailableRAM());
-    
-    // printf("pase 4\n");
+
     for (int i = 0; i < textureData2->width * textureData2->height; i++) {
       textureData2->data[i] = 0;
     }
-    // printf("pase 5\n");
+
     textureData2->name = "copia";
     textureData2->bpp = Tyra::bpp8;
     textureData2->gsComponents = TEXTURE_COMPONENTS_RGBA;
@@ -380,12 +483,10 @@ void ReadFontImage(FontData* font, Tyra::TextureAtlas* textureAtlasFont, const c
       free(image.data);
     }
     
-    printf("pase 3\n");
-    
     // free(textureData->clut);
   } else if (texture->core->bpp == Tyra::bpp24) {
     
-    printf("estoy en 24\n");
+    // printf("estoy en 24\n");
     textureData2->data = static_cast<unsigned char*>(
         memalign(128, textureData2->width * textureData2->height * 3));
 
@@ -413,6 +514,8 @@ void ReadFontImage(FontData* font, Tyra::TextureAtlas* textureAtlasFont, const c
       textureAtlasFont->x += font->rectlist[i].val[2];
       free(image.data);
     }
+  }else{
+    TYRA_TRAP("Doesn't support this format for the font");
   }
 
   Tyra::Texture* texture2 = new Tyra::Texture(textureData2);
@@ -465,6 +568,17 @@ void loadFonts() {
   fonts.push_back(font2);
   
   FontPicoID = fonts.size()-1;
+  
+  textureAtlasFont.x = 0;
+  textureAtlasFont.y = 0;
+  textureAtlasFont.maxHeight = 0;
+  
+  FontData font3;
+  ReadFontFile(&font3, FONT_TXT_HouseofTerror16);
+  ReadFontImage(&font3, &textureAtlasFont, FONT_HouseofTerror16);
+  fonts.push_back(font3);
+  
+  HouseofTerror16ID = fonts.size()-1;
   
   printf("ram: %f\n",engine->info.getAvailableRAM());
 
@@ -594,6 +708,8 @@ void drawText(FontData* font, std::string text, float x, float y) {
   // sizeof(font->offsetlist);
   maxLetters = codepoints.size();
   // printf("maxletters 2: %d\n",maxLetters);
+  static bool show=true;
+  static int test=0;
   for (unsigned int i = 0; i < maxLetters; i++) {
     // printf("text: %c,%d\n", (unsigned char)codepoints[i],codepoints[i]);
     if (codepoints[i] == ' ') {
@@ -603,20 +719,33 @@ void drawText(FontData* font, std::string text, float x, float y) {
       offsetX = 0;
     } else {
       ascii = getLetterPos(font->charlist, codepoints[i]);
-      spriteFont.position.x = x + offsetX;
+      spriteFont.position.x = x + offsetX ;//+ font->offsetlist[ascii].val[0];
       spriteFont.position.y = y + offsetY;
       spriteFont.offset.x = font->rectlist[ascii].val[0];
       spriteFont.offset.y = font->rectlist[ascii].val[1];
+      // spriteFont.size.x = font->widthlist[ascii];
+      // spriteFont.size.x = font->rectlist[ascii].val[2] ;
       spriteFont.size.x = font->rectlist[ascii].val[2];
-      spriteFont.size.y = font->rectlist[ascii].val[3];
-      // printf("offset\n");
-      // spriteFont.offset.print();
-      // printf("text: %d\n", ascii);
-      // printf("size\n");
-      // spriteFont.size.print();
+      spriteFont.size.y = font->rectlist[ascii].val[3] - font->offsetlist[ascii].val[1];
+      if(show == true){
+        printf("text: %c\n", codepoints[i]);
+        printf("position\n");
+        spriteFont.position.print();
+        printf("offset\n");
+        spriteFont.offset.print();
+        printf("size\n");
+        spriteFont.size.print();
+      }
+      
       renderer->renderer2D.render(spriteFont);
-      offsetX += font->widthlist[ascii] + 1;
+      offsetX += font->widthlist[ascii];
+      // offsetX += font->rectlist[ascii].val[2];
+      // offsetX += font->widthlist[ascii] + font->offsetlist[ascii].val[0] ;
     }
+  }
+  test++;
+  if(test == 3){
+    show = false;
   }
   texRepo->getByTextureId(font->textureID)->removeLinkById(spriteFont.id);
 }
