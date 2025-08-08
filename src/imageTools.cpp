@@ -1,3 +1,4 @@
+#include "PVZ.hpp"
 #include "imageTools.hpp"
 #include "debug/debug.hpp"
 #include <file/file_utils.hpp>
@@ -9,7 +10,6 @@
 #include <setjmp.h>
 #include <stdio.h>
 #include <png.h>
-#include "components.hpp"
 
 struct JpgPixel3 {
   u8 r, g, b;

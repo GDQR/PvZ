@@ -1,5 +1,5 @@
+#include "PVZ.hpp"
 #include "font/font.hpp"
-#include "components.hpp"
 #include "fontFiles.hpp"
 #include "imageTools.hpp"
 #include "renderSprite/textures.hpp"
@@ -696,7 +696,6 @@ void drawText(FontData* font, std::string text, float x, float y) {
   // printf("spritefont size\n");
   // spriteFont.size.print();
   // texture->print();
-  texture->addLink(spriteFont.id);
   spriteFont.textureID = texture->id;
   // renderer->renderer2D.render(spriteFont);
   unsigned int indexGlyph = 0;
@@ -709,7 +708,7 @@ void drawText(FontData* font, std::string text, float x, float y) {
   maxLetters = codepoints.size();
   // printf("maxletters 2: %d\n",maxLetters);
   for (unsigned int i = 0; i < maxLetters; i++) {
-    // printf("text: %c,%d\n", (unsigned char)codepoints[i],codepoints[i]);
+    // printf("text: %c,%d\n",codepoints[i],codepoints[i]);
     if (codepoints[i] == ' ') {
       offsetX += font->spaceWidth;
     } else if (codepoints[i] == '\n') {
@@ -727,5 +726,4 @@ void drawText(FontData* font, std::string text, float x, float y) {
       offsetX += font->widthlist[ascii];
     }
   }
-  texRepo->getByTextureId(font->textureID)->removeLinkById(spriteFont.id);
 }

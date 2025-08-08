@@ -1,16 +1,13 @@
-#include "components.hpp"
 #include "debugPVZ/debug.hpp"
 #include "debugPVZ/menuDebugCommands.hpp"
-#include "entities/entities.hpp"
 #include "font/font.hpp"
 #include "renderSprite/textures.hpp"
 #include "scenes.hpp"
 #include "states.hpp"
-#include "systems.hpp"
-#include "entities/zombie.hpp"
 #include "imageTools.hpp"
 #include "imageFiles.hpp"
 #include "text.hpp"
+#include "manager.hpp"
 #include <stdlib.h>
 
 using namespace Tyra;
@@ -23,6 +20,7 @@ int flagMeterTimer = 0;
 int emptyFlagMeter;
 int seedChooser;
 int sunCounterText = 0;
+int tutorialSpr = 0;
 int tutorialText = 0;
 static int awardBackground;
 bool firstTime = true;
@@ -79,14 +77,24 @@ void Level1::init() {
   loadAnimation(AnimIndex::Peashooter);
   loadAnimation(AnimIndex::SunFlower);
   loadAnimation(AnimIndex::CherryBomb);
-  loadAnimation(AnimIndex::Chomper);
+  // loadAnimation(AnimIndex::Wallnut);
+  // loadAnimation(AnimIndex::PotatoMine);
+  // loadAnimation(AnimIndex::SnowPea);
+  // loadAnimation(AnimIndex::Chomper);
+  // loadAnimation(AnimIndex::Repeater);
   loadAnimation(AnimIndex::LawnMower);
   loadAnimation(AnimIndex::Zombie);
   loadAnimation(AnimIndex::Zombie_charred);
+  // loadAnimation(AnimIndex::Zombie_PoleVaulter);
   loadAnimation(AnimIndex::Sun);
-  createCard(Plant_State_enum::PeaShotter, Vec2(120, 10), isVersusMode);
-  createCard(SunFlower, Vec2(180, 10), isVersusMode);
-  createCard(CherryBomb, Vec2(240, 10), isVersusMode);
+  createCard(Plant_State_enum::PeaShotter, isVersusMode);
+  createCard(SunFlower, isVersusMode);
+  createCard(CherryBomb, isVersusMode);
+  // createCard(Plant_State_enum::Wallnut, isVersusMode);
+  // createCard(PotatoMine, isVersusMode);
+  // createCard(SnowPea, Vec2(240, 10), isVersusMode);
+  // createCard(Plant_State_enum::Chomper, Vec2(120, 10), isVersusMode);
+  // createCard(Repeater, Vec2(240, 10), isVersusMode);
   createLawnMower(Tyra::Vec2(-35, 200));
 
   for (int i = 0; i < 5; i++) {
@@ -108,19 +116,28 @@ void Level1::init() {
   }
   mapEnable[2] = true;
 
-  maxZombies = 5;  // this is used for when you win the level
+  maxZombies = 1;  // this is used for when you win the level
   zombieCreateRow[2].maxZombiesInRow = 10;
   zombiescreated = 0;
   player.init();
   player.initCursor(Vec2(mapCollider[0][0].x, mapCollider[0][0].y + 30));
   player.initDeckCard(Tyra::Vec2(posArray[cards[0].seed].x - 3, -10));
+  player.initPlant();
   loadProjectile();
   // sunManager.create(Vec2(277, 77), sunCost::normalSun, false);
-  
+  tutorialSpr = Entities::newID();
+  createSprite(tutorialSpr,Tyra::SpriteMode::MODE_STRETCH,Tyra::Vec2(0,270),Tyra::Vec2(512,96));
+  createTexture(tutorialSpr,IMG_ConveyorBelt_backdrop);
+  spriteArray[tutorialSpr].color = Color(0,0,0,60);
   std::string text;
   text = std::to_string(sunCounter);
-  sunCounterText = CreateTextData(text,70,40,FontBrianneTod12ID);
-  tutorialText =  CreateTextData(ADVICE_CLICK_SEED_PACKET,70,270,FontBrianneTod12ID);
+  sunCounterText = CreateTextData(text,70,40,HouseofTerror16ID);
+  tutorialText =  CreateTextData(ADVICE_CLICK_SEED_PACKET,70,280,HouseofTerror16ID);
+  
+  // static int textotest = Entities::newID();
+  // createSprite(textotest, Tyra::MODE_REPEAT, Vec2(0,0), Vec2(50, 70));
+  // createTexture(textotest, IMG_SeedPacketSilhouette);
+  // spriteArray[textotest].color = Color(128,128,128,128);
   firstTime = false;
   if (firstTime == true) {
     initAnimation();
@@ -233,14 +250,8 @@ void Level1::update() {
       // animManager.update();
       frameManager.update();
     }
-    if (debugMode == false) {
-      sunManager.updateNaturalSun();
-    }
 
-    if (stopAnimation == false) {
-      sunManager.createByTime();
-      // sunManager.erase(cursor.id);
-    }
+    sunManager.update();
 
     // printf("FPS: %d\n",engine->info.getFps()) ;
     // printf("ram: %f\n",engine->info.getAvailableRAM());

@@ -1,14 +1,7 @@
-#include "components.hpp"
+#include "PVZ.hpp"
+#include "manager.hpp"
 #include "debugPVZ/menuDebugCommands.hpp"
-#include "entities/entities.hpp"
 #include <iostream>
-
-Tyra::Engine* engine;
-Tyra::Renderer* renderer;
-Tyra::Renderer2D* renderer2D;
-Tyra::Pad* pad;
-const Tyra::PadJoy* leftJoy;
-Tyra::TextureRepository* texRepo;
 
 // sparse array
 std::vector<FrameCounter> frameCounterArray;
@@ -45,8 +38,6 @@ std::unordered_map<int, int> damageArray;
 ArrayKey<int, int> lifeArray(enumComponents::life);
 std::map<int, Tyra::Vec2> pivot;
 std::vector<Controller> controller;
-
-Plant plant[maxPlants];
 std::vector<Zombie> zombie;
 std::vector<Zombie> deadZombie;
 std::vector<Zombie> damagedZombie;
@@ -59,14 +50,337 @@ std::vector<LawnMower> lawnMower;
 std::vector<Cursor> cursor;
 std::vector<DeckCursor> deckCursor;
 
-int zombiescreated;
-ZombieRow zombieCreateRow[5];
-bool mapEnable[5];
-bool plantCreatedInMap[5][9];
-BoxCollider mapCollider[5][9];
+BoxCollider::BoxCollider() {}
+BoxCollider::BoxCollider(int id, float x, float y, float width, float height) {
+  this->id = id;
+  this->x = x;
+  this->y = y;
+  this->width = width;
+  this->height = height;
+}
+BoxCollider::BoxCollider(float x, float y, float width, float height) {
+  this->x = x;
+  this->y = y;
+  this->width = width;
+  this->height = height;
+}
 
-Tyra::Sprite d_SpriteBoxCollider;
-std::map<int, Tyra::Sprite> dm_SpritePointCollider;
-std::map<int, Tyra::Sprite> dm_SpriteBoxCollider;
-std::map<int, Tyra::Sprite> dm_SpriteNormal;
-std::map<int, Tyra::Sprite> dm_SpriteNormalPivot;
+void BoxCollider::move(const int entityID, float offsetX, float offsetY) {
+  x = offsetX + posArray[entityID].x;
+  y = offsetY + posArray[entityID].y;
+}
+
+/*
+ * @return True if collision exist
+ */
+bool BoxCollider::collision(const BoxCollider* box) {
+  if (x + width >= box->x && box->x + box->width >= x && y + height >= box->y &&
+      box->y + box->height >= y) {
+    return true;
+  }
+  return false;
+}
+
+bool BoxCollider::pointCollision(const Tyra::Vec2* point) {
+  if (point->x < x + width && point->y > y && point->y < y + height) {
+    return true;
+  }
+  return false;
+}
+
+BoxCollider& searchBoxCollider(int type,int id){
+  return boxColliderArray[type][boxColliderArrayID[id]];
+}
+
+void Card::update() {
+  PS2Timer& timer = timerArray[seedShadowTimer];
+  // printf("counter: %d\n", timer.counterMS);
+  // printf("maxMS: %d\n", timer.maxMS);
+  if (timer.counterMS <
+      timer.maxMS) {
+    timer.addMSinCounter();
+
+    spriteArray[seedShadow].size = Vec2(50, 70);
+    spriteArray[seedShadowTimer].size.y -= (70.0f * timer.getTimeInMS() / timer.maxMS);
+  } else if (sunCounter >= cost) {
+    spriteArray[seedShadow].size = Vec2(0, 0);
+    spriteArray[seedShadowTimer].size = Vec2(0, 0);
+  }
+}
+
+void Controller::update() {
+  if (pad->getClicked().Cross) {
+    // create plant
+    printf("press cross\n");
+    plantsManager.create(playerID);
+  }
+  if (pad->getClicked().DpadLeft) {
+    deckCursor[playerID].moveLeft(playerID);
+  }
+  if (pad->getClicked().DpadRight) {
+    deckCursor[playerID].moveRight(playerID);
+  }
+
+  if (debugMode == false) {
+    cursor[playerID].move();
+    
+    for(size_t i=0; i < boxColliderPlayer.size();i++){
+      if(boxColliderPlayer[i].id ==cursor[playerID].id){
+        boxColliderPlayer[i].move(cursor[playerID].id, 28 / 2,
+                                               24 / 2);
+      }
+    }
+  }
+
+  if (pad->getClicked().R1 && debugMode == false) {
+    debugMode = true;
+    debugMenu = true;
+    printf("\nDEBUG MODE ACTIVE\n");
+  }
+
+  if (debugMenu == true) {
+    debugModeClass.mainMenu();
+  }
+}
+
+void Cursor::move() {
+  float x = 0.0F;
+  float y = 0.0F;
+
+  if (leftJoy->h <= 100) {
+    x = -cursorSpeed;
+  } else if (leftJoy->h >= 200) {
+    x = cursorSpeed;
+  }
+
+  if (leftJoy->v <= 100) {
+    y = -cursorSpeed;
+  } else if (leftJoy->v >= 200) {
+    y = cursorSpeed;
+  }
+
+  posArray[id] += Vec2(x, y);
+  if (spriteArray[id].position.x != posArray[id].x ||
+      spriteArray[id].position.y != posArray[id].y) {
+    if (cursorTimer < 20) {
+      cursorTimer++;
+
+      if (cursorTimer == 10) {
+        cursorSpeed = 1.5f;
+      } else if (cursorTimer == 20) {
+        cursorSpeed = 2.0f;
+      }
+    }
+
+  } else {
+    cursorTimer = 0;
+    cursorSpeed = 1;
+  }
+}
+
+void ChangeSpriteFromAnimation(std::vector<int>& ids, int& fatherID, AnimIndex::Animation anim, int frame){
+  std::vector<int>& anim_2 = m_animID[anim];
+  if(ids.size() < anim_2.size()){
+    
+    for(size_t i=ids.size();i<anim_2.size();i++){
+      ids.push_back(Entities::newID());
+      int entityID = ids[i];
+
+      newFatherID(&fatherID, &ids[i]);
+
+      createSpriteRotate(entityID, Tyra::MODE_STRETCH, Vec2(0, 0),
+                          Vec2(128 / 1.6f, 128 / 1.6f), Vec2(0.0f, 0.0f));
+
+      texPosArray.insert(entityID, Tyra::Vec2());
+      scaleTexture[ids[i]] = scaleTexture[ids[i-1]];
+    }
+  }else if(ids.size() != anim_2.size()){
+    size_t size = ids.size();
+    while (size != anim_2.size())
+    {
+      deletePosArray(ids[size-1]);
+      deleteFinalPosArray(ids[size-1]);
+      deleteTexPosArray(ids[size-1]);
+      deleteFatherIDChild(fatherID,&ids[size-1]);
+      deleteSprite(ids[size-1]);
+      Entities::deleteID(ids[size-1]);
+      ids.erase(ids.begin()+ size-1);
+      size--;
+    }
+  }
+
+  // Gives an error in the size with CherryBomb
+  for(size_t i=0; i< anim_2.size();i++){
+    animationDataArray[anim_2[i]].activeAnimation(ids[i],frame,frame);
+    
+    spriteArray[ids[i]].color.a = 64;
+  }
+}
+
+void CreateSelectorPlant(int playerID, int pos){
+  size_t indexFound = plantAnims.size();
+  for(size_t i=0; i < indexFound; i++){
+    if(plantAnims[i].id == playerID){
+      indexFound = i;
+      break;
+    }
+  }
+
+  if(indexFound == plantAnims.size()){
+    TYRA_TRAP("ERROR");
+  }
+
+  std::vector<int>& anims = plantAnims[indexFound].entity;
+  switch (cards[pos].plant)
+  {
+  case PeaShotter:
+    ChangeSpriteFromAnimation(anims,plantAnims[indexFound].id,AnimIndex::Peashooter,80);
+    break;
+  case SunFlower:
+    ChangeSpriteFromAnimation(anims,plantAnims[indexFound].id,AnimIndex::SunFlower,8);
+    break;
+  case CherryBomb:
+    ChangeSpriteFromAnimation(anims,plantAnims[indexFound].id,AnimIndex::CherryBomb,1);
+    break;
+  case Wallnut:
+    ChangeSpriteFromAnimation(anims,plantAnims[indexFound].id,AnimIndex::Wallnut,1);
+    break;
+  case PotatoMine:
+    ChangeSpriteFromAnimation(anims,plantAnims[indexFound].id,AnimIndex::PotatoMine,1);
+    break;
+  
+  default:
+    break;
+  }
+}
+
+void DeckCursor::moveLeft(int playerID) {
+  pos--;
+  if (pos < 0) {
+    pos = cards.size() - 1;
+  }
+  posArray[id].x = posArray[cards[pos].seed].x - 3;
+
+  CreateSelectorPlant(playerID, pos);
+}
+
+void DeckCursor::moveRight(int playerID) {
+  pos++;
+  if (pos >= (int)cards.size()) {
+    pos = 0;
+  }
+  posArray[id].x = posArray[cards[pos].seed].x - 3;
+
+  CreateSelectorPlant(playerID, pos);
+}
+
+void Explosion::erase() {
+  deleteSprite(id);
+  deletePosArray(id);
+  deleteFinalPosArray(id);
+  // boxColliderArray.erase(id);
+  deleteDebugBoxCollider(id);
+  Entities::deleteID(id);
+}
+
+void FatherID::update(const int entityID) {
+  for (unsigned int i = 0; i < id.size(); i++) {
+    // finalPos += fatherPos
+    finalPosArray[id[i]] += posArray[entityID];
+  }
+}
+
+bool Proyectile::attack(){
+  size_t searchIndex = responseCollisionZombieProjectile.size();
+  size_t size = searchIndex;
+  int zombieCollisionID;
+  for(size_t i=0;i<size;i++){
+    if(responseCollisionZombieProjectile[i].projectileID == id){
+      searchIndex = i;
+      zombieCollisionID = responseCollisionZombieProjectile[i].zombieID;
+      break;
+    }
+  }
+
+  if(searchIndex == size){
+    return move(); 
+  }
+
+  size = zombie.size();
+  for(size_t i=0; i < size; i++){
+    if(zombie[i].boxColliderID == zombieCollisionID){
+      zombie[i].damage(id);
+      if(zombie[i].erase() == true){
+        zombie.erase(zombie.begin()+i);
+      }else if (type == enumProyectile::snowPea) {
+        speedArray[zombie[i].father] = 0.5f;
+      }
+      break;
+    }
+  }
+  return true;
+}
+
+bool Proyectile::move() {
+  // boxColliderArray[id].x++;
+  // boxColliderArray[BOXCOLLIDER_PROYECTILE][boxColliderArrayID[id]].x++;
+  for(unsigned int i=0; i < boxColliderProyectile.size();i++){
+    if(boxColliderProyectile[i].id == id){
+      boxColliderProyectile[i].x++;
+      break;
+    }
+  }
+  posArray[id].x++;
+  if (posArray[id].x >= 580) {
+    // delete projectile
+    printf("deleting projectile\n");
+    return true;
+  }
+  return false;
+}
+
+void Proyectile::erase() {
+  // if (type == enumProyectile::pea) {
+  //   projectilePea->removeLinkById(spriteArray[id].id);
+  // } else if (type == enumProyectile::snowPea) {
+  //   projectileSnowPea->removeLinkById(spriteArray[id].id);
+  // }
+
+  deleteSprite(id);
+  deletePosArray(id);
+  deleteFinalPosArray(id);
+  
+  for(size_t i=0; i<boxColliderProyectile.size();i++){
+    if(boxColliderProyectile[i].id == id){
+      boxColliderProyectile.erase(boxColliderProyectile.begin()+i);
+      break;
+    }
+  }
+  deleteDebugBoxCollider(id);
+  Entities::deleteID(id);
+}
+
+static u32 globalTime;
+
+void GetTime(){
+  globalTime = GetTimerSystemTime() / (kBUSCLK / CLOCKS_PER_SEC);
+}
+
+PS2Timer::PS2Timer() { resetCounter(); }
+void PS2Timer::setLastTime() { lastTime = actualTime; }
+
+u32 PS2Timer::getTimeInMS() {
+  actualTime = globalTime;
+  return actualTime - lastTime;
+}
+
+void PS2Timer::resetCounter() {
+  lastTime = globalTime;
+  actualTime = lastTime;
+  counterMS = 0;
+}
+
+void PS2Timer::addMSinCounter() {
+  setLastTime();
+  counterMS += getTimeInMS();
+}

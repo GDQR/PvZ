@@ -1,7 +1,6 @@
+#include "PVZ.hpp"
 #include "debugPVZ/menuDebugAnimation.hpp"
-#include "components.hpp"
 #include "font/font.hpp"
-#include "systems.hpp"
 
 bool isMainMenuAnimationActive = true;
 bool startAnimationDebug = true;

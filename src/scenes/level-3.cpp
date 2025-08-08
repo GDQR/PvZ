@@ -1,9 +1,8 @@
-#include "components.hpp"
 #include "scenes.hpp"
 #include "states.hpp"
-#include "systems.hpp"
 #include "imageTools.hpp"
 #include "imageFiles.hpp"
+#include "manager.hpp"
 
 static BackgroundEntity sodnormal;
 static BackgroundEntity sodnormalAlpha;

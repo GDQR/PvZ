@@ -1,5 +1,5 @@
+#include "PVZ.hpp"
 #include "debugPVZ/debug.hpp"
-#include "components.hpp"
 #include "debugPVZ/menuDebugAnimation.hpp"
 #include "debugPVZ/menuDebugSprite.hpp"
 #include "font/font.hpp"
@@ -295,21 +295,18 @@ void createDebugBoxFill(const int id, Tyra::SpriteMode mode, Vec2 pos,
 
 void deleteDebugSprite(const int id) {
   if (spriteArray.count(id)) {
-    debugBoxTexture->removeLinkById(dm_SpriteNormal[id].id);
     dm_SpriteNormal.erase(id);
   }
 }
 
 void deleteDebugSpritePivot(const int id) {
   if (spriteArray.count(id)) {
-    debugPointTexture->removeLinkById(dm_SpriteNormalPivot[id].id);
     dm_SpriteNormalPivot.erase(id);
   }
 }
 
 void deleteDebugBoxCollider(const int id) {
   if(dm_SpriteBoxCollider.count(id) == 1){
-    debugBoxTexture->removeLinkById(dm_SpriteBoxCollider[id].id);
     dm_SpriteBoxCollider.erase(id);
   }
 }
@@ -325,6 +322,5 @@ void createDebugPoint(const int id, Tyra::SpriteMode mode) {
 }
 
 void deleteDebugPoint(const int id) {
-  debugPointTexture->removeLinkById(dm_SpritePointCollider[id].id);
   dm_SpritePointCollider.erase(id);
 }

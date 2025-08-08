@@ -1,7 +1,4 @@
-#include "entities/zombie.hpp"
-#include "components.hpp"
-#include "entities/entities.hpp"
-#include "systems.hpp"
+#include "PVZ.hpp"
 
 std::vector<ZombieAnimation> zombieAnims;
 int zombiesCreated = 0;
@@ -308,7 +305,7 @@ bool Zombie::erase() {
           // printf("borrando zombie anim ID: %d\n",zombieAnims[i].entity[animSize]);
           deletePosArray(zomAnim.entity[animSize]);
           deleteFinalPosArray(zomAnim.entity[animSize]);
-          deleteFatherIDChild(&father, &zomAnim.entity[animSize]);
+          deleteFatherIDChild(father, &zomAnim.entity[animSize]);
           deleteSprite(zomAnim.entity[animSize]);
           deleteTexPosArray(zomAnim.entity[animSize]);
           for(unsigned int j=0; j< frameCounterArray.size();j++){
@@ -338,7 +335,7 @@ bool Zombie::erase() {
     //   deleteTexPosArray(id[i]);
     //   Entities::deleteID(id[i]);
     // }
-    deleteFatherID(&father);
+    deleteFatherID(father);
     Entities::deleteID(father);
     Entities::deleteID(boxColliderID);
     type = Zombie_State_enum::NoneZombie;
@@ -529,18 +526,44 @@ void createZombie(Tyra::Vec2 pos, const Zombie_State_enum type) {
 int waves = 1;
 int zombiesLeftForWave = 2;
 
-int timerZombies = 0;
+int timerZombies = 30*60;//1*60=60=1 sec //2310;
 int maxZombies;  // this is used for when you win the level
 // para terminar un nivel se usa el tiempo, hay un tiempo determinado por eso la
 // barra sigue moviendose procedimiento crea zombie espera se termina el tiempo
 // y crea otro zombie espera el tiempo es igual al tiempo que transcurre una
 // oleada se crean varios zombies al crear varios zombies se puede hacer un
 // limite para que no esten todos en una fila
+
+//nivel 1
+//en el segundo 0 se crea 1 zombie
+//en 1/4 se crea 1 zombie
+//la mitad se crea 1 zombie
+//al final se crea 2 zombie
+struct ZombieWave{
+  int time;
+  int maxZombies;
+};
+ZombieWave timeZombie;
 void createZombieMain() {
+  timeZombie.maxZombies = 1;
+  timeZombie.time = 450;//2310;
+  // 100% --- 158  --- 1800
+  // 25%  --- 39.5 --- 450
+  // 154 es el size maximo del fullflagmeter
+  // 100% --- 154
+  //  25% --- 38.5
+  // digamos que el tiempo maximo son 30 segundos
+  // 100% --- 30000 
+  //  25% --- 7500
   // printf("timerZombies: %d\n",timerZombies);
-  if (timerZombies > 0) {
-    timerZombies--;
+  if (timerZombies < timeZombie.time) {
+    timerZombies++;
+    if(timerZombies%12==0){
+      posArray[Entity::zombieFlagMeter].x--;
+      spriteArray[Entity::fullFlagMeter].size.x++;
+    }
   } else {
+    // printf("creando zombie\n");
     if (zombiescreated < maxZombies) {
       int row = rand() % 5;
       while (zombieCreateRow[row].zombiesInRow ==
@@ -553,15 +576,15 @@ void createZombieMain() {
 
       BoxCollider& boxcollider = boxColliderArray[BOXCOLLIDER_MAP][boxColliderArrayID[map[row][8]]];
       createZombie(Vec2(boxcollider.x, boxcollider.y),
-            Zombie_State_enum::coneheadZombie);
+            Zombie_State_enum::normalZombie);
 
       // createZombie(Vec2(mapCollider[row][8].x, mapCollider[row][8].y),
       //              Zombie_State_enum::coneheadZombie);
-
+      timerZombies = 0;
       if (maxZombies - zombiescreated != zombiesLeftForWave) {
-        timerZombies = 60;
+        // time = 60
       } else {
-        timerZombies = 30;
+        // timerZombies = 30;
       }
       zombiescreated++;
     }

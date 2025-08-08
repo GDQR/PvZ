@@ -1,5 +1,5 @@
+#include "PVZ.hpp"
 #include "debugPVZ/menuDebugCommands.hpp"
-#include "components.hpp"
 
 int padTimer = 0;
 int padPressTimer = 0;

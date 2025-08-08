@@ -1,6 +1,5 @@
-#include "components.hpp"
 #include "scenes.hpp"
-#include "systems.hpp"
+#include "manager.hpp"
 #include "imageFiles.hpp"
 #include <gs_psm.h>
 #include <screenshot.h>

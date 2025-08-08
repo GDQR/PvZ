@@ -1,8 +1,7 @@
 #include "scenes/level-2.hpp"
-#include "components.hpp"
 #include "scenes.hpp"
 #include "states.hpp"
-#include "systems.hpp"
+#include "manager.hpp"
 
 void Level2::init() {
   Entity::background = Entities::newID();
