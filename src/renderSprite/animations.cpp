@@ -707,8 +707,8 @@ void SetOneSpriteAnimationToEntity(std::vector<int>& ids, int& father, AnimIndex
     }                             
     texPosArray[entityID] = positionFrame[posIndex] * scaleTexture[entityID]; 
 
-    const int spriteID = spriteArray[entityID].id;
-    Tyra::Texture* oldTexture = texRepo->getBySpriteId(spriteID);
+    const int oldTextureID = spriteArray[entityID].textureID;
+    Tyra::Texture* oldTexture = texRepo->getByTextureId(oldTextureID);
     Tyra::Texture* newTexture = texRepo->getByTextureId(textureFrame[textureIndex]);
     
     if (oldTexture != newTexture) {

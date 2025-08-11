@@ -133,7 +133,7 @@ Tyra::Texture* loadTexture(std::string fileImage) {
 void copyTexture(Sprite* sprite1, Sprite* sprite2) {
   auto& textureRepository = renderer->getTextureRepository();
 
-  auto* texture = textureRepository.getBySpriteId(sprite1->textureID);
+  auto* texture = textureRepository.getByTextureId(sprite1->textureID);
 
   /** Let's assign this texture to sprite. */
   sprite2->textureID = texture->id;

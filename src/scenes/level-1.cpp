@@ -161,10 +161,12 @@ void Level1::initAnimation(){
   createTexture(sodRollCap, "REANIM/SodRollCap.png");
   createTexture(sodRollRow1, IMG_sod1row);
   createTexture(sodRollRow1Alpha, IMG_sod1row_);
-  Tyra::Texture* alpha = renderer->getTextureRepository().getBySpriteId(
-    spriteArray[Entity::sodRollRow1Alpha].id);
-  Tyra::Texture* background = renderer->getTextureRepository().getBySpriteId(
-      spriteArray[Entity::sodRollRow1].id);
+  Tyra::Texture* alpha = renderer->getTextureRepository().getByTextureId(
+    spriteArray[Entity::sodRollRow1Alpha].textureID);
+  Tyra::Texture* background = renderer->getTextureRepository().getByTextureId(
+      spriteArray[Entity::sodRollRow1].textureID);
+  TYRA_ASSERT(alpha!=nullptr,"Alpha Texture is NUll");
+  TYRA_ASSERT(background!=nullptr,"background Texture is NUll");
   // spriteArray[Entity::sodRollRow1].scale = 0.64f;
   background->core->components = TEXTURE_COMPONENTS_RGBA;
 
@@ -179,8 +181,7 @@ void Level1::initAnimation(){
   SetAlphaFrom8BppToJPG(backData,newClutData,pixelData,128,771);
 
   free(clutDataNormal);
-
-  sodnormal.initJPG(texRepo->getBySpriteId(spriteArray[Entity::sodRollRow1].id),SpriteMode::MODE_REPEAT,13,200,256,128,TextureScale::Tex256,TextureScale::Tex128);
+  sodnormal.initJPG(texRepo->getByTextureId(spriteArray[Entity::sodRollRow1].textureID),SpriteMode::MODE_REPEAT,13,200,256,128,TextureScale::Tex256,TextureScale::Tex128);
   for(unsigned int i=0;i<sodnormal.id.size();i++){
     spriteArray[sodnormal.id[i]].size.x = -1.0f;
     spriteArray[sodnormal.id[i]].scale = 0.64f;

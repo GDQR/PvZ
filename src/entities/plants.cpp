@@ -387,8 +387,8 @@ int Plant::attack() {
       printf("change animation\n");
       for(size_t i=0; i<plantAnims.size();i++){
         if(plantAnims[i].id == father){
-          const int spriteID = spriteArray[plantAnims[i].entity[0]].id;
-          Tyra::Texture* oldTexture = texRepo->getBySpriteId(spriteID);
+          const int oldTextureID = spriteArray[plantAnims[i].entity[0]].textureID;
+          Tyra::Texture* oldTexture = texRepo->getByTextureId(oldTextureID);
           if (oldTexture != TEX_Wallnut_cracked2) {
             // printf("link sprite\n");
           
@@ -404,8 +404,8 @@ int Plant::attack() {
       printf("change animation\n");
       for(size_t i=0; i<plantAnims.size();i++){
         if(plantAnims[i].id == father){
-          const int spriteID = spriteArray[plantAnims[i].entity[0]].id;
-          Tyra::Texture* oldTexture = texRepo->getBySpriteId(spriteID);
+          const int oldTextureID = spriteArray[plantAnims[i].entity[0]].textureID;
+          Tyra::Texture* oldTexture = texRepo->getByTextureId(oldTextureID);
           if (oldTexture != TEX_Wallnut_cracked1) {
             // printf("link sprite\n");
           

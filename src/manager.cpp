@@ -90,8 +90,8 @@ void FrameManager::update(){
           // }
           texPosArray[frameArray[i].entityID] = positionFrame[animProp[j].dataIndex] * scaleTexture[frameArray[i].entityID];
         }else if(animProp[j].type == ANIM_TEXTURE){
-          const int spriteID = spriteArray[frameArray[i].entityID].id;
-          Tyra::Texture* oldTexture = texRepo->getBySpriteId(spriteID);
+          const int oldTextureID = spriteArray[frameArray[i].entityID].textureID;
+          Tyra::Texture* oldTexture = texRepo->getByTextureId(oldTextureID);
           Tyra::Texture* newTexture = texRepo->getByTextureId(textureFrame[animProp[j].dataIndex]);
           if (oldTexture != newTexture) {
             // printf("link sprite\n");

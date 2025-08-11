@@ -42,11 +42,12 @@ class BackgroundEntity{
 class Player{
   public:
   // Player(Tyra::Vec2 cursorPos, Tyra::Vec2 deckCursorPos);
-  void init();
+  int id;
+  void init(Tyra::Vec2 cursorPos,Tyra::Vec2 deckPos);
+  private:
   void initCursor(Tyra::Vec2 cursorPos);
   void initDeckCard(Tyra::Vec2 pos);
   void initPlant();
-  int id;
 };
 
 enum Zombie_State_enum{

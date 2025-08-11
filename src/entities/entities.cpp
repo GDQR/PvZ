@@ -210,7 +210,7 @@ void createCard(const Plant_State_enum typePlant, const bool isVersusMode) {
   cards.push_back(card);
 }
 
-void Player::init(){
+void Player::init(Tyra::Vec2 cursorPos,Tyra::Vec2 deckPos){
   printf("init Player\n");
   static int countPlayer = 0;
   id = cursor.size();
@@ -220,6 +220,9 @@ void Player::init(){
   newController.playerID = countPlayer;
   controller.push_back(newController);
   countPlayer++;
+  initCursor(cursorPos);
+  initDeckCard(deckPos);
+  initPlant();
 }
 
 void Player::initCursor(Tyra::Vec2 cursorPos){
