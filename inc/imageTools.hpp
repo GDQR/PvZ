@@ -70,3 +70,4 @@ class PNGImageScale {
 unsigned char* RotateClut(Tyra::PngPixel4* data);
 void SetAlphaFrom8BppToJPG(Tyra::PngPixel3* jpgData, Tyra::PngPixel4* clutData,
                            unsigned char* clutPos, int width, int height);
+void Shader_SetAlphaToImage(const int textureAlphaID, const int textureImageID);

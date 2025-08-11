@@ -113,8 +113,6 @@ void createBoxCollider(int id, BoxColliderEnum type, BoxCollider collider){
 }
 
 void deleteSprite(const int entityID) {
-  Tyra::Texture* textureID = texRepo->getByTextureId(spriteArray[entityID].textureID);
-
   spriteArray.erase(entityID);
 
   spriteRenderIDArray.erase(entityID);

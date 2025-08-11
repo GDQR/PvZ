@@ -119,10 +119,7 @@ void Level1::init() {
   maxZombies = 1;  // this is used for when you win the level
   zombieCreateRow[2].maxZombiesInRow = 10;
   zombiescreated = 0;
-  player.init();
-  player.initCursor(Vec2(mapCollider[0][0].x, mapCollider[0][0].y + 30));
-  player.initDeckCard(Tyra::Vec2(posArray[cards[0].seed].x - 3, -10));
-  player.initPlant();
+  player.init(Vec2(mapCollider[0][0].x, mapCollider[0][0].y + 30),Tyra::Vec2(posArray[cards[0].seed].x - 3, -10));
   loadProjectile();
   // sunManager.create(Vec2(277, 77), sunCost::normalSun, false);
   tutorialSpr = Entities::newID();
@@ -161,26 +158,8 @@ void Level1::initAnimation(){
   createTexture(sodRollCap, "REANIM/SodRollCap.png");
   createTexture(sodRollRow1, IMG_sod1row);
   createTexture(sodRollRow1Alpha, IMG_sod1row_);
-  Tyra::Texture* alpha = renderer->getTextureRepository().getByTextureId(
-    spriteArray[Entity::sodRollRow1Alpha].textureID);
-  Tyra::Texture* background = renderer->getTextureRepository().getByTextureId(
-      spriteArray[Entity::sodRollRow1].textureID);
-  TYRA_ASSERT(alpha!=nullptr,"Alpha Texture is NUll");
-  TYRA_ASSERT(background!=nullptr,"background Texture is NUll");
   // spriteArray[Entity::sodRollRow1].scale = 0.64f;
-  background->core->components = TEXTURE_COMPONENTS_RGBA;
-
-  Tyra::PngPixel4* clutData = (Tyra::PngPixel4*)alpha->clut->data;
-  unsigned char* pixelData = alpha->core->data;
-
-  unsigned char* clutDataNormal= RotateClut(clutData);
-  Tyra::PngPixel4* newClutData = (Tyra::PngPixel4*)clutDataNormal;
-
-  struct Tyra::PngPixel3* backData =
-      (struct Tyra::PngPixel3*)background->core->data;
-  SetAlphaFrom8BppToJPG(backData,newClutData,pixelData,128,771);
-
-  free(clutDataNormal);
+  Shader_SetAlphaToImage(spriteArray[Entity::sodRollRow1Alpha].textureID,spriteArray[Entity::sodRollRow1].textureID);
   sodnormal.initJPG(texRepo->getByTextureId(spriteArray[Entity::sodRollRow1].textureID),SpriteMode::MODE_REPEAT,13,200,256,128,TextureScale::Tex256,TextureScale::Tex128);
   for(unsigned int i=0;i<sodnormal.id.size();i++){
     spriteArray[sodnormal.id[i]].size.x = -1.0f;

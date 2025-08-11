@@ -45,27 +45,9 @@ void SelectorScreen::BGLeft() {
   createSprite(selectorScreenLeft, Tyra::MODE_STRETCH, Vec2(0, 0),
                Vec2(512, 393));
   createTexture(selectorScreenLeft, "SelectorScreen_BG_Left.jpg");
-
-  Tyra::Texture* alpha = renderer->getTextureRepository().getBySpriteId(
-      spriteArray[selectorScreenLeftAlpha].id);
-  Tyra::Texture* background = renderer->getTextureRepository().getBySpriteId(
-      spriteArray[selectorScreenLeft].id);
-  background->core->components = TEXTURE_COMPONENTS_RGBA;
-
-  printf("left width: %d\n", background->core->width);
-
-  Tyra::PngPixel4* clutData = (Tyra::PngPixel4*)alpha->clut->data;
-  unsigned char* pixelData = alpha->core->data;
-
-  unsigned char* clutDataNormal= RotateClut(clutData);
-  Tyra::PngPixel4* newClutData = (Tyra::PngPixel4*)clutDataNormal;
-
-  struct Tyra::PngPixel3* backData =
-      (struct Tyra::PngPixel3*)background->core->data;
   
-  SetAlphaFrom8BppToJPG(backData,newClutData,pixelData,512,512);
+  Shader_SetAlphaToImage(spriteArray[selectorScreenLeftAlpha].textureID,spriteArray[selectorScreenLeft].textureID);
 
-  free(clutDataNormal);
   deleteSprite(selectorScreenLeftAlpha);
   packet2_update(mypacket,
                  draw_texture_expand_alpha(mypacket->next, 128, 1, 0));
@@ -85,23 +67,7 @@ void SelectorScreen::BGCenter() {
                Vec2(512, 256));
   createTexture(selectorScreenCenter, "SelectorScreen_BG_Center.jpg");
 
-  Tyra::Texture* alpha = renderer->getTextureRepository().getBySpriteId(
-      spriteArray[selectorScreenCenterAlpha].id);
-  Tyra::Texture* background = renderer->getTextureRepository().getBySpriteId(
-      spriteArray[selectorScreenCenter].id);
-  background->core->components = TEXTURE_COMPONENTS_RGBA;
-
-  Tyra::PngPixel4* clutData = (Tyra::PngPixel4*)alpha->clut->data;
-  unsigned char* pixelData = alpha->core->data;
-
-  unsigned char* clutDataNormal= RotateClut(clutData);
-  Tyra::PngPixel4* newClutData = (Tyra::PngPixel4*)clutDataNormal;
-
-  struct Tyra::PngPixel3* backData =
-      (struct Tyra::PngPixel3*)background->core->data;
-  background->print();    
-  SetAlphaFrom8BppToJPG(backData,newClutData,pixelData,256,512);
-  free(clutDataNormal);
+  Shader_SetAlphaToImage(spriteArray[selectorScreenCenterAlpha].textureID,spriteArray[selectorScreenCenter].textureID);
 
   deleteSprite(selectorScreenCenterAlpha);
   packet2_update(mypacket,
@@ -120,24 +86,8 @@ void SelectorScreen::BGRight() {
   createSprite(selectorScreen, Tyra::MODE_STRETCH, Vec2(0, 50), Vec2(512, 488));
   createTexture(selectorScreen, "SelectorScreen_BG_Right.jpg");
 
-  Tyra::Texture* alpha = renderer->getTextureRepository().getBySpriteId(
-      spriteArray[selectorScreenAlpha].id);
-  Tyra::Texture* background = renderer->getTextureRepository().getBySpriteId(
-      spriteArray[selectorScreen].id);
-  background->core->components = TEXTURE_COMPONENTS_RGBA;
-  int v = 0;
+  Shader_SetAlphaToImage(spriteArray[selectorScreenAlpha].textureID,spriteArray[selectorScreen].textureID);
 
-  Tyra::PngPixel4* clutData = (Tyra::PngPixel4*)alpha->clut->data;
-  unsigned char* pixelData = alpha->core->data;
-
-  unsigned char* clutDataNormal= RotateClut(clutData);
-  Tyra::PngPixel4* newClutData = (Tyra::PngPixel4*)clutDataNormal;
-
-  struct Tyra::PngPixel3* backData =
-      (struct Tyra::PngPixel3*)background->core->data;
-
-  SetAlphaFrom8BppToJPG(backData,newClutData,pixelData,512,512);
-  free(clutDataNormal);
   deleteSprite(selectorScreenAlpha);
   packet2_update(mypacket,
                  draw_texture_expand_alpha(mypacket->next, 128, 1, 0));
@@ -154,8 +104,8 @@ void SelectorScreen::BG() {
                Vec2(650, 512));
   createTexture(selectorScreenBackground, "SelectorScreen_BG.jpg");
 
-  Tyra::Texture* background = renderer->getTextureRepository().getBySpriteId(
-      spriteArray[selectorScreenBackground].id);
+  Tyra::Texture* background = renderer->getTextureRepository().getByTextureId(
+      spriteArray[selectorScreenBackground].textureID);
   background->core->components = TEXTURE_COMPONENTS_RGBA;
 
   // packet2_update(mypacket,draw_texture_expand_alpha(mypacket->next,128,1,0));

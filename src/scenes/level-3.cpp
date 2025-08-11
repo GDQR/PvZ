@@ -38,7 +38,7 @@ void Level3::init() {
   
   struct Tyra::PngPixel3* backData =
       (struct Tyra::PngPixel3*)background->core->data;
-  SetAlphaFrom8BppToJPG(backData,newClutData,pixelData,128,771);
+  SetAlphaFrom8BppToJPG(backData,newClutData,pixelData,771,128);
 
   free(clutDataNormal);
   

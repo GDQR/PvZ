@@ -44,10 +44,7 @@ void Level5::init() {
     }
   }
   mapEnable[2] = true;
-  Entity::player.init();
-  Entity::player.initCursor(Vec2(mapCollider[0][0].x, mapCollider[0][0].y + 30));
-  Entity::player.initDeckCard(Tyra::Vec2(posArray[cards[0].seed].x - 3, -10));
-  Entity::player.initPlant();
+  Entity::player.init(Vec2(mapCollider[0][0].x, mapCollider[0][0].y + 30),Tyra::Vec2(posArray[cards[0].seed].x - 3, -10));
 }
 
 void Level5::update() {

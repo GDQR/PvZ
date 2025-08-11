@@ -547,8 +547,8 @@ void SetAlphaFrom8BppToJPG(Tyra::PngPixel3* jpgData, Tyra::PngPixel4* clutData,
   float alphaval;
   int clutColor;
   int v=0;
-  for (int i = 0; i < width; i++) {
-    for (int j = 0; j < height; j++) {
+  for (int i = 0; i < height; i++) {
+    for (int j = 0; j < width; j++) {
       if(i==22 && j == 152){
         printf("pixel clut pos[%d]: %d\n",v,clutPos[v]);
         printf("pixel clut[%d]: %d,%d,%d\n",v,clutData[clutPos[v]].r,clutData[clutPos[v]].g,clutData[clutPos[v]].b);
@@ -1084,4 +1084,26 @@ void PngLoaderUnlimited::handle4bppPalletized(Tyra::TextureBuilderData* result,
   for (int row = 0; row < result->height; row++) free(rowPointers[row]);
 
   free(rowPointers);
+}
+
+void Shader_SetAlphaToImage(const int textureAlphaID, const int textureImageID){
+  Tyra::Texture* alpha = renderer->getTextureRepository().getByTextureId(textureAlphaID);
+  Tyra::Texture* image = renderer->getTextureRepository().getByTextureId(textureImageID);
+  
+  TYRA_ASSERT(alpha!=nullptr,"Alpha Texture is NUll");
+  TYRA_ASSERT(image!=nullptr,"Image Texture is NUll");
+  
+  image->core->components = TEXTURE_COMPONENTS_RGBA;
+
+  Tyra::PngPixel4* clutData = (Tyra::PngPixel4*)alpha->clut->data;
+  unsigned char* pixelData = alpha->core->data;
+
+  unsigned char* clutDataNormal= RotateClut(clutData);
+  Tyra::PngPixel4* newClutData = (Tyra::PngPixel4*)clutDataNormal;
+
+  struct Tyra::PngPixel3* backData =
+      (struct Tyra::PngPixel3*)image->core->data;
+  SetAlphaFrom8BppToJPG(backData,newClutData,pixelData,image->core->width,image->core->height);
+
+  free(clutDataNormal);
 }
