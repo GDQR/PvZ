@@ -333,7 +333,7 @@ void RewardManager::update() {
       eraseReward();
       
       // load award
-      JpgScaleData textures2 = JpgImageScale::load(Tyra::FileUtils::fromCwd(AwardScreen_Back).c_str(),TextureScale::Tex128,TextureScale::Tex128);
+      BigTexture textures2 = JpgImageScale::load(Tyra::FileUtils::fromCwd(AwardScreen_Back).c_str(),TextureScale::Tex128,TextureScale::Tex128);
       SetBigImage(&Entity::awardbackground, &textures2,Tyra::SpriteMode::MODE_STRETCH,0,0,81,95);
 
       while (textures2.data.size()!=0)

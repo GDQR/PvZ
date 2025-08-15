@@ -16,6 +16,7 @@ struct JpgPixel3 {
 };
 
 static u32 getTextureSize(const u32& width, const u32& height,
+int getTextureSize(const unsigned int& width, const unsigned int& height,
                    const Tyra::TextureBpp& bpp) {
   switch (bpp) {
     case Tyra::bpp32:
@@ -55,7 +56,7 @@ my_error_exit(j_common_ptr cinfo) {
 }
 
 /** Based on GsKit texture loading - thank you guys! */
-JpgScaleData JpgImageScale::load(const char* fullPath,
+BigTexture JpgImageScale::load(const char* fullPath,
                                               const TextureScale sWidth,
                                               const TextureScale sHeight) {
   std::string path = fullPath;
@@ -90,7 +91,7 @@ JpgScaleData JpgImageScale::load(const char* fullPath,
   jpeg_start_decompress(&cinfo);
 
   std::vector<Tyra::TextureBuilderData*> textures;
-  JpgScaleData jpgData;
+  BigTexture jpgData;
 
   Tyra::TextureBuilderData* result = new Tyra::TextureBuilderData();
   result->width = cinfo.output_width;
@@ -249,7 +250,7 @@ JpgScaleData JpgImageScale::load(const char* fullPath,
   return jpgData;
 }
 
-JpgScaleData JpgImageScale::load(Tyra::Texture* texture, const TextureScale sWidth,
+BigTexture JpgImageScale::load(Tyra::Texture* texture, const TextureScale sWidth,
   const TextureScale sHeight, const int TextureComponent){
     if(texture == nullptr){
       TYRA_TRAP("ERROR CUTTING TEXTURE");
@@ -257,7 +258,7 @@ JpgScaleData JpgImageScale::load(Tyra::Texture* texture, const TextureScale sWid
 
     // JCS_YCbCr
     std::vector<Tyra::TextureBuilderData*> textures;
-    JpgScaleData jpgData;
+    BigTexture jpgData;
     JpgPixel3* pixel = (JpgPixel3*) texture->core->data; 
     int widthBlock = ceil((float)texture->core->height/sHeight);
     int heightBlock = ceil((float)texture->core->width/sWidth);
@@ -337,7 +338,7 @@ JpgScaleData JpgImageScale::load(Tyra::Texture* texture, const TextureScale sWid
     return jpgData;
 }
 
-JpgScaleData PNGImageScale::load(Tyra::Texture* texture, const TextureScale sWidth,
+BigTexture PNGImageScale::load(Tyra::Texture* texture, const TextureScale sWidth,
   const TextureScale sHeight, const int TextureComponent){
     if(texture == nullptr){
       TYRA_TRAP("ERROR CUTTING TEXTURE");
@@ -345,7 +346,7 @@ JpgScaleData PNGImageScale::load(Tyra::Texture* texture, const TextureScale sWid
     texture->print();
     
     std::vector<Tyra::TextureBuilderData*> textures;
-    JpgScaleData jpgData;
+    BigTexture jpgData;
     JpgPixel3* pixel = (JpgPixel3*) texture->core->data; 
     int widthBlock = ceil((float)texture->core->height/sHeight);
     int heightBlock = ceil((float)texture->core->width/sWidth);
@@ -430,7 +431,7 @@ JpgScaleData PNGImageScale::load(Tyra::Texture* texture, const TextureScale sWid
     return jpgData;
 }
 
-JpgScaleData PNGImageScale::loadOne(Tyra::Texture* texture, const TextureScale sWidth,
+BigTexture PNGImageScale::loadOne(Tyra::Texture* texture, const TextureScale sWidth,
   const TextureScale sHeight, const int TextureComponent){
     if(texture == nullptr){
       TYRA_TRAP("ERROR CUTTING TEXTURE");
@@ -438,7 +439,7 @@ JpgScaleData PNGImageScale::loadOne(Tyra::Texture* texture, const TextureScale s
     texture->print();
     
     std::vector<Tyra::TextureBuilderData*> textures;
-    JpgScaleData jpgData;
+    BigTexture jpgData;
     JpgPixel3* pixel = (JpgPixel3*) texture->core->data; 
     int widthBlock = ceil((float)texture->core->height/sHeight);
     int heightBlock = ceil((float)texture->core->width/sWidth);

@@ -17,7 +17,7 @@ enum TextureScale {
   tex512 = 512
 };
 
-struct JpgScaleData {
+struct BigTexture {
   std::vector<Tyra::TextureBuilderData*> data;
   int width;
   int height;
@@ -25,9 +25,9 @@ struct JpgScaleData {
 
 class JpgImageScale {
  public:
-  static JpgScaleData load(const char* fullpath, const TextureScale sWidth,
+  static BigTexture load(const char* fullpath, const TextureScale sWidth,
                            const TextureScale sHeight);
-  static JpgScaleData load(Tyra::Texture* texture, const TextureScale sWidth,
+  static BigTexture load(Tyra::Texture* texture, const TextureScale sWidth,
                            const TextureScale sHeight,
                            const int TextureComponent);
 };
@@ -61,12 +61,19 @@ class PngLoaderUnlimited {
 
 class PNGImageScale {
  public:
-  static JpgScaleData load(Tyra::Texture* texture, const TextureScale sWidth,
+  static BigTexture load(Tyra::Texture* texture, const TextureScale sWidth,
                            const TextureScale sHeight, const int TextureComponent);
-  static JpgScaleData loadOne(Tyra::Texture* texture, const TextureScale sWidth,
+  static BigTexture loadOne(Tyra::Texture* texture, const TextureScale sWidth,
                            const TextureScale sHeight, const int TextureComponent);
 };
 
+class JPGLoaderUnlimited {
+  public:
+  static Tyra::TextureBuilderData* load(const char* fullPath);
+};
+
+int getTextureSize(const unsigned int& width, const unsigned int& height,
+                   const Tyra::TextureBpp& bpp);
 unsigned char* RotateClut(Tyra::PngPixel4* data);
 void SetAlphaFrom8BppToJPG(Tyra::PngPixel3* jpgData, Tyra::PngPixel4* clutData,
                            unsigned char* clutPos, int width, int height);

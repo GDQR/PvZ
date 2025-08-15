@@ -4,13 +4,12 @@
 #include "imageFiles.hpp"
 #include "manager.hpp"
 
-static BackgroundEntity sodnormal;
-static BackgroundEntity sodnormalAlpha;
+static BigSpriteJPG sodnormal;
 static packet2_t* mypacket;
 
 void Level3::init() {
   engine->renderer.core.setClearScreenColor(Tyra::Color(255,0,0));
-  // JpgScaleData textures = JpgImageScale::load(Tyra::FileUtils::fromCwd(IMG_sod1row).c_str(),TextureScale::Tex256,TextureScale::Tex128);
+  // BigTexture textures = JpgImageScale::load(Tyra::FileUtils::fromCwd(IMG_sod1row).c_str(),TextureScale::Tex256,TextureScale::Tex128);
   // SetBigImage(&sodnormal, &textures,0,0,81,95);
   // textures = JpgImageScale::load(Tyra::FileUtils::fromCwd(IMG_sod1row_).c_str(),TextureScale::Tex256,TextureScale::Tex128);
   // SetBigImage(&sodnormalAlpha, &textures,0,0,81,95);
@@ -20,7 +19,7 @@ void Level3::init() {
   createSprite(Entity::sodRollRow1Alpha, Tyra::MODE_STRETCH, Vec2(0, 0), Vec2(717, 127));
   createTexture(Entity::sodRollRow1, IMG_sod1row);
   createTexture(Entity::sodRollRow1Alpha, IMG_sod1row_);
-  // JpgScaleData textures = PNGImageScale::load(texRepo->getBySpriteId(spriteArray[Entity::sodRollRow1Alpha].id),TextureScale::Tex256,TextureScale::Tex128);
+  // BigTexture textures = PNGImageScale::load(texRepo->getBySpriteId(spriteArray[Entity::sodRollRow1Alpha].id),TextureScale::Tex256,TextureScale::Tex128);
   // textures = JpgImageScale::load(texRepo->getBySpriteId(spriteArray[Entity::sodRollRow1Alpha].id),TextureScale::Tex256,TextureScale::Tex128);
   // SetBigImage(&sodnormalAlpha, &textures,0,0,81,95);
   Tyra::Texture* alpha = renderer->getTextureRepository().getBySpriteId(
@@ -42,11 +41,11 @@ void Level3::init() {
 
   free(clutDataNormal);
   
-  JpgScaleData textures = JpgImageScale::load(texRepo->getBySpriteId(spriteArray[Entity::sodRollRow1].id),TextureScale::Tex256,TextureScale::Tex128,TEXTURE_COMPONENTS_RGBA);
+  BigTexture textures = JpgImageScale::load(texRepo->getBySpriteId(spriteArray[Entity::sodRollRow1].id),TextureScale::Tex256,TextureScale::Tex128,TEXTURE_COMPONENTS_RGBA);
   SetBigImage(&sodnormal, &textures,Tyra::SpriteMode::MODE_STRETCH,0,0,256/2,128/2);
   deleteSprite(Entity::sodRollRow1);
   deleteSprite(Entity::sodRollRow1Alpha);
-  // JpgScaleData textures = JpgImageScale::load(Tyra::FileUtils::fromCwd(AwardScreen_Back).c_str(),TextureScale::Tex128,TextureScale::Tex128);
+  // BigTexture textures = JpgImageScale::load(Tyra::FileUtils::fromCwd(AwardScreen_Back).c_str(),TextureScale::Tex128,TextureScale::Tex128);
   // SetBigImage(&Entity::backgroundIDs, &textures,0,0,81,95);
 
   // while (textures.data.size()!=0)

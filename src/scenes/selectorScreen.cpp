@@ -57,19 +57,34 @@ void SelectorScreen::BGLeft() {
   packet2_reset(mypacket, 0);
 }
 
+static BigSpriteJPG as;
 void SelectorScreen::BGCenter() {
-  selectorScreenCenterAlpha = Entities::newID();
-  selectorScreenCenter = Entities::newID();
-  createSprite(selectorScreenCenterAlpha, Tyra::MODE_STRETCH, Vec2(0, 0),
-               Vec2(512, 256));
-  createTexture(selectorScreenCenterAlpha, PNG_SelectorScreenBGCenter);
-  createSprite(selectorScreenCenter, Tyra::MODE_STRETCH, Vec2(0, 200),
-               Vec2(512, 256));
-  createTexture(selectorScreenCenter, "SelectorScreen_BG_Center.jpg");
+  // selectorScreenCenterAlpha = Entities::newID();
+  // selectorScreenCenter = Entities::newID();
+  // createSprite(selectorScreenCenterAlpha, Tyra::MODE_STRETCH, Vec2(0, 0),
+  //              Vec2(512, 256));
 
-  Shader_SetAlphaToImage(spriteArray[selectorScreenCenterAlpha].textureID,spriteArray[selectorScreenCenter].textureID);
+  PngLoaderUnlimited loader;
+  Tyra::TextureBuilderData* texDataAlpha = loader.load(PNG_SelectorScreenBGCenter);
+  Tyra::Texture* textureAlpha = new Tyra::Texture(texDataAlpha);
+  texRepo->add(textureAlpha);
+  // spriteArray[selectorScreenCenterAlpha].textureID = textureAlpha->id;
 
-  deleteSprite(selectorScreenCenterAlpha);
+  // createTexture(selectorScreenCenterAlpha, PNG_SelectorScreenBGCenter);
+  // createSprite(selectorScreenCenter, Tyra::MODE_STRETCH, Vec2(0, 200),
+  //              Vec2(512, 256));
+  Tyra::TextureBuilderData* texData = JPGLoaderUnlimited::load(JPG_SelectorScreenBGCenter);
+  Tyra::Texture* texture = new Tyra::Texture(texData);
+  texRepo->add(texture);
+  // spriteArray[selectorScreenCenter].textureID = texture->id;
+  // createTexture(selectorScreenCenter, "REANIM/SelectorScreen_BG_Center.jpg");
+
+  Shader_SetAlphaToImage(textureAlpha->id,texture->id);
+  
+  BigTexture scaleData = JpgImageScale::load(texture,TextureScale::Tex256,TextureScale::Tex256,TEXTURE_COMPONENTS_RGBA);
+  SetBigImage(&as,&scaleData,Tyra::MODE_STRETCH,0,200,720/2,350/2);
+
+  // deleteSprite(selectorScreenCenterAlpha);
   packet2_update(mypacket,
                  draw_texture_expand_alpha(mypacket->next, 128, 1, 0));
   packet2_update(mypacket, draw_finish(mypacket->next));
@@ -102,7 +117,7 @@ void SelectorScreen::BG() {
 
   createSprite(selectorScreenBackground, Tyra::MODE_STRETCH, Vec2(0, 0),
                Vec2(650, 512));
-  createTexture(selectorScreenBackground, "SelectorScreen_BG.jpg");
+  createTexture(selectorScreenBackground, "REANIM/SelectorScreen_BG.jpg");
 
   Tyra::Texture* background = renderer->getTextureRepository().getByTextureId(
       spriteArray[selectorScreenBackground].textureID);

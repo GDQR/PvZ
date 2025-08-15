@@ -12,7 +12,7 @@
 
 using namespace Tyra;
 
-static BackgroundEntity entidad;
+static BigSpriteJPG entidad;
 
 void Level4::init() {
   loadFonts();

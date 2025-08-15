@@ -1,6 +1,7 @@
 #pragma once
 
 extern const char* PNG_SelectorScreenBGCenter;
+extern const char* JPG_SelectorScreenBGCenter;
 extern const char* background1;
 extern const char* background1unsodded;
 extern const char* background2;

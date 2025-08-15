@@ -1,6 +1,7 @@
 #include "imageFiles.hpp"
 
-const char* PNG_SelectorScreenBGCenter = "SelectorScreen_BG_Center_.png"; 
+const char* PNG_SelectorScreenBGCenter = "REANIM/SelectorScreen_BG_Center_.png"; 
+const char* JPG_SelectorScreenBGCenter = "REANIM/SelectorScreen_BG_Center.jpg"; 
 const char* background1 = "IMAGES/background1.jpg";
 const char* background1unsodded =  "IMAGES/background1unsodded.jpg";
 const char* background2 = "IMAGES/background2.jpg";

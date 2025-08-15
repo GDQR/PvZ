@@ -26,8 +26,8 @@ std::map<int, Tyra::Sprite> dm_SpriteBoxCollider;
 std::map<int, Tyra::Sprite> dm_SpriteNormal;
 std::map<int, Tyra::Sprite> dm_SpriteNormalPivot;
 
-void BackgroundEntity::initJPG(const char* JPGfile, Tyra::SpriteMode mode, float x, float y, float width, float height, TextureScale scaleWidth, TextureScale scaleHeight){
-  JpgScaleData textures = JpgImageScale::load(Tyra::FileUtils::fromCwd(JPGfile).c_str(),scaleWidth,scaleHeight);
+void BigSpriteJPG::initJPG(const char* JPGfile, Tyra::SpriteMode mode, float x, float y, float width, float height, TextureScale scaleWidth, TextureScale scaleHeight){
+  BigTexture textures = JpgImageScale::load(Tyra::FileUtils::fromCwd(JPGfile).c_str(),scaleWidth,scaleHeight);
   SetBigImage(this, &textures,mode,x,y,width,height);
   rowTextures = textures.width;
 
@@ -38,9 +38,9 @@ void BackgroundEntity::initJPG(const char* JPGfile, Tyra::SpriteMode mode, float
   }
 }
 
-void BackgroundEntity::initJPG(Tyra::Texture* texture, Tyra::SpriteMode mode, float x, float y, float width, float height, TextureScale scaleWidth, TextureScale scaleHeight){
-  // JpgScaleData textures = JpgImageScale::load(Tyra::FileUtils::fromCwd(JPGfile).c_str(),scaleWidth,scaleHeight);
-  JpgScaleData textures = JpgImageScale::load(texture,scaleWidth,scaleHeight,TEXTURE_COMPONENTS_RGBA);
+void BigSpriteJPG::initJPG(Tyra::Texture* texture, Tyra::SpriteMode mode, float x, float y, float width, float height, TextureScale scaleWidth, TextureScale scaleHeight){
+  // BigTexture textures = JpgImageScale::load(Tyra::FileUtils::fromCwd(JPGfile).c_str(),scaleWidth,scaleHeight);
+  BigTexture textures = JpgImageScale::load(texture,scaleWidth,scaleHeight,TEXTURE_COMPONENTS_RGBA);
   SetBigImage(this, &textures,mode,x,y,width,height);
   rowTextures = textures.width;
 
@@ -51,13 +51,13 @@ void BackgroundEntity::initJPG(Tyra::Texture* texture, Tyra::SpriteMode mode, fl
   // }
 }
 
-void BackgroundEntity::move(){
+void BigSpriteJPG::move(){
   for(unsigned int i=0;i<id.size();i++){
     posArray[id[i]].x--;
   }
 }
 
-void BackgroundEntity::scale(){
+void BigSpriteJPG::scale(){
   if(engine->pad.getClicked().DpadLeft){
     int k=0;
     int l=0;
@@ -91,7 +91,7 @@ void BackgroundEntity::scale(){
   }
 }
 
-void BackgroundEntity::scaleTest(int width, int height){
+void BigSpriteJPG::scaleTest(int width, int height){
   int k=0;
   int l=0;
   for(unsigned int i=0;i<id.size();i++){
@@ -483,8 +483,8 @@ namespace Entity {
 Reward reward;
 Player player;
 int background;
-BackgroundEntity backgroundIDs;
-BackgroundEntity awardbackground;
+BigSpriteJPG backgroundIDs;
+BigSpriteJPG awardbackground;
 int sodRoll;
 int sodRollCap;
 int sodRollRow1;

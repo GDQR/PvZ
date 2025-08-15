@@ -228,7 +228,7 @@ void createLawnMower(const Tyra::Vec2 pos) {
   lawnMower.push_back(entity);
 }
 
-void SetBigImage(BackgroundEntity* entity, JpgScaleData* textures, Tyra::SpriteMode mode,float x,float y, float width, float height){
+void SetBigImage(BigSpriteJPG* entity, BigTexture* textures, Tyra::SpriteMode mode,float x,float y, float width, float height){
   int j=0;
   int k=0;
 

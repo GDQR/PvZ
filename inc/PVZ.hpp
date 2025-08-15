@@ -28,7 +28,7 @@ class Entities {
   static void deleteID(unsigned int& id);
 };
 
-class BackgroundEntity{
+class BigSpriteJPG{
   public:
   std::vector<int> id;
   int rowTextures;
@@ -234,8 +234,8 @@ extern Tyra::Vec2 cameraPos;
 
 namespace Entity {
   extern int background;
-  extern BackgroundEntity backgroundIDs;
-  extern BackgroundEntity awardbackground;
+  extern BigSpriteJPG backgroundIDs;
+  extern BigSpriteJPG awardbackground;
   extern int sodRoll;
   extern int sodRollCap;
   extern int sodRollRow1;
@@ -570,7 +570,7 @@ void deleteFinalPosArray(const int entityID);
 void deleteTexPosArray(const int entityID);
 BoxCollider& searchBoxCollider(int type,int id);
 void GetTime();
-void SetBigImage(BackgroundEntity* entity, JpgScaleData* textures, Tyra::SpriteMode mode, float x, float y, float width, float height);
+void SetBigImage(BigSpriteJPG* entity, BigTexture* textures, Tyra::SpriteMode mode, float x, float y, float width, float height);
 
 //----------------------------------------------------------------------------------
 // Local Variables Definition (local to this module)
