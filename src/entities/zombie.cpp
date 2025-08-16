@@ -46,7 +46,7 @@ void SetZombieAnimation(const int entityID, const int animID, const Zombie_State
       (strcmp(animationDataArray[animID].name, anim_tongue)==0) ||
       (strcmp(animationDataArray[animID].name, Zombie_innerarm_screendoor)==0) ||
       (strcmp(animationDataArray[animID].name, Zombie_flaghand)==0)) {
-        setSprite(entityID, (int)enumDraw::noDraw);
+        setSprite(entityID, (int)enumDraw::noDraw, enumSpriteLayer::zombie_layer);
       }
       break;
     case Zombie_State_enum::flagZombie:
@@ -63,7 +63,7 @@ void SetZombieAnimation(const int entityID, const int animID, const Zombie_State
         (strcmp(animationDataArray[animID].name, anim_innerarm1)==0) ||
         (strcmp(animationDataArray[animID].name, anim_innerarm2)==0) ||
         (strcmp(animationDataArray[animID].name, anim_innerarm3)==0)) {
-        setSprite(entityID, (int)enumDraw::noDraw);
+        setSprite(entityID, (int)enumDraw::noDraw, enumSpriteLayer::zombie_layer);
       }
       break;
     case Zombie_State_enum::coneheadZombie:
@@ -78,7 +78,7 @@ void SetZombieAnimation(const int entityID, const int animID, const Zombie_State
           (strcmp(animationDataArray[animID].name, Zombie_duckytube)==0) ||
           (strcmp(animationDataArray[animID].name, Zombie_innerarm_screendoor)==0) ||
           (strcmp(animationDataArray[animID].name, Zombie_flaghand)==0)) {
-        setSprite(entityID, (int)enumDraw::noDraw);
+        setSprite(entityID, (int)enumDraw::noDraw, enumSpriteLayer::zombie_layer);
       }
       break;
     case Zombie_State_enum::bucketHeadZombie:
@@ -93,7 +93,7 @@ void SetZombieAnimation(const int entityID, const int animID, const Zombie_State
           (strcmp(animationDataArray[animID].name, Zombie_duckytube)==0) ||
           (strcmp(animationDataArray[animID].name, Zombie_innerarm_screendoor)==0) ||
           (strcmp(animationDataArray[animID].name, Zombie_flaghand)==0)) {
-        setSprite(entityID, (int)enumDraw::noDraw);
+        setSprite(entityID, (int)enumDraw::noDraw, enumSpriteLayer::zombie_layer);
       }
       break;
     default:
@@ -146,7 +146,7 @@ int Zombie::attackPlant() {
       for(unsigned int k=0 ; k < zombieAnims.size(); k++){
         if(zombieAnims[k].id == father){
           attack = false;
-          ChangeAnimationEntity(zombieAnims[k].entity,AnimIndex::Zombie,enumAnimationState::normalZombieWalk);
+          ChangeAnimationEntity(zombieAnims[k].entity,AnimIndex::Zombie,enumAnimationState::normalZombieWalk, zombie_layer);
         }
       }
     }
@@ -159,7 +159,7 @@ int Zombie::attackPlant() {
       // printf("encontre\n");
       if(attack == false){
         attack = true;
-        ChangeAnimationEntity(zombieAnims[k].entity,AnimIndex::Zombie,enumAnimationState::normalZombieAttack);
+        ChangeAnimationEntity(zombieAnims[k].entity,AnimIndex::Zombie,enumAnimationState::normalZombieAttack, zombie_layer);
       }else {
         for(size_t m=0;m<frameCounterArray.size();m++){
           if(frameCounterArray[m].entityID == zombieAnims[k].entity[0]){
@@ -349,7 +349,7 @@ void createNormalZombie(const int id, const int fatherID, Tyra::Vec2 pos) {
   ZombieAnimation anim;
   anim.id = fatherID;
   // printf("zombie anim size: %d\n", m_animID[AnimIndex::Zombie].size());
-  SetAnimationToEntity(anim.entity,zombie[id].father,AnimIndex::Zombie, Tyra::Vec2(1, 1), normalZombieWalk);
+  SetAnimationToEntity(anim.entity,zombie[id].father,AnimIndex::Zombie, Tyra::Vec2(1, 1), normalZombieWalk, enumSpriteLayer::zombie_layer);
   std::vector<int>& animData = m_animID[AnimIndex::Zombie];
   int size = animData.size();
   Zombie_State_enum type = zombie[id].type;
@@ -378,7 +378,7 @@ void createFlagZombie(const int id, const int fatherID, Tyra::Vec2 pos) {
   ZombieAnimation anim;
   anim.id = fatherID;
   // printf("zombie anim size: %d\n", m_animID[AnimIndex::Zombie].size());
-  SetAnimationToEntity(anim.entity,zombie[id].father,AnimIndex::Zombie, Tyra::Vec2(1, 1), normalZombieWalk);
+  SetAnimationToEntity(anim.entity,zombie[id].father,AnimIndex::Zombie, Tyra::Vec2(1, 1), normalZombieWalk, enumSpriteLayer::zombie_layer);
   std::vector<int>& animData = m_animID[AnimIndex::Zombie];
   int size = animData.size();
   Zombie_State_enum type = zombie[id].type;
@@ -409,7 +409,7 @@ void createConeheadZombie(const int id, const int fatherID, Tyra::Vec2 pos) {
   ZombieAnimation anim;
   anim.id = fatherID;
   // printf("zombie anim size: %d\n", m_animID[AnimIndex::Zombie].size());
-  SetAnimationToEntity(anim.entity,zombie[id].father,AnimIndex::Zombie, Tyra::Vec2(1, 1), normalZombieWalk);
+  SetAnimationToEntity(anim.entity,zombie[id].father,AnimIndex::Zombie, Tyra::Vec2(1, 1), normalZombieWalk, enumSpriteLayer::zombie_layer);
   std::vector<int>& animData = m_animID[AnimIndex::Zombie];
   int size = animData.size();
   Zombie_State_enum type = zombie[id].type;
@@ -440,7 +440,7 @@ void createPoleVaulterZombie(const int id, const int fatherID, Tyra::Vec2 pos) {
   anim.id = fatherID;
   // printf("zombie anim size: %d\n",
   //        m_animID[AnimIndex::Zombie_PoleVaulter].size());
-  SetAnimationToEntity(anim.entity,zombie[id].father,AnimIndex::Zombie_PoleVaulter, Tyra::Vec2(1, 1), 14,50);
+  SetAnimationToEntity(anim.entity,zombie[id].father,AnimIndex::Zombie_PoleVaulter, Tyra::Vec2(1, 1), 14,50, enumSpriteLayer::zombie_layer);
 
   zombieAnims.push_back(anim);
 
@@ -463,7 +463,7 @@ void createPoleVaulterZombie(const int id, const int fatherID, Tyra::Vec2 pos) {
 void createBucketheadZombie(const int id, const int fatherID, Tyra::Vec2 pos) {
   ZombieAnimation anim;
   anim.id = fatherID;
-  SetAnimationToEntity(anim.entity,zombie[id].father,AnimIndex::Zombie, Tyra::Vec2(1, 1), normalZombieWalk);
+  SetAnimationToEntity(anim.entity,zombie[id].father,AnimIndex::Zombie, Tyra::Vec2(1, 1), normalZombieWalk, enumSpriteLayer::zombie_layer);
   std::vector<int>& animData = m_animID[AnimIndex::Zombie];
   int size = animData.size();
   Zombie_State_enum type = zombie[id].type;

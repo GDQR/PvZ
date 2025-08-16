@@ -189,7 +189,7 @@ void ChangeSpriteFromAnimation(std::vector<int>& ids, int& fatherID, AnimIndex::
       newFatherID(&fatherID, &ids[i]);
 
       createSpriteRotate(entityID, Tyra::MODE_STRETCH, Vec2(0, 0),
-                          Vec2(128 / 1.6f, 128 / 1.6f), Vec2(0.0f, 0.0f));
+                          Vec2(128 / 1.6f, 128 / 1.6f), Vec2(0.0f, 0.0f), card_layer);
 
       texPosArray.insert(entityID, Tyra::Vec2());
       scaleTexture[ids[i]] = scaleTexture[ids[i-1]];
@@ -211,7 +211,7 @@ void ChangeSpriteFromAnimation(std::vector<int>& ids, int& fatherID, AnimIndex::
 
   // Gives an error in the size with CherryBomb
   for(size_t i=0; i< anim_2.size();i++){
-    animationDataArray[anim_2[i]].activeAnimation(ids[i],frame,frame);
+    animationDataArray[anim_2[i]].activeAnimation(ids[i],frame,frame, card_layer);
     
     spriteArray[ids[i]].color.a = 64;
   }

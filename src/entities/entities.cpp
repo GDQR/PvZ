@@ -114,7 +114,7 @@ void createPlantCard(int& plantID,AnimIndex::Animation plantAnim, const Tyra::Ve
   PlantAnimation anim;
   anim.id = plantID;
 
-  SetOneSpriteAnimationToEntity(anim.entity, plantID, plantAnim, size, frame);
+  SetOneSpriteAnimationToEntity(anim.entity, plantID, plantAnim, size, frame, card_layer);
 
   plantAnims.push_back(anim);
 }
@@ -125,7 +125,7 @@ void createPlantCard(int& plantID,AnimIndex::Animation plantAnim, const Tyra::Ve
   PlantAnimation anim;
   anim.id = plantID;
 
-  SetOneSpriteAnimationToEntity(anim.entity, plantID, plantAnim, size, frame);
+  SetOneSpriteAnimationToEntity(anim.entity, plantID, plantAnim, size, frame, card_layer);
 
   for(size_t i=0; i < anim.entity.size();i++){
     spriteArray[anim.entity[i]].color = color;
@@ -146,7 +146,7 @@ void createCard(const Plant_State_enum typePlant, const bool isVersusMode) {
 
   pos.x += cards.size() * 60;
 
-  createSprite(card.seed, Tyra::MODE_REPEAT, pos, Vec2(50, 70));
+  createSprite(card.seed, Tyra::MODE_REPEAT, pos, Vec2(50, 70), enumSpriteLayer::card_layer);
   createTexture(card.seed, IMG_seeds);
   spriteArray[card.seed].offset.x = 100;
 
@@ -174,7 +174,7 @@ void createCard(const Plant_State_enum typePlant, const bool isVersusMode) {
   printf("seedShadow ID:%d\n",card.seedShadow);
   printf("seedShadowTimer ID:%d\n",card.seedShadowTimer);
 
-  createSprite(card.seedShadow, Tyra::MODE_REPEAT, pos, Vec2(50, 70));
+  createSprite(card.seedShadow, Tyra::MODE_REPEAT, pos, Vec2(50, 70), enumSpriteLayer::card_layer);
   createTexture(card.seedShadow, IMG_seeds);
   spriteArray[card.seedShadow].offset.x = 100;
   spriteArray[card.seedShadow].color = Tyra::Color(0.0F, 0.0F, 0.0F, 60.0F);
@@ -184,7 +184,7 @@ void createCard(const Plant_State_enum typePlant, const bool isVersusMode) {
   // y crear un efecto para cuando el seed shadow (lo de arriba) se va porque el
   // costo de soles es mayor
 
-  createSprite(card.seedShadowTimer, Tyra::MODE_REPEAT, pos, Vec2(50.0f, 70.0f));
+  createSprite(card.seedShadowTimer, Tyra::MODE_REPEAT, pos, Vec2(50.0f, 70.0f), enumSpriteLayer::card_layer);
   createTexture(card.seedShadowTimer, IMG_seeds);
   spriteArray[card.seedShadowTimer].offset.x = 100;
   spriteArray[card.seedShadowTimer].color =
@@ -229,7 +229,7 @@ void Player::initCursor(Tyra::Vec2 cursorPos){
   printf("init Cursor\n");
   Cursor newCursor;
   newCursor.id = Entities::newID();
-  createSprite(newCursor.id, Tyra::MODE_STRETCH, cursorPos, Vec2(56, 48));
+  createSprite(newCursor.id, Tyra::MODE_STRETCH, cursorPos, Vec2(56, 48), enumSpriteLayer::player_layer);
   createTexture(newCursor.id, "cursor6.png");
   createBoxCollider(newCursor.id, BoxColliderEnum::BOXCOLLIDER_PLAYER, BoxCollider(newCursor.id,cursorPos.x + 28 / 2, cursorPos.y + 24 / 2, 24, 24));
   // createDebugBoxCollider(newCursor.id, BoxColliderEnum::BOXCOLLIDER_PLAYER, Tyra::MODE_STRETCH);
@@ -247,7 +247,7 @@ void Player::initDeckCard(Tyra::Vec2 pos){
 
   newDeckCursor.id = Entities::newID();
   // printf("deck cursor id: %d\n", deckCursor[controllerID].id);
-  createSprite(newDeckCursor.id, Tyra::MODE_STRETCH, pos, Vec2(56, 48));
+  createSprite(newDeckCursor.id, Tyra::MODE_STRETCH, pos, Vec2(56, 48), enumSpriteLayer::player_layer);
   createTexture(newDeckCursor.id, "cursor6.png");
   deckCursor.push_back(newDeckCursor);
 
@@ -296,7 +296,7 @@ void rewardLevel1(Tyra::Vec2 pos) {
   int id;
   int animID;
 
-  createSprite(reward.father, Tyra::MODE_REPEAT, pos, Vec2(50, 70));
+  createSprite(reward.father, Tyra::MODE_REPEAT, pos, Vec2(50, 70), enumSpriteLayer::background);
   createTexture(reward.father, "UI/Seeds.png");
   spriteArray[reward.father].offset.x = 100;
 
@@ -308,7 +308,7 @@ void rewardLevel1(Tyra::Vec2 pos) {
     animID = m_animID[AnimIndex::SunFlower][i];
     newFatherID(&reward.father, &id);
     animationDataArray[animID].loadAnimation(id, animID, Tyra::Vec2(0.6f, 0.6f),
-                                             8, 8);
+                                             8, 8, enumSpriteLayer::background);
   }
   createBoxCollider(reward.father,BoxColliderEnum::BOXCOLLIDER_REWARD,BoxCollider(pos.x, pos.y, 28, 38));
 
@@ -372,7 +372,7 @@ void SunManager::create(Tyra::Vec2 position, sunCost cost,
     naturalSun.push_back(newNaturalSun);
   }
   
-  SetAnimationToEntity(newSun.id,newSun.father,AnimIndex::Sun,Tyra::Vec2(0.5f, 0.5f), 1, 12);
+  SetAnimationToEntity(newSun.id,newSun.father,AnimIndex::Sun,Tyra::Vec2(0.5f, 0.5f), 1, 12, enumSpriteLayer::sun_layer);
 
   // HitBox
   createBoxCollider(newSun.father,BoxColliderEnum::BOXCOLLIDER_SUN,BoxCollider(newSun.father, position.x-16,

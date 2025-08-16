@@ -553,9 +553,9 @@ void newExplosion(Tyra::Vec2 position, Tyra::Vec2 size, const int damage,
 void newFatherID(int* fatherID, int* childID);
 
 void createSprite(int id, Tyra::SpriteMode mode, Tyra::Vec2 position,
-                  Tyra::Vec2 size);
+                  Tyra::Vec2 size, enumSpriteLayer layer);
 void createSpriteRotate(int id, Tyra::SpriteMode mode, Tyra::Vec2 position,
-                        Tyra::Vec2 size, const Tyra::Vec2 angle);
+                        Tyra::Vec2 size, const Tyra::Vec2 angle, enumSpriteLayer layer);
 void createBoxCollider(int id, BoxColliderEnum type, BoxCollider collider);
 void createLawnMower(const Tyra::Vec2 pos);
 void createCard(Plant_State_enum typePlant, bool isVersusMode);

@@ -15,8 +15,8 @@ void Level3::init() {
   // SetBigImage(&sodnormalAlpha, &textures,0,0,81,95);
   Entity::sodRollRow1 = Entities::newID();
   Entity::sodRollRow1Alpha = Entities::newID();
-  createSprite(Entity::sodRollRow1, Tyra::MODE_REPEAT, Vec2(12, 202), Vec2(132, 132));
-  createSprite(Entity::sodRollRow1Alpha, Tyra::MODE_STRETCH, Vec2(0, 0), Vec2(717, 127));
+  createSprite(Entity::sodRollRow1, Tyra::MODE_REPEAT, Vec2(12, 202), Vec2(132, 132), enumSpriteLayer::background);
+  createSprite(Entity::sodRollRow1Alpha, Tyra::MODE_STRETCH, Vec2(0, 0), Vec2(717, 127), enumSpriteLayer::background);
   createTexture(Entity::sodRollRow1, IMG_sod1row);
   createTexture(Entity::sodRollRow1Alpha, IMG_sod1row_);
   // BigTexture textures = PNGImageScale::load(texRepo->getBySpriteId(spriteArray[Entity::sodRollRow1Alpha].id),TextureScale::Tex256,TextureScale::Tex128);

@@ -40,10 +40,10 @@ void SelectorScreen::BGLeft() {
   selectorScreenLeftAlpha = Entities::newID();
   selectorScreenLeft = Entities::newID();
   createSprite(selectorScreenLeftAlpha, Tyra::MODE_STRETCH, Vec2(0, 0),
-               Vec2(512, 393));
+               Vec2(512, 393), enumSpriteLayer::background);
   createTexture(selectorScreenLeftAlpha, "SelectorScreen_BG_Left_.png");
   createSprite(selectorScreenLeft, Tyra::MODE_STRETCH, Vec2(0, 0),
-               Vec2(512, 393));
+               Vec2(512, 393), enumSpriteLayer::background);
   createTexture(selectorScreenLeft, "SelectorScreen_BG_Left.jpg");
   
   Shader_SetAlphaToImage(spriteArray[selectorScreenLeftAlpha].textureID,spriteArray[selectorScreenLeft].textureID);
@@ -56,7 +56,6 @@ void SelectorScreen::BGLeft() {
   dma_channel_send_packet2(mypacket, DMA_CHANNEL_GIF, true);
   packet2_reset(mypacket, 0);
 }
-
 static BigSpriteJPG as;
 void SelectorScreen::BGCenter() {
   // selectorScreenCenterAlpha = Entities::newID();
@@ -96,9 +95,9 @@ void SelectorScreen::BGRight() {
   selectorScreenAlpha = Entities::newID();
   selectorScreen = Entities::newID();
   createSprite(selectorScreenAlpha, Tyra::MODE_STRETCH, Vec2(0, 0),
-               Vec2(512, 488));
+               Vec2(512, 488), enumSpriteLayer::background);
   createTexture(selectorScreenAlpha, "SelectorScreen_BG_Right_.png");
-  createSprite(selectorScreen, Tyra::MODE_STRETCH, Vec2(0, 50), Vec2(512, 488));
+  createSprite(selectorScreen, Tyra::MODE_STRETCH, Vec2(0, 50), Vec2(512, 488), enumSpriteLayer::background);
   createTexture(selectorScreen, "SelectorScreen_BG_Right.jpg");
 
   Shader_SetAlphaToImage(spriteArray[selectorScreenAlpha].textureID,spriteArray[selectorScreen].textureID);
@@ -116,7 +115,7 @@ void SelectorScreen::BG() {
   selectorScreenBackground = Entities::newID();
 
   createSprite(selectorScreenBackground, Tyra::MODE_STRETCH, Vec2(0, 0),
-               Vec2(650, 512));
+               Vec2(650, 512), enumSpriteLayer::background);
   createTexture(selectorScreenBackground, "REANIM/SelectorScreen_BG.jpg");
 
   Tyra::Texture* background = renderer->getTextureRepository().getByTextureId(

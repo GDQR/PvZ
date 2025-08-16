@@ -22,7 +22,7 @@ void createPeashotter(const int id, const Tyra::Vec2 pos, AnimIndex::Animation a
   PlantAnimation anim;
   anim.id = father;
   
-  SetAnimationToEntity(anim.entity,father,animationIndex,Tyra::Vec2(0.8f, 0.8f), 80, 104);
+  SetAnimationToEntity(anim.entity,father,animationIndex,Tyra::Vec2(0.8f, 0.8f), 80, 104, enumSpriteLayer::plants);
   plantAnims.push_back(anim);
 
   // Life
@@ -48,7 +48,7 @@ void createSunflower(const int id, const Tyra::Vec2 pos, AnimIndex::Animation an
   PlantAnimation anim;
   anim.id = father;
 
-  SetAnimationToEntity(anim.entity,father,animationIndex,Tyra::Vec2(0.8f, 0.8f), 5);
+  SetAnimationToEntity(anim.entity,father,animationIndex,Tyra::Vec2(0.8f, 0.8f), 5, enumSpriteLayer::plants);
   plantAnims.push_back(anim);
   
   // Life
@@ -72,7 +72,7 @@ void createCherryBomb(const int id, const Tyra::Vec2 pos, AnimIndex::Animation a
   PlantAnimation anim;
   anim.id = father;
   
-  SetAnimationToEntity(anim.entity,father,animationIndex,Tyra::Vec2(0.8f, 0.8f), 1, 14);
+  SetAnimationToEntity(anim.entity,father,animationIndex,Tyra::Vec2(0.8f, 0.8f), 1, 14, enumSpriteLayer::plants);
 
   plantAnims.push_back(anim);
   
@@ -90,7 +90,7 @@ void createWallnut(const int id, const Tyra::Vec2 pos, AnimIndex::Animation anim
   PlantAnimation anim;
   anim.id = father;
   
-  SetAnimationToEntity(anim.entity,father,animationIndex,Tyra::Vec2(0.8f, 0.8f), 1, 17);
+  SetAnimationToEntity(anim.entity,father,animationIndex,Tyra::Vec2(0.8f, 0.8f), 1, 17, enumSpriteLayer::plants);
   plantAnims.push_back(anim);
 
   // Life
@@ -109,7 +109,7 @@ void createPotatoMine(const int id, const Tyra::Vec2 pos, AnimIndex::Animation a
   PlantAnimation anim;
   anim.id = father;
   
-  SetAnimationToEntity(anim.entity,father,animationIndex,Tyra::Vec2(0.8f, 0.8f), 1, 1);
+  SetAnimationToEntity(anim.entity,father,animationIndex,Tyra::Vec2(0.8f, 0.8f), 1, 1, enumSpriteLayer::plants);
   plantAnims.push_back(anim);
 
   // Life
@@ -133,7 +133,7 @@ void createSnowPea(const int id, const Tyra::Vec2 pos, AnimIndex::Animation anim
   PlantAnimation anim;
   anim.id = father;
   
-  SetAnimationToEntity(anim.entity,father,animationIndex,Tyra::Vec2(0.8f, 0.8f), 80, 104);
+  SetAnimationToEntity(anim.entity,father,animationIndex,Tyra::Vec2(0.8f, 0.8f), 80, 104, enumSpriteLayer::plants);
   plantAnims.push_back(anim);
 
   // Life
@@ -159,7 +159,7 @@ void createChomper(const int id, const Tyra::Vec2 pos, AnimIndex::Animation anim
   PlantAnimation anim;
   anim.id = father;
   
-  SetAnimationToEntity(anim.entity,father,animationIndex,Tyra::Vec2(0.8f, 0.8f), 1, 25);
+  SetAnimationToEntity(anim.entity,father,animationIndex,Tyra::Vec2(0.8f, 0.8f), 1, 25, enumSpriteLayer::plants);
   plantAnims.push_back(anim);
 
   // Life
@@ -186,7 +186,7 @@ void createRepeater(const int id, const Tyra::Vec2 pos, AnimIndex::Animation ani
   PlantAnimation anim;
   anim.id = father;
   
-  SetAnimationToEntity(anim.entity,father,AnimIndex::Repeater,Tyra::Vec2(0.8f, 0.8f), 80, 104);
+  SetAnimationToEntity(anim.entity,father,AnimIndex::Repeater,Tyra::Vec2(0.8f, 0.8f), 80, 104, enumSpriteLayer::plants);
   plantAnims.push_back(anim);
 
   // Life
@@ -214,7 +214,7 @@ void createPuffShroom(const int id, const Tyra::Vec2 pos, AnimIndex::Animation a
   PlantAnimation anim;
   anim.id = father;
   
-  SetAnimationToEntity(anim.entity,father,animationIndex,Tyra::Vec2(0.8f, 0.8f), 80, 104);
+  SetAnimationToEntity(anim.entity,father,animationIndex,Tyra::Vec2(0.8f, 0.8f), 80, 104, enumSpriteLayer::plants);
   plantAnims.push_back(anim);
 
   // Life

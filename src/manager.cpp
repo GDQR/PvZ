@@ -225,38 +225,81 @@ void RendererSprites::updateTexture() {
   }
 }
 void RendererSprites::updateRender() {
-  // int k=0;
-  // printf("sprite render size: %d\n",spriteRenderIDArray.first.size());
-  std::vector<int>& keys = spriteRenderIDArray.first;
-  for (int &it : keys) {
-    
-    // printf("pase: %d\n",k);
-    // k++;
+  for (int &it : backgroundLayer) {
     Tyra::Sprite& spriteRender = spriteArray[it];
     spriteRender.position = finalPosArray[it];
-    // sizeof(spriteRender)
-    // printf("entity:%d sprite ID: %d\n",it,spriteRender.id);
-    if(it == 179 ){
-    //   printf("entity 199 texture id: %d\n",spriteRender.textureID);
-    // //   printf("entity 199 pos: %f,%f\n",spriteRender.position.x,spriteRender.position.y);
 
-    
-    // //   printf("IT: %d sprite pos: \n",it);
-    // // printf("entityID: %d\n",it);
-    //   spriteArray[it].position.print();
-      printf("scale: %f\n",spriteArray[it].scale);
-    printf("size:\n");
-      spriteArray[it].size.print();
-    //   printf("color:\n");
-    //   spriteArray[it].color.print();
-    }
     if (angleArray.count(it) == 1) {
-      // angleArray[it].print();
       renderer2D->renderRotate(spriteRender, angleArray[it]);
     } else {
       renderer2D->render(spriteRender);
     }
-    // }
+  }
+
+  for (int &it : cardLayer) {
+    Tyra::Sprite& spriteRender = spriteArray[it];
+    spriteRender.position = finalPosArray[it];
+
+    if (angleArray.count(it) == 1) {
+      renderer2D->renderRotate(spriteRender, angleArray[it]);
+    } else {
+      renderer2D->render(spriteRender);
+    }
+  }
+
+  for (int &it : plantsLayer) {
+    Tyra::Sprite& spriteRender = spriteArray[it];
+    spriteRender.position = finalPosArray[it];
+
+    if (angleArray.count(it) == 1) {
+      renderer2D->renderRotate(spriteRender, angleArray[it]);
+    } else {
+      renderer2D->render(spriteRender);
+    }
+  }
+
+  for (int &it : projectileLayer) {
+    Tyra::Sprite& spriteRender = spriteArray[it];
+    spriteRender.position = finalPosArray[it];
+
+    if (angleArray.count(it) == 1) {
+      renderer2D->renderRotate(spriteRender, angleArray[it]);
+    } else {
+      renderer2D->render(spriteRender);
+    }
+  }
+  
+  for (int &it : zombieLayer) {
+    Tyra::Sprite& spriteRender = spriteArray[it];
+    spriteRender.position = finalPosArray[it];
+
+    if (angleArray.count(it) == 1) {
+      renderer2D->renderRotate(spriteRender, angleArray[it]);
+    } else {
+      renderer2D->render(spriteRender);
+    }
+  }
+
+  for (int &it : sunLayer) {
+    Tyra::Sprite& spriteRender = spriteArray[it];
+    spriteRender.position = finalPosArray[it];
+
+    if (angleArray.count(it) == 1) {
+      renderer2D->renderRotate(spriteRender, angleArray[it]);
+    } else {
+      renderer2D->render(spriteRender);
+    }
+  }
+
+  for (int &it : playerLayer) {
+    Tyra::Sprite& spriteRender = spriteArray[it];
+    spriteRender.position = finalPosArray[it];
+
+    if (angleArray.count(it) == 1) {
+      renderer2D->renderRotate(spriteRender, angleArray[it]);
+    } else {
+      renderer2D->render(spriteRender);
+    }
   }
 }
 
@@ -344,7 +387,7 @@ void RewardManager::update() {
       CreateTextData(NEW_PLANT,150,20,HouseofTerror16ID);
       
       int spr = Entities::newID();
-      createSprite(spr,Tyra::SpriteMode::MODE_REPEAT,Vec2(160,350),Vec2(156,42));
+      createSprite(spr,Tyra::SpriteMode::MODE_REPEAT,Vec2(160,350),Vec2(156,42), card_layer);
       loadTexture(spr,IMG_SeedChooser_Button);
     }
   }

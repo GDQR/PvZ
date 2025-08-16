@@ -74,7 +74,7 @@ void Level4::init() {
 
   Sprite sprFont;
   int pase=Entities::newID();
-  createSprite(pase,Tyra::SpriteMode::MODE_STRETCH,Vec2(10,150),Vec2(512,512));
+  createSprite(pase,Tyra::SpriteMode::MODE_STRETCH,Vec2(10,150),Vec2(512,512), enumSpriteLayer::background);
   
   spriteArray[pase].textureID = fonts[HouseofTerror16ID].textureID;
 }

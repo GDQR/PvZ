@@ -7,7 +7,7 @@ void Level2::init() {
   Entity::background = Entities::newID();
   // load background
   createSprite(Entity::background, Tyra::MODE_STRETCH, Vec2(-56, -1),
-               Vec2(780, 524));  // Vec2(467, 200*2.9f)
+               Vec2(780, 524), enumSpriteLayer::background);  // Vec2(467, 200*2.9f)
   // printf("posArray: %s\n",posArray[background].getPrint().c_str());
   createTexture(Entity::background, "Backgrounds/DAY Unsodded.png");
   initAnimation(); 
@@ -22,10 +22,10 @@ void Level2::initAnimation(){
   Entity::sodRollRow1Alpha = Entities::newID();
   Entity::sod3Row = Entities::newID();
   Entity::sod3RowAlpha = Entities::newID();
-  createSprite(Entity::sodRoll, Tyra::MODE_STRETCH, Vec2(0, 0), Vec2(64, 141));
-  createSprite(Entity::sodRollCap, Tyra::MODE_STRETCH, Vec2(0, 0), Vec2(73, 71));
-  createSprite(Entity::sodRollRow1, Tyra::MODE_REPEAT, Vec2(0, 0), Vec2(771, 127));
-  createSprite(Entity::sodRollRow1Alpha, Tyra::MODE_STRETCH, Vec2(0, 0), Vec2(717, 127));
+  createSprite(Entity::sodRoll, Tyra::MODE_STRETCH, Vec2(0, 0), Vec2(64, 141), enumSpriteLayer::background);
+  createSprite(Entity::sodRollCap, Tyra::MODE_STRETCH, Vec2(0, 0), Vec2(73, 71), enumSpriteLayer::background);
+  createSprite(Entity::sodRollRow1, Tyra::MODE_REPEAT, Vec2(0, 0), Vec2(771, 127), enumSpriteLayer::background);
+  createSprite(Entity::sodRollRow1Alpha, Tyra::MODE_STRETCH, Vec2(0, 0), Vec2(717, 127), enumSpriteLayer::background);
   // createSprite(sod3Row, Tyra::MODE_REPEAT, Vec2(0, 0), Vec2(0, 355));
   // TODO: the image can be more than 512
   // createSprite(sod3RowAlpha, Tyra::MODE_STRETCH, Vec2(0, 0), Vec2(771, 335));

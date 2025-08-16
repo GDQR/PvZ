@@ -5,6 +5,13 @@
 
 
 std::string animString[AnimIndex::enumMax];
+std::vector<int> backgroundLayer;
+std::vector<int> cardLayer;
+std::vector<int> plantsLayer;
+std::vector<int> projectileLayer;
+std::vector<int> sunLayer;
+std::vector<int> zombieLayer;
+std::vector<int> playerLayer;
 
 void loadAnimString() {
   angleFrame.push_back(Tyra::Vec2(0,0));
@@ -161,20 +168,86 @@ void loadAnimString() {
   animString[AnimIndex::ZombiesWon] = "ZombiesWon";
 }
 
-void setSprite(const int entityID, const int draw) {
+void setSprite(const int entityID, const int draw, enumSpriteLayer layer) {
   if (spriteRenderIDArray.count(entityID) == 1 && draw == -1) {
+    // printf("delete render sprite id: %d\n",entityID);
     // spritesNormalRender.erase(entityID);
     spriteRenderIDArray.erase(entityID);
     // spriteNormalIdStopRender.push_back(entityID);
+    if(layer == enumSpriteLayer::background){
+      for(size_t i=0; i < backgroundLayer.size(); i++ ){
+        if(backgroundLayer[i] == entityID){
+          backgroundLayer.erase(backgroundLayer.begin() + i);
+          break;
+        }
+      }
+    }else if(layer == enumSpriteLayer::card_layer){
+      for(size_t i=0; i < cardLayer.size(); i++ ){
+        if(cardLayer[i] == entityID){
+          cardLayer.erase(cardLayer.begin() + i);
+          break;
+        }
+      }
+    }else if(layer == enumSpriteLayer::plants){
+      for(size_t i=0; i < plantsLayer.size(); i++ ){
+        if(plantsLayer[i] == entityID){
+          plantsLayer.erase(plantsLayer.begin() + i);
+          break;
+        }
+      }
+    }else if(layer == enumSpriteLayer::projectile_layer){
+      for(size_t i=0; i < projectileLayer.size(); i++ ){
+        if(projectileLayer[i] == entityID){
+          projectileLayer.erase(projectileLayer.begin() + i);
+          break;
+        }
+      }
+    }else if(layer == enumSpriteLayer::sun_layer){
+      for(size_t i=0; i < sunLayer.size(); i++ ){
+        if(sunLayer[i] == entityID){
+          sunLayer.erase(sunLayer.begin() + i);
+          break;
+        }
+      }
+    }else if(layer == enumSpriteLayer::zombie_layer){
+      for(size_t i=0; i < zombieLayer.size(); i++ ){
+        if(zombieLayer[i] == entityID){
+          zombieLayer.erase(zombieLayer.begin() + i);
+          break;
+        }
+      }
+    }else if(layer == enumSpriteLayer::player_layer){
+      for(size_t i=0; i < playerLayer.size(); i++ ){
+        if(playerLayer[i] == entityID){
+          playerLayer.erase(playerLayer.begin() + i);
+          break;
+        }
+      }
+    }
   } else if (spriteRenderIDArray.count(entityID) == 0 && draw == 0) {
     spriteRenderIDArray.insert(entityID, 0);
-    int renderSize = spriteRenderIDArray.first.size();
-    for(int j=renderSize-1;j>1;j--){
-      if(spriteRenderIDArray.first[j] < spriteRenderIDArray.first[j-1]){         
-        int aux= spriteRenderIDArray.first[j];
-        spriteRenderIDArray.first[j] = spriteRenderIDArray.first[j-1];
-        spriteRenderIDArray.first[j-1] = aux;
-      }
+    // int renderSize = spriteRenderIDArray.first.size();
+    // for(int j=renderSize-1;j>1;j--){
+    //   if(spriteRenderIDArray.first[j] < spriteRenderIDArray.first[j-1]){         
+    //     int aux= spriteRenderIDArray.first[j];
+    //     spriteRenderIDArray.first[j] = spriteRenderIDArray.first[j-1];
+    //     spriteRenderIDArray.first[j-1] = aux;
+    //   }
+    // }
+    if(layer == enumSpriteLayer::background){
+      backgroundLayer.push_back(entityID);
+    }else if(layer == enumSpriteLayer::card_layer){
+      cardLayer.push_back(entityID);
+    }else if(layer == enumSpriteLayer::plants){
+      plantsLayer.push_back(entityID);
+    }else if(layer == enumSpriteLayer::projectile_layer){
+      projectileLayer.push_back(entityID);
+    }else if(layer == enumSpriteLayer::sun_layer){
+      sunLayer.push_back(entityID);
+    }else if(layer == enumSpriteLayer::zombie_layer){
+      zombieLayer.push_back(entityID);
+    }else if(layer == enumSpriteLayer::player_layer){
+      playerLayer.push_back(entityID);
     }
   }
   // printf("plant draw: %d\n", animationArray[entityID].draw);
@@ -200,15 +273,15 @@ void loadAnimationStates() {
 
 void AnimationData::loadAnimation(const int entityID, const int animID,
                                   const Tyra::Vec2 scaleTextures,
-                                  enumAnimationState animationState) {
+                                  enumAnimationState animationState, enumSpriteLayer layer) {
   loadAnimation(entityID, animID, scaleTextures,
                 animationStateVector[animationState].firstFrame,
-                animationStateVector[animationState].lastFrame);
+                animationStateVector[animationState].lastFrame, layer);
 }
 
 void AnimationData::loadAnimation(const int entityID, const int animID,
                                   const Tyra::Vec2 scaleTextures,
-                                  const int firstFrame, const int lastFrame) {
+                                  const int firstFrame, const int lastFrame, enumSpriteLayer layer) {
   bool hasRotation = false;                                  
   unsigned int dataSize;
   for(unsigned int i=1;i<=maxFrame;i++){
@@ -227,10 +300,10 @@ void AnimationData::loadAnimation(const int entityID, const int animID,
   if(hasRotation == true){
     // printf("crear rotate\n");
     createSpriteRotate(entityID, Tyra::MODE_STRETCH, Vec2(0, 0),
-                         Vec2(128 / 1.6f, 128 / 1.6f), Vec2(0.0f, 0.0f));
+                         Vec2(128 / 1.6f, 128 / 1.6f), Vec2(0.0f, 0.0f), layer);
   }else {
     createSprite(entityID, Tyra::MODE_STRETCH, Vec2(0, 0),
-                 Vec2(128 / 1.6f, 128 / 1.6f));
+                 Vec2(128 / 1.6f, 128 / 1.6f), layer);
   }
 
   FrameCounter frameCounter;
@@ -245,7 +318,7 @@ void AnimationData::loadAnimation(const int entityID, const int animID,
 
   scaleTexture[entityID] = scaleTextures;
 
-  activeAnimation(entityID, firstFrame, lastFrame);
+  activeAnimation(entityID, firstFrame, lastFrame, layer);
 
   // printf("termine\n\n");
 }
@@ -259,7 +332,7 @@ std::vector<int> drawFrame;
 
 int AnimationData::activeAnimation(const int entityID,
                                    const unsigned int firstFrame,
-                                   const unsigned int lastFrame) {
+                                   const unsigned int lastFrame, enumSpriteLayer layer) {
   bool drawPropertyFounded = false;
   bool scalePropertyFounded = false;
   bool posPropertyFounded = false;
@@ -298,7 +371,7 @@ int AnimationData::activeAnimation(const int entityID,
       }else if (animProp[i].type == ANIM_DRAW && drawPropertyFounded == false){
         drawPropertyFounded = true;
         // printf("draw: %d\n",drawFrame[animProp[i].dataIndex]);
-        setSprite(entityID,drawFrame[animProp[i].dataIndex]);
+        setSprite(entityID,drawFrame[animProp[i].dataIndex], layer);
       }
     }
     
@@ -334,9 +407,9 @@ int AnimationData::activeAnimation(const int entityID,
 }
 
 void AnimationData::setAnimationState(const int entityID,
-                                      enumAnimationState animationState) {
+                                      enumAnimationState animationState, enumSpriteLayer layer) {
   activeAnimation(entityID, animationStateVector[animationState].firstFrame,
-                  animationStateVector[animationState].lastFrame);
+                  animationStateVector[animationState].lastFrame, layer);
 }
 
 void readTag(char* line, std::string& string, int& indexText) {
@@ -616,7 +689,7 @@ void loadAnimation(const AnimIndex::Animation animNameID) {
       animNameID,
       Tyra::FileUtils::fromCwd("reanim/" + animString[animNameID] + ".reanim"));
 }
-void SetOneSpriteAnimationToEntity(std::vector<int>& ids, int& father, AnimIndex::Animation anim, Tyra::Vec2 size, int frame){
+void SetOneSpriteAnimationToEntity(std::vector<int>& ids, int& father, AnimIndex::Animation anim, Tyra::Vec2 size, int frame, enumSpriteLayer layer){
   size_t animSize = m_animID[anim].size() + ids.size();
   int entityID = -1;
   int animID;
@@ -657,7 +730,7 @@ void SetOneSpriteAnimationToEntity(std::vector<int>& ids, int& father, AnimIndex
 
     // if(hasRotation == true){
       createSpriteRotate(entityID, Tyra::MODE_STRETCH, Vec2(0, 0),
-                          Vec2(128 / 1.6f, 128 / 1.6f), Vec2(0.0f, 0.0f));
+                          Vec2(128 / 1.6f, 128 / 1.6f), Vec2(0.0f, 0.0f), layer);
     // }else {
     //   createSprite(entityID, Tyra::MODE_STRETCH, Vec2(0, 0),
     //               Vec2(128 / 1.6f, 128 / 1.6f));
@@ -699,7 +772,7 @@ void SetOneSpriteAnimationToEntity(std::vector<int>& ids, int& father, AnimIndex
         }else if (animProp[j].type == ANIM_DRAW && drawPropertyFounded == false){
           drawPropertyFounded = true;
           // printf("draw: %d\n",drawFrame[animProp[j].dataIndex]);
-          setSprite(entityID,drawFrame[animProp[j].dataIndex]);
+          setSprite(entityID,drawFrame[animProp[j].dataIndex], layer);
         }
       }
       
@@ -726,7 +799,7 @@ void SetOneSpriteAnimationToEntity(std::vector<int>& ids, int& father, AnimIndex
   }
 }
 
-void SetAnimationToEntity(std::vector<int>& ids, int& father, AnimIndex::Animation anim, Tyra::Vec2 size, int firstFrame, int lastFrame){
+void SetAnimationToEntity(std::vector<int>& ids, int& father, AnimIndex::Animation anim, Tyra::Vec2 size, int firstFrame, int lastFrame, enumSpriteLayer layer){
   size_t animSize = m_animID[anim].size();
   int entityID = -1;
   int animID;
@@ -737,11 +810,11 @@ void SetAnimationToEntity(std::vector<int>& ids, int& father, AnimIndex::Animati
     animID = m_animID[anim][i];
 
     newFatherID(&father, &ids[i]);
-    animationDataArray[animID].loadAnimation(entityID, animID, size, firstFrame, lastFrame);
+    animationDataArray[animID].loadAnimation(entityID, animID, size, firstFrame, lastFrame, layer);
   }
 }
 
-void SetAnimationToEntity(std::vector<int>& ids, int& father, AnimIndex::Animation anim, Tyra::Vec2 size, enumAnimationState animState){
+void SetAnimationToEntity(std::vector<int>& ids, int& father, AnimIndex::Animation anim, Tyra::Vec2 size, enumAnimationState animState, enumSpriteLayer layer){
   size_t animSize = m_animID[anim].size();
   int entityID = -1;
   int animID;
@@ -752,12 +825,12 @@ void SetAnimationToEntity(std::vector<int>& ids, int& father, AnimIndex::Animati
     animID = m_animID[anim][i];
 
     newFatherID(&father, &ids[i]);
-    animationDataArray[animID].loadAnimation(entityID, animID, size, animationStateVector[animState].firstFrame, animationStateVector[animState].lastFrame);
+    animationDataArray[animID].loadAnimation(entityID, animID, size, animationStateVector[animState].firstFrame, animationStateVector[animState].lastFrame, layer);
 
   }
 }
 
-void SetAnimationToEntity(std::vector<int>& ids, int& father, AnimIndex::Animation anim, Tyra::Vec2 size, int firstFrame){
+void SetAnimationToEntity(std::vector<int>& ids, int& father, AnimIndex::Animation anim, Tyra::Vec2 size, int firstFrame, enumSpriteLayer layer){
   size_t animSize = m_animID[anim].size();
   int entityID = -1;
   int animID;
@@ -768,11 +841,11 @@ void SetAnimationToEntity(std::vector<int>& ids, int& father, AnimIndex::Animati
     animID = m_animID[anim][i];
 
     newFatherID(&father, &ids[i]);
-    animationDataArray[animID].loadAnimation(entityID, animID, size, firstFrame,animationDataArray[animID].maxFrame);
+    animationDataArray[animID].loadAnimation(entityID, animID, size, firstFrame,animationDataArray[animID].maxFrame, layer);
   }
 }
 
-void ChangeAnimationEntity(std::vector<int>& ids, AnimIndex::Animation anim, enumAnimationState animState){
+void ChangeAnimationEntity(std::vector<int>& ids, AnimIndex::Animation anim, enumAnimationState animState, enumSpriteLayer layer){
   unsigned int frameIndex = frameCounterArray.size();
   for(size_t i=0;i<frameCounterArray.size();i++){
     if(frameCounterArray[i].entityID == ids[0]){
@@ -794,7 +867,7 @@ void ChangeAnimationEntity(std::vector<int>& ids, AnimIndex::Animation anim, enu
   
   std::vector<int>& anim_2 = m_animID[anim];
   for(size_t i=0; i< anim_2.size();i++){
-    animationDataArray[anim_2[i]].activeAnimation(ids[i],animationStateVector[animState].firstFrame,animationStateVector[animState].lastFrame);
+    animationDataArray[anim_2[i]].activeAnimation(ids[i],animationStateVector[animState].firstFrame,animationStateVector[animState].lastFrame, layer);
   }
   
   //TODO: esto debe estar separado para las animaciones de los zombies

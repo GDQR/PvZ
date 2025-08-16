@@ -15,7 +15,6 @@ struct JpgPixel3 {
   u8 r, g, b;
 };
 
-static u32 getTextureSize(const u32& width, const u32& height,
 int getTextureSize(const unsigned int& width, const unsigned int& height,
                    const Tyra::TextureBpp& bpp) {
   switch (bpp) {

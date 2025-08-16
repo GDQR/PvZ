@@ -73,21 +73,39 @@ int explosionsCreated = 0;
 
 //   return 1;
 // }
+std::unordered_map<int,int> layerID;
 
 void createSprite(int id, Tyra::SpriteMode mode, Tyra::Vec2 position,
-                  Tyra::Vec2 size) {
+                  Tyra::Vec2 size, enumSpriteLayer layer) {
   spriteArray.insert(id, Sprite());
   posArray.insert(id, position);
   finalPosArray.insert(id, Vec2(0, 0));
   loadSprite(&spriteArray[id], mode, Vec2(0.0f, 0.0f), size);
-  // spriteRenderIDArray.insert(id, 0);
-  setSprite(id,(int)enumDraw::draw);
+  spriteRenderIDArray.insert(id, 0);
+  setSprite(id,(int)enumDraw::draw, layer);
+  layerID[id] = layer;
+
+  if(layer == enumSpriteLayer::background){
+    backgroundLayer.push_back(id);
+  }else if(layer == enumSpriteLayer::card_layer){
+    cardLayer.push_back(id);
+  }else if(layer == enumSpriteLayer::plants){
+    plantsLayer.push_back(id);
+  }else if(layer == enumSpriteLayer::projectile_layer){
+    projectileLayer.push_back(id);
+  }else if(layer == enumSpriteLayer::sun_layer){
+    sunLayer.push_back(id);
+  }else if(layer == enumSpriteLayer::zombie_layer){
+    zombieLayer.push_back(id);
+  }else if(layer == enumSpriteLayer::player_layer){
+    playerLayer.push_back(id);
+  }
 }
 
 void createSpriteRotate(int id, Tyra::SpriteMode mode, Tyra::Vec2 position,
-                        Tyra::Vec2 size, const Tyra::Vec2 angle) {
+                        Tyra::Vec2 size, const Tyra::Vec2 angle, enumSpriteLayer layer) {
   angleArray.insert(id, angle);
-  createSprite(id, mode, position, size);
+  createSprite(id, mode, position, size, layer);
 }
 void createBoxCollider(int id, BoxColliderEnum type, BoxCollider collider){
   if(type == BOXCOLLIDER_PROYECTILE){
@@ -116,6 +134,55 @@ void deleteSprite(const int entityID) {
   spriteArray.erase(entityID);
 
   spriteRenderIDArray.erase(entityID);
+  if(layerID[entityID] == enumSpriteLayer::background){
+    for(size_t i=0; i < backgroundLayer.size(); i++ ){
+      if(backgroundLayer[i] == entityID){
+        backgroundLayer.erase(backgroundLayer.begin() + i);
+        break;
+      }
+    }
+  }else if(layerID[entityID] == enumSpriteLayer::card_layer){
+    for(size_t i=0; i < cardLayer.size(); i++ ){
+      if(cardLayer[i] == entityID){
+        cardLayer.erase(cardLayer.begin() + i);
+        break;
+      }
+    }
+    // cardLayer.push_back(entityID);
+  }else if(layerID[entityID] == enumSpriteLayer::plants){
+    for(size_t i=0; i < plantsLayer.size(); i++ ){
+      if(plantsLayer[i] == entityID){
+        plantsLayer.erase(plantsLayer.begin() + i);
+        break;
+      }
+    }
+    // plantsLayer.push_back(entityID);
+  }else if(layerID[entityID] == enumSpriteLayer::projectile_layer){
+    for(size_t i=0; i < projectileLayer.size(); i++ ){
+      if(projectileLayer[i] == entityID){
+        projectileLayer.erase(projectileLayer.begin() + i);
+        break;
+      }
+    }
+    // projectileLayer.push_back(entityID);
+  }else if(layerID[entityID] == enumSpriteLayer::sun_layer){
+    for(size_t i=0; i < sunLayer.size(); i++ ){
+      if(sunLayer[i] == entityID){
+        sunLayer.erase(sunLayer.begin() + i);
+        break;
+      }
+    }
+    // sunLayer.push_back(entityID);
+  }else if(layerID[entityID] == enumSpriteLayer::zombie_layer){
+    for(size_t i=0; i < zombieLayer.size(); i++ ){
+      if(zombieLayer[i] == entityID){
+        zombieLayer.erase(zombieLayer.begin() + i);
+        break;
+      }
+    }
+    // zombieLayer.push_back(entityID);
+  }
+  layerID.erase(entityID);
   
   if(angleArray.count(entityID) == 1){
     angleArray.erase(entityID);
@@ -145,7 +212,7 @@ void newProjectile(Vec2 position, const int damage,
     int& id = projectile[projectile.size()-1].id; //projectile[projectilesCreated].id;
 
     position.y -= 15.0f;
-    createSprite(id, Tyra::MODE_STRETCH, position, Vec2(31 / 1.6f, 31 / 1.6f));
+    createSprite(id, Tyra::MODE_STRETCH, position, Vec2(31 / 1.6f, 31 / 1.6f),projectile_layer);
     if (projectileType == enumProyectile::pea) {
       spriteArray[id].textureID = projectilePea->id;
     } else if (projectileType == enumProyectile::snowPea) {
@@ -173,7 +240,7 @@ void newExplosion(Vec2 position, Vec2 size, const int damage,
     int* id = &explosion[explosionsCreated].id;
     // TODO: Fix position for sprite
     createSprite(*id, Tyra::MODE_STRETCH, position - size / 2 / 2,
-                 Vec2(256 / 1.6f, 256 / 1.6f));
+                 Vec2(256 / 1.6f, 256 / 1.6f), enumSpriteLayer::projectile_layer);
     printf("sprite explosion id: %d\n",spriteArray[*id].id);
     if (projectileType == enumProyectile::ExplosionPowie) {
       spriteArray[*id].textureID = projectileExplosionPowie->id;
@@ -219,7 +286,7 @@ void createLawnMower(const Tyra::Vec2 pos) {
     // printf("animID: %d\n", animID);
     newFatherID(&entity.id[0], &entityID);
     animationDataArray[animID].loadAnimation(entityID, animID,
-                                             Tyra::Vec2(0.7f, 0.7f), 1, 1);
+                                             Tyra::Vec2(0.7f, 0.7f), 1, 1, background);
   }
 
   // HitBox
@@ -237,7 +304,7 @@ void SetBigImage(BigSpriteJPG* entity, BigTexture* textures, Tyra::SpriteMode mo
     printf("reward big[%d] id: %d\n",i,entity->id[i]);
     // printf("pos x,y: %f,%f\n",j*width+(j)+x,k*height+k+y);
     createSprite(entity->id[i], mode, Vec2(j*width+(j)+x, k*height+k+y),
-               Vec2(width, height));
+               Vec2(width, height), background);
                //award
     // createSprite(backgroundIDs.id[i], Tyra::MODE_STRETCH, Vec2(j*81+(j), k*94+k),
     //            Vec2(81, 94));

@@ -53,15 +53,15 @@ void Level1::init() {
   awardBackground = Entities::newID();
   // // TODO: Fix size seedBank
   createSprite(seedBank, MODE_STRETCH, Vec2(63, 10),
-               Vec2(512 / 1.5f, 128 / 1.5f));
+               Vec2(512 / 1.5f, 128 / 1.5f), enumSpriteLayer::background);
   createTexture(seedBank, IMG_seedBank);
 
   
-  createSprite(emptyFlagMeter, MODE_REPEAT, Vec2(255, 410), Vec2(158, 24));
+  createSprite(emptyFlagMeter, MODE_REPEAT, Vec2(255, 410), Vec2(158, 24), enumSpriteLayer::background);
   spriteArray[emptyFlagMeter].scale = 1;
   createTexture(emptyFlagMeter, IMG_FlagMeter);
   
-  createSprite(fullFlagMeter, MODE_REPEAT, Vec2(255, 410), Vec2(158, 24));
+  createSprite(fullFlagMeter, MODE_REPEAT, Vec2(255, 410), Vec2(158, 24), enumSpriteLayer::background);
   spriteArray[fullFlagMeter].scale = 1;
   spriteArray[fullFlagMeter].offset.y = 27;
   spriteArray[fullFlagMeter].size.x = 0;
@@ -69,7 +69,7 @@ void Level1::init() {
   createTexture(fullFlagMeter, IMG_FlagMeter);
 
 
-  createSprite(zombieFlagMeter, MODE_REPEAT, Vec2(405, 410), Vec2(28, 25)); //pos(255,410) es el final
+  createSprite(zombieFlagMeter, MODE_REPEAT, Vec2(405, 410), Vec2(28, 25), enumSpriteLayer::background); //pos(255,410) es el final
   spriteArray[zombieFlagMeter].scale = 1;
   createTexture(zombieFlagMeter, IMG_FlagMeterParts);
 
@@ -123,7 +123,7 @@ void Level1::init() {
   loadProjectile();
   // sunManager.create(Vec2(277, 77), sunCost::normalSun, false);
   tutorialSpr = Entities::newID();
-  createSprite(tutorialSpr,Tyra::SpriteMode::MODE_STRETCH,Tyra::Vec2(0,270),Tyra::Vec2(512,96));
+  createSprite(tutorialSpr,Tyra::SpriteMode::MODE_STRETCH,Tyra::Vec2(0,270),Tyra::Vec2(512,96), enumSpriteLayer::background);
   createTexture(tutorialSpr,IMG_ConveyorBelt_backdrop);
   spriteArray[tutorialSpr].color = Color(0,0,0,60);
   std::string text;
@@ -142,7 +142,8 @@ void Level1::init() {
   printf("ram: %f\n",engine->info.getAvailableRAM());
 }
 static packet2_t* mypacket;
-static BackgroundEntity sodnormal;
+static BigSpriteJPG sodnormal;
+
 void Level1::initAnimation(){
   mypacket = packet2_create(16, P2_TYPE_NORMAL, P2_MODE_NORMAL, 0);
   
@@ -150,10 +151,10 @@ void Level1::initAnimation(){
   sodRollCap = Entities::newID();
   sodRollRow1 = Entities::newID();
   sodRollRow1Alpha = Entities::newID();
-  createSprite(sodRoll, MODE_STRETCH, Vec2(0, 0), Vec2(64, 141));
-  createSprite(sodRollCap, MODE_STRETCH, Vec2(0, 0), Vec2(73, 71));
-  createSprite(sodRollRow1, MODE_REPEAT, Vec2(12, 202), Vec2(0, 132));
-  createSprite(sodRollRow1Alpha, MODE_STRETCH, Vec2(0, 0), Vec2(717, 127));
+  createSprite(sodRoll, MODE_STRETCH, Vec2(0, 0), Vec2(64, 141), enumSpriteLayer::background);
+  createSprite(sodRollCap, MODE_STRETCH, Vec2(0, 0), Vec2(73, 71), enumSpriteLayer::background);
+  createSprite(sodRollRow1, MODE_REPEAT, Vec2(12, 202), Vec2(0, 132), enumSpriteLayer::background);
+  createSprite(sodRollRow1Alpha, MODE_STRETCH, Vec2(0, 0), Vec2(717, 127), enumSpriteLayer::background);
   createTexture(sodRoll, "REANIM/SodRoll.png");
   createTexture(sodRollCap, "REANIM/SodRollCap.png");
   createTexture(sodRollRow1, IMG_sod1row);
