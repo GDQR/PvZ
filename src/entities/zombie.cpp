@@ -13,7 +13,10 @@ void Zombie::createSpace() {
   }
 }
 
-void Zombie::newZombie(Zombie_State_enum newType) { type = newType; }
+void Zombie::newZombie(Zombie_State_enum newType) { 
+  type = newType;
+  color.set(5,5,5,0);
+}
 
 const char* anim_bucket = "anim_bucket";
 const char* anim_cone = "anim_cone";
@@ -257,13 +260,10 @@ int Zombie::normalColor() {
     if (spriteRenderIDArray.count(ids[i]) == 1) {
       // printf("anim attack id: %d\n",m_animID["Zombie"][j]);
       Tyra::Sprite& animSprite = spriteArray[ids[i]];
-      animSprite.color.r -= 5;
-      animSprite.color.g -= 5;
-      animSprite.color.b -= 5;
-      if(animSprite.color.r < 128.0f){
-        animSprite.color.r = 128.0f;
-        animSprite.color.g = 128.0f;
-        animSprite.color.b = 128.0f;
+      animSprite.color.r -= color.r;
+      animSprite.color.g -= color.g;
+      animSprite.color.b -= color.b;
+      if(animSprite.color.r <= 128.0f){
         damaged = false;
       }
     }

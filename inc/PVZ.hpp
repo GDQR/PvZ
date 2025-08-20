@@ -161,7 +161,7 @@ enum Plant_State_enum {
   DoomShroom,
   LilyPad,
   Squash,
-  Threepeater,
+  ThreePeater,
   Tanglekelp,
   Jalapeno,
   Spikeweed,

@@ -313,6 +313,7 @@ bool Proyectile::attack(){
       if(zombie[i].erase() == true){
         zombie.erase(zombie.begin()+i);
       }else if (type == enumProyectile::snowPea) {
+        zombie[i].color.b = 0;
         speedArray[zombie[i].father] = 0.5f;
       }
       break;
