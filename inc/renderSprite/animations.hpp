@@ -63,7 +63,7 @@ struct AnimIndex {
     GatlingPea,
     GloomShroom,
     GoldMagnet,
-    Gravebuster,
+    GraveBuster,
     Hammer,
     HypnoShroom,
     IceShroom,
@@ -77,7 +77,7 @@ struct AnimIndex {
     Magnetshroom,
     Marigold,
     Melonpult,
-    Peashooter,  // PeashooterSingle
+    PeaShotter,  // PeashooterSingle
     Repeater,    // Peashotter
     Plantern,
     PoolCleaner,

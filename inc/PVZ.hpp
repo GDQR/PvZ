@@ -76,6 +76,7 @@ class Zombie {
   int father;
   int boxColliderID;
   Zombie_State_enum type = NoneZombie;
+  Tyra::Color color;
   bool attack = false;
   bool damaged = false;
   bool explosion = false;

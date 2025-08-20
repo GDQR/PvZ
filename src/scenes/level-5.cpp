@@ -20,7 +20,7 @@ void Level5::init() {
     // sunManager.create(Vec2(20,20),sunCost::normalSun,true);
     // printf("pase 2\n");
     
-    loadAnimation(AnimIndex::Peashooter);
+    loadAnimation(AnimIndex::PeaShotter);
     loadAnimation(AnimIndex::SunFlower);
     // createCard(Chomper, Vec2(120, 10), false);
     // createCard(PeaShotter, Vec2(180, 10), false);

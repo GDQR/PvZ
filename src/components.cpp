@@ -234,7 +234,7 @@ void CreateSelectorPlant(int playerID, int pos){
   switch (cards[pos].plant)
   {
   case PeaShotter:
-    ChangeSpriteFromAnimation(anims,plantAnims[indexFound].id,AnimIndex::Peashooter,80);
+    ChangeSpriteFromAnimation(anims,plantAnims[indexFound].id,AnimIndex::PeaShotter,80);
     break;
   case SunFlower:
     ChangeSpriteFromAnimation(anims,plantAnims[indexFound].id,AnimIndex::SunFlower,8);

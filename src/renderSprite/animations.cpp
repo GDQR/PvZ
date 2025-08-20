@@ -58,7 +58,7 @@ void loadAnimString() {
   animString[AnimIndex::GatlingPea] = "GatlingPea";
   animString[AnimIndex::GloomShroom] = "GloomShroom";
   animString[AnimIndex::GoldMagnet] = "GoldMagnet";
-  animString[AnimIndex::Gravebuster] = "Gravebuster";
+  animString[AnimIndex::GraveBuster] = "Gravebuster";
   animString[AnimIndex::Hammer] = "Hammer";
   animString[AnimIndex::HypnoShroom] = "HypnoShroom";
   animString[AnimIndex::IceShroom] = "IceShroom";
@@ -72,7 +72,7 @@ void loadAnimString() {
   animString[AnimIndex::Magnetshroom] = "Magnetshroom";
   animString[AnimIndex::Marigold] = "Marigold";
   animString[AnimIndex::Melonpult] = "Melonpult";
-  animString[AnimIndex::Peashooter] = "PeaShooterSingle";
+  animString[AnimIndex::PeaShotter] = "PeaShooterSingle";
   animString[AnimIndex::Repeater] = "PeaShooter";
   animString[AnimIndex::Plantern] = "Plantern";
   animString[AnimIndex::PoolCleaner] = "PoolCleaner";

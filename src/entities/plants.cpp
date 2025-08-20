@@ -261,7 +261,7 @@ bool createPlant(Plant_State_enum typePlant, const int row, const int column, in
     switch (typePlant) {
       case PeaShotter:
         printf("peashooter\n");
-        createPeashotter(plantPos, pos, AnimIndex::Peashooter);
+        createPeashotter(plantPos, pos, AnimIndex::PeaShotter);
         break;
       case SunFlower:
         printf("sunflower\n");
@@ -616,7 +616,7 @@ void loadPlantCost() {
   plantCost[DoomShroom] = 125;
   plantCost[LilyPad] = 25;
   plantCost[Squash] = 50;
-  plantCost[Threepeater] = 325;
+  plantCost[ThreePeater] = 325;
   plantCost[Tanglekelp] = 25;
   plantCost[Jalapeno] = 125;
   plantCost[Spikeweed] = 100;
@@ -700,7 +700,7 @@ int getPlantRechargeTime(Plant_State_enum typePlant, bool isVersusMode) {
     case CobCannon:
       return plantRechargeTime[verySlow];
     case GraveBuster:
-    case Threepeater:
+    case ThreePeater:
     case SplitPea:
     case Garlic:
     case Melonpult:
@@ -740,7 +740,7 @@ bool startWithoutWait(Plant_State_enum typePlant, bool isVersusMode) {
     case Chomper:
     case Repeater:
     case GraveBuster:
-    case Threepeater:
+    case ThreePeater:
     case Spikeweed:
     case Torchwood:
     case Cactus:
