@@ -284,9 +284,18 @@ void Explosion::erase() {
 }
 
 void FatherID::update(const int entityID) {
+  Tyra::Vec2 fatherPos = posArray[entityID];
   for (unsigned int i = 0; i < id.size(); i++) {
     // finalPos += fatherPos
-    finalPosArray[id[i]] += posArray[entityID];
+    // printf("childID: %d\n",id[i]);
+    finalPosArray[id[i]] += fatherPos;
+  }
+  if(texPosArray.count(entityID) == 1){
+    fatherPos = texPosArray[entityID];
+    // printf("fatherID: %d texpos:%f,%f\n",entityID, pos.x,pos.y);
+    for (unsigned int i = 0; i < id.size(); i++) {
+      finalPosArray[id[i]] += fatherPos;
+    }
   }
 }
 

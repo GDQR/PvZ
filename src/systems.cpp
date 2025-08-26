@@ -269,7 +269,11 @@ void deleteFatherIDChild(const int fatherID, const int* childID) {
   fatherIDArray[fatherID].id.erase(it);
 }
 
-void deleteFatherID(const int entityID) { fatherIDArray.erase(entityID); }
+void deleteFatherID(const int entityID) {
+  if(fatherIDArray.count(entityID)){
+   fatherIDArray.erase(entityID);
+  }
+}
 
 void createLawnMower(const Tyra::Vec2 pos) {
   LawnMower entity;

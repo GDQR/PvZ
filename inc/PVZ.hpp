@@ -455,12 +455,10 @@ int ArrayKey<Key, Type>::count(const Key key) {
 
 template <class Key, class Type>
 Type& ArrayKey<Key, Type>::operator[](const Key entityID) {
-  unsigned int pos = fastKey[entityID];
-  if (pos >= second.size()) {
-    TYRA_ASSERT(!(true == true),
+  TYRA_ASSERT(fastKey.count(entityID) == 1,
                 "ERROR SEARCHING KEY, KEY NOT FOUNDED:", entityID,
                 "COMPONENT:", type);
-  }
+  unsigned int pos = fastKey[entityID];
   return second[pos];
 }
 
