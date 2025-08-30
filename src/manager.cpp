@@ -90,22 +90,26 @@ void FrameManager::update(){
           // }
           texPosArray[frameArray[i].entityID] = positionFrame[animProp[j].dataIndex] * scaleTexture[frameArray[i].entityID];
         }else if(animProp[j].type == ANIM_TEXTURE){
-          const int oldTextureID = spriteArray[frameArray[i].entityID].textureID;
-          Tyra::Texture* oldTexture = texRepo->getByTextureId(oldTextureID);
-          Tyra::Texture* newTexture = texRepo->getByTextureId(textureFrame[animProp[j].dataIndex]);
-          if (oldTexture != newTexture) {
-            // printf("link sprite\n");
-          
-            // Link new Texture to the sprite entitie
-            spriteArray[frameArray[i].entityID].textureID = newTexture->id;
-            originalSize[frameArray[i].entityID] =
-                Vec2(newTexture->getWidth(), newTexture->getHeight());
+          if(spriteArray.count(frameArray[i].entityID) == 1){
+            const int oldTextureID = spriteArray[frameArray[i].entityID].textureID;
+            Tyra::Texture* oldTexture = texRepo->getByTextureId(oldTextureID);
+            Tyra::Texture* newTexture = texRepo->getByTextureId(textureFrame[animProp[j].dataIndex]);
+            if (oldTexture != newTexture) {
+              // printf("link sprite\n");
+            
+              // Link new Texture to the sprite entitie
+              spriteArray[frameArray[i].entityID].textureID = newTexture->id;
+              originalSize[frameArray[i].entityID] =
+                  Vec2(newTexture->getWidth(), newTexture->getHeight());
+            }
           }
         }else if(animProp[j].type == ANIM_SCALE){
-          spriteArray[frameArray[i].entityID].size = 
-            originalSize[frameArray[i].entityID] * 
-            scaleTexture.at(frameArray[i].entityID) * 
-            scaleFrame[animProp[j].dataIndex];
+          if(spriteArray.count(frameArray[i].entityID) == 1){
+            spriteArray[frameArray[i].entityID].size = 
+              originalSize[frameArray[i].entityID] * 
+              scaleTexture.at(frameArray[i].entityID) * 
+              scaleFrame[animProp[j].dataIndex];
+          }
         }else if(animProp[j].type == ANIM_ROTATION){
           // angleFrame[animProp[j].dataIndex].print();
           // if(frameArray[i].animIndex ==22){
@@ -113,7 +117,9 @@ void FrameManager::update(){
           // }
           angleArray[frameArray[i].entityID] = angleFrame[animProp[j].dataIndex];
         } else if(animProp[j].type == ANIM_ALPHA){
-          spriteArray[frameArray[i].entityID].color.a = alphaFrame[animProp[j].dataIndex];
+          if(spriteArray.count(frameArray[i].entityID) == 1){
+            spriteArray[frameArray[i].entityID].color.a = alphaFrame[animProp[j].dataIndex];
+          }
         } else if (animProp[j].type == ANIM_DRAW){
           if (spriteRenderIDArray.count(frameArray[i].entityID) == 1 && drawFrame[animProp[j].dataIndex] == (int)enumDraw::noDraw) {
             spriteRenderIDArray.erase(frameArray[i].entityID);
@@ -236,6 +242,7 @@ void RendererSprites::updateRender() {
     }
   }
 
+  // printf("card\n");
   for (int &it : cardLayer) {
     Tyra::Sprite& spriteRender = spriteArray[it];
     spriteRender.position = finalPosArray[it];
@@ -247,6 +254,7 @@ void RendererSprites::updateRender() {
     }
   }
 
+  // printf("plantsLayer\n");
   for (int &it : plantsLayer) {
     Tyra::Sprite& spriteRender = spriteArray[it];
     spriteRender.position = finalPosArray[it];
@@ -307,9 +315,7 @@ void RendererSprites::update() {
   resetFinalPos();
   updateChildPos();
   updateTexture();
-  // if(true == true){
-  //   cameraManager.update();
-  // }
+  cameraManager.update();
   updateRender();
 }
 
@@ -626,14 +632,36 @@ void LawnMoverManager::update(){
 }
 
 void CameraManager::update() {
-  if(cameraPos.x > -150){
-
-    cameraPos.x--;
-    
-  }
   for(auto &it: finalPosArray.second){
-    it += cameraPos;
+    it -= cameraPos;
   }
+}
+
+bool CameraManager::intro(){
+  if(state == cameraShowEnemies){
+    if(cameraPos.x < 150){
+      cameraPos.x +=5;
+    }else{
+      state = cameraDelay;
+    }
+  }else if(state == cameraDelay){
+    if(cameraPos.x == 150){
+      static PS2Timer cameraTimer;
+      printf("camera timer: %d\n",cameraTimer.counterMS);
+      if(cameraTimer.counterMS < 3000){
+        cameraTimer.addMSinCounter();
+      }else {
+        state = cameraShowHouse;
+      }
+    }
+  }else if(state == cameraShowHouse){
+    if(cameraPos.x > 0){
+      cameraPos.x -=5;
+    }else{
+      return true;
+    }
+  }
+  return false;
 }
 
 void FontManager::update(){

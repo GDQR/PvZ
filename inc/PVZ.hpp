@@ -205,6 +205,8 @@ struct PlantAnimation{
 
 extern std::vector<PlantAnimation> plantAnims;
 
+extern std::vector<PlantAnimation> cardsAnimations;
+
 class Plant {
  public:
   // std::vector<int> id;
@@ -414,6 +416,7 @@ extern Tyra::Pad* pad;
 extern const Tyra::PadJoy* leftJoy;
 extern Tyra::TextureRepository* texRepo;
 extern std::unordered_map<int, std::vector<int>> m_animID;
+extern std::unordered_map<int, std::vector<char*>> animNames;
 
 template <class Key, class Type>
 class ArrayKey {

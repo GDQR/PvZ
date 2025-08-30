@@ -18,84 +18,106 @@ void Zombie::newZombie(Zombie_State_enum newType) {
   color.set(5,5,5,0);
 }
 
-const char* anim_bucket = "anim_bucket";
-const char* anim_cone = "anim_cone";
-const char* anim_hair = "anim_hair";
-const char* anim_screendoor = "anim_screendoor";
-const char* Zombie_duckytube = "Zombie_duckytube";
-const char* anim_innerarm1 = "anim_innerarm1";
-const char* anim_innerarm2 = "anim_innerarm2";
-const char* anim_innerarm3 = "anim_innerarm3";
-const char* Zombie_whitewater = "Zombie_whitewater";
-const char* Zombie_whitewater2 = "Zombie_whitewater2";
-const char* Zombie_outerarm_screendoor = "Zombie_outerarm_screendoor";
-const char* Zombie_innerarm_screendoor_hand = "Zombie_innerarm_screendoor_hand";
-const char* Zombie_mustache = "Zombie_mustache";
-const char* anim_tongue = "anim_tongue";
-const char* Zombie_innerarm_screendoor = "Zombie_innerarm_screendoor";
-const char* Zombie_flaghand = "Zombie_flaghand";
+int anim_bucket;
+int anim_cone;
+int anim_hair;
+int anim_screendoor;
+int Zombie_duckytube;
+int anim_innerarm1;
+int anim_innerarm2;
+int anim_innerarm3;
+int Zombie_whitewater;
+int Zombie_whitewater2;
+int Zombie_outerarm_screendoor;
+int Zombie_innerarm_screendoor_hand;
+int Zombie_mustache;
+int anim_tongue;
+int Zombie_innerarm_screendoor;
+int Zombie_flaghand;
+
+void SetAnimationNamesID(AnimIndex::Animation animation){
+  if(animation == AnimIndex::Zombie){
+    anim_bucket = GetAnimationNameID(AnimIndex::Zombie, "anim_bucket");
+    anim_cone = GetAnimationNameID(AnimIndex::Zombie, "anim_cone");
+    anim_hair = GetAnimationNameID(AnimIndex::Zombie, "anim_hair");
+    anim_screendoor = GetAnimationNameID(AnimIndex::Zombie, "anim_screendoor");
+    Zombie_duckytube = GetAnimationNameID(AnimIndex::Zombie, "Zombie_duckytube");;
+    anim_innerarm1 = GetAnimationNameID(AnimIndex::Zombie, "anim_innerarm1");;
+    anim_innerarm2 = GetAnimationNameID(AnimIndex::Zombie, "anim_innerarm2");;
+    anim_innerarm3 = GetAnimationNameID(AnimIndex::Zombie, "anim_innerarm3");;
+    Zombie_whitewater = GetAnimationNameID(AnimIndex::Zombie, "Zombie_whitewater");;
+    Zombie_whitewater2 = GetAnimationNameID(AnimIndex::Zombie, "Zombie_whitewater2");;
+    Zombie_outerarm_screendoor = GetAnimationNameID(AnimIndex::Zombie, "Zombie_outerarm_screendoor");;
+    Zombie_innerarm_screendoor_hand = GetAnimationNameID(AnimIndex::Zombie, "Zombie_innerarm_screendoor_hand");;
+    Zombie_mustache = GetAnimationNameID(AnimIndex::Zombie, "Zombie_mustache");;
+    anim_tongue = GetAnimationNameID(AnimIndex::Zombie, "anim_tongue");;
+    Zombie_innerarm_screendoor = GetAnimationNameID(AnimIndex::Zombie, "Zombie_innerarm_screendoor");;
+    Zombie_flaghand = GetAnimationNameID(AnimIndex::Zombie, "Zombie_flaghand");;
+  } 
+}
+
 void SetZombieAnimation(const int entityID, const int animID, const Zombie_State_enum type) {
+  int nameID = animationDataArray[animID].nameID;
   switch (type) {
     case Zombie_State_enum::normalZombie:
-      if ((strcmp(animationDataArray[animID].name, anim_bucket)==0) ||
-      (strcmp(animationDataArray[animID].name, anim_cone)==0) ||
-      (strcmp(animationDataArray[animID].name, anim_screendoor)==0) ||
-      (strcmp(animationDataArray[animID].name, Zombie_duckytube)==0) ||
-      (strcmp(animationDataArray[animID].name, Zombie_whitewater)==0) ||
-      (strcmp(animationDataArray[animID].name, Zombie_whitewater2)==0) ||
-      (strcmp(animationDataArray[animID].name, Zombie_outerarm_screendoor)==0) ||
-      (strcmp(animationDataArray[animID].name, Zombie_innerarm_screendoor_hand)==0) ||
-      (strcmp(animationDataArray[animID].name, Zombie_mustache)==0) ||
-      (strcmp(animationDataArray[animID].name, anim_tongue)==0) ||
-      (strcmp(animationDataArray[animID].name, Zombie_innerarm_screendoor)==0) ||
-      (strcmp(animationDataArray[animID].name, Zombie_flaghand)==0)) {
-        setSprite(entityID, (int)enumDraw::noDraw, enumSpriteLayer::zombie_layer);
-      }
+        if(nameID == anim_bucket
+          || nameID == anim_cone
+          || nameID == anim_screendoor
+          || nameID == Zombie_duckytube
+          || nameID == Zombie_whitewater
+          || nameID == Zombie_whitewater2
+          || nameID == Zombie_outerarm_screendoor
+          || nameID == Zombie_innerarm_screendoor_hand
+          || nameID == Zombie_mustache || nameID == anim_tongue
+          || nameID == Zombie_innerarm_screendoor
+          || nameID == Zombie_flaghand){
+          setSprite(entityID, (int)enumDraw::noDraw, enumSpriteLayer::zombie_layer);
+        }
       break;
     case Zombie_State_enum::flagZombie:
-      if ((strcmp(animationDataArray[animID].name, anim_bucket)==0) ||
-        (strcmp(animationDataArray[animID].name, anim_cone)==0) ||
-        (strcmp(animationDataArray[animID].name, Zombie_whitewater2)==0) ||
-        (strcmp(animationDataArray[animID].name, Zombie_outerarm_screendoor)==0) ||
-        (strcmp(animationDataArray[animID].name, Zombie_innerarm_screendoor_hand)==0) ||
-        (strcmp(animationDataArray[animID].name, anim_screendoor)==0) ||
-        (strcmp(animationDataArray[animID].name, Zombie_mustache)==0) ||
-        (strcmp(animationDataArray[animID].name, anim_tongue)==0) ||
-        (strcmp(animationDataArray[animID].name, Zombie_whitewater)==0) ||
-        (strcmp(animationDataArray[animID].name, Zombie_duckytube)==0) || // can use in water
-        (strcmp(animationDataArray[animID].name, anim_innerarm1)==0) ||
-        (strcmp(animationDataArray[animID].name, anim_innerarm2)==0) ||
-        (strcmp(animationDataArray[animID].name, anim_innerarm3)==0)) {
+      if(nameID == anim_bucket 
+        || nameID == anim_cone 
+        || nameID == anim_screendoor
+        || nameID == Zombie_duckytube /* can use in water*/ 
+        || nameID == anim_innerarm1
+        || nameID == anim_innerarm2 
+        || nameID == anim_innerarm3
+        || nameID == Zombie_whitewater 
+        || nameID == Zombie_whitewater2
+        || nameID == Zombie_outerarm_screendoor 
+        || nameID == Zombie_innerarm_screendoor_hand
+        || nameID == Zombie_mustache 
+        || nameID == anim_tongue){
         setSprite(entityID, (int)enumDraw::noDraw, enumSpriteLayer::zombie_layer);
       }
       break;
     case Zombie_State_enum::coneheadZombie:
-      if ((strcmp(animationDataArray[animID].name, anim_bucket)==0) ||
-          (strcmp(animationDataArray[animID].name, anim_hair)==0) ||
-          (strcmp(animationDataArray[animID].name, Zombie_outerarm_screendoor)==0) ||
-          (strcmp(animationDataArray[animID].name, Zombie_innerarm_screendoor_hand)==0)||
-          (strcmp(animationDataArray[animID].name, anim_screendoor)==0) ||
-          (strcmp(animationDataArray[animID].name, Zombie_mustache)==0) ||
-          (strcmp(animationDataArray[animID].name, anim_tongue)==0) ||
-          (strcmp(animationDataArray[animID].name, Zombie_whitewater)==0) ||
-          (strcmp(animationDataArray[animID].name, Zombie_duckytube)==0) ||
-          (strcmp(animationDataArray[animID].name, Zombie_innerarm_screendoor)==0) ||
-          (strcmp(animationDataArray[animID].name, Zombie_flaghand)==0)) {
+      if(nameID == anim_bucket 
+        || nameID == anim_hair
+        || nameID == Zombie_outerarm_screendoor
+        || nameID == Zombie_innerarm_screendoor_hand
+        || nameID == anim_screendoor
+        || nameID == Zombie_mustache
+        || nameID == anim_tongue
+        || nameID == Zombie_whitewater
+        || nameID == Zombie_duckytube
+        || nameID == Zombie_innerarm_screendoor
+        || nameID == Zombie_flaghand){
         setSprite(entityID, (int)enumDraw::noDraw, enumSpriteLayer::zombie_layer);
       }
       break;
     case Zombie_State_enum::bucketHeadZombie:
-      if ((strcmp(animationDataArray[animID].name, anim_cone)==0) ||
-          (strcmp(animationDataArray[animID].name, anim_hair)==0) ||
-          (strcmp(animationDataArray[animID].name, Zombie_outerarm_screendoor)==0) ||
-          (strcmp(animationDataArray[animID].name, Zombie_innerarm_screendoor_hand)==0) ||
-          (strcmp(animationDataArray[animID].name, anim_screendoor)==0) ||
-          (strcmp(animationDataArray[animID].name, Zombie_mustache)==0) ||
-          (strcmp(animationDataArray[animID].name, anim_tongue)==0) ||
-          (strcmp(animationDataArray[animID].name, Zombie_whitewater)==0) ||
-          (strcmp(animationDataArray[animID].name, Zombie_duckytube)==0) ||
-          (strcmp(animationDataArray[animID].name, Zombie_innerarm_screendoor)==0) ||
-          (strcmp(animationDataArray[animID].name, Zombie_flaghand)==0)) {
+      if(nameID == anim_cone
+        || nameID == anim_hair
+        || nameID == Zombie_outerarm_screendoor
+        || nameID == Zombie_innerarm_screendoor_hand
+        || nameID == anim_screendoor
+        || nameID == Zombie_mustache
+        || nameID == anim_tongue
+        || nameID == Zombie_whitewater
+        || nameID == Zombie_duckytube
+        || nameID == Zombie_innerarm_screendoor
+        || nameID == Zombie_flaghand){
         setSprite(entityID, (int)enumDraw::noDraw, enumSpriteLayer::zombie_layer);
       }
       break;
@@ -149,7 +171,7 @@ int Zombie::attackPlant() {
       for(unsigned int k=0 ; k < zombieAnims.size(); k++){
         if(zombieAnims[k].id == father){
           attack = false;
-          ChangeAnimationEntity(zombieAnims[k].entity,AnimIndex::Zombie,enumAnimationState::normalZombieWalk, zombie_layer);
+          ChangeAnimationEntity(zombieAnims[k].entity,AnimIndex::Zombie, "anim_walk", zombie_layer);
         }
       }
     }
@@ -162,7 +184,7 @@ int Zombie::attackPlant() {
       // printf("encontre\n");
       if(attack == false){
         attack = true;
-        ChangeAnimationEntity(zombieAnims[k].entity,AnimIndex::Zombie,enumAnimationState::normalZombieAttack, zombie_layer);
+        ChangeAnimationEntity(zombieAnims[k].entity,AnimIndex::Zombie,"anim_eat", zombie_layer);
       }else {
         for(size_t m=0;m<frameCounterArray.size();m++){
           if(frameCounterArray[m].entityID == zombieAnims[k].entity[0]){
@@ -207,8 +229,8 @@ void Zombie::damage(const int entityID) {
   std::vector<int>& animEntity = zombieAnims[indexAnim].entity;
   size = animEntity.size();
   for(size_t i=0; i < size; i++){
-    if (spriteRenderIDArray.count(animEntity[i]) == 1) {
-      // printf("anim attack id: %d\n",m_animID["Zombie"][j]);
+    if(spriteArray.count(animEntity[i]) == 1){
+    // printf("anim attack id: %d\n",m_animID["Zombie"][j]);
       spriteArray[animEntity[i]].color = Tyra::Color(255, 255, 255, 128);
     }
   }
@@ -257,7 +279,7 @@ int Zombie::normalColor() {
   std::vector<int>& ids = zombieAnims[indexAnim].entity;
   size = ids.size();
   for(size_t i=0; i < size; i++){
-    if (spriteRenderIDArray.count(ids[i]) == 1) {
+    if (spriteArray.count(ids[i]) == 1) {
       // printf("anim attack id: %d\n",m_animID["Zombie"][j]);
       Tyra::Sprite& animSprite = spriteArray[ids[i]];
       animSprite.color.r -= color.r;
@@ -302,7 +324,7 @@ bool Zombie::erase() {
         int animSize = zombieAnims[i].entity.size()-1;
         while (animSize >= 0)
         {
-          // printf("borrando zombie anim ID: %d\n",zombieAnims[i].entity[animSize]);
+          // printf("deleting zombie anim ID: %d\n",zombieAnims[i].entity[animSize]);
           deletePosArray(zomAnim.entity[animSize]);
           deleteFinalPosArray(zomAnim.entity[animSize]);
           deleteFatherIDChild(father, &zomAnim.entity[animSize]);
@@ -349,7 +371,7 @@ void createNormalZombie(const int id, const int fatherID, Tyra::Vec2 pos) {
   ZombieAnimation anim;
   anim.id = fatherID;
   // printf("zombie anim size: %d\n", m_animID[AnimIndex::Zombie].size());
-  SetAnimationToEntity(anim.entity,zombie[id].father,AnimIndex::Zombie, Tyra::Vec2(1, 1), normalZombieWalk, enumSpriteLayer::zombie_layer);
+  SetAnimationToEntity(anim.entity,zombie[id].father,AnimIndex::Zombie, Tyra::Vec2(1, 1), "anim_walk", enumSpriteLayer::zombie_layer);
   std::vector<int>& animData = m_animID[AnimIndex::Zombie];
   int size = animData.size();
   Zombie_State_enum type = zombie[id].type;
@@ -378,7 +400,7 @@ void createFlagZombie(const int id, const int fatherID, Tyra::Vec2 pos) {
   ZombieAnimation anim;
   anim.id = fatherID;
   // printf("zombie anim size: %d\n", m_animID[AnimIndex::Zombie].size());
-  SetAnimationToEntity(anim.entity,zombie[id].father,AnimIndex::Zombie, Tyra::Vec2(1, 1), normalZombieWalk, enumSpriteLayer::zombie_layer);
+  SetAnimationToEntity(anim.entity,zombie[id].father,AnimIndex::Zombie, Tyra::Vec2(1, 1), "anim_walk", enumSpriteLayer::zombie_layer);
   std::vector<int>& animData = m_animID[AnimIndex::Zombie];
   int size = animData.size();
   Zombie_State_enum type = zombie[id].type;
@@ -409,7 +431,7 @@ void createConeheadZombie(const int id, const int fatherID, Tyra::Vec2 pos) {
   ZombieAnimation anim;
   anim.id = fatherID;
   // printf("zombie anim size: %d\n", m_animID[AnimIndex::Zombie].size());
-  SetAnimationToEntity(anim.entity,zombie[id].father,AnimIndex::Zombie, Tyra::Vec2(1, 1), normalZombieWalk, enumSpriteLayer::zombie_layer);
+  SetAnimationToEntity(anim.entity,zombie[id].father,AnimIndex::Zombie, Tyra::Vec2(1, 1), "anim_walk", enumSpriteLayer::zombie_layer);
   std::vector<int>& animData = m_animID[AnimIndex::Zombie];
   int size = animData.size();
   Zombie_State_enum type = zombie[id].type;
@@ -463,7 +485,7 @@ void createPoleVaulterZombie(const int id, const int fatherID, Tyra::Vec2 pos) {
 void createBucketheadZombie(const int id, const int fatherID, Tyra::Vec2 pos) {
   ZombieAnimation anim;
   anim.id = fatherID;
-  SetAnimationToEntity(anim.entity,zombie[id].father,AnimIndex::Zombie, Tyra::Vec2(1, 1), normalZombieWalk, enumSpriteLayer::zombie_layer);
+  SetAnimationToEntity(anim.entity,zombie[id].father,AnimIndex::Zombie, Tyra::Vec2(1, 1), "anim_walk", enumSpriteLayer::zombie_layer);
   std::vector<int>& animData = m_animID[AnimIndex::Zombie];
   int size = animData.size();
   Zombie_State_enum type = zombie[id].type;

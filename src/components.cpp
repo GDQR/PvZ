@@ -6,6 +6,7 @@
 // sparse array
 std::vector<FrameCounter> frameCounterArray;
 std::unordered_map<int, std::vector<int>> m_animID;
+std::unordered_map<int, std::vector<char*>> animNames;
 std::unordered_map<int, AnimationData> animationDataArray;
 ArrayKey<int, FatherID> fatherIDArray(enumComponents::fatherID);
 ArrayKey<int, Tyra::Vec2> posArray(enumComponents::pos);
@@ -111,7 +112,7 @@ void Card::update() {
 void Controller::update() {
   if (pad->getClicked().Cross) {
     // create plant
-    printf("press cross\n");
+    // printf("press cross\n");
     plantsManager.create(playerID);
   }
   if (pad->getClicked().DpadLeft) {
@@ -178,100 +179,42 @@ void Cursor::move() {
   }
 }
 
-void ChangeSpriteFromAnimation(std::vector<int>& ids, int& fatherID, AnimIndex::Animation anim, int frame){
-  std::vector<int>& anim_2 = m_animID[anim];
-  if(ids.size() < anim_2.size()){
-    
-    for(size_t i=ids.size();i<anim_2.size();i++){
-      ids.push_back(Entities::newID());
-      int entityID = ids[i];
-
-      newFatherID(&fatherID, &ids[i]);
-
-      createSpriteRotate(entityID, Tyra::MODE_STRETCH, Vec2(0, 0),
-                          Vec2(128 / 1.6f, 128 / 1.6f), Vec2(0.0f, 0.0f), card_layer);
-
-      texPosArray.insert(entityID, Tyra::Vec2());
-      scaleTexture[ids[i]] = scaleTexture[ids[i-1]];
-    }
-  }else if(ids.size() != anim_2.size()){
-    size_t size = ids.size();
-    while (size != anim_2.size())
-    {
-      deletePosArray(ids[size-1]);
-      deleteFinalPosArray(ids[size-1]);
-      deleteTexPosArray(ids[size-1]);
-      deleteFatherIDChild(fatherID,&ids[size-1]);
-      deleteSprite(ids[size-1]);
-      Entities::deleteID(ids[size-1]);
-      ids.erase(ids.begin()+ size-1);
-      size--;
-    }
-  }
-
-  // Gives an error in the size with CherryBomb
-  for(size_t i=0; i< anim_2.size();i++){
-    animationDataArray[anim_2[i]].activeAnimation(ids[i],frame,frame, card_layer);
-    
-    spriteArray[ids[i]].color.a = 64;
-  }
-}
-
-void CreateSelectorPlant(int playerID, int pos){
-  size_t indexFound = plantAnims.size();
-  for(size_t i=0; i < indexFound; i++){
-    if(plantAnims[i].id == playerID){
-      indexFound = i;
-      break;
-    }
-  }
-
-  if(indexFound == plantAnims.size()){
-    TYRA_TRAP("ERROR");
-  }
-
-  std::vector<int>& anims = plantAnims[indexFound].entity;
-  switch (cards[pos].plant)
-  {
-  case PeaShotter:
-    ChangeSpriteFromAnimation(anims,plantAnims[indexFound].id,AnimIndex::PeaShotter,80);
-    break;
-  case SunFlower:
-    ChangeSpriteFromAnimation(anims,plantAnims[indexFound].id,AnimIndex::SunFlower,8);
-    break;
-  case CherryBomb:
-    ChangeSpriteFromAnimation(anims,plantAnims[indexFound].id,AnimIndex::CherryBomb,1);
-    break;
-  case Wallnut:
-    ChangeSpriteFromAnimation(anims,plantAnims[indexFound].id,AnimIndex::Wallnut,1);
-    break;
-  case PotatoMine:
-    ChangeSpriteFromAnimation(anims,plantAnims[indexFound].id,AnimIndex::PotatoMine,1);
-    break;
-  
-  default:
-    break;
-  }
-}
-
 void DeckCursor::moveLeft(int playerID) {
+  std::vector<int>& actualAnim = cardsAnimations[pos].entity;
+  for(size_t i=0;i<actualAnim.size();i++){
+    deleteFatherIDChild(playerID,&actualAnim[i]);
+    setSprite(actualAnim[i],-1,card_layer);
+  }
   pos--;
   if (pos < 0) {
     pos = cards.size() - 1;
   }
   posArray[id].x = posArray[cards[pos].seed].x - 3;
-
-  CreateSelectorPlant(playerID, pos);
+  
+  std::vector<int>& newAnim = cardsAnimations[pos].entity;
+  for(size_t i=0;i<newAnim.size();i++){
+    newFatherID(&playerID,&newAnim[i]);
+    setSprite(newAnim[i],0,card_layer);
+  }
 }
 
 void DeckCursor::moveRight(int playerID) {
+  std::vector<int>& actualAnim = cardsAnimations[pos].entity;
+  for(size_t i=0;i<actualAnim.size();i++){
+    deleteFatherIDChild(playerID,&actualAnim[i]);
+    setSprite(actualAnim[i],-1,card_layer);
+  }
   pos++;
   if (pos >= (int)cards.size()) {
     pos = 0;
   }
   posArray[id].x = posArray[cards[pos].seed].x - 3;
 
-  CreateSelectorPlant(playerID, pos);
+  std::vector<int>& newAnim = cardsAnimations[pos].entity;
+  for(size_t i=0;i<newAnim.size();i++){
+    newFatherID(&playerID,&newAnim[i]);
+    setSprite(newAnim[i],0,card_layer);
+  }
 }
 
 void Explosion::erase() {

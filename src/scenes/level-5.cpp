@@ -14,7 +14,6 @@ void Level5::init() {
   loadPlantCost();
     loadAnimString();
   loadPlantRechargeTime();
-  loadAnimationStates();
     // loadAnimation(AnimIndex::Sun);
     // printf("pase 1\n");
     // sunManager.create(Vec2(20,20),sunCost::normalSun,true);

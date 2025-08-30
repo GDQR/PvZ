@@ -158,11 +158,6 @@ void Animation::updateAngle(const int entityID) {
   // }
 }
 
-void Animation::setAnimation(enumAnimationState animationState) {
-  currentFrame = animationStateVector[animationState].firstFrame;
-  lastFrame = animationStateVector[animationState].lastFrame;
-  firstFrame = currentFrame;
-}
 int Animation::debugAnim(const int entitieID) {
   if (framesCounter < (60 / framesSpeed)) {
     framesCounter++;

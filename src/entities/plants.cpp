@@ -22,7 +22,22 @@ void createPeashotter(const int id, const Tyra::Vec2 pos, AnimIndex::Animation a
   PlantAnimation anim;
   anim.id = father;
   
-  SetAnimationToEntity(anim.entity,father,animationIndex,Tyra::Vec2(0.8f, 0.8f), 80, 104, enumSpriteLayer::plants);
+  SetAnimationToEntity(anim.entity,father,animationIndex,Tyra::Vec2(0.8f, 0.8f), "anim_idle", enumSpriteLayer::plants);
+  
+  plantAnims.push_back(anim);
+  
+  int anim_stem = anim.entity[GetAnimationNameID(animationIndex,"anim_stem")];
+  
+  anim.entity.clear();
+  fatherIDArray.insert(anim_stem, FatherID());
+  posArray[anim_stem] = posArray[father];
+  
+  SetAnimationToEntity(anim.entity,anim_stem,animationIndex,Tyra::Vec2(0.8f, 0.8f), "anim_head_idle", enumSpriteLayer::plants);
+  
+  for (size_t i = 0; i < anim.entity.size(); i++) {
+    posArray[anim.entity[i]] -= texPosArray[anim_stem]; 
+  }
+
   plantAnims.push_back(anim);
 
   // Life
@@ -489,7 +504,7 @@ void Plant::damage(const int entityID){
   std::vector<int>& animEntity = plantAnims[indexAnim].entity;
   size = animEntity.size();
   for(size_t i=0; i < size; i++){
-    if (spriteRenderIDArray.count(animEntity[i]) == 1) {
+    if (spriteArray.count(animEntity[i]) == 1) {
       // printf("anim attack id: %d\n",m_animID["Zombie"][j]);
       spriteArray[animEntity[i]].color = Tyra::Color(255, 255, 255, 128);
     }
@@ -515,7 +530,7 @@ int Plant::normalColor(){
   std::vector<int>& ids = plantAnims[indexAnim].entity;
   size = ids.size();
   for(size_t i=0; i < size; i++){
-    if (spriteRenderIDArray.count(ids[i]) == 1) {
+    if (spriteArray.count(ids[i]) == 1) {
       // printf("anim attack id: %d\n",m_animID["Zombie"][j]);
       Tyra::Sprite& animSprite = spriteArray[ids[i]];
       animSprite.color.r -= 5;
@@ -561,6 +576,7 @@ void Plant::erase() {
       deletePosArray(*it);
       deleteFinalPosArray(*it);
       deleteTexPosArray(*it);
+      deleteFatherID(*it);
       deleteFatherIDChild(father, &*it);
       for(unsigned int j=0; j< frameCounterArray.size();j++){
         if(frameCounterArray[j].entityID == *it){
@@ -573,6 +589,7 @@ void Plant::erase() {
       Entities::deleteID(*it);
       it++;
     }
+
     plantAnims[animIndex].entity.clear();
     if (type == PeaShotter) {
       timerArray.erase(father);

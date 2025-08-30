@@ -305,7 +305,7 @@ void SetBigImage(BigSpriteJPG* entity, BigTexture* textures, Tyra::SpriteMode mo
 
   for(unsigned int i=0;i<textures->data.size();i++){
     entity->id.push_back(Entities::newID());
-    printf("reward big[%d] id: %d\n",i,entity->id[i]);
+    // printf("reward big[%d] id: %d\n",i,entity->id[i]);
     // printf("pos x,y: %f,%f\n",j*width+(j)+x,k*height+k+y);
     createSprite(entity->id[i], mode, Vec2(j*width+(j)+x, k*height+k+y),
                Vec2(width, height), background);

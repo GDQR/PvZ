@@ -224,7 +224,7 @@ void setSprite(const int entityID, const int draw, enumSpriteLayer layer) {
         }
       }
     }
-  } else if (spriteRenderIDArray.count(entityID) == 0 && draw == 0) {
+  } else if (spriteRenderIDArray.count(entityID) == 0 && spriteArray.count(entityID) == 1 && draw == 0) {
     spriteRenderIDArray.insert(entityID, 0);
     // int renderSize = spriteRenderIDArray.first.size();
     // for(int j=renderSize-1;j>1;j--){
@@ -253,36 +253,14 @@ void setSprite(const int entityID, const int draw, enumSpriteLayer layer) {
   // printf("plant draw: %d\n", animationArray[entityID].draw);
 }
 
-AnimationState::AnimationState(){};
-AnimationState::AnimationState(const unsigned int firstFrame,
-                               const unsigned int lastFrame) {
-  this->firstFrame = firstFrame;
-  this->lastFrame = lastFrame;
-}
-
-AnimationState animationStateVector[enumMaxAnimationState];
 int maxAnimID = 0;
 
-void loadAnimationStates() {
-  animationStateVector[normalZombieWalk] = AnimationState(45, 91);
-  animationStateVector[normalZombieAttack] = AnimationState(139, 178);
-  animationStateVector[normalZombieCharred] = AnimationState(1, 43);
-  animationStateVector[poleVaulterWalk] = AnimationState(14, 50);
-  animationStateVector[explodeCherryBomb] = AnimationState(1, 8);
-}
-
-void AnimationData::loadAnimation(const int entityID, const int animID,
-                                  const Tyra::Vec2 scaleTextures,
-                                  enumAnimationState animationState, enumSpriteLayer layer) {
-  loadAnimation(entityID, animID, scaleTextures,
-                animationStateVector[animationState].firstFrame,
-                animationStateVector[animationState].lastFrame, layer);
-}
 
 void AnimationData::loadAnimation(const int entityID, const int animID,
                                   const Tyra::Vec2 scaleTextures,
                                   const int firstFrame, const int lastFrame, enumSpriteLayer layer) {
-  bool hasRotation = false;                                  
+  bool hasRotation = false;
+  bool hasImage = false;                                  
   unsigned int dataSize;
   for(unsigned int i=1;i<=maxFrame;i++){
     std::vector<AnimationProperty>& animProp = property[i];
@@ -290,20 +268,25 @@ void AnimationData::loadAnimation(const int entityID, const int animID,
     for(unsigned int j=0;j<dataSize;j++){
       // printf("test animID:%d i:%d j:%d type:%d\n",animID,i,j,animProp[j].type);
       if(animProp[j].type == ANIM_ROTATION){
-        i=maxFrame;
         hasRotation = true;
-        break;
+      }else if(animProp[j].type == ANIM_TEXTURE){
+        hasImage = true;
       }
     }
   }
 
-  if(hasRotation == true){
-    // printf("crear rotate\n");
-    createSpriteRotate(entityID, Tyra::MODE_STRETCH, Vec2(0, 0),
-                         Vec2(128 / 1.6f, 128 / 1.6f), Vec2(0.0f, 0.0f), layer);
-  }else {
-    createSprite(entityID, Tyra::MODE_STRETCH, Vec2(0, 0),
-                 Vec2(128 / 1.6f, 128 / 1.6f), layer);
+  if(hasImage == true){
+    if(hasRotation == true){
+      // printf("crear rotate\n");
+      createSpriteRotate(entityID, Tyra::MODE_STRETCH, Vec2(0, 0),
+                          Vec2(128 / 1.6f, 128 / 1.6f), Vec2(0.0f, 0.0f), layer);
+    }else {
+      createSprite(entityID, Tyra::MODE_STRETCH, Vec2(0, 0),
+                  Vec2(128 / 1.6f, 128 / 1.6f), layer);
+    }
+  }else{
+    finalPosArray.insert(entityID, Vec2(0.0f, 0.0f));
+    posArray.insert(entityID, Vec2(0.0f,0.0f));
   }
 
   FrameCounter frameCounter;
@@ -367,7 +350,9 @@ int AnimationData::activeAnimation(const int entityID,
         angleArray[entityID] = angleFrame[animProp[i].dataIndex];
       }else if(animProp[i].type == ANIM_ALPHA && alphaPropertyFounded == false){
         alphaPropertyFounded = true;
-        spriteArray[entityID].color.a = alphaFrame[animProp[i].dataIndex];
+        if(spriteArray.count(entityID) == 1){
+          spriteArray[entityID].color.a = alphaFrame[animProp[i].dataIndex];
+        }
       }else if (animProp[i].type == ANIM_DRAW && drawPropertyFounded == false){
         drawPropertyFounded = true;
         // printf("draw: %d\n",drawFrame[animProp[i].dataIndex]);
@@ -380,37 +365,34 @@ int AnimationData::activeAnimation(const int entityID,
 
   texPosArray[entityID] = positionFrame[posIndex] * scaleTexture[entityID];
 
-  Tyra::Texture* oldTexture = texRepo->getByTextureId(spriteArray[entityID].textureID);
-  Tyra::Texture* newTexture = texRepo->getByTextureId(textureFrame[textureIndex]);
+  if(spriteArray.count(entityID) == 1){
+    Tyra::Texture* oldTexture = texRepo->getByTextureId(spriteArray[entityID].textureID);
+    Tyra::Texture* newTexture = texRepo->getByTextureId(textureFrame[textureIndex]);
 
-  if (oldTexture != newTexture) {
-    // printf("texture id: %d\n",newTexture->id);
-    // printf("linking sprite id\n");
-    if(newTexture != nullptr){
-      // Link new Texture to the sprite entitie
-
-      spriteArray[entityID].textureID = newTexture->id;
-      originalSize[entityID] =
-          Vec2(newTexture->getWidth(), newTexture->getHeight());
-
+    if (oldTexture != newTexture) {
+      // printf("texture id: %d\n",newTexture->id);
+      // printf("linking sprite id\n");
+      if(newTexture != nullptr){
+        // Link new Texture to the sprite entitie
+        
+        spriteArray[entityID].textureID = newTexture->id;
+        
+        originalSize[entityID] =
+            Vec2(newTexture->getWidth(), newTexture->getHeight());
+      }
     }
+    
+    spriteArray[entityID].size = 
+          originalSize[entityID] * scaleTexture[entityID] * scaleFrame[scaleIndex];
   }
 
-  spriteArray[entityID].size = 
-          originalSize[entityID] * scaleTexture[entityID] * scaleFrame[scaleIndex];
-
   if(anglePropertyFounded == false){
-    angleArray[entityID] = Vec2(0,0);
+    angleArray.insert(entityID, Vec2(0.0f,0.0f));
   }
 
   return 0;
 }
 
-void AnimationData::setAnimationState(const int entityID,
-                                      enumAnimationState animationState, enumSpriteLayer layer) {
-  activeAnimation(entityID, animationStateVector[animationState].firstFrame,
-                  animationStateVector[animationState].lastFrame, layer);
-}
 
 void readTag(char* line, std::string& string, int& indexText) {
   // printf("start\n");
@@ -433,8 +415,7 @@ void readTag(char* line, std::string& string, int& indexText) {
   // printf("val: %s\n",string.c_str());
 }
 
-void readInfo(FILE* MyReadFile, char* textLine, std::string& insideArrow,
-              bool& useAnim, int& animID, int& indexText) {
+void readInfo(FILE* MyReadFile, char* textLine, std::string& insideArrow, int& animID, int& indexText) {
   bool textureFounded = false;
   bool finish = false;
 
@@ -500,7 +481,6 @@ void readInfo(FILE* MyReadFile, char* textLine, std::string& insideArrow,
         // //        texture->getHeight());
       }
       textureFounded = false;
-      useAnim = true;
     } else if (insideArrow == "x") {  // es la suma del x layer y el x del
                                       // simbolo(?) igual con y
       readTag(textLine, insideArrow, indexText);
@@ -631,6 +611,13 @@ void readInfo(FILE* MyReadFile, char* textLine, std::string& insideArrow,
     }
   }
 }
+std::vector<LayerData> animsInFlash;
+
+int insertAnimName(int animID, char* name){
+  std::vector<char*>& names = animNames[animID];
+  names.push_back(name);
+  return names.size()-1;
+}
 
 void readReanimFiles(int nameID, std::string file){
   std::string myText;
@@ -646,10 +633,13 @@ void readReanimFiles(int nameID, std::string file){
 
   int intValue;
   int animID = -1;
-  bool useAnim = true;
   int indexText = 0;
   char text [512];
 
+  //Layers in one animation
+
+  std::vector<char*>& names = animNames[nameID];
+  std::vector<int>& layers = m_animID[nameID];
   while (fgets (text , 512 , MyReadFile) != NULL) {
     indexText = 0;
     readTag(text, insideArrow, indexText);
@@ -661,25 +651,67 @@ void readReanimFiles(int nameID, std::string file){
 
     } else if (insideArrow == "name") {
       readTag(text, insideArrow, indexText);
-      // std::cout << "Name: " << insideArrow << std::endl;
-      if (useAnim == true) {
-        m_animID[nameID].push_back(maxAnimID);
-        animID = maxAnimID;
-        animationDataArray[animID] = AnimationData();
-        maxAnimID++;
-        useAnim = false;
-      }else{
-        animationDataArray[animID].property.clear();
-      }
-      // printf("inside arrow: %s\n",insideArrow.c_str());
+      // printf("Name: %s\n",insideArrow.c_str());
+      layers.push_back(maxAnimID);
+      animID = maxAnimID;
+      maxAnimID++;
+      animationDataArray[animID] = AnimationData();
+
       int size = insideArrow.size()+1;
       char* name = (char*) malloc(size*sizeof(char));
       strcpy(name, insideArrow.c_str());
-      animationDataArray[animID].name = name;
-      // std::cout << "animID: " << animID << std::endl;
-      readInfo(MyReadFile, text, insideArrow, useAnim, animID, indexText);
+
+      names.push_back(name);
+      animationDataArray[animID].nameID = names.size()-1;
+
+      // printf("animID: %d\n",animID);
+      readInfo(MyReadFile, text, insideArrow, animID, indexText);
+      
+      // printf("inside arrow: %s\n",insideArrow.c_str());
+      if(strncmp(name, "anim_",5) == 0 ){
+        LayerData fd;
+        fd.animID = animID;
+        fd.nameID = animationDataArray[animID].nameID;
+        AnimationData anim2 = animationDataArray[animID];
+
+        // printf("maxframe: %d\n",animationDataArray[animID].maxFrame);
+        // printf("property size: %d\n", anim2.property.size());
+        
+        for(size_t i=0; i<anim2.property.size();i++){
+          for(size_t j=0; j<anim2.property[i].size();j++){
+            if(anim2.property[i][j].type == EnumAnimationProperty::ANIM_DRAW){
+              if(drawFrame[anim2.property[i][j].dataIndex]==0){
+                fd.startFrame = i;
+              }else if(drawFrame[anim2.property[i][j].dataIndex] == -1){
+                fd.endFrame = i-1;
+              }
+              // printf("frame %d: %d\n",i,drawFrame[anim2.property[i][j].dataIndex]);              
+            }
+          }
+        }
+        if(fd.endFrame < fd.startFrame){
+          fd.endFrame = animationDataArray[animID].maxFrame;
+        }
+        
+        animsInFlash.push_back(fd);
+        // printf("start, end:%d,%d\n",fd.startFrame,fd.endFrame);
+      }
     }
   }
+  
+  // printf("animsinflash: %d\n",animsInFlash.size());
+
+  // for(size_t k=0; k< animsInFlash.size();k++){
+  //   printf("anim %d: animID: %d, nameID: %d, SF: %d, EF: %d\n",k,animsInFlash[k].animID,animsInFlash[k].nameID,animsInFlash[k].startFrame,animsInFlash[k].endFrame);
+  // }
+
+  // printf("names\n");
+
+  // std::vector<char*>& names = animNames[nameID];
+  // for(size_t k=0; k< names.size();k++){
+  //   printf("name[%d]: %s\n",k,names[k]);
+  // } 
+
   // Close the file
   fclose(MyReadFile);
 }
@@ -688,12 +720,13 @@ void loadAnimation(const AnimIndex::Animation animNameID) {
   readReanimFiles(
       animNameID,
       Tyra::FileUtils::fromCwd("reanim/" + animString[animNameID] + ".reanim"));
+  
+  SetAnimationNamesID(animNameID);
 }
 void SetOneSpriteAnimationToEntity(std::vector<int>& ids, int& father, AnimIndex::Animation anim, Tyra::Vec2 size, int frame, enumSpriteLayer layer){
   size_t animSize = m_animID[anim].size() + ids.size();
   int entityID = -1;
-  int animID;
-  bool hasRotation;                                  
+  int animID;                               
   unsigned int dataSize;
   bool drawPropertyFounded = false;
   bool scalePropertyFounded = false;
@@ -707,37 +740,12 @@ void SetOneSpriteAnimationToEntity(std::vector<int>& ids, int& father, AnimIndex
   for (size_t i = ids.size(); i < animSize; i++) {
     ids.push_back(Entities::newID());
     entityID = ids[i];
-    printf("entityID: %d\n",entityID);
+    // printf("entityID: %d\n",entityID);
     animID = m_animID[anim][i];
 
     newFatherID(&father, &ids[i]);
     scaleTexture[entityID] = size;
     
-    // hasRotation = false;
-
-    // for(unsigned int j=1;j<=animationDataArray[animID].maxFrame;j++){
-    //   std::vector<AnimationProperty>& animProp = animationDataArray[animID].property[j];
-    //   dataSize = animProp.size();
-    //   for(unsigned int k=0;k<dataSize;k++){
-    //     // printf("test animID:%d i:%d j:%d type:%d\n",animID,i,j,animProp[j].type);
-    //     if(animProp[k].type == ANIM_ROTATION){
-    //       j=animationDataArray[animID].maxFrame;
-    //       hasRotation = true;
-    //       break;
-    //     }
-    //   }
-    // }
-
-    // if(hasRotation == true){
-      createSpriteRotate(entityID, Tyra::MODE_STRETCH, Vec2(0, 0),
-                          Vec2(128 / 1.6f, 128 / 1.6f), Vec2(0.0f, 0.0f), layer);
-    // }else {
-    //   createSprite(entityID, Tyra::MODE_STRETCH, Vec2(0, 0),
-    //               Vec2(128 / 1.6f, 128 / 1.6f));
-    // }
-    
-    texPosArray.insert(entityID, Tyra::Vec2());
-
     drawPropertyFounded = false;
     scalePropertyFounded = false;
     posPropertyFounded = false;
@@ -747,8 +755,34 @@ void SetOneSpriteAnimationToEntity(std::vector<int>& ids, int& father, AnimIndex
     scaleIndex = -1;
     textureIndex = -1;
     posIndex = -1;
-  
+
     int counter = frame;
+    while ((texturePropertyFounded == false) && counter > 0){
+      std::vector<AnimationProperty>& animProp = animationDataArray[animID].property[counter];
+      dataSize = animProp.size();
+      // printf("start entity: %d, Frame: %d\n",entityID,counter);
+      for(unsigned int j=0; j<dataSize;j++){
+         if(animProp[j].type == ANIM_TEXTURE && texturePropertyFounded == false){
+          texturePropertyFounded = true;
+          textureIndex = animProp[j].dataIndex;
+          createSpriteRotate(entityID, Tyra::MODE_STRETCH, Vec2(0, 0),
+                                Vec2(128 / 1.6f, 128 / 1.6f), Vec2(0.0f, 0.0f), layer);
+          // printf("sprite id: %d\n", spriteArray[entityID].id);
+        }
+      }
+      
+      counter--;
+    }
+    if(texturePropertyFounded == false){
+      posArray.insert(entityID,Tyra::Vec2(0,0));
+      finalPosArray.insert(entityID,Tyra::Vec2(0,0));
+      angleArray.insert(entityID,Tyra::Vec2(0,0));
+    }
+    texturePropertyFounded = false;
+    
+    texPosArray.insert(entityID, Tyra::Vec2());
+  
+    counter = frame;
     while ((texturePropertyFounded == false || posPropertyFounded == false || anglePropertyFounded == false) && counter > 0){
       std::vector<AnimationProperty>& animProp = animationDataArray[animID].property[counter];
       dataSize = animProp.size();
@@ -768,34 +802,191 @@ void SetOneSpriteAnimationToEntity(std::vector<int>& ids, int& father, AnimIndex
           angleArray[entityID] = angleFrame[animProp[j].dataIndex];
         }else if(animProp[j].type == ANIM_ALPHA && alphaPropertyFounded == false){
           alphaPropertyFounded = true;
-          spriteArray[entityID].color.a = alphaFrame[animProp[j].dataIndex];
+          if(spriteArray.count(entityID) == 1){
+            spriteArray[entityID].color.a = alphaFrame[animProp[j].dataIndex];
+          }
         }else if (animProp[j].type == ANIM_DRAW && drawPropertyFounded == false){
           drawPropertyFounded = true;
           // printf("draw: %d\n",drawFrame[animProp[j].dataIndex]);
           setSprite(entityID,drawFrame[animProp[j].dataIndex], layer);
         }
       }
+
+      counter--;
+    }        
+    
+    if(spriteArray.count(entityID) == 1){
+      texPosArray[entityID] = positionFrame[posIndex] * scaleTexture[entityID]; 
+
+      const int oldTextureID = spriteArray[entityID].textureID;
+      Tyra::Texture* oldTexture = texRepo->getByTextureId(oldTextureID);
+      Tyra::Texture* newTexture = texRepo->getByTextureId(textureFrame[textureIndex]);
+
+      if (oldTexture != newTexture) {
+        // printf("texture id: %d\n",newTexture->id);
+        // printf("linking sprite id\n");
+        // Link new Texture to the sprite entitie
+        spriteArray[entityID].textureID = newTexture->id;
+        originalSize[entityID] =
+            Vec2(newTexture->getWidth(), newTexture->getHeight());
+
+      }
+
+      spriteArray[entityID].size = 
+              originalSize[entityID] * scaleTexture[entityID] * scaleFrame[scaleIndex];
+    }
+  }
+}
+
+void SetOneSpriteAnimationToEntity(std::vector<int>& ids, AnimIndex::Animation anim, Tyra::Vec2 size, int frame, enumSpriteLayer layer){
+  size_t animSize = m_animID[anim].size() + ids.size();
+  int entityID = -1;
+  int animID;                               
+  unsigned int dataSize;
+  bool drawPropertyFounded = false;
+  bool scalePropertyFounded = false;
+  bool posPropertyFounded = false;
+  bool alphaPropertyFounded = false;
+  bool texturePropertyFounded = false;
+  bool anglePropertyFounded = false;
+  int scaleIndex = -1;
+  int textureIndex = -1;
+  int posIndex = -1;
+  for (size_t i = ids.size(); i < animSize; i++) {
+    ids.push_back(Entities::newID());
+    entityID = ids[i];
+    // printf("entityID: %d\n",entityID);
+    animID = m_animID[anim][i];
+
+    scaleTexture[entityID] = size;
+    
+    drawPropertyFounded = false;
+    scalePropertyFounded = false;
+    posPropertyFounded = false;
+    alphaPropertyFounded = false;
+    texturePropertyFounded = false;
+    anglePropertyFounded = false;
+    scaleIndex = -1;
+    textureIndex = -1;
+    posIndex = -1;
+
+    int counter = frame;
+    while ((texturePropertyFounded == false) && counter > 0){
+      std::vector<AnimationProperty>& animProp = animationDataArray[animID].property[counter];
+      dataSize = animProp.size();
+      // printf("start entity: %d, Frame: %d\n",entityID,counter);
+      for(unsigned int j=0; j<dataSize;j++){
+         if(animProp[j].type == ANIM_TEXTURE && texturePropertyFounded == false){
+          texturePropertyFounded = true;
+          textureIndex = animProp[j].dataIndex;
+          createSpriteRotate(entityID, Tyra::MODE_STRETCH, Vec2(0, 0),
+                                Vec2(128 / 1.6f, 128 / 1.6f), Vec2(0.0f, 0.0f), layer);
+          // printf("sprite id: %d\n", spriteArray[entityID].id);
+        }
+      }
       
       counter--;
-    }                             
-    texPosArray[entityID] = positionFrame[posIndex] * scaleTexture[entityID]; 
-
-    const int oldTextureID = spriteArray[entityID].textureID;
-    Tyra::Texture* oldTexture = texRepo->getByTextureId(oldTextureID);
-    Tyra::Texture* newTexture = texRepo->getByTextureId(textureFrame[textureIndex]);
-    
-    if (oldTexture != newTexture) {
-      // printf("texture id: %d\n",newTexture->id);
-      // printf("linking sprite id\n");
-      // Link new Texture to the sprite entitie
-      spriteArray[entityID].textureID = newTexture->id;
-      originalSize[entityID] =
-          Vec2(newTexture->getWidth(), newTexture->getHeight());
-
     }
+    if(texturePropertyFounded == false){
+      posArray.insert(entityID,Tyra::Vec2(0,0));
+      finalPosArray.insert(entityID,Tyra::Vec2(0,0));
+      angleArray.insert(entityID,Tyra::Vec2(0,0));
+    }
+    texturePropertyFounded = false;
+    
+    texPosArray.insert(entityID, Tyra::Vec2());
+  
+    counter = frame;
+    while ((texturePropertyFounded == false || posPropertyFounded == false || anglePropertyFounded == false) && counter > 0){
+      std::vector<AnimationProperty>& animProp = animationDataArray[animID].property[counter];
+      dataSize = animProp.size();
+      // printf("start entity: %d, Frame: %d\n",entityID,counter);
+      for(unsigned int j=0; j<dataSize;j++){
+        if(animProp[j].type == ANIM_POSITION && posPropertyFounded == false){
+          posPropertyFounded = true;
+          posIndex = animProp[j].dataIndex;
+        }else if(animProp[j].type == ANIM_TEXTURE && texturePropertyFounded == false){
+          texturePropertyFounded = true;
+          textureIndex = animProp[j].dataIndex;
+        }else if(animProp[j].type == ANIM_SCALE && scalePropertyFounded == false){
+          scalePropertyFounded = true;
+          scaleIndex = animProp[j].dataIndex;
+        }else if(animProp[j].type == ANIM_ROTATION && anglePropertyFounded == false){
+          anglePropertyFounded = true;
+          angleArray[entityID] = angleFrame[animProp[j].dataIndex];
+        }else if(animProp[j].type == ANIM_ALPHA && alphaPropertyFounded == false){
+          alphaPropertyFounded = true;
+          if(spriteArray.count(entityID) == 1){
+            spriteArray[entityID].color.a = alphaFrame[animProp[j].dataIndex];
+          }
+        }else if (animProp[j].type == ANIM_DRAW && drawPropertyFounded == false){
+          drawPropertyFounded = true;
+          // printf("draw: %d\n",drawFrame[animProp[j].dataIndex]);
+          setSprite(entityID,drawFrame[animProp[j].dataIndex], layer);
+        }
+      }
 
-    spriteArray[entityID].size = 
-            originalSize[entityID] * scaleTexture[entityID] * scaleFrame[scaleIndex];
+      counter--;
+    }        
+    
+    if(spriteArray.count(entityID) == 1){
+      texPosArray[entityID] = positionFrame[posIndex] * scaleTexture[entityID]; 
+
+      const int oldTextureID = spriteArray[entityID].textureID;
+      Tyra::Texture* oldTexture = texRepo->getByTextureId(oldTextureID);
+      Tyra::Texture* newTexture = texRepo->getByTextureId(textureFrame[textureIndex]);
+
+      if (oldTexture != newTexture) {
+        // printf("texture id: %d\n",newTexture->id);
+        // printf("linking sprite id\n");
+        // Link new Texture to the sprite entitie
+        spriteArray[entityID].textureID = newTexture->id;
+        originalSize[entityID] =
+            Vec2(newTexture->getWidth(), newTexture->getHeight());
+
+      }
+
+      spriteArray[entityID].size = 
+              originalSize[entityID] * scaleTexture[entityID] * scaleFrame[scaleIndex];
+    }
+  }
+}
+
+unsigned int GetAnimationNameID(AnimIndex::Animation anim, const char* layer){
+  std::vector<char*>&names = animNames[anim];
+  size_t size = names.size();
+  for(size_t i=0; i < size;i++){
+    if(strcmp(layer, names[i]) == 0){
+      return i;
+    }
+  }
+  return size;
+}
+
+void SetAnimationToEntity(std::vector<int>& ids, int& father, AnimIndex::Animation anim, Tyra::Vec2 size, const char* animFlash, enumSpriteLayer layer){
+  size_t animSize = m_animID[anim].size();
+  int entityID = -1;
+  int animID;
+  
+  LayerData fd;
+  unsigned int nameID = GetAnimationNameID(anim,animFlash);
+  for(size_t j=0; j < animsInFlash.size();j++){
+    if(animsInFlash[j].nameID == nameID){
+      fd = animsInFlash[j];
+      break;
+    }
+  }
+
+  std::vector<int>& animsID = m_animID[anim];
+  for (size_t i = 0; i < animSize; i++) {
+    entityID = Entities::newID();
+    
+    ids.push_back(entityID);
+    animID = animsID[i];
+
+    // printf("entity ID: %d\n",entityID);
+    newFatherID(&father, &entityID);
+    animationDataArray[animID].loadAnimation(entityID, animID, size, fd.startFrame, fd.endFrame, layer);
   }
 }
 
@@ -814,22 +1005,6 @@ void SetAnimationToEntity(std::vector<int>& ids, int& father, AnimIndex::Animati
   }
 }
 
-void SetAnimationToEntity(std::vector<int>& ids, int& father, AnimIndex::Animation anim, Tyra::Vec2 size, enumAnimationState animState, enumSpriteLayer layer){
-  size_t animSize = m_animID[anim].size();
-  int entityID = -1;
-  int animID;
-  for (size_t i = 0; i < animSize; i++) {
-    ids.push_back(Entities::newID());
-
-    entityID = ids[i];
-    animID = m_animID[anim][i];
-
-    newFatherID(&father, &ids[i]);
-    animationDataArray[animID].loadAnimation(entityID, animID, size, animationStateVector[animState].firstFrame, animationStateVector[animState].lastFrame, layer);
-
-  }
-}
-
 void SetAnimationToEntity(std::vector<int>& ids, int& father, AnimIndex::Animation anim, Tyra::Vec2 size, int firstFrame, enumSpriteLayer layer){
   size_t animSize = m_animID[anim].size();
   int entityID = -1;
@@ -845,7 +1020,7 @@ void SetAnimationToEntity(std::vector<int>& ids, int& father, AnimIndex::Animati
   }
 }
 
-void ChangeAnimationEntity(std::vector<int>& ids, AnimIndex::Animation anim, enumAnimationState animState, enumSpriteLayer layer){
+void ChangeAnimationEntity(std::vector<int>& ids, AnimIndex::Animation anim, const char* animState, enumSpriteLayer layer){
   unsigned int frameIndex = frameCounterArray.size();
   for(size_t i=0;i<frameCounterArray.size();i++){
     if(frameCounterArray[i].entityID == ids[0]){
@@ -858,18 +1033,27 @@ void ChangeAnimationEntity(std::vector<int>& ids, AnimIndex::Animation anim, enu
     return;
   }
 
+  LayerData fd;
+  unsigned int nameID = GetAnimationNameID(anim,animState);
+  for(size_t j=0; j < animsInFlash.size();j++){
+    if(animsInFlash[j].nameID == nameID){
+      fd = animsInFlash[j];
+      break;
+    }
+  }
+
   size_t size = frameIndex+ids.size();
   for(size_t i=frameIndex; i < size; i++){
-    frameCounterArray[i].currentFrame = animationStateVector[animState].firstFrame;
+    frameCounterArray[i].currentFrame = fd.startFrame;
     frameCounterArray[i].firstFrame = frameCounterArray[i].currentFrame;
-    frameCounterArray[i].lastFrame = animationStateVector[animState].lastFrame;
+    frameCounterArray[i].lastFrame = fd.endFrame;
   }
   
   std::vector<int>& anim_2 = m_animID[anim];
   for(size_t i=0; i< anim_2.size();i++){
-    animationDataArray[anim_2[i]].activeAnimation(ids[i],animationStateVector[animState].firstFrame,animationStateVector[animState].lastFrame, layer);
+    animationDataArray[anim_2[i]].activeAnimation(ids[i],fd.startFrame,fd.endFrame, layer);
   }
-  
+
   //TODO: esto debe estar separado para las animaciones de los zombies
   if(anim == AnimIndex::Zombie){
     for(size_t i=0; i< anim_2.size();i++){

@@ -95,9 +95,18 @@ class LawnMoverManager{
   void update();
 };
 
+enum enumCameraState{
+  cameraShowEnemies,
+  cameraDelay,
+  cameraShowHouse
+};
+
 class CameraManager {
+ private:
+  enumCameraState state = cameraShowEnemies;
  public:
   void update();
+  bool intro();
 };
 
 class FontManager {

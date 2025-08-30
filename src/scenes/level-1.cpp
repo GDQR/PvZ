@@ -39,7 +39,6 @@ void Level1::init() {
   loadPlantCost();
   loadAnimString();
   loadPlantRechargeTime();
-  loadAnimationStates();
   loadDebugTextures();
   
   Entity::backgroundIDs.initJPG(background1unsodded,SpriteMode::MODE_STRETCH,-141,0,81,95,TextureScale::Tex128,TextureScale::Tex128);

@@ -8,15 +8,6 @@
 
 enum class enumDraw { draw = 0, noDraw = -1 };
 
-enum enumAnimationState {
-  normalZombieWalk,
-  normalZombieAttack,
-  normalZombieCharred,
-  poleVaulterWalk,
-  explodeCherryBomb,
-  enumMaxAnimationState
-};
-
 struct AnimIndex {
   enum Animation {
     Blover,
@@ -192,13 +183,7 @@ extern std::vector<int> sunLayer;
 extern std::vector<int> zombieLayer;
 extern std::vector<int> playerLayer;
 
-class AnimationState {
- public:
-  AnimationState();
-  AnimationState(const unsigned int firstFrame, const unsigned int lastFrame);
-  unsigned int firstFrame;
-  unsigned int lastFrame;
-};
+
 
 class Animation {
  public:
@@ -208,7 +193,6 @@ class Animation {
   void activeDrawNormalSprites(const int entityID);
   void updateSprites(const int entityID);
   void updateAngle(const int entityID);
-  void setAnimation(enumAnimationState animationState);
   void position(const int entityID);
   int debugAnim(const int entitieID);
 
@@ -240,9 +224,11 @@ class FrameCounter {
   unsigned int lastFrame = 1;
 };
 
-struct FramesData{
+struct LayerData{
   int animID;
-  int frame;
+  unsigned int nameID;
+  int startFrame;
+  int endFrame;
 };
 
 extern std::vector<int> textureFrame;
@@ -278,27 +264,25 @@ class AnimationData {
  public:
   std::unordered_map<unsigned int,std::vector<AnimationProperty>> property;
   unsigned int maxFrame;
-  const char* name;
-  void loadAnimation(const int entityID, const int animID,
-                     const Tyra::Vec2 scaleTextures,
-                     enumAnimationState animationState, enumSpriteLayer layer);
+  int nameID;
   void loadAnimation(const int entityID, const int animID,
                      const Tyra::Vec2 scaleTextures, const int firstFrame,
                      const int lastFrame, enumSpriteLayer layer);
   int activeAnimation(const int entityID, const unsigned int firstFrame,
                       const unsigned int lastFrame, enumSpriteLayer layer);
-  void setAnimationState(const int entityID, enumAnimationState animationState, enumSpriteLayer layer);
 };
 
-extern AnimationState animationStateVector[enumMaxAnimationState];
 extern std::string animString[AnimIndex::enumMax];
 
 void setSprite(const int entityID, const int draw, enumSpriteLayer layer);
 void loadAnimString();
-void loadAnimationStates();
 void loadAnimation(const AnimIndex::Animation animNameID);
+
+unsigned int GetAnimationNameID(AnimIndex::Animation anim, const char* layer);
+void SetAnimationNamesID(AnimIndex::Animation animation);
+void SetOneSpriteAnimationToEntity(std::vector<int>& ids, AnimIndex::Animation anim, Tyra::Vec2 size, int frame, enumSpriteLayer layer);
 void SetOneSpriteAnimationToEntity(std::vector<int>& ids, int& father, AnimIndex::Animation anim, Tyra::Vec2 size, int frame, enumSpriteLayer layer);
+void SetAnimationToEntity(std::vector<int>& ids, int& father, AnimIndex::Animation anim, Tyra::Vec2 size, const char* animFlash, enumSpriteLayer layer);
 void SetAnimationToEntity(std::vector<int>& ids, int& father, AnimIndex::Animation anim, Tyra::Vec2 size, int firstFrame, int lastFrame, enumSpriteLayer layer);
-void SetAnimationToEntity(std::vector<int>& ids, int& father, AnimIndex::Animation anim, Tyra::Vec2 size, enumAnimationState animState, enumSpriteLayer layer);
 void SetAnimationToEntity(std::vector<int>& ids, int& father, AnimIndex::Animation anim, Tyra::Vec2 size, int firstFrame, enumSpriteLayer layer);
-void ChangeAnimationEntity(std::vector<int>& ids, AnimIndex::Animation anim, enumAnimationState animState, enumSpriteLayer layer);
+void ChangeAnimationEntity(std::vector<int>& ids, AnimIndex::Animation anim, const char* animState, enumSpriteLayer layer);
