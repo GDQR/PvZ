@@ -969,6 +969,8 @@ void SetAnimationToEntity(std::vector<int>& ids, int& father, AnimIndex::Animati
   int animID;
   
   LayerData fd;
+  fd.startFrame = 0;
+  fd.endFrame = 0;
   unsigned int nameID = GetAnimationNameID(anim,animFlash);
   for(size_t j=0; j < animsInFlash.size();j++){
     if(animsInFlash[j].nameID == nameID){
@@ -1034,6 +1036,8 @@ void ChangeAnimationEntity(std::vector<int>& ids, AnimIndex::Animation anim, con
   }
 
   LayerData fd;
+  fd.startFrame = 0;
+  fd.endFrame = 0;
   unsigned int nameID = GetAnimationNameID(anim,animState);
   for(size_t j=0; j < animsInFlash.size();j++){
     if(animsInFlash[j].nameID == nameID){

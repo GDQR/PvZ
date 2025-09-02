@@ -549,10 +549,10 @@ void SetAlphaFrom8BppToJPG(Tyra::PngPixel3* jpgData, Tyra::PngPixel4* clutData,
   int v=0;
   for (int i = 0; i < height; i++) {
     for (int j = 0; j < width; j++) {
-      if(i==22 && j == 152){
-        printf("pixel clut pos[%d]: %d\n",v,clutPos[v]);
-        printf("pixel clut[%d]: %d,%d,%d\n",v,clutData[clutPos[v]].r,clutData[clutPos[v]].g,clutData[clutPos[v]].b);
-      }
+      // if(i==22 && j == 152){
+      //   printf("pixel clut pos[%d]: %d\n",v,clutPos[v]);
+      //   printf("pixel clut[%d]: %d,%d,%d\n",v,clutData[clutPos[v]].r,clutData[clutPos[v]].g,clutData[clutPos[v]].b);
+      // }
       
       clutColor= clutData[clutPos[v]].r;
       // if(clutData[clutPos[v]].g>clutColor){
@@ -620,6 +620,9 @@ Tyra::TextureBuilderData* PngLoaderUnlimited::load(const char* fullPath) {
   result->width = width;
   result->height = height;
   result->name = filename;
+
+  
+  printf("png width, height: %d,%d\n",width, height);
 
   auto updatedColorType = png_get_color_type(pngPtr, infoPtr);
   printf("color: %d\n",updatedColorType);
@@ -1094,7 +1097,8 @@ void Shader_SetAlphaToImage(const int textureAlphaID, const int textureImageID){
   TYRA_ASSERT(image!=nullptr,"Image Texture is NUll");
   
   image->core->components = TEXTURE_COMPONENTS_RGBA;
-
+  // alpha->core->print();
+  // image->core->print();
   Tyra::PngPixel4* clutData = (Tyra::PngPixel4*)alpha->clut->data;
   unsigned char* pixelData = alpha->core->data;
 

@@ -222,11 +222,13 @@ void createCard(const Plant_State_enum typePlant, const bool isVersusMode) {
 void Player::init(Tyra::Vec2 cursorPos,Tyra::Vec2 deckPos){
   printf("init Player\n");
   static int countPlayer = 0;
-  id = cursor.size();
-  printf("playerID: %d\n",id);
+  id = Entities::newID();
+  cursorID = cursor.size();
+  // printf("playerID: %d\n",id);
   // controllerID = countPlayer;
   Controller newController;
-  newController.playerID = countPlayer;
+  newController.playerID = id;
+  newController.cursorID = cursorID;
   controller.push_back(newController);
   countPlayer++;
   initCursor(cursorPos);
@@ -235,9 +237,10 @@ void Player::init(Tyra::Vec2 cursorPos,Tyra::Vec2 deckPos){
 }
 
 void Player::initCursor(Tyra::Vec2 cursorPos){
-  printf("init Cursor\n");
+  // printf("init Cursor\n");
   Cursor newCursor;
   newCursor.id = Entities::newID();
+  // printf("cursorID: %d\n",newCursor.id);
   createSprite(newCursor.id, Tyra::MODE_STRETCH, cursorPos, Vec2(56, 48), enumSpriteLayer::player_layer);
   createTexture(newCursor.id, "cursor6.png");
   createBoxCollider(newCursor.id, BoxColliderEnum::BOXCOLLIDER_PLAYER, BoxCollider(newCursor.id,cursorPos.x + 28 / 2, cursorPos.y + 24 / 2, 24, 24));
@@ -250,7 +253,7 @@ void Player::initDeckCard(Tyra::Vec2 pos){
   if(cards.size() == 0){
     TYRA_TRAP("CARDS DOESN'T EXIST");
   }
-  printf("init Deck\n");
+  // printf("init Deck\n");
 
   DeckCursor newDeckCursor;
 
@@ -269,13 +272,14 @@ void Player::initPlant(){
   // printf("init plant\n");
   
   std::vector<BoxCollider>& vec = boxColliderArray[BOXCOLLIDER_MAP];
-  int mapID = map[cursor[id].tileX][cursor[id].tileY];
+  // printf("cursor index: %d\n",cursorID);
+  int mapID = map[cursor[cursorID].tileX][cursor[cursorID].tileY];
   Tyra::Vec2 pos = Vec2(vec[boxColliderArrayID[mapID]].x,vec[boxColliderArrayID[mapID]].y);
   
   posArray.insert(id, pos);
   fatherIDArray.insert(id, FatherID());
 
-  size_t deckCursorPos = deckCursor[id].pos;
+  size_t deckCursorPos = deckCursor[cursorID].pos;
   size_t size = cardsAnimations.size();
   for(size_t j=0; j < size; j++){
     PlantAnimation& anim = cardsAnimations[j];
@@ -426,6 +430,8 @@ void Sun::erase(const int cursorID) {
       // deleteDebugSprite(id[i]);
       // deleteDebugSpritePivot(id[i]);
       deleteSprite(id[size]);
+      deletePosArray(id[size]);
+      deleteFinalPosArray(id[size]);
       deleteTexPosArray(id[size]);
       deleteFatherIDChild(father, &id[size]);
       for(size_t j=0; j<frameCounterArray.size();j++){
@@ -511,13 +517,18 @@ int zombieFlagMeter;
 }  // namespace Entity
 
 unsigned int Entities::counter = 1;
-std::vector<unsigned int> Entities::aliveEntities;
 std::vector<unsigned int> Entities::deadEntities;
+std::vector<IndexComponent> entityComponents; // position [0] is not used
 
 unsigned int Entities::newID() {
   // printf("deadEntities.size(): %d\n",deadEntities.size());
   if (deadEntities.size() == 0) {
     // printf("net entity: %d\n",counter);
+    if(counter >= entityComponents.size()){
+      IndexComponent components;
+      entityComponents.push_back(components);
+      // printf("entityComponents size: %d\n",counter);
+    }
     return counter++;
   }
   unsigned int oldID = deadEntities.front();
@@ -537,4 +548,30 @@ void Entities::deleteID(int& id) {
   deadEntities.push_back(newID);
   // printf("entity Deleted: %d\n",newID);
   id = 0;
+}
+
+void setEntityComponent(const int id, const enumComponents component){
+  entityComponents[id].component[component] = true;
+}
+
+void deleteEntityComponent(const int id, const enumComponents component){
+  entityComponents[id].component[component] = false;
+}
+
+bool hasEntityComponent(const int id, const enumComponents component){
+  return entityComponents[id].component[component];
+}
+
+void deleteEntity(const int id){
+  // printf("deleting entity: %d\n",id);
+  if(fatherIDArray.count(id) == true){
+    for(size_t i=0; i< fatherIDArray.second[id].id.size();i++){
+      deleteFatherIDChild(id, &fatherIDArray.second[id].id[i]);
+    }
+  } 
+  deleteFatherID(id);
+  deleteSprite(id);
+  deletePosArray(id);
+  deleteFinalPosArray(id);
+  deleteTexPosArray(id);
 }

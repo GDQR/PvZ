@@ -8,7 +8,6 @@
 int projectilesCreated = 0;
 int explosionsCreated = 0;
 
-
 // int ZombiesManager::collision() {
 //   std::vector<Zombie>::iterator it;
 

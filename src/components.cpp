@@ -113,21 +113,21 @@ void Controller::update() {
   if (pad->getClicked().Cross) {
     // create plant
     // printf("press cross\n");
-    plantsManager.create(playerID);
+    plantsManager.create(cursorID);
   }
   if (pad->getClicked().DpadLeft) {
-    deckCursor[playerID].moveLeft(playerID);
+    deckCursor[cursorID].moveLeft(playerID);
   }
   if (pad->getClicked().DpadRight) {
-    deckCursor[playerID].moveRight(playerID);
+    deckCursor[cursorID].moveRight(playerID);
   }
 
   if (debugMode == false) {
-    cursor[playerID].move();
+    cursor[cursorID].move();
     
     for(size_t i=0; i < boxColliderPlayer.size();i++){
-      if(boxColliderPlayer[i].id ==cursor[playerID].id){
-        boxColliderPlayer[i].move(cursor[playerID].id, 28 / 2,
+      if(boxColliderPlayer[i].id ==cursor[cursorID].id){
+        boxColliderPlayer[i].move(cursor[cursorID].id, 28 / 2,
                                                24 / 2);
       }
     }

@@ -90,7 +90,7 @@ void FrameManager::update(){
           // }
           texPosArray[frameArray[i].entityID] = positionFrame[animProp[j].dataIndex] * scaleTexture[frameArray[i].entityID];
         }else if(animProp[j].type == ANIM_TEXTURE){
-          if(spriteArray.count(frameArray[i].entityID) == 1){
+          if(hasEntityComponent(frameArray[i].entityID,enumComponents::sprite) == true){
             const int oldTextureID = spriteArray[frameArray[i].entityID].textureID;
             Tyra::Texture* oldTexture = texRepo->getByTextureId(oldTextureID);
             Tyra::Texture* newTexture = texRepo->getByTextureId(textureFrame[animProp[j].dataIndex]);
@@ -104,7 +104,7 @@ void FrameManager::update(){
             }
           }
         }else if(animProp[j].type == ANIM_SCALE){
-          if(spriteArray.count(frameArray[i].entityID) == 1){
+          if(hasEntityComponent(frameArray[i].entityID,enumComponents::sprite) == true){
             spriteArray[frameArray[i].entityID].size = 
               originalSize[frameArray[i].entityID] * 
               scaleTexture.at(frameArray[i].entityID) * 
@@ -117,7 +117,7 @@ void FrameManager::update(){
           // }
           angleArray[frameArray[i].entityID] = angleFrame[animProp[j].dataIndex];
         } else if(animProp[j].type == ANIM_ALPHA){
-          if(spriteArray.count(frameArray[i].entityID) == 1){
+          if(hasEntityComponent(frameArray[i].entityID,enumComponents::sprite) == true){
             spriteArray[frameArray[i].entityID].color.a = alphaFrame[animProp[j].dataIndex];
           }
         } else if (animProp[j].type == ANIM_DRAW){
@@ -312,10 +312,15 @@ void RendererSprites::updateRender() {
 }
 
 void RendererSprites::update() {
+  // printf("render 1\n");
   resetFinalPos();
+  // printf("render 2\n");
   updateChildPos();
+  // printf("render 3\n");
   updateTexture();
+  // printf("render 4\n");
   cameraManager.update();
+  // printf("render 5\n");
   updateRender();
 }
 
@@ -372,7 +377,7 @@ void RewardManager::update() {
   if (rewardExist == true) {
     BoxCollider boxPlayer;
     for(size_t i=0; i < boxColliderPlayer.size();i++){
-      if(boxColliderPlayer[i].id == cursor[Entity::player.id].id){
+      if(boxColliderPlayer[i].id == cursor[Entity::player.cursorID].id){
         boxPlayer = boxColliderPlayer[i];
         break;
       }
@@ -402,18 +407,19 @@ void RewardManager::update() {
 void BoxCollisionManager::mapCollision() {
   BoxCollider boxColPlayer;
   for(size_t i=0;i<boxColliderPlayer.size();i++){
-    if(boxColliderPlayer[i].id == cursor[Entity::player.id].id){
+    if(boxColliderPlayer[i].id == cursor[Entity::player.cursorID].id){
       boxColPlayer = boxColliderPlayer[i];
       break;
     }
   }
+
   std::vector<BoxCollider>& vec = boxColliderArray[BOXCOLLIDER_MAP];
   for (int i = 0; i < 5; i++) {
     for (int j = 0; j < 9; j++) {
       if (boxColPlayer.collision(&vec[boxColliderArrayID[map[i][j]]]) ==
           true) {
-        cursor[Entity::player.id].tileX = i;
-        cursor[Entity::player.id].tileY = j;
+        cursor[Entity::player.cursorID].tileX = i;
+        cursor[Entity::player.cursorID].tileY = j;
         
         Tyra::Vec2 pos = Vec2(vec[boxColliderArrayID[map[i][j]]].x,vec[boxColliderArrayID[map[i][j]]].y);
         posArray[Entity::player.id] = pos;
@@ -423,7 +429,7 @@ void BoxCollisionManager::mapCollision() {
       }
     }
   }
-  // printf("cursor i:%f j:%f\n",cursor[Entity::player.id].cursorTile.x,cursor[Entity::player.id].cursorTile.y);
+  // printf("cursor i:%d j:%d\n",cursor[Entity::player.id].tileX,cursor[Entity::player.id].tileY);
 }
 
 void BoxCollisionManager::projectileZombieCollision() {
