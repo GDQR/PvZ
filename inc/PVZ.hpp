@@ -210,6 +210,8 @@ enum Plant_State_enum {
   Spikerock,
   CobCannon,
   Imitator,
+  WallnutBowlingExplosion,
+  WallnutBowling,
   enumMaxPlants,
   NonePlant
 };
@@ -227,12 +229,11 @@ extern std::vector<PlantAnimation> cardsAnimations;
 
 class Plant {
  public:
-  // std::vector<int> id;
-
   Plant_State_enum type = NonePlant;
   int father;
   int row;
   int column;
+  bool collision = false;
   bool damaged = false;
   void newPlant(Plant_State_enum newType);
   int attack();
@@ -447,6 +448,7 @@ extern std::vector<BoxCollider> boxColliderSun;
 extern std::vector<BoxCollider> boxColliderPlayer;
 extern std::vector<ResponseCollisionProjectile> responseCollisionZombieProjectile;
 extern std::vector<ResponseCollisionZombiePlant> responseCollisionZombiePlant;
+extern std::vector<ResponseCollisionZombiePlant> stopResponseCollisionZombiePlant;
 extern std::vector<ResponseCollisionSunCursor> responseCollisionSunCursor;
 extern std::unordered_map<int, TriggerBoxCollider> resultBoxCollider;
 extern std::unordered_map<int, float> speedArray;
@@ -492,6 +494,7 @@ void createSpriteRotate(int id, Tyra::SpriteMode mode, Tyra::Vec2 position,
 void createBoxCollider(int id, BoxColliderEnum type, BoxCollider collider);
 void createLawnMower(const Tyra::Vec2 pos);
 void createCard(Plant_State_enum typePlant, bool isVersusMode);
+void createCardMinigame(const Plant_State_enum typePlant);
 void createPlantCard(int& plantID,AnimIndex::Animation plantAnim, const Tyra::Vec2 pos, const Tyra::Vec2 size, const Tyra::Color color, const int frame);
 void createReward(Tyra::Vec2 pos);
 void eraseReward();

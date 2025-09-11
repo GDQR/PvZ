@@ -166,7 +166,7 @@ void createCard(const Plant_State_enum typePlant, const bool isVersusMode) {
     createPlantCard(card.plantID, AnimIndex::SunFlower, Vec2(pos.x, pos.y+5), Vec2(0.6f, 0.6f),8);
   } else if (typePlant == Plant_State_enum::CherryBomb) {
     createPlantCard(card.plantID, AnimIndex::CherryBomb, Vec2(pos.x, pos.y+5), Vec2(0.6f, 0.6f),1);
-  } else if (typePlant == Plant_State_enum::Wallnut) {
+  } else if (typePlant == Plant_State_enum::Wallnut || typePlant == Plant_State_enum::WallnutBowling || typePlant == Plant_State_enum::WallnutBowlingExplosion) {
     createPlantCard(card.plantID, AnimIndex::Wallnut, Vec2(pos.x, pos.y+5), Vec2(0.6f, 0.6f),1);
   } else if (typePlant == Plant_State_enum::PotatoMine) {
     createPlantCard(card.plantID, AnimIndex::PotatoMine, Vec2(pos.x, pos.y+5), Vec2(0.6f, 0.6f),31);

@@ -13,6 +13,7 @@ extern const char* IMG_SeedPacketSilhouette;
 extern const char* IMG_seedBank;
 extern const char* IMG_FlagMeter;
 extern const char* IMG_FlagMeterParts;
+extern const char* IMG_ConveyorBelt;
 extern const char* IMG_ConveyorBelt_backdrop;
 extern const char* IMG_Wallnut_cracked1;
 extern const char* IMG_Wallnut_cracked2;

@@ -406,8 +406,9 @@ void RewardManager::update() {
 
 void BoxCollisionManager::mapCollision() {
   BoxCollider boxColPlayer;
+  Cursor& cursorPlayer = cursor[Entity::player.cursorID];
   for(size_t i=0;i<boxColliderPlayer.size();i++){
-    if(boxColliderPlayer[i].id == cursor[Entity::player.cursorID].id){
+    if(boxColliderPlayer[i].id == cursorPlayer.id){
       boxColPlayer = boxColliderPlayer[i];
       break;
     }
@@ -418,8 +419,8 @@ void BoxCollisionManager::mapCollision() {
     for (int j = 0; j < 9; j++) {
       if (boxColPlayer.collision(&vec[boxColliderArrayID[map[i][j]]]) ==
           true) {
-        cursor[Entity::player.cursorID].tileX = i;
-        cursor[Entity::player.cursorID].tileY = j;
+        cursorPlayer.tileX = i;
+        cursorPlayer.tileY = j;
         
         Tyra::Vec2 pos = Vec2(vec[boxColliderArrayID[map[i][j]]].x,vec[boxColliderArrayID[map[i][j]]].y);
         posArray[Entity::player.id] = pos;
@@ -563,9 +564,29 @@ void BoxCollisionManager::lawnCollision(){
 }
 
 void BoxCollisionManager::plantZombieCollision(){
+  stopResponseCollisionZombiePlant.clear();
+  ResponseCollisionZombiePlant res;
+
+  for(size_t i=0; i < responseCollisionZombiePlant.size();i++){
+    for(BoxCollider &it: boxColliderZombie){
+      if(it.id == responseCollisionZombiePlant[i].zombieID){
+        for(BoxCollider &it2: boxColliderPlant){
+          if(it2.id == responseCollisionZombiePlant[i].plantID){
+            if(it.collision(&it2) == false){
+              res.plantID = it2.id;
+              res.zombieID = it.id;
+              stopResponseCollisionZombiePlant.push_back(res);
+              break;
+            }
+          }
+        }
+        break;
+      }
+    }
+  }
+
   responseCollisionZombiePlant.clear();
 
-  ResponseCollisionZombiePlant res;
   for(BoxCollider &it: boxColliderZombie){
     for(BoxCollider &it2: boxColliderPlant){
       if(it.collision(&it2) == true){

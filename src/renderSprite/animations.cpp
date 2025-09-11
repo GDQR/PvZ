@@ -611,13 +611,7 @@ void readInfo(FILE* MyReadFile, char* textLine, std::string& insideArrow, int& a
     }
   }
 }
-std::vector<LayerData> animsInFlash;
-
-int insertAnimName(int animID, char* name){
-  std::vector<char*>& names = animNames[animID];
-  names.push_back(name);
-  return names.size()-1;
-}
+std::unordered_map<int, std::vector<LayerData>> animsInFlash;
 
 void readReanimFiles(int nameID, std::string file){
   std::string myText;
@@ -638,6 +632,7 @@ void readReanimFiles(int nameID, std::string file){
 
   //Layers in one animation
 
+  std::vector<LayerData>& frames = animsInFlash[nameID];
   std::vector<char*>& names = animNames[nameID];
   std::vector<int>& layers = m_animID[nameID];
   while (fgets (text , 512 , MyReadFile) != NULL) {
@@ -972,9 +967,10 @@ void SetAnimationToEntity(std::vector<int>& ids, int& father, AnimIndex::Animati
   fd.startFrame = 0;
   fd.endFrame = 0;
   unsigned int nameID = GetAnimationNameID(anim,animFlash);
-  for(size_t j=0; j < animsInFlash.size();j++){
-    if(animsInFlash[j].nameID == nameID){
-      fd = animsInFlash[j];
+  std::vector<LayerData>& frames = animsInFlash[anim];
+  for(size_t j=0; j < frames.size();j++){
+    if(frames[j].nameID == nameID){
+      fd = frames[j];
       break;
     }
   }
@@ -1039,9 +1035,10 @@ void ChangeAnimationEntity(std::vector<int>& ids, AnimIndex::Animation anim, con
   fd.startFrame = 0;
   fd.endFrame = 0;
   unsigned int nameID = GetAnimationNameID(anim,animState);
-  for(size_t j=0; j < animsInFlash.size();j++){
-    if(animsInFlash[j].nameID == nameID){
-      fd = animsInFlash[j];
+  std::vector<LayerData>& frames = animsInFlash[anim];
+  for(size_t j=0; j < frames.size();j++){
+    if(frames[j].nameID == nameID){
+      fd = frames[j];
       break;
     }
   }

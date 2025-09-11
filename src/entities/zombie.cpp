@@ -178,6 +178,18 @@ int Zombie::attackPlant() {
     return 0;
   }
 
+  // Plants that should not be attacked
+
+  for(size_t j=0;j<45;j++){
+    if(plant[j].father == responseCollisionZombiePlant[searchIndex].plantID){
+      if(plant[j].type == WallnutBowling || plant[j].type == WallnutBowlingExplosion){
+        return 0;
+      }
+    }
+  }
+
+  // Plants that should be attacked
+
   for(unsigned int k=0 ; k < zombieAnims.size(); k++){
     // printf("seaching\n");
     if(zombieAnims[k].id == father){
@@ -294,6 +306,7 @@ int Zombie::normalColor() {
 }
 
 int zombiesDefeated = 0;
+//TODO: the last zombie the body is erased without animation
 bool Zombie::erase() {
   // printf("zombie id:%d life: %d\n",father, lifeArray[father]);
   if (lifeArray[father] <= 0) {

@@ -13,6 +13,7 @@ const char* IMG_SeedPacketSilhouette = "IMAGES/SeedPacketSilhouette.PNG";
 const char* IMG_seedBank = "IMAGES/SeedBank.png";
 const char* IMG_FlagMeter = "IMAGES/FlagMeter.png";
 const char* IMG_FlagMeterParts = "IMAGES/FlagMeterParts.png";
+const char* IMG_ConveyorBelt = "IMAGES/ConveyorBelt.png";
 const char* IMG_ConveyorBelt_backdrop = "IMAGES/ConveyorBelt_backdrop.png"; // lo voy a usar para el texto
 const char* IMG_Wallnut_cracked1 = "REANIM/Wallnut_cracked1.png";
 const char* IMG_Wallnut_cracked2 = "REANIM/Wallnut_cracked2.png";

@@ -31,6 +31,7 @@ std::vector<BoxCollider> boxColliderSun;
 std::vector<BoxCollider> boxColliderPlayer;
 std::vector<ResponseCollisionProjectile> responseCollisionZombieProjectile;
 std::vector<ResponseCollisionZombiePlant> responseCollisionZombiePlant;
+std::vector<ResponseCollisionZombiePlant> stopResponseCollisionZombiePlant;
 std::vector<ResponseCollisionSunCursor> responseCollisionSunCursor;
 std::unordered_map<int, TriggerBoxCollider> resultBoxCollider;
 ArrayKey<int, PS2Timer> timerArray(enumComponents::timer);
@@ -123,11 +124,11 @@ void Controller::update() {
   }
 
   if (debugMode == false) {
-    cursor[cursorID].move();
-    
+    Cursor& playerCursor = cursor[cursorID];
+    playerCursor.move();
     for(size_t i=0; i < boxColliderPlayer.size();i++){
-      if(boxColliderPlayer[i].id ==cursor[cursorID].id){
-        boxColliderPlayer[i].move(cursor[cursorID].id, 28 / 2,
+      if(boxColliderPlayer[i].id == playerCursor.id){
+        boxColliderPlayer[i].move(playerCursor.id, 28 / 2,
                                                24 / 2);
       }
     }

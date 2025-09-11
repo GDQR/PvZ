@@ -117,6 +117,29 @@ void createWallnut(const int id, const Tyra::Vec2 pos, AnimIndex::Animation anim
   createDebugBoxCollider(plant[id].father, BoxColliderEnum::BOXCOLLIDER_PLANT, Tyra::MODE_STRETCH);
 }
 
+void createWallnutBowling(const int id, const Tyra::Vec2 pos, AnimIndex::Animation animationIndex) {
+  printf("size: %d\n", m_animID[animationIndex].size());
+
+  int& father = plant[id].father;
+  PlantAnimation anim;
+  anim.id = father;
+  
+  SetAnimationToEntity(anim.entity,father,animationIndex,Tyra::Vec2(0.8f, 0.8f), "_ground", enumSpriteLayer::plants);
+  plantAnims.push_back(anim);
+
+  // Life
+
+  lifeArray.insert(father, 4000);
+
+  damageArray[father] = 700;
+
+  speedArray[father] = 0;
+
+  // HitBox
+  createBoxCollider(father, BoxColliderEnum::BOXCOLLIDER_PLANT, BoxCollider(father, pos.x + 10, pos.y + 20, 28, 38));
+  createDebugBoxCollider(father, BoxColliderEnum::BOXCOLLIDER_PLANT, Tyra::MODE_STRETCH);
+}
+
 void createPotatoMine(const int id, const Tyra::Vec2 pos, AnimIndex::Animation animationIndex) {
   printf("size: %d\n", m_animID[animationIndex].size());
 
@@ -309,7 +332,11 @@ bool createPlant(Plant_State_enum typePlant, const int row, const int column, in
       case PuffShroom:
         createPuffShroom(plantPos, pos, AnimIndex::PuffShroom);
         break;
+      case WallnutBowling:
+        createWallnutBowling(plantPos,pos, AnimIndex::Wallnut);
+        break;
       default:
+        TYRA_TRAP("ERROR CAN'T CREATE PLANT");
         break;
     }
     plantsCreated++;
@@ -431,6 +458,51 @@ int Plant::attack() {
           }
           break;
         }
+      }
+    }
+  } else if (type == WallnutBowling){
+    posArray[father].x++;
+    for(size_t i=0; i < stopResponseCollisionZombiePlant.size();i++){
+      if(stopResponseCollisionZombiePlant[i].plantID == father){
+        collision = false;
+      }
+    }
+
+    if(collision == false){
+      for(size_t i=0; i < responseCollisionZombiePlant.size();i++){
+        if(responseCollisionZombiePlant[i].plantID == father){
+          for(size_t j=0; j < zombie.size();j++){
+            if(zombie[j].boxColliderID == responseCollisionZombiePlant[i].zombieID && collision == false){
+              if(speedArray[father] == 0){
+                speedArray[father] = 2; // TODO: esto empieza con abajo o arriba y se usa el mismo estado para todos
+              }if(speedArray[father] == 1){
+                speedArray[father] = 2;
+              }else if(speedArray[father] == 2){
+                speedArray[father] = 1;
+              }
+              zombie[j].damage(father);
+              if(zombie[j].erase() == true){
+                zombie.erase(zombie.begin()+j);
+              }
+              collision = true;
+              break;
+            }
+          }
+          break;
+        }
+      }
+    }
+    if(speedArray[father] == 1){
+      posArray[father].y++;
+    }else if(speedArray[father] == 2){
+      posArray[father].y--;
+    }
+    
+    for(unsigned int i=0; i<boxColliderPlant.size();i++){
+      if(boxColliderPlant[i].id == father){
+        boxColliderPlant[i].x = posArray[father].x;
+        boxColliderPlant[i].y = posArray[father].y;
+        break;
       }
     }
   } else if (type == PotatoMine) {
@@ -725,6 +797,9 @@ int getPlantRechargeTime(Plant_State_enum typePlant, bool isVersusMode) {
         return plantRechargeTime[fast];
       }
       return plantRechargeTime[verySlow];
+    case WallnutBowling:
+    case WallnutBowlingExplosion:
+      return 0;
     default:
       TYRA_ASSERT(!(true == true), "ERROR: PLANT RECHARGE TIME DON'T FOUNDED");
       break;
