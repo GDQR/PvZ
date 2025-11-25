@@ -6,164 +6,7 @@
 #include <vector>
 
 
-enum class enumDraw { draw = 0, noDraw = -1 };
-
-struct AnimIndex {
-  enum Animation {
-    Blover,
-    Cabbagepult,
-    Cactus,
-    Spikeweed,  // caltrop
-    Cattail,
-    CherryBomb,
-    Chomper,
-    CobCannon,
-    CoffeeBean,
-    Coin_gold,
-    Coin_silver,
-    Kernelpult,  // Cornpult
-    CrazyDave,
-    Credits_AnyHour,
-    Credits_BigBrain,
-    Credits_Bossdance,
-    Credits_brainplate,
-    Credits_CrazyDave,
-    Credits_DiscoLights,
-    Credits_Flower_petals,
-    Credits_Football,
-    Credits_Infantry,
-    Credits_Jackbox,
-    Credits_Main,
-    Credits_Main2,
-    Credits_Main3,
-    Credits_SolarPower,
-    Credits_stage,
-    Credits_Throat,
-    Credits_Tombstones,
-    Credits_WeAreTheUndead,
-    Credits_ZombieArmy1,
-    Credits_ZombieArmy2,
-    Diamond,
-    Digger_rising_dirt,
-    DoomShroom,
-    FinalWave,
-    Fire,
-    FirePea,
-    FumeShroom,
-    Garlic,
-    GatlingPea,
-    GloomShroom,
-    GoldMagnet,
-    GraveBuster,
-    Hammer,
-    HypnoShroom,
-    IceShroom,
-    Imitater,
-    Jalapeno,
-    LawnMower,
-    LawnMoweredZombie,
-    LilyPad,
-    LoadBar_sprout,
-    LoadBar_Zombiehead,
-    Magnetshroom,
-    Marigold,
-    Melonpult,
-    PeaShotter,  // PeashooterSingle
-    Repeater,    // Peashotter
-    Plantern,
-    PoolCleaner,
-    Portal_Circle,
-    Portal_Square,
-    FlowerPot,  // Pot
-    PotatoMine,
-    puff,
-    PuffShroom,
-    Pumpkin,
-    Rain_circle,
-    Rain_splash,
-    Rake,
-    RoofCleaner,
-    ScaredyShroom,
-    SeaShroom,
-    SelectorScreen,
-    SelectorScreen_WoodSign,
-    SlotMachine,
-    SnowPea,
-    SodRoll,
-    Spikerock,
-    splash,
-    SplitPea,
-    Squash,
-    Starfruit,
-    StartReadySetPlant,
-    Stinky,
-    Sun,
-    SunFlower,
-    SunShroom,
-    Tallnut,
-    Tanglekelp,
-    TextFadeOn,
-    TextSlideDown,
-    TextSlideOn,
-    ThreePeater,
-    Torchwood,
-    TreeFood,
-    treeofWisdom,
-    TreeOfWisdomClouds,
-    TwinSunflower,
-    UmbrellaLeaf,
-    Wallnut,
-    WinterMelon,
-    Z,
-    ZenGarden_bugspray,
-    ZenGarden_fertilizer,
-    ZenGarden_phonograph,
-    ZenGarden_sprout,
-    ZenGarden_wateringcan,
-    zombatar_zombie_head,
-    Zombie,
-    Zombie_balloon,
-    Zombie_bobsled,
-    Zombie_boss,
-    Zombie_Boss_driver,
-    Zombie_boss_fireball,
-    Zombie_boss_iceball,
-    Zombie_bungi,
-    Zombie_catapult,
-    Zombie_charred,
-    Zombie_charred_catapult,
-    Zombie_charred_digger,
-    Zombie_charred_gargantuar,
-    Zombie_charred_imp,
-    Zombie_charred_zamboni,
-    Zombie_credits_conehead,
-    Zombie_credits_dance,
-    Zombie_credits_screendoor,
-    Zombie_dancer,
-    Zombie_digger,
-    Zombie_disco,
-    Zombie_dolphinrider,
-    Zombie_flagpole,
-    Zombie_football,
-    Zombie_gargantuar,
-    Zombie_hand,
-    Zombie_imp,
-    Zombie_jackbox,
-    Zombie_Jackson,
-    Zombie_ladder,
-    Zombie_paper,
-    Zombie_pogo,
-    Zombie_PoleVaulter,
-    Zombie_snorkle,
-    Zombie_surprise,
-    Zombie_Target,
-    Zombie_yeti,
-    Zombie_zamboni,
-    ZombiesWon,
-    enumMax
-  };
-};
-
+enum enumDraw { draw = 0, noDraw = -1 };
 
 enum enumSpriteLayer{
   background,
@@ -175,6 +18,249 @@ enum enumSpriteLayer{
   player_layer
 };
 
+enum EnumAnimationProperty{
+  ANIM_DRAW,
+  ANIM_TEXTURE,
+  ANIM_POSITION,
+  ANIM_ROTATION,
+  ANIM_SCALE,
+  ANIM_ALPHA
+};
+
+enum EnumAnimationIndex : unsigned char {
+  ANIM_Blover,
+  ANIM_Cabbagepult,
+  ANIM_Cactus,
+  ANIM_Spikeweed,  // caltrop
+  ANIM_Cattail,
+  ANIM_CherryBomb,
+  ANIM_Chomper,
+  ANIM_CobCannon,
+  ANIM_CoffeeBean,
+  ANIM_Coin_gold,
+  ANIM_Coin_silver,
+  ANIM_Kernelpult,  // Cornpult
+  ANIM_CrazyDave,
+  ANIM_Credits_AnyHour,
+  ANIM_Credits_BigBrain,
+  ANIM_Credits_Bossdance,
+  ANIM_Credits_brainplate,
+  ANIM_Credits_CrazyDave,
+  ANIM_Credits_DiscoLights,
+  ANIM_Credits_Flower_petals,
+  ANIM_Credits_Football,
+  ANIM_Credits_Infantry,
+  ANIM_Credits_Jackbox,
+  ANIM_Credits_Main,
+  ANIM_Credits_Main2,
+  ANIM_Credits_Main3,
+  ANIM_Credits_SolarPower,
+  ANIM_Credits_stage,
+  ANIM_Credits_Throat,
+  ANIM_Credits_Tombstones,
+  ANIM_Credits_WeAreTheUndead,
+  ANIM_Credits_ZombieArmy1,
+  ANIM_Credits_ZombieArmy2,
+  ANIM_Diamond,
+  ANIM_Digger_rising_dirt,
+  ANIM_DoomShroom,
+  ANIM_FinalWave,
+  ANIM_Fire,
+  ANIM_FirePea,
+  ANIM_FumeShroom,
+  ANIM_Garlic,
+  ANIM_GatlingPea,
+  ANIM_GloomShroom,
+  ANIM_GoldMagnet,
+  ANIM_GraveBuster,
+  ANIM_Hammer,
+  ANIM_HypnoShroom,
+  ANIM_IceShroom,
+  ANIM_Imitater,
+  ANIM_Jalapeno,
+  ANIM_LawnMower,
+  ANIM_LawnMoweredZombie,
+  ANIM_LilyPad,
+  ANIM_LoadBar_sprout,
+  ANIM_LoadBar_Zombiehead,
+  ANIM_Magnetshroom,
+  ANIM_Marigold,
+  ANIM_Melonpult,
+  ANIM_PeaShotter,  // PeashooterSingle
+  ANIM_Repeater,    // Peashotter
+  ANIM_Plantern,
+  ANIM_PoolCleaner,
+  ANIM_Portal_Circle,
+  ANIM_Portal_Square,
+  ANIM_FlowerPot,  // Pot
+  ANIM_PotatoMine,
+  ANIM_puff,
+  ANIM_PuffShroom,
+  ANIM_Pumpkin,
+  ANIM_Rain_circle,
+  ANIM_Rain_splash,
+  ANIM_Rake,
+  ANIM_RoofCleaner,
+  ANIM_ScaredyShroom,
+  ANIM_SeaShroom,
+  ANIM_SelectorScreen,
+  ANIM_SelectorScreen_WoodSign,
+  ANIM_SlotMachine,
+  ANIM_SnowPea,
+  ANIM_SodRoll,
+  ANIM_Spikerock,
+  ANIM_splash,
+  ANIM_SplitPea,
+  ANIM_Squash,
+  ANIM_Starfruit,
+  ANIM_StartReadySetPlant,
+  ANIM_Stinky,
+  ANIM_Sun,
+  ANIM_SunFlower,
+  ANIM_SunShroom,
+  ANIM_Tallnut,
+  ANIM_Tanglekelp,
+  ANIM_TextFadeOn,
+  ANIM_TextSlideDown,
+  ANIM_TextSlideOn,
+  ANIM_ThreePeater,
+  ANIM_Torchwood,
+  ANIM_TreeFood,
+  ANIM_treeofWisdom,
+  ANIM_TreeOfWisdomClouds,
+  ANIM_TwinSunflower,
+  ANIM_UmbrellaLeaf,
+  ANIM_Wallnut,
+  ANIM_WinterMelon,
+  ANIM_Z,
+  ANIM_ZenGarden_bugspray,
+  ANIM_ZenGarden_fertilizer,
+  ANIM_ZenGarden_phonograph,
+  ANIM_ZenGarden_sprout,
+  ANIM_ZenGarden_wateringcan,
+  ANIM_zombatar_zombie_head,
+  ANIM_Zombie,
+  ANIM_Zombie_balloon,
+  ANIM_Zombie_bobsled,
+  ANIM_Zombie_boss,
+  ANIM_Zombie_Boss_driver,
+  ANIM_Zombie_boss_fireball,
+  ANIM_Zombie_boss_iceball,
+  ANIM_Zombie_bungi,
+  ANIM_Zombie_catapult,
+  ANIM_Zombie_charred,
+  ANIM_Zombie_charred_catapult,
+  ANIM_Zombie_charred_digger,
+  ANIM_Zombie_charred_gargantuar,
+  ANIM_Zombie_charred_imp,
+  ANIM_Zombie_charred_zamboni,
+  ANIM_Zombie_credits_conehead,
+  ANIM_Zombie_credits_dance,
+  ANIM_Zombie_credits_screendoor,
+  ANIM_Zombie_dancer,
+  ANIM_Zombie_digger,
+  ANIM_Zombie_disco,
+  ANIM_Zombie_dolphinrider,
+  ANIM_Zombie_flagpole,
+  ANIM_Zombie_football,
+  ANIM_Zombie_gargantuar,
+  ANIM_Zombie_hand,
+  ANIM_Zombie_imp,
+  ANIM_Zombie_jackbox,
+  ANIM_Zombie_Jackson,
+  ANIM_Zombie_ladder,
+  ANIM_Zombie_paper,
+  ANIM_Zombie_pogo,
+  ANIM_Zombie_PoleVaulter,
+  ANIM_Zombie_snorkle,
+  ANIM_Zombie_surprise,
+  ANIM_Zombie_Target,
+  ANIM_Zombie_yeti,
+  ANIM_Zombie_zamboni,
+  ANIM_ZombiesWon,
+  ANIM_enumMax
+};
+
+struct FramePos{
+   unsigned int frameIndex;
+   unsigned int propIndex;
+};
+
+struct FrameProperties{
+  unsigned int textureIndex = 0;
+  unsigned int posIndex = 0;
+  unsigned int angleIndex = 0;
+  unsigned int drawIndex = 0;
+  unsigned int scaleIndex = 0;
+  unsigned int alphaIndex = 0;
+};
+
+struct FrameProperty{
+ int dataIndex;
+ EnumAnimationProperty type;
+};
+
+struct AnimationTime{
+  unsigned short start;
+  unsigned short end;
+};
+
+class AnimationLayer{
+  public:
+  std::vector<AnimationTime> timeLapse;
+  unsigned int nameID;
+  unsigned int layerDataID;
+};
+
+
+// Anim Frames can have 0 or N properties
+// AnimationFrameData: 0 or N Properties from 1 frame of 1 layer
+typedef std::vector<FrameProperty> AnimationFrameData;
+
+// AnimationLayerData: 1 or N Frames of 1 layer
+typedef std::vector<AnimationFrameData> AnimationLayerData;
+// Anim Layers can have 1 or N time lapse
+// Anim Layers can have 1 or N frames
+// AnimationClipData: 1 or N Layers from 1 animation file (clip)
+typedef std::vector<AnimationLayer> AnimationClipData;
+
+typedef std::vector<char*> AnimationLayerNameData;
+
+struct AnimIndex {
+  
+  EnumAnimationIndex type;
+  
+  unsigned int GetNameID(unsigned int layer);
+  unsigned int GetLayerID(unsigned int layer);
+  unsigned int GetLayerSize();
+  AnimationFrameData& GetFrameProperties(unsigned int layer, unsigned int frame);
+  unsigned int GetAnimationNameID(const char* layer);
+  FrameProperties GetPropertiesFromOneFrame(unsigned int layerIndex, unsigned int frame);
+
+  void SetOneSpriteAnimationToEntity(std::vector<int>& ids, Tyra::Vec2 size, int frame, enumSpriteLayer layer);
+  void SetOneSpriteAnimationToEntity(std::vector<int>& ids, int& father, Tyra::Vec2 size, int frame, enumSpriteLayer layer);
+  void SetAnimationToEntity(std::vector<int>& ids, int& father, Tyra::Vec2 size, int firstFrame, int lastFrame, bool repeat, enumSpriteLayer layer);
+  void SetAnimationToEntity(std::vector<int>& ids, int& father, Tyra::Vec2 size, const char* animFlash, unsigned int timeIndex, bool repeat, enumSpriteLayer layer);
+  void SetAnimationToEntity(std::vector<int>& ids, int& father, Tyra::Vec2 size, int firstFrame, bool repeat, enumSpriteLayer layer);
+  void ChangeAnimationEntity(std::vector<int>& ids, const char* animState, unsigned int timeIndex, enumSpriteLayer layer, bool repeat);
+
+  void createAnimation(const int entityID, const int layerID,
+                     const Tyra::Vec2 scaleTextures, const int firstFrame,
+                     const int lastFrame, bool repeat, enumSpriteLayer layer);
+  int activeAnimation(const int entityID, const int layerID,
+                                   const unsigned int firstFrame,
+                                   const unsigned int lastFrame, enumSpriteLayer layer);
+};
+
+class AnimationClip{
+  public:
+  unsigned int fps;
+  unsigned int maxFrame;
+  unsigned int layerCount;
+};
+
+extern AnimIndex animComponent[EnumAnimationIndex::ANIM_enumMax];
+
 extern std::vector<int> backgroundLayer;
 extern std::vector<int> cardLayer;
 extern std::vector<int> plantsLayer;
@@ -184,39 +270,22 @@ extern std::vector<int> zombieLayer;
 extern std::vector<int> playerLayer;
 
 
-
-class Animation {
- public:
-  Animation();
-  Animation(const int anim);
-  void update(const int entityID);
-  void activeDrawNormalSprites(const int entityID);
-  void updateSprites(const int entityID);
-  void updateAngle(const int entityID);
-  void position(const int entityID);
-  int debugAnim(const int entitieID);
-
-  int animID = -1;
-  int draw = (int)enumDraw::draw;
-  unsigned int framesCounter = 0;
-  unsigned int currentFrame = 1;
-  unsigned int framesSpeed = 20;
-  unsigned int firstFrame = 1;
-  unsigned int lastFrame = 1;
-};
-
 struct FrameOut {
  int entityID;
  int animIndex;
+ int layerIndex;
  int frame;
 };
 
 class FrameCounter {
  public:
   int update();
+  bool IsLastframe();
   
+  bool repeat = true;
   int entityID;
   unsigned int animIndex;
+  unsigned int layerIndex;
   unsigned int framesCounter = 0;
   unsigned int currentFrame = 1;
   unsigned int framesSpeed = 20;
@@ -237,52 +306,10 @@ extern std::vector<Tyra::Vec2> scaleFrame;
 extern std::vector<Tyra::Vec2> angleFrame;
 extern std::vector<float> alphaFrame;
 extern std::vector<int> drawFrame;
-// extern std::vector<std::vector<FramesData>> textureFrame;
-// extern std::vector<std::vector<FramesData>> positionFrame;
-// extern std::vector<std::vector<FramesData>> scaleFrame;
-// extern std::vector<std::vector<FramesData>> angleFrame;
-// std::vector<std::vector<int>> positionFrame;
-// std::vector<std::vector<int>> scaleFrame;
-// std::vector<std::vector<int>> angleFrame;
-// std::vector<std::vector<int>> alphaFrame;
-// std::vector<std::vector<int>> drawFrame;
-enum EnumAnimationProperty{
-  ANIM_TEXTURE,
-  ANIM_POSITION,
-  ANIM_ROTATION,
-  ANIM_SCALE,
-  ANIM_ALPHA,
-  ANIM_DRAW
-};
 
-struct AnimationProperty{
- int dataIndex;
- EnumAnimationProperty type;
-};
-
-class AnimationData {
- public:
-  std::unordered_map<unsigned int,std::vector<AnimationProperty>> property;
-  unsigned int maxFrame;
-  int nameID;
-  void loadAnimation(const int entityID, const int animID,
-                     const Tyra::Vec2 scaleTextures, const int firstFrame,
-                     const int lastFrame, enumSpriteLayer layer);
-  int activeAnimation(const int entityID, const unsigned int firstFrame,
-                      const unsigned int lastFrame, enumSpriteLayer layer);
-};
-
-extern std::string animString[AnimIndex::enumMax];
-
+void initAnimation();
 void setSprite(const int entityID, const int draw, enumSpriteLayer layer);
 void loadAnimString();
-void loadAnimation(const AnimIndex::Animation animNameID);
+void loadAnimation(const EnumAnimationIndex animNameID);
 
-unsigned int GetAnimationNameID(AnimIndex::Animation anim, const char* layer);
-void SetAnimationNamesID(AnimIndex::Animation animation);
-void SetOneSpriteAnimationToEntity(std::vector<int>& ids, AnimIndex::Animation anim, Tyra::Vec2 size, int frame, enumSpriteLayer layer);
-void SetOneSpriteAnimationToEntity(std::vector<int>& ids, int& father, AnimIndex::Animation anim, Tyra::Vec2 size, int frame, enumSpriteLayer layer);
-void SetAnimationToEntity(std::vector<int>& ids, int& father, AnimIndex::Animation anim, Tyra::Vec2 size, const char* animFlash, enumSpriteLayer layer);
-void SetAnimationToEntity(std::vector<int>& ids, int& father, AnimIndex::Animation anim, Tyra::Vec2 size, int firstFrame, int lastFrame, enumSpriteLayer layer);
-void SetAnimationToEntity(std::vector<int>& ids, int& father, AnimIndex::Animation anim, Tyra::Vec2 size, int firstFrame, enumSpriteLayer layer);
-void ChangeAnimationEntity(std::vector<int>& ids, AnimIndex::Animation anim, const char* animState, enumSpriteLayer layer);
+void SetAnimationNamesID(EnumAnimationIndex animation);

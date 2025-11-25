@@ -5,9 +5,7 @@
 
 // sparse array
 std::vector<FrameCounter> frameCounterArray;
-std::unordered_map<int, std::vector<int>> m_animID;
-std::unordered_map<int, std::vector<char*>> animNames;
-std::unordered_map<int, AnimationData> animationDataArray;
+std::unordered_map<int, std::vector<char*>> layerAnimNames;
 ArrayKey<int, FatherID> fatherIDArray(enumComponents::fatherID);
 ArrayKey<int, Tyra::Vec2> posArray(enumComponents::pos);
 ArrayKey<int, Tyra::Vec2> texPosArray(enumComponents::texPos);
@@ -42,6 +40,7 @@ std::map<int, Tyra::Vec2> pivot;
 std::vector<Controller> controller;
 std::vector<Zombie> zombie;
 std::vector<Zombie> deadZombie;
+std::vector<Zombie> charredZombie;
 std::vector<Zombie> damagedZombie;
 std::vector<Sun> sun;
 std::vector<NaturalSun> naturalSun;
@@ -262,13 +261,15 @@ bool Proyectile::attack(){
   size = zombie.size();
   for(size_t i=0; i < size; i++){
     if(zombie[i].boxColliderID == zombieCollisionID){
-      zombie[i].damage(id);
-      if(zombie[i].erase() == true){
+      if(zombie[i].damage(id, Bullet) == true){
         zombie.erase(zombie.begin()+i);
-      }else if (type == enumProyectile::snowPea) {
-        zombie[i].color.b = 0;
-        speedArray[zombie[i].father] = 0.5f;
       }
+      // if(zombie[i].erase() == true){
+      //   zombie.erase(zombie.begin()+i);
+      // }else if (type == enumProyectile::snowPea) {
+      //   zombie[i].color.b = 0;
+      //   speedArray[zombie[i].father] = 0.5f;
+      // }
       break;
     }
   }
@@ -300,6 +301,7 @@ void Proyectile::erase() {
   //   projectileSnowPea->removeLinkById(spriteArray[id].id);
   // }
 
+  printf("deleting projectile\n");
   deleteSprite(id);
   deletePosArray(id);
   deleteFinalPosArray(id);

@@ -213,7 +213,7 @@ void SaveImageInTexture(Image image, unsigned char* data,
   Tyra::PngPixel3* pixel = (Tyra::PngPixel3*)image.data;
   Tyra::PngPixel3* src = (Tyra::PngPixel3*)data;
   int k = 0;
-  printf("save in x,y: %d,%d\n",atlas->x,atlas->y);
+  // printf("save in x,y: %d,%d\n",atlas->x,atlas->y);
   if (image.width + atlas->x > widthTexture) {
     atlas->x = 0;
     atlas->y += atlas->maxHeight;

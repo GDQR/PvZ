@@ -76,6 +76,7 @@ int main() {
   texRepo = &engine->renderer.getTextureRepository();
   ReadTextFile();
   // loadFonts();
+  initAnimation();
   entityComponents.push_back(IndexComponent());
   states.isActive.reserve(lastGameState);
   

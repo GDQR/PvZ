@@ -110,18 +110,18 @@ void BigSpriteJPG::scaleTest(int width, int height){
   spriteArray[id[0]].size.print();
 }
 
-void createPlantCard(int& plantID,AnimIndex::Animation plantAnim, const Tyra::Vec2 pos, const Tyra::Vec2 size, const int frame) {
+void createPlantCard(int& plantID,EnumAnimationIndex plantAnim, const Tyra::Vec2 pos, const Tyra::Vec2 size, const int frame) {
   posArray.insert(plantID, pos);
   fatherIDArray.insert(plantID, FatherID());
   PlantAnimation anim;
   anim.id = plantID;
 
-  SetOneSpriteAnimationToEntity(anim.entity, plantID, plantAnim, size, frame, card_layer);
+  animComponent[plantAnim].SetOneSpriteAnimationToEntity(anim.entity,plantID, Tyra::Vec2(0.6f,0.6f), frame, card_layer);
 
   plantAnims.push_back(anim);
 
   PlantAnimation cardAnim;
-  SetOneSpriteAnimationToEntity(cardAnim.entity, plantAnim, Tyra::Vec2(0.6f,0.6f), frame, card_layer);
+  animComponent[plantAnim].SetOneSpriteAnimationToEntity(cardAnim.entity, Tyra::Vec2(0.6f,0.6f), frame, card_layer);
     
   for(size_t i=0; i < cardAnim.entity.size();i++){
     if(spriteArray.count(cardAnim.entity[i]) == 1){
@@ -147,7 +147,7 @@ void createCard(const Plant_State_enum typePlant, const bool isVersusMode) {
   Card card;
   card.seed = Entities::newID();
   card.plantID = Entities::newID();
-  // printf("seed ID:%d\n",card.seed);
+  printf("seed ID:%d\n",card.seed);
   
   Tyra::Vec2 pos;
   pos.x = 120;
@@ -161,21 +161,21 @@ void createCard(const Plant_State_enum typePlant, const bool isVersusMode) {
 
   // printf("plant type: %d\n",typePlant);
   if (typePlant == Plant_State_enum::PeaShotter) {
-    createPlantCard(card.plantID, AnimIndex::PeaShotter, Vec2(pos.x, pos.y), Vec2(0.6f, 0.6f),80);
+    createPlantCard(card.plantID, EnumAnimationIndex::ANIM_PeaShotter, Vec2(pos.x, pos.y), Vec2(0.6f, 0.6f),80);
   } else if (typePlant == Plant_State_enum::SunFlower) {
-    createPlantCard(card.plantID, AnimIndex::SunFlower, Vec2(pos.x, pos.y+5), Vec2(0.6f, 0.6f),8);
+    createPlantCard(card.plantID, EnumAnimationIndex::ANIM_SunFlower, Vec2(pos.x, pos.y+5), Vec2(0.6f, 0.6f),8);
   } else if (typePlant == Plant_State_enum::CherryBomb) {
-    createPlantCard(card.plantID, AnimIndex::CherryBomb, Vec2(pos.x, pos.y+5), Vec2(0.6f, 0.6f),1);
+    createPlantCard(card.plantID, EnumAnimationIndex::ANIM_CherryBomb, Vec2(pos.x, pos.y+5), Vec2(0.6f, 0.6f),1);
   } else if (typePlant == Plant_State_enum::Wallnut || typePlant == Plant_State_enum::WallnutBowling || typePlant == Plant_State_enum::WallnutBowlingExplosion) {
-    createPlantCard(card.plantID, AnimIndex::Wallnut, Vec2(pos.x, pos.y+5), Vec2(0.6f, 0.6f),1);
+    createPlantCard(card.plantID, EnumAnimationIndex::ANIM_Wallnut, Vec2(pos.x, pos.y+5), Vec2(0.6f, 0.6f),1);
   } else if (typePlant == Plant_State_enum::PotatoMine) {
-    createPlantCard(card.plantID, AnimIndex::PotatoMine, Vec2(pos.x, pos.y+5), Vec2(0.6f, 0.6f),31);
+    createPlantCard(card.plantID, EnumAnimationIndex::ANIM_PotatoMine, Vec2(pos.x, pos.y+5), Vec2(0.6f, 0.6f),31);
   } else if (typePlant == Plant_State_enum::SnowPea) {
-    createPlantCard(card.plantID, AnimIndex::SnowPea, Vec2(pos.x, pos.y+5), Vec2(0.6f, 0.6f),80);
+    createPlantCard(card.plantID, EnumAnimationIndex::ANIM_SnowPea, Vec2(pos.x, pos.y+5), Vec2(0.6f, 0.6f),80);
   } else if (typePlant == Plant_State_enum::Chomper) {
-    createPlantCard(card.plantID, AnimIndex::Chomper, Vec2(pos.x, pos.y+5), Vec2(0.6f, 0.6f),1);
+    createPlantCard(card.plantID, EnumAnimationIndex::ANIM_Chomper, Vec2(pos.x, pos.y+5), Vec2(0.6f, 0.6f),1);
   } else if (typePlant == Plant_State_enum::Repeater) {
-    createPlantCard(card.plantID, AnimIndex::Repeater, Vec2(pos.x, pos.y+5), Vec2(0.6f, 0.6f),80);
+    createPlantCard(card.plantID, EnumAnimationIndex::ANIM_Repeater, Vec2(pos.x, pos.y+5), Vec2(0.6f, 0.6f),80);
   }
   
   card.seedShadow = Entities::newID();
@@ -312,7 +312,6 @@ using namespace Entity;
 void rewardLevel1(Tyra::Vec2 pos) {
   reward.father = Entities::newID();
   int id;
-  int animID;
 
   createSprite(reward.father, Tyra::MODE_REPEAT, pos, Vec2(50, 70), enumSpriteLayer::background);
   createTexture(reward.father, "UI/Seeds.png");
@@ -320,13 +319,12 @@ void rewardLevel1(Tyra::Vec2 pos) {
 
   fatherIDArray.insert(reward.father, FatherID());
 
-  for (unsigned int i = 0; i < m_animID[AnimIndex::SunFlower].size(); i++) {
+  for (unsigned int i = 0; i < animComponent[EnumAnimationIndex::ANIM_SunFlower].GetLayerSize(); i++) {
     id = Entities::newID();
     reward.id.push_back(id);
-    animID = m_animID[AnimIndex::SunFlower][i];
     newFatherID(&reward.father, &id);
-    animationDataArray[animID].loadAnimation(id, animID, Tyra::Vec2(0.6f, 0.6f),
-                                             8, 8, enumSpriteLayer::background);
+    animComponent[EnumAnimationIndex::ANIM_SunFlower].createAnimation(id, i, Tyra::Vec2(0.6f, 0.6f),
+                                             8, 8, true, enumSpriteLayer::background);
   }
   createBoxCollider(reward.father,BoxColliderEnum::BOXCOLLIDER_REWARD,BoxCollider(pos.x, pos.y, 28, 38));
 
@@ -337,7 +335,7 @@ void rewardLevel1(Tyra::Vec2 pos) {
 void eraseRewardLevel1() {
   deletePosArray(reward.father);
   deleteFinalPosArray(reward.father);
-  unsigned int animSize = m_animID[AnimIndex::SunFlower].size();
+  unsigned int animSize = animComponent[EnumAnimationIndex::ANIM_SunFlower].GetLayerSize();
   for (unsigned int i = 0; i < animSize; i++) {
     deletePosArray(reward.id[i]);
     deleteFinalPosArray(reward.id[i]);
@@ -391,7 +389,7 @@ void SunManager::create(Tyra::Vec2 position, sunCost cost,
     naturalSun.push_back(newNaturalSun);
   }
   
-  SetAnimationToEntity(newSun.id,newSun.father,AnimIndex::Sun,Tyra::Vec2(0.5f, 0.5f), 1, 12, enumSpriteLayer::sun_layer);
+  animComponent[EnumAnimationIndex::ANIM_Sun].SetAnimationToEntity(newSun.id,newSun.father,Tyra::Vec2(0.5f, 0.5f), 1, 12, enumSpriteLayer::sun_layer);
 
   // HitBox
   createBoxCollider(newSun.father,BoxColliderEnum::BOXCOLLIDER_SUN,BoxCollider(newSun.father, position.x-16,
@@ -546,6 +544,13 @@ void Entities::deleteID(unsigned int& id) {
 void Entities::deleteID(int& id) {
   int newID = id;
   deadEntities.push_back(newID);
+  // for(size_t i = deadEntities.size()-1; i>0; i--){
+  //   if(deadEntities[i] < deadEntities[i-1]){
+  //     newID = deadEntities[i];
+  //     deadEntities[i] = deadEntities[i-1];
+  //     deadEntities[i-1] = newID;
+  //   }
+  // }
   // printf("entity Deleted: %d\n",newID);
   id = 0;
 }

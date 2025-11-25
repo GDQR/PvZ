@@ -72,7 +72,7 @@ int explosionsCreated = 0;
 
 //   return 1;
 // }
-std::unordered_map<int,int> layerID;
+std::unordered_map<int,enumSpriteLayer> layerID;
 
 void createSprite(int id, Tyra::SpriteMode mode, Tyra::Vec2 position,
                   Tyra::Vec2 size, enumSpriteLayer layer) {
@@ -81,7 +81,7 @@ void createSprite(int id, Tyra::SpriteMode mode, Tyra::Vec2 position,
   finalPosArray.insert(id, Vec2(0, 0));
   loadSprite(&spriteArray[id], mode, Vec2(0.0f, 0.0f), size);
   spriteRenderIDArray.insert(id, 0);
-  setSprite(id,(int)enumDraw::draw, layer);
+  setSprite(id,enumDraw::draw, layer);
   layerID[id] = layer;
 
   if(layer == enumSpriteLayer::background){
@@ -280,16 +280,16 @@ void createLawnMower(const Tyra::Vec2 pos) {
   posArray.insert(entity.id[0], pos);
   fatherIDArray.insert(entity.id[0], FatherID());
   int entityID;
-  int animID;
-  for (unsigned int i = 0; i < m_animID[AnimIndex::LawnMower].size(); i++) {
+  unsigned int animLayerSize = animComponent[EnumAnimationIndex::ANIM_LawnMower].GetLayerSize();
+  // printf("layerCount:%d\n",animLayerSize);
+  for (unsigned int i = 0; i < animLayerSize; i++) {
     entityID = Entities::newID();
     entity.id.push_back(entityID);
-    animID = m_animID[AnimIndex::LawnMower][i];
     // printf("plant ID: %d\n", entityID);
-    // printf("animID: %d\n", animID);
+    // printf("layerID: %d\n", i);
     newFatherID(&entity.id[0], &entityID);
-    animationDataArray[animID].loadAnimation(entityID, animID,
-                                             Tyra::Vec2(0.7f, 0.7f), 1, 1, background);
+    animComponent[EnumAnimationIndex::ANIM_LawnMower].createAnimation(entityID, i,
+                                             Tyra::Vec2(0.7f, 0.7f), 1, 1, true, background);
   }
 
   // HitBox

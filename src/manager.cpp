@@ -58,12 +58,13 @@ void FrameManager::update(){
   
   for(FrameCounter& frame: frameCounterArray){
     if(frame.update() == 0){
-      // printf("Entity id: %d, animID: %d, frame: %d\n",frame.entityID,frame.animIndex,frame.currentFrame);
+      // printf("Entity id: %d, animID: %d, layer:%d, frame: %d\n",frame.entityID,frame.animIndex,frame.layerIndex,frame.currentFrame);
       frameOut.entityID = frame.entityID;
       frameOut.animIndex = frame.animIndex;
+      frameOut.layerIndex = frame.layerIndex;
       frameOut.frame = frame.currentFrame;
       frameArray.push_back(frameOut);
-      // if(frameOut.entityID == 200){
+      // if(frameOut.entityID == 286){
       //   printf("ingresar Entity id: %d, animID: %d, frame: %d\n",frame.entityID,frame.animIndex,frame.currentFrame);
       // }
     }
@@ -71,29 +72,28 @@ void FrameManager::update(){
 
   if(frameArray.size() > 0){
     for(unsigned int i=0;i<frameArray.size();i++){
-      // if(frameArray[i].entityID==201){
+      // if(frameArray[i].entityID==295){
       //   printf("entity:%d, animID: %d, frame: %d\n",frameArray[i].entityID,frameArray[i].animIndex,frameArray[i].frame);
       // }
       // printf("entity:%d, animID: %d, frame: %d\n",frameArray[i].entityID,frameArray[i].animIndex,frameArray[i].frame);
-      std::vector<AnimationProperty>& animProp = animationDataArray[frameArray[i].animIndex].property[frameArray[i].frame];
+      std::vector<FrameProperty>& animProp = animComponent[frameArray[i].animIndex].GetFrameProperties(frameArray[i].layerIndex,frameArray[i].frame);
       for(unsigned int j=0; j< animProp.size();j++){
-        // if(frameArray[i].animIndex ==44){
-        // printf("type: %d, data: %d\n",animProp[j].type,animProp[j].dataIndex);
-
+        // if(frameArray[i].entityID ==286){
+        //   printf("type: %d, data: %d\n",animProp[j].type,animProp[j].dataIndex);
         // }
         // printf("type: %d, data: %d\n",animProp[j].type,animProp[j].dataIndex);
         if(animProp[j].type == ANIM_POSITION){
-          // if(frameArray[i].animIndex ==22){
-          //   printf("entity:%d, animID: %d, frame: %d\n",frameArray[i].entityID,frameArray[i].animIndex,frameArray[i].frame);
-          //   positionFrame[animProp[j].dataIndex].print();
-
+          // if(frameArray[i].entityID ==286){
+          //   // printf("entity:%d, animID: %d, frame: %d\n",frameArray[i].entityID,frameArray[i].animIndex,frameArray[i].frame);
           // }
           texPosArray[frameArray[i].entityID] = positionFrame[animProp[j].dataIndex] * scaleTexture[frameArray[i].entityID];
         }else if(animProp[j].type == ANIM_TEXTURE){
-          if(hasEntityComponent(frameArray[i].entityID,enumComponents::sprite) == true){
+          
+          // if(spriteArray.count(frameArray[i].entityID) == true){
             const int oldTextureID = spriteArray[frameArray[i].entityID].textureID;
             Tyra::Texture* oldTexture = texRepo->getByTextureId(oldTextureID);
             Tyra::Texture* newTexture = texRepo->getByTextureId(textureFrame[animProp[j].dataIndex]);
+
             if (oldTexture != newTexture) {
               // printf("link sprite\n");
             
@@ -101,10 +101,26 @@ void FrameManager::update(){
               spriteArray[frameArray[i].entityID].textureID = newTexture->id;
               originalSize[frameArray[i].entityID] =
                   Vec2(newTexture->getWidth(), newTexture->getHeight());
+
+              // this is a hack to get the scaleFrame
+              for(int k=frameArray[i].frame; k>0;k--){
+                AnimationFrameData& fd = animComponent[frameArray[i].animIndex].GetFrameProperties(frameArray[i].layerIndex,k);
+                for(size_t m = 0; m < fd.size();m++){
+                  if(fd[m].type == ANIM_SCALE){
+                    spriteArray[frameArray[i].entityID].size = 
+                      originalSize[frameArray[i].entityID] * 
+                      scaleTexture.at(frameArray[i].entityID) * 
+                      scaleFrame[fd[m].dataIndex];
+                      k = 0;
+                      m = 0;
+                    break;
+                  }
+                }
+              }
             }
-          }
+            
         }else if(animProp[j].type == ANIM_SCALE){
-          if(hasEntityComponent(frameArray[i].entityID,enumComponents::sprite) == true){
+          if(spriteArray.count(frameArray[i].entityID) == true){
             spriteArray[frameArray[i].entityID].size = 
               originalSize[frameArray[i].entityID] * 
               scaleTexture.at(frameArray[i].entityID) * 
@@ -117,27 +133,11 @@ void FrameManager::update(){
           // }
           angleArray[frameArray[i].entityID] = angleFrame[animProp[j].dataIndex];
         } else if(animProp[j].type == ANIM_ALPHA){
-          if(hasEntityComponent(frameArray[i].entityID,enumComponents::sprite) == true){
+          if(spriteArray.count(frameArray[i].entityID) == true){
             spriteArray[frameArray[i].entityID].color.a = alphaFrame[animProp[j].dataIndex];
           }
         } else if (animProp[j].type == ANIM_DRAW){
-          if (spriteRenderIDArray.count(frameArray[i].entityID) == 1 && drawFrame[animProp[j].dataIndex] == (int)enumDraw::noDraw) {
-            spriteRenderIDArray.erase(frameArray[i].entityID);
-            // spriteNormalIdStopRender.push_back(entityID);
-          } else if (spriteRenderIDArray.count(frameArray[i].entityID) == 0 && drawFrame[animProp[j].dataIndex] == (int)enumDraw::draw) {
-            spriteRenderIDArray.insert(frameArray[i].entityID, 0);
-            int renderSize = spriteRenderIDArray.first.size();
-            // printf("sorting\n");
-            for(int j=renderSize-1;j>1;j--){
-              if(spriteRenderIDArray.first[j] < spriteRenderIDArray.first[j-1]){          
-                // printf("pos1: %d\n",spriteRenderIDArray.first[j]);
-                // printf("pos2: %d\n",spriteRenderIDArray.first[j-1]);
-                int aux= spriteRenderIDArray.first[j];
-                spriteRenderIDArray.first[j] = spriteRenderIDArray.first[j-1];
-                spriteRenderIDArray.first[j-1] = aux;
-              }
-            }
-          }
+          setSprite(frameArray[i].entityID, drawFrame[animProp[j].dataIndex],layerID[frameArray[i].entityID]);
         }
       }
     }
@@ -231,6 +231,7 @@ void RendererSprites::updateTexture() {
   }
 }
 void RendererSprites::updateRender() {
+  // printf("background\n");
   for (int &it : backgroundLayer) {
     Tyra::Sprite& spriteRender = spriteArray[it];
     spriteRender.position = finalPosArray[it];
@@ -276,7 +277,7 @@ void RendererSprites::updateRender() {
       renderer2D->render(spriteRender);
     }
   }
-  
+  // printf("zombie layer\n");
   for (int &it : zombieLayer) {
     Tyra::Sprite& spriteRender = spriteArray[it];
     spriteRender.position = finalPosArray[it];
@@ -288,6 +289,7 @@ void RendererSprites::updateRender() {
     }
   }
 
+  // printf("Sun layer\n");
   for (int &it : sunLayer) {
     Tyra::Sprite& spriteRender = spriteArray[it];
     spriteRender.position = finalPosArray[it];
@@ -325,28 +327,29 @@ void RendererSprites::update() {
 }
 
 void ZombiesManager::update() {
-  for(Zombie& it: zombie){
+  for(int i = zombie.size()-1; i>=0; i--){
+    Zombie& it = zombie[i];
     if(it.type != NoneZombie){
-    it.move();
-    it.attackPlant();
-    it.normalColor();
+      it.move();
+      it.attackPlant();
+      it.normalColor();
     }
   }
-  // std::vector<Zombie>::iterator it;
-  // for (it = zombie.begin(); it < zombie.end();) {
-  //   //if (it->explosion == false) {
-  //     it->move();
-  //     // it->attackPlant();
-  //     // it->normalColor();
-  //     it++;
-  //   /*} else {
-  //     if (it->explosionState() == true) {
-  //       it = zombie.erase(it);
-  //     } else {
-  //       it++;
-  //     }
-  //   }*/
-  // }
+  for(int i = deadZombie.size()-1; i>=0; i--){
+    Zombie& it = deadZombie[i];
+    it.normalColor();
+    if(it.erase() == true){
+      deadZombie.erase(deadZombie.begin()+i);
+    } 
+  }
+
+  for(int i = charredZombie.size()-1; i>=0; i--){
+    Zombie& it = charredZombie[i];
+    it.normalColor();
+    if(it.explosionState() == true){
+      charredZombie.erase(charredZombie.begin()+i);
+    } 
+  }
 }
 
 
@@ -486,8 +489,7 @@ void BoxCollisionManager::explosionZombieCollision() {
       // printf("box collider:%d searched:%d\n",zombie[i].boxColliderID,zombieEraseID[sizeProyectile]);
       if(zombie[i].boxColliderID == zombieEraseID[sizeProyectile]){
         // printf("zombie colision\n");
-        zombie[i].damage(explosionEraseID[sizeProyectile]);
-        if(zombie[i].erase() == true){
+        if(zombie[i].damage(explosionEraseID[sizeProyectile], EXPLOSION) == true){
           zombie.erase(zombie.begin()+i);
         }
         zombieEraseID.erase(zombieEraseID.begin() + sizeProyectile);
@@ -549,9 +551,9 @@ void BoxCollisionManager::lawnCollision(){
         // printf("zombie colision\n");
         // zombie[i].damage(lawnMoverEraseID[sizeProyectile]);
         lifeArray[zombie[i].father] = 0;
-        if(zombie[i].erase() == true){
-          zombie.erase(zombie.begin()+i);
-        }
+        // if(zombie[i].erase() == true){
+        //   zombie.erase(zombie.begin()+i);
+        // }
         zombieEraseID.erase(zombieEraseID.begin() + sizeProyectile);
         zombieNotFound = true;
         break;

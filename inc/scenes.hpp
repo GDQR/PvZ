@@ -15,13 +15,13 @@ class SelectorScreen {
 };
 
 class Level1 {
+ private:
+  static void initAnimation();
+  static bool loopAnimation();
+  static void initGameplay();
  public:
   static void init();
-  static void initAnimation();
-  static void loopAnimation();
   static void update();
-  static void destroy();  // tal vez sea innecesario, ahora que lo pienso es una
-                          // optimizacion prematura la puta madre
 };
 
 class Level2 {
@@ -30,8 +30,6 @@ class Level2 {
   static void initAnimation();
   static void loopAnimation();
   static void update();
-  static void destroy();  // tal vez sea innecesario, ahora que lo pienso es una
-                          // optimizacion prematura la puta madre
 };
 
 class Level3 {

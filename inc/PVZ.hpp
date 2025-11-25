@@ -74,7 +74,8 @@ enum Zombie_State_enum{
   flagZombie,
   coneheadZombie,
   poleVaulterZombie,
-  bucketHeadZombie
+  bucketHeadZombie,
+  CHARRED_ZOMBIE
 };
 
 struct ZombieAnimation{
@@ -83,6 +84,12 @@ struct ZombieAnimation{
 };
 
 extern std::vector<ZombieAnimation> zombieAnims;
+
+enum DamageType : unsigned char{
+  Bullet,
+  EXPLOSION,
+  Bowling
+};
 
 class Zombie {
  private:
@@ -102,11 +109,13 @@ class Zombie {
   bool explosionState();
   int move();
   int attackPlant();
-  void damage(const int entityID);
+  bool damage(const int entityID, DamageType damageType);
   int normalColor();
   bool erase();
+  void deleteData();
 };
 
+void createNormalCharredZombie(int& fatherID, Tyra::Vec2 pos);
 void createZombie(Tyra::Vec2 pos, const Zombie_State_enum type);
 void createZombieMain();
 void SetZombieAnimation(const int entityID, const int animID, const Zombie_State_enum type);
@@ -249,6 +258,7 @@ extern std::vector<Sun> sun;
 extern std::vector<NaturalSun> naturalSun;
 extern std::vector<Zombie> zombie;
 extern std::vector<Zombie> deadZombie;
+extern std::vector<Zombie> charredZombie;
 extern std::vector<Zombie> damagedZombie;
 
 extern bool rewardExist;
@@ -422,13 +432,11 @@ extern Tyra::Renderer2D* renderer2D;
 extern Tyra::Pad* pad;
 extern const Tyra::PadJoy* leftJoy;
 extern Tyra::TextureRepository* texRepo;
-extern std::unordered_map<int, std::vector<int>> m_animID;
-extern std::unordered_map<int, std::vector<char*>> animNames;
+extern std::unordered_map<int, std::vector<char*>> layerAnimNames;
+extern std::unordered_map<int, enumSpriteLayer> layerID;
 
 // sparse array
 extern std::vector<FrameCounter> frameCounterArray;
-extern std::unordered_map<int, AnimationData>
-    animationDataArray;  // Save the animation textures
 
 // extern std::vector<int> spriteNormalIdStopRender; useless maybe
 // extern std::vector<int> animationIdStopRender; useless maybe
@@ -495,7 +503,7 @@ void createBoxCollider(int id, BoxColliderEnum type, BoxCollider collider);
 void createLawnMower(const Tyra::Vec2 pos);
 void createCard(Plant_State_enum typePlant, bool isVersusMode);
 void createCardMinigame(const Plant_State_enum typePlant);
-void createPlantCard(int& plantID,AnimIndex::Animation plantAnim, const Tyra::Vec2 pos, const Tyra::Vec2 size, const Tyra::Color color, const int frame);
+void createPlantCard(int& plantID,EnumAnimationIndex plantAnim, const Tyra::Vec2 pos, const Tyra::Vec2 size, const Tyra::Color color, const int frame);
 void createReward(Tyra::Vec2 pos);
 void eraseReward();
 void deleteFatherIDChild(const int fatherID, const int* childID);

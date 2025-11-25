@@ -15,24 +15,24 @@ void loadPlantRechargeTime() {
   plantRechargeTime[verySlow] = 50000;  // 50 seconds
 }
 
-void createPeashotter(const int id, const Tyra::Vec2 pos, AnimIndex::Animation animationIndex) {
-  printf("size: %d\n", m_animID[animationIndex].size());
+void createPeashotter(const int id, const Tyra::Vec2 pos, EnumAnimationIndex animationIndex) {
+  printf("size: %d\n", animComponent[animationIndex].GetLayerSize());
 
   int& father = plant[id].father;
   PlantAnimation anim;
   anim.id = father;
   
-  SetAnimationToEntity(anim.entity,father,animationIndex,Tyra::Vec2(0.8f, 0.8f), "anim_idle", enumSpriteLayer::plants);
-  
+  animComponent[animationIndex].SetAnimationToEntity(anim.entity,father, Tyra::Vec2(0.8f, 0.8f), "anim_idle", 0, true, enumSpriteLayer::plants);
+
   plantAnims.push_back(anim);
   
-  int anim_stem = anim.entity[GetAnimationNameID(animationIndex,"anim_stem")];
-  
+  int anim_stem = anim.entity[animComponent[animationIndex].GetAnimationNameID("anim_stem")];
+
   anim.entity.clear();
   fatherIDArray.insert(anim_stem, FatherID());
   posArray[anim_stem] = posArray[father];
-  
-  SetAnimationToEntity(anim.entity,anim_stem,animationIndex,Tyra::Vec2(0.8f, 0.8f), "anim_head_idle", enumSpriteLayer::plants);
+
+  animComponent[animationIndex].SetAnimationToEntity(anim.entity,anim_stem, Tyra::Vec2(0.8f, 0.8f), "anim_head_idle", 0, true, enumSpriteLayer::plants);
   
   for (size_t i = 0; i < anim.entity.size(); i++) {
     posArray[anim.entity[i]] -= texPosArray[anim_stem]; 
@@ -56,14 +56,14 @@ void createPeashotter(const int id, const Tyra::Vec2 pos, AnimIndex::Animation a
   createDebugPoint(father, Tyra::MODE_STRETCH);
 }
 
-void createSunflower(const int id, const Tyra::Vec2 pos, AnimIndex::Animation animationIndex) {
-  printf("size: %d\n", m_animID[animationIndex].size());
+void createSunflower(const int id, const Tyra::Vec2 pos, EnumAnimationIndex animationIndex) {
+  printf("size: %d\n", animComponent[animationIndex].GetLayerSize());
   
   int& father = plant[id].father;
   PlantAnimation anim;
   anim.id = father;
 
-  SetAnimationToEntity(anim.entity,father,animationIndex,Tyra::Vec2(0.8f, 0.8f), 5, enumSpriteLayer::plants);
+  animComponent[animationIndex].SetAnimationToEntity(anim.entity,father, Tyra::Vec2(0.8f, 0.8f), 5, true, enumSpriteLayer::plants);
   plantAnims.push_back(anim);
   
   // Life
@@ -80,14 +80,14 @@ void createSunflower(const int id, const Tyra::Vec2 pos, AnimIndex::Animation an
   createDebugBoxCollider(plant[id].father, BoxColliderEnum::BOXCOLLIDER_PLANT, Tyra::MODE_STRETCH);
 }
 
-void createCherryBomb(const int id, const Tyra::Vec2 pos, AnimIndex::Animation animationIndex) {
-  printf("size: %d\n", m_animID[animationIndex].size());
+void createCherryBomb(const int id, const Tyra::Vec2 pos, EnumAnimationIndex animationIndex) {
+  printf("size: %d\n", animComponent[animationIndex].GetLayerSize());
 
   int& father = plant[id].father;
   PlantAnimation anim;
   anim.id = father;
-  
-  SetAnimationToEntity(anim.entity,father,animationIndex,Tyra::Vec2(0.8f, 0.8f), 1, 14, enumSpriteLayer::plants);
+
+  animComponent[animationIndex].SetAnimationToEntity(anim.entity,father,Tyra::Vec2(0.8f, 0.8f), 1, 14, true, enumSpriteLayer::plants);
 
   plantAnims.push_back(anim);
   
@@ -98,14 +98,15 @@ void createCherryBomb(const int id, const Tyra::Vec2 pos, AnimIndex::Animation a
   createDebugBoxCollider(plant[id].father, BoxColliderEnum::BOXCOLLIDER_PLANT, Tyra::MODE_STRETCH);
 }
 
-void createWallnut(const int id, const Tyra::Vec2 pos, AnimIndex::Animation animationIndex) {
-  printf("size: %d\n", m_animID[animationIndex].size());
+void createWallnut(const int id, const Tyra::Vec2 pos, EnumAnimationIndex animationIndex) {
+  printf("size: %d\n", animComponent[animationIndex].GetLayerSize());
 
   int& father = plant[id].father;
   PlantAnimation anim;
   anim.id = father;
   
-  SetAnimationToEntity(anim.entity,father,animationIndex,Tyra::Vec2(0.8f, 0.8f), 1, 17, enumSpriteLayer::plants);
+  animComponent[animationIndex].SetAnimationToEntity(anim.entity,father,Tyra::Vec2(0.8f, 0.8f), 1, 17, true, enumSpriteLayer::plants);
+
   plantAnims.push_back(anim);
 
   // Life
@@ -117,14 +118,14 @@ void createWallnut(const int id, const Tyra::Vec2 pos, AnimIndex::Animation anim
   createDebugBoxCollider(plant[id].father, BoxColliderEnum::BOXCOLLIDER_PLANT, Tyra::MODE_STRETCH);
 }
 
-void createWallnutBowling(const int id, const Tyra::Vec2 pos, AnimIndex::Animation animationIndex) {
-  printf("size: %d\n", m_animID[animationIndex].size());
+void createWallnutBowling(const int id, const Tyra::Vec2 pos, EnumAnimationIndex animationIndex) {
+  printf("size: %d\n", animComponent[animationIndex].GetLayerSize());
 
   int& father = plant[id].father;
   PlantAnimation anim;
   anim.id = father;
   
-  SetAnimationToEntity(anim.entity,father,animationIndex,Tyra::Vec2(0.8f, 0.8f), "_ground", enumSpriteLayer::plants);
+  animComponent[animationIndex].SetAnimationToEntity(anim.entity,father,Tyra::Vec2(0.8f, 0.8f), "_ground", 0, true, enumSpriteLayer::plants);
   plantAnims.push_back(anim);
 
   // Life
@@ -140,14 +141,14 @@ void createWallnutBowling(const int id, const Tyra::Vec2 pos, AnimIndex::Animati
   createDebugBoxCollider(father, BoxColliderEnum::BOXCOLLIDER_PLANT, Tyra::MODE_STRETCH);
 }
 
-void createPotatoMine(const int id, const Tyra::Vec2 pos, AnimIndex::Animation animationIndex) {
-  printf("size: %d\n", m_animID[animationIndex].size());
+void createPotatoMine(const int id, const Tyra::Vec2 pos, EnumAnimationIndex animationIndex) {
+  printf("size: %d\n", animComponent[animationIndex].GetLayerSize());
 
   int& father = plant[id].father;
   PlantAnimation anim;
   anim.id = father;
   
-  SetAnimationToEntity(anim.entity,father,animationIndex,Tyra::Vec2(0.8f, 0.8f), 1, 1, enumSpriteLayer::plants);
+  animComponent[animationIndex].SetAnimationToEntity(anim.entity,father,Tyra::Vec2(0.8f, 0.8f), 1, 1, true, enumSpriteLayer::plants);
   plantAnims.push_back(anim);
 
   // Life
@@ -164,14 +165,14 @@ void createPotatoMine(const int id, const Tyra::Vec2 pos, AnimIndex::Animation a
   createDebugBoxCollider(plant[id].father, BoxColliderEnum::BOXCOLLIDER_PLANT, Tyra::MODE_STRETCH);
 }
 
-void createSnowPea(const int id, const Tyra::Vec2 pos, AnimIndex::Animation animationIndex) {
-  printf("size: %d\n", m_animID[animationIndex].size());
+void createSnowPea(const int id, const Tyra::Vec2 pos, EnumAnimationIndex animationIndex) {
+  printf("size: %d\n", animComponent[animationIndex].GetLayerSize());
 
   int& father = plant[id].father;
   PlantAnimation anim;
   anim.id = father;
   
-  SetAnimationToEntity(anim.entity,father,animationIndex,Tyra::Vec2(0.8f, 0.8f), 80, 104, enumSpriteLayer::plants);
+  animComponent[animationIndex].SetAnimationToEntity(anim.entity,father,Tyra::Vec2(0.8f, 0.8f), 80, 104, true, enumSpriteLayer::plants);
   plantAnims.push_back(anim);
 
   // Life
@@ -190,14 +191,14 @@ void createSnowPea(const int id, const Tyra::Vec2 pos, AnimIndex::Animation anim
   createDebugPoint(plant[id].father, Tyra::MODE_STRETCH);
 }
 
-void createChomper(const int id, const Tyra::Vec2 pos, AnimIndex::Animation animationIndex) {
-  printf("size: %d\n", m_animID[animationIndex].size());
+void createChomper(const int id, const Tyra::Vec2 pos, EnumAnimationIndex animationIndex) {
+  printf("size: %d\n", animComponent[animationIndex].GetLayerSize());
 
   int& father = plant[id].father;
   PlantAnimation anim;
   anim.id = father;
   
-  SetAnimationToEntity(anim.entity,father,animationIndex,Tyra::Vec2(0.8f, 0.8f), 1, 25, enumSpriteLayer::plants);
+  animComponent[animationIndex].SetAnimationToEntity(anim.entity,father,Tyra::Vec2(0.8f, 0.8f), 1, 25, true, enumSpriteLayer::plants);
   plantAnims.push_back(anim);
 
   // Life
@@ -217,14 +218,14 @@ void createChomper(const int id, const Tyra::Vec2 pos, AnimIndex::Animation anim
   // createDebugBoxCollider(plant[id].id[0], BoxColliderEnum::BOXCOLLIDER_PLANT, Tyra::MODE_STRETCH);
 }
 
-void createRepeater(const int id, const Tyra::Vec2 pos, AnimIndex::Animation animationIndex) {
-  printf("size: %d\n", m_animID[AnimIndex::Repeater].size());
+void createRepeater(const int id, const Tyra::Vec2 pos, EnumAnimationIndex animationIndex) {
+  printf("size: %d\n", animComponent[animationIndex].GetLayerSize());
 
   int& father = plant[id].father;
   PlantAnimation anim;
   anim.id = father;
   
-  SetAnimationToEntity(anim.entity,father,AnimIndex::Repeater,Tyra::Vec2(0.8f, 0.8f), 80, 104, enumSpriteLayer::plants);
+  animComponent[animationIndex].SetAnimationToEntity(anim.entity,father,Tyra::Vec2(0.8f, 0.8f), 80, 104, true, enumSpriteLayer::plants);
   plantAnims.push_back(anim);
 
   // Life
@@ -245,14 +246,14 @@ void createRepeater(const int id, const Tyra::Vec2 pos, AnimIndex::Animation ani
   createDebugBoxCollider(plant[id].father, BoxColliderEnum::BOXCOLLIDER_PLANT, Tyra::MODE_STRETCH);
 }
 
-void createPuffShroom(const int id, const Tyra::Vec2 pos, AnimIndex::Animation animationIndex) {
-  printf("size: %d\n", m_animID[animationIndex].size());
+void createPuffShroom(const int id, const Tyra::Vec2 pos, EnumAnimationIndex animationIndex) {
+  printf("size: %d\n", animComponent[animationIndex].GetLayerSize());
 
   int& father = plant[id].father;
   PlantAnimation anim;
   anim.id = father;
   
-  SetAnimationToEntity(anim.entity,father,animationIndex,Tyra::Vec2(0.8f, 0.8f), 80, 104, enumSpriteLayer::plants);
+  animComponent[animationIndex].SetAnimationToEntity(anim.entity,father,Tyra::Vec2(0.8f, 0.8f), 80, 104, true, enumSpriteLayer::plants);
   plantAnims.push_back(anim);
 
   // Life
@@ -295,45 +296,45 @@ bool createPlant(Plant_State_enum typePlant, const int row, const int column, in
     BoxCollider& boxPos = boxColliderArray[BOXCOLLIDER_MAP][boxColliderArrayID[map[row][column]]];
     Tyra::Vec2 pos(boxPos.x,boxPos.y);
     posArray.insert(plant[plantPos].father, pos);
-
+    printf("typePlant: %d\n",typePlant);
     switch (typePlant) {
       case PeaShotter:
         printf("peashooter\n");
-        createPeashotter(plantPos, pos, AnimIndex::PeaShotter);
+        createPeashotter(plantPos, pos, EnumAnimationIndex::ANIM_PeaShotter);
         break;
       case SunFlower:
         printf("sunflower\n");
-        createSunflower(plantPos, pos, AnimIndex::SunFlower);
+        createSunflower(plantPos, pos, EnumAnimationIndex::ANIM_SunFlower);
         break;
       case CherryBomb:
         printf("cherryBomb");
-        createCherryBomb(plantPos, pos, AnimIndex::CherryBomb);
+        createCherryBomb(plantPos, pos, EnumAnimationIndex::ANIM_CherryBomb);
         break;
       case Wallnut:
         printf("wallNut");
-        createWallnut(plantPos, pos, AnimIndex::Wallnut);
+        createWallnut(plantPos, pos, EnumAnimationIndex::ANIM_Wallnut);
         break;
       case PotatoMine:
         printf("potatoMine");
-        createPotatoMine(plantPos, pos, AnimIndex::PotatoMine);
+        createPotatoMine(plantPos, pos, EnumAnimationIndex::ANIM_PotatoMine);
         break;
       case SnowPea:
         printf("SnowPea");
-        createSnowPea(plantPos, pos, AnimIndex::SnowPea);
+        createSnowPea(plantPos, pos, EnumAnimationIndex::ANIM_SnowPea);
         break;
       case Chomper:
         printf("Chomper");
-        createChomper(plantPos, pos, AnimIndex::Chomper);
+        createChomper(plantPos, pos, EnumAnimationIndex::ANIM_Chomper);
         break;
       case Repeater:
         printf("Repeater");
-        createRepeater(plantPos, pos, AnimIndex::Repeater);
+        createRepeater(plantPos, pos, EnumAnimationIndex::ANIM_Repeater);
         break;
       case PuffShroom:
-        createPuffShroom(plantPos, pos, AnimIndex::PuffShroom);
+        createPuffShroom(plantPos, pos, EnumAnimationIndex::ANIM_PuffShroom);
         break;
       case WallnutBowling:
-        createWallnutBowling(plantPos,pos, AnimIndex::Wallnut);
+        createWallnutBowling(plantPos,pos, EnumAnimationIndex::ANIM_Wallnut);
         break;
       default:
         TYRA_TRAP("ERROR CAN'T CREATE PLANT");
@@ -417,11 +418,11 @@ int Plant::attack() {
       }
     }
    
-    if (frameCounterArray[frameIndex].currentFrame == frameCounterArray[frameIndex].lastFrame) {
+    if (frameCounterArray[frameIndex].IsLastframe() == true) {
       printf("explode\n");
-      // newExplosion(posArray[father], Vec2(256 / 1.6f, 256 / 1.6f), 1800,
-      //              enumProyectile::ExplosionPowie);
-      // lifeArray[father] = 0;
+      newExplosion(posArray[father], Vec2(256 / 1.6f, 256 / 1.6f), 1800,
+                   enumProyectile::ExplosionPowie);
+      lifeArray[father] = 0;
       // erase();
     }
   } else if (type == Wallnut) {
@@ -480,10 +481,12 @@ int Plant::attack() {
               }else if(speedArray[father] == 2){
                 speedArray[father] = 1;
               }
-              zombie[j].damage(father);
-              if(zombie[j].erase() == true){
+              if(zombie[j].damage(father, Bowling) == true){
                 zombie.erase(zombie.begin()+j);
               }
+              // if(zombie[j].erase() == true){
+              //   zombie.erase(zombie.begin()+j);
+              // }
               collision = true;
               break;
             }
@@ -576,8 +579,7 @@ void Plant::damage(const int entityID){
   std::vector<int>& animEntity = plantAnims[indexAnim].entity;
   size = animEntity.size();
   for(size_t i=0; i < size; i++){
-    if (spriteArray.count(animEntity[i]) == 1) {
-      // printf("anim attack id: %d\n",m_animID["Zombie"][j]);
+    if (spriteArray.count(animEntity[i]) == 1) {;
       spriteArray[animEntity[i]].color = Tyra::Color(255, 255, 255, 128);
     }
   }
@@ -603,7 +605,6 @@ int Plant::normalColor(){
   size = ids.size();
   for(size_t i=0; i < size; i++){
     if (spriteArray.count(ids[i]) == 1) {
-      // printf("anim attack id: %d\n",m_animID["Zombie"][j]);
       Tyra::Sprite& animSprite = spriteArray[ids[i]];
       animSprite.color.r -= 5;
       animSprite.color.g -= 5;
