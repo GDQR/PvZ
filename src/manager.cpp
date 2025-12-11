@@ -1,6 +1,7 @@
 #include "manager.hpp"
 #include "text.hpp"
 #include "font/font.hpp"
+#include "particles.hpp"
 #include "imageFiles.hpp"
 
 PlayerControl playerControl;
@@ -17,6 +18,7 @@ CameraManager cameraManager;
 FontManager fontManager;
 FrameManager frameManager;
 LawnMoverManager lawnMoverManager;
+ParticleManager particleManager;
 
 void PlayerControl::update() {
   for (Controller& joystick: controller){
@@ -39,6 +41,7 @@ void ProjectileManager::update(){
     for(size_t i=0; i < size;i++){
       if(deleteID[sizeProyectile] == projectile[i].id){
         printf("se borra el id: %d\n",projectile[i].id);
+        CreateParticle(posArray[projectile[i].id], enumPARTICLETYPE::PEASPLAT);
         projectile[i].erase();
         projectile[i] = projectile[size-1];
         projectile.erase(projectile.begin() + size-1);
@@ -212,20 +215,23 @@ void RendererDebugSpritesManager::update() {
 
 void RendererSprites::resetFinalPos() {
   // std::map<int, Vec2>::iterator it;
+  std::vector<unsigned int>& keys = finalPosArray.getDenseData();
   for (unsigned int i = 0; i < finalPosArray.second.size(); i++) {
-    finalPosArray.second[i] = posArray[finalPosArray.first[i]];
+    finalPosArray.second[i] = posArray[keys[i]];
   }
 }
 
 void RendererSprites::updateChildPos() {
-  for (unsigned int i = 0; i < fatherIDArray.first.size(); i++) {
-    fatherIDArray.second[i].update(fatherIDArray.first[i]);
+  std::vector<unsigned int>& keys = fatherIDArray.getDenseData();
+  for (unsigned int i = 0; i < keys.size(); i++) {
+    fatherIDArray.second[i].update(keys[i]);
   }
 }
 
 void RendererSprites::updateTexture() {
   int i = 0;
-  for (auto it : texPosArray.first) {
+  std::vector<unsigned int>& keys = texPosArray.getDenseData();
+  for (auto it : keys) {
     finalPosArray[it] += texPosArray.second[i];
     i++;
   }
@@ -255,6 +261,18 @@ void RendererSprites::updateRender() {
     }
   }
 
+  // printf("zombie layer\n");
+  for (int &it : zombieLayer) {
+    Tyra::Sprite& spriteRender = spriteArray[it];
+    spriteRender.position = finalPosArray[it];
+
+    if (angleArray.count(it) == 1) {
+      renderer2D->renderRotate(spriteRender, angleArray[it]);
+    } else {
+      renderer2D->render(spriteRender);
+    }
+  }
+
   // printf("plantsLayer\n");
   for (int &it : plantsLayer) {
     Tyra::Sprite& spriteRender = spriteArray[it];
@@ -268,17 +286,6 @@ void RendererSprites::updateRender() {
   }
 
   for (int &it : projectileLayer) {
-    Tyra::Sprite& spriteRender = spriteArray[it];
-    spriteRender.position = finalPosArray[it];
-
-    if (angleArray.count(it) == 1) {
-      renderer2D->renderRotate(spriteRender, angleArray[it]);
-    } else {
-      renderer2D->render(spriteRender);
-    }
-  }
-  // printf("zombie layer\n");
-  for (int &it : zombieLayer) {
     Tyra::Sprite& spriteRender = spriteArray[it];
     spriteRender.position = finalPosArray[it];
 
@@ -331,10 +338,21 @@ void ZombiesManager::update() {
     Zombie& it = zombie[i];
     if(it.type != NoneZombie){
       it.move();
-      it.attackPlant();
       it.normalColor();
+      if(it.animAttackPlant() == true){
+        zombie.erase(zombie.begin()+i);
+      }
     }
   }
+
+  for(int i = zombieAttackState.size()-1; i >= 0; i--){
+    Zombie& it = zombieAttackState[i];
+    it.normalColor();
+    if(it.animWalk() == true){
+      zombieAttackState.erase(zombieAttackState.begin()+i);
+    }
+  }
+
   for(int i = deadZombie.size()-1; i>=0; i--){
     Zombie& it = deadZombie[i];
     it.normalColor();
@@ -348,7 +366,7 @@ void ZombiesManager::update() {
     it.normalColor();
     if(it.explosionState() == true){
       charredZombie.erase(charredZombie.begin()+i);
-    } 
+    }
   }
 }
 
@@ -565,29 +583,37 @@ void BoxCollisionManager::lawnCollision(){
   }
 }
 
-void BoxCollisionManager::plantZombieCollision(){
-  stopResponseCollisionZombiePlant.clear();
-  ResponseCollisionZombiePlant res;
-
-  for(size_t i=0; i < responseCollisionZombiePlant.size();i++){
-    for(BoxCollider &it: boxColliderZombie){
-      if(it.id == responseCollisionZombiePlant[i].zombieID){
-        for(BoxCollider &it2: boxColliderPlant){
-          if(it2.id == responseCollisionZombiePlant[i].plantID){
-            if(it.collision(&it2) == false){
-              res.plantID = it2.id;
-              res.zombieID = it.id;
-              stopResponseCollisionZombiePlant.push_back(res);
-              break;
-            }
-          }
-        }
-        break;
-      }
+bool CollisionEnterPlant(int boxCollider){
+  // printf("buscando zombie\n");
+  for(size_t i=0; i < enterResponseCollisionZombiePlant.size();i++){
+    if(enterResponseCollisionZombiePlant[i].plantID == boxCollider ||
+    enterResponseCollisionZombiePlant[i].zombieID == boxCollider){
+  printf("encontrado\n");
+      return true;
     }
   }
+  // printf("no paso\n");
+  return false;
+}
+
+bool CollisionStopPlant(int boxCollider){
+  for(size_t i=0; i < stopResponseCollisionZombiePlant.size();i++){
+    if(stopResponseCollisionZombiePlant[i].plantID == boxCollider ||
+    stopResponseCollisionZombiePlant[i].zombieID == boxCollider){
+      printf("stop encontrado\n");
+      return true;
+    }
+  }
+  // printf("no paso\n");
+  return false;
+}
+
+void BoxCollisionManager::plantZombieCollision(){
+  previousResponseCollisionZombiePlant = responseCollisionZombiePlant;
+  // check for collisions that make contact
 
   responseCollisionZombiePlant.clear();
+  ResponseCollisionZombiePlant res;
 
   for(BoxCollider &it: boxColliderZombie){
     for(BoxCollider &it2: boxColliderPlant){
@@ -599,7 +625,43 @@ void BoxCollisionManager::plantZombieCollision(){
         break;
       }
     }
-      // printf("loop 1\n");
+  }
+
+  // Event when collision stopped
+  stopResponseCollisionZombiePlant.clear();
+
+  bool found = false;
+  for(ResponseCollisionZombiePlant& col1: previousResponseCollisionZombiePlant){
+    found = false;
+    for(size_t j=0; j < responseCollisionZombiePlant.size(); j++){
+      if(col1.plantID == responseCollisionZombiePlant[j].plantID &&
+      col1.zombieID == responseCollisionZombiePlant[j].zombieID){
+        found = true;
+        break;
+      }
+    }
+    if(found == false){
+      // printf("ingreso stop plantID:%d zombieID: %d, size: %d\n",col1.plantID,col1.zombieID,stopResponseCollisionZombiePlant.size());
+      stopResponseCollisionZombiePlant.push_back(col1);
+    }
+  }
+
+  // Event when collision enter
+  enterResponseCollisionZombiePlant.clear();
+
+  for(ResponseCollisionZombiePlant& col1: responseCollisionZombiePlant){
+    found = false;
+    for(size_t j=0; j < previousResponseCollisionZombiePlant.size(); j++){
+      if(col1.plantID == previousResponseCollisionZombiePlant[j].plantID &&
+      col1.zombieID == previousResponseCollisionZombiePlant[j].zombieID){
+        found = true;
+        break;
+      }
+    }
+    if(found == false){
+      // printf("ingreso enter plantID:%d zombieID: %d, size: %d\n",col1.plantID,col1.zombieID,enterResponseCollisionZombiePlant.size());
+      enterResponseCollisionZombiePlant.push_back(col1);
+    }
   }
 }
 

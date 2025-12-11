@@ -3,6 +3,17 @@
 #include "text.hpp"
 #include "scenes.hpp"
 
+size_t GetIndexToErase(const unsigned int key, const enumComponents type){
+  std::vector<unsigned int>& keyDense = entityKeyDense[type];
+  unsigned int size = keyDense.size();
+  for (size_t i = 0; i < size; i++) {
+    if (keyDense[i] == key) {
+      return i;
+    }
+  }
+  return size;
+}
+
 static int actualState;
 static States states;
 

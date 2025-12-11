@@ -1,5 +1,5 @@
 # =======================
-$CUSTOM_PCSX2_PATH = "" # "D:/My/Path/To/PCSX2"
+$CUSTOM_PCSX2_PATH = "F:/Emuladores/pcsx2-beta" # "D:/My/Path/To/PCSX2"
 # =======================
 
 function GetTargetELFName {

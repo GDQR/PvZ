@@ -196,8 +196,8 @@ void SelectorScreen::init() {
 
   BG();
   BGCenter();
-  BGLeft();
-  BGRight();
+  // BGLeft();
+  // BGRight();
 
   // startAdventure = Entities::newID();
 

@@ -63,23 +63,23 @@ void getPrevSprite(int& entitieID) {
   debugAlphaColor = debugSpritesType[entitieID]->color.a;
 }
 int DebugSpriteMode::init() {
-  if (spriteArray.first.size() == 0) {
-    // ERROR MENU
-    if (engine->pad.getClicked().Circle) {
-      debugAnimation = false;
-      debugState = debugMain;
-    }
-    return 1;
-  }
+  // if (spriteArray.first.size() == 0) {
+  //   // ERROR MENU
+  //   if (engine->pad.getClicked().Circle) {
+  //     debugAnimation = false;
+  //     debugState = debugMain;
+  //   }
+  //   return 1;
+  // }
   if (startSpriteDebug == true) {
     printf("start debug sprite\n");
     startSpriteDebug = false;
 
     // Get all normal and rotated sprites
     // std::unordered_map<int, Sprite>::iterator it;
-    for (unsigned int i = 0; i < spriteArray.first.size(); i++) {
-      debugSpritesType[spriteArray.first[i]] = &spriteArray.second[i];
-    }
+    // for (unsigned int i = 0; i < spriteArray.first.size(); i++) {
+    //   debugSpritesType[spriteArray.first[i]] = &spriteArray.second[i];
+    // }
 
     debugEntityId = debugSpritesType.begin()->first;
     debugAlphaColor = debugSpritesType.begin()->second->color.a;

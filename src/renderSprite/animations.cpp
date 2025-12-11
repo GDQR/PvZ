@@ -62,7 +62,7 @@ void AnimIndex::createAnimation(const int entityID, const int animlayerID,
     std::vector<FrameProperty>& animProp = GetFrameProperties(animlayerID,i);
     dataSize = animProp.size();
     for(unsigned int j=0;j<dataSize;j++){
-      // printf("test animID:%d i:%d j:%d type:%d\n",animID,i,j,animProp[j].type);
+      // printf("test animID:%d animLayer:%d i:%d j:%d type:%d\n",type,animlayerID,i,j,animProp[j].type);
       if(animProp[j].type == ANIM_ROTATION){
         hasRotation = true;
       }else if(animProp[j].type == ANIM_TEXTURE){
@@ -71,6 +71,7 @@ void AnimIndex::createAnimation(const int entityID, const int animlayerID,
     }
   }
 
+  // aca se creaun bug porque tiene que crear la rotacion pero no tiene imagen
   if(hasImage == true){
     if(hasRotation == true){
       // printf("crear rotate\n");
@@ -83,6 +84,9 @@ void AnimIndex::createAnimation(const int entityID, const int animlayerID,
   }else{
     finalPosArray.insert(entityID, Vec2(0.0f, 0.0f));
     posArray.insert(entityID, Vec2(0.0f,0.0f));
+    if(hasRotation == true){
+      angleArray.insert(entityID, Vec2(0.0f,0.0f));
+    }
   }
 
   FrameCounter frameCounter;
@@ -94,6 +98,7 @@ void AnimIndex::createAnimation(const int entityID, const int animlayerID,
   frameCounter.layerIndex = animlayerID;
   frameCounter.repeat = repeat;
   frameCounterArray.push_back(frameCounter);
+  // printf("fisrt frame: %d last: %d\n",frameCounter.firstFrame,frameCounter.lastFrame);
 
   texPosArray.insert(entityID, Tyra::Vec2());
 
@@ -163,14 +168,11 @@ int AnimIndex::activeAnimation(const int entityID, const int layerID,
     if (oldTexture != newTexture) {
       // printf("texture id: %d\n",newTexture->id);
       // printf("linking sprite id\n");
-      if(newTexture != nullptr){
-        // Link new Texture to the sprite entitie
-        
+        // Link new Texture to the sprite entitie      
         spriteArray[entityID].textureID = newTexture->id;
         
         originalSize[entityID] =
             Vec2(newTexture->getWidth(), newTexture->getHeight());
-      }
     }
     
     spriteArray[entityID].size = 
@@ -584,15 +586,6 @@ void AnimIndex::ChangeAnimationEntity(std::vector<int>& ids, const char* animSta
   for(size_t i=0; i< GetLayerSize();i++){
     activeAnimation(ids[i],i,fd.startFrame,fd.endFrame, layer);
   }
-
-  //TODO: esto debe estar separado para las animaciones de los zombies
-  if(type == EnumAnimationIndex::ANIM_Zombie){
-    // for(size_t i=0; i< anim_2.size();i++){
-    for(size_t i=0; i< animClips[type].layerCount;i++){
-      SetZombieAnimation(ids[i], animClipLayers[type][i].nameID,Zombie_State_enum::normalZombie);
-      // SetZombieAnimation(ids[i],anim_2[i],Zombie_State_enum::normalZombie);
-    }
-  }
 }
 
 void initAnimation(){
@@ -759,7 +752,7 @@ void loadAnimString() {
   animString[EnumAnimationIndex::ANIM_ZombiesWon] = "ZombiesWon";
 }
 
-void setSprite(const int entityID, const int draw, enumSpriteLayer layer) {
+void setSprite(const int entityID, const enumDraw draw, enumSpriteLayer layer) {
     // printf("set sprite id: %d,draw: %d\n",entityID, draw);
   if (spriteRenderIDArray.count(entityID) == 1 && draw == -1) {
     // printf("delete render sprite id: %d\n",entityID);
@@ -852,7 +845,7 @@ std::vector<Tyra::Vec2> positionFrame;
 std::vector<Tyra::Vec2> scaleFrame;
 std::vector<Tyra::Vec2> angleFrame;
 std::vector<float> alphaFrame;
-std::vector<int> drawFrame;
+std::vector<enumDraw> drawFrame;
 
 void readTag(char* line, std::string& string, int& indexText) {
   // printf("start\n");
@@ -894,7 +887,7 @@ void readInfo(FILE* MyReadFile, char* textLine, std::string& insideArrow, const 
   float beforeA = 2.0f;
   float a = 1.0f;
   int beforeDraw = -2;
-  int draw = 0;
+  enumDraw draw = enumDraw::draw;
   unsigned int countframes = 1;
   Tyra::Texture* texture = nullptr;
   std::string fileName;
@@ -914,7 +907,7 @@ void readInfo(FILE* MyReadFile, char* textLine, std::string& insideArrow, const 
       // animLayerKeyTime[animIndex][layerID].push_back(KEY_NO_EXISTS);
     }else if (insideArrow == "f") {
       readTag(textLine, insideArrow, indexText);
-      draw = std::stoi(insideArrow);
+      draw = (enumDraw) std::stoi(insideArrow);
       // std::cout << " draw: " << draw;
     } else if (insideArrow == "i") {
       readTag(textLine, insideArrow, indexText);

@@ -33,7 +33,10 @@ enum enumComponents {
 struct IndexComponent{
   bool component[COMPONENTS_MAX] = {false};
 };
+
 extern std::vector<IndexComponent> entityComponents;
+extern std::vector<unsigned int> entityKeySparse[COMPONENTS_MAX];
+extern std::vector<unsigned int> entityKeyDense[COMPONENTS_MAX];
 
 class Entities {
  public:
@@ -87,6 +90,7 @@ extern std::vector<ZombieAnimation> zombieAnims;
 
 enum DamageType : unsigned char{
   Bullet,
+  SNOW_BULLET,
   EXPLOSION,
   Bowling
 };
@@ -102,13 +106,17 @@ class Zombie {
   int boxColliderID;
   Zombie_State_enum type = NoneZombie;
   Tyra::Color color;
-  bool attack = false;
   bool damaged = false;
   bool explosion = false;
   void newZombie(Zombie_State_enum newType);
+  void SetZombieAnimation(const int entityID, const int nameID, const Zombie_State_enum type);
+  void setNormalZombieAnimation();
+  void setConeheadAnimation(int entityID);
+  void setBucketheadAnimation(int entityID);
+  bool animWalk();
+  bool animAttackPlant();
   bool explosionState();
   int move();
-  int attackPlant();
   bool damage(const int entityID, DamageType damageType);
   int normalColor();
   bool erase();
@@ -245,11 +253,13 @@ class Plant {
   bool collision = false;
   bool damaged = false;
   void newPlant(Plant_State_enum newType);
+  void setWallnutAnimation();
   int attack();
   void damage(const int entityID);
   int normalColor();
   void erase();
 };
+void attackZombie(int entityID);
 
 
 const int maxPlants = 5 * 9;
@@ -257,6 +267,7 @@ extern Plant plant[maxPlants];
 extern std::vector<Sun> sun;
 extern std::vector<NaturalSun> naturalSun;
 extern std::vector<Zombie> zombie;
+extern std::vector<Zombie> zombieAttackState;
 extern std::vector<Zombie> deadZombie;
 extern std::vector<Zombie> charredZombie;
 extern std::vector<Zombie> damagedZombie;
@@ -456,7 +467,9 @@ extern std::vector<BoxCollider> boxColliderSun;
 extern std::vector<BoxCollider> boxColliderPlayer;
 extern std::vector<ResponseCollisionProjectile> responseCollisionZombieProjectile;
 extern std::vector<ResponseCollisionZombiePlant> responseCollisionZombiePlant;
+extern std::vector<ResponseCollisionZombiePlant> previousResponseCollisionZombiePlant;
 extern std::vector<ResponseCollisionZombiePlant> stopResponseCollisionZombiePlant;
+extern std::vector<ResponseCollisionZombiePlant> enterResponseCollisionZombiePlant;
 extern std::vector<ResponseCollisionSunCursor> responseCollisionSunCursor;
 extern std::unordered_map<int, TriggerBoxCollider> resultBoxCollider;
 extern std::unordered_map<int, float> speedArray;
@@ -515,7 +528,8 @@ void deleteTexPosArray(const int entityID);
 BoxCollider& searchBoxCollider(int type,int id);
 void GetTime();
 void SetBigImage(BigSpriteJPG* entity, BigTexture* textures, Tyra::SpriteMode mode, float x, float y, float width, float height);
-
+bool CollisionEnterPlant(int boxCollider);
+bool CollisionStopPlant(int boxCollider);
 //----------------------------------------------------------------------------------
 // Local Variables Definition (local to this module)
 //----------------------------------------------------------------------------------
@@ -525,86 +539,135 @@ void SetBigImage(BigSpriteJPG* entity, BigTexture* textures, Tyra::SpriteMode mo
 // Local Functions Declaration
 //----------------------------------------------------------------------------------
 
-template <class Key, class Type>
+template <class Type>
 class ArrayKey {
  public:
   ArrayKey(enumComponents typeComponent);
   enumComponents type;
-  std::vector<size_t> sparse;
-  std::vector<Key> first;
   std::vector<Type> second;
   void insert(const unsigned int key, const Type value);
-  bool count(const Key key);
+  std::vector<unsigned int>& getSparceData();
+  std::vector<unsigned int>& getDenseData();
+  const char* getTypeName();
+  bool count(const unsigned int key);
   void clear();
-  void erase(const Key& key);
-  Type& operator[](const Key key);
+  void erase(const unsigned int key);
+  Type& operator[](const unsigned int key);
 };
 
-template <class Key, class Type>
-ArrayKey<Key, Type>::ArrayKey(enumComponents typeComponent) {
+template <class Type>
+ArrayKey<Type>::ArrayKey(enumComponents typeComponent) {
   type = typeComponent;
 }
 
-template <class Key, class Type>
-void ArrayKey<Key, Type>::insert(const unsigned int key, const Type value) {
+template <class Type>
+void ArrayKey<Type>::insert(const unsigned int key, const Type value) {
   // TYRA_ASSERT(key!=0,"ERROR KEY CAN'T BE 0");
   setEntityComponent(key,type);
-
-  while (sparse.size() <= key)
+  // printf("insert key: %d\n",key);
+  entityKeyDense[type].push_back(key); // dense array
+  std::vector<unsigned int>& keySparse = getSparceData();
+  while (keySparse.size() <= key)
   {
-    sparse.push_back(0);
+    keySparse.push_back(0);
   }
-  sparse[key] = first.size();
-  
-  first.push_back(key); // dense array
+  // printf("entityKeyDense type: %d size: %d\n",type, entityKeyDense[type].size());
+  keySparse[key] = entityKeyDense[type].size();
+
   second.push_back(value);
 }
 
-template <class Key, class Type>
-bool ArrayKey<Key, Type>::count(const Key key) {
+template <class Type>
+std::vector<unsigned int>& ArrayKey<Type>::getSparceData() {
+  return entityKeySparse[type];
+}
+
+template <class Type>
+std::vector<unsigned int>& ArrayKey<Type>::getDenseData() {
+  return entityKeyDense[type];
+}
+
+template <class Type>
+const char* ArrayKey<Type>::getTypeName() {
+  if(type == enumComponents::angle){
+    return "ANGLE";
+  }else if(type == enumComponents::animation){
+    return "ANIMATION";
+  }else if(type == enumComponents::fatherID){
+    return "fatherID";
+  }else if(type == enumComponents::finalPos){
+    return "finalPos";
+  }else if(type == enumComponents::life){
+    return "life";
+  }else if(type == enumComponents::pos){
+    return "pos";
+  }else if(type == enumComponents::sprite){
+    return "sprite";
+  }else if(type == enumComponents::spriteRender){
+    return "spriteRender";
+  }else if(type == enumComponents::texPos){
+    return "texPos";
+  }else if(type == enumComponents::timer){
+    return "timer";
+  }
+  return "TYPE NOT INCLUDED";
+}
+
+template <class Type>
+bool ArrayKey<Type>::count(const unsigned int key) {
   return hasEntityComponent(key,type);
 }
 
-template <class Key, class Type>
-Type& ArrayKey<Key, Type>::operator[](const Key entityID) {
-  TYRA_ASSERT(count(entityID) == true,
-                "ERROR SEARCHING KEY, KEY NOT FOUNDED:", entityID,
-                "COMPONENT:", type);
-  unsigned int pos = sparse[entityID];
-  return second[pos];
-}
-
-template <class Key, class Type>
-void ArrayKey<Key, Type>::clear() {
-  first.clear();
-  second.clear();
-  sparse.clear();
-}
-
-template <class Key, class Type>
-void ArrayKey<Key, Type>::erase(const Key& key) {
-  unsigned int size = first.size();
-  for (unsigned int i = 0; i < size; i++) {
-    if (first[i] == key) {
-      deleteEntityComponent(key,type);
-      first.erase(first.begin() + i);
-      second.erase(second.begin() + i);
-      sparse[key] = 0; 
-      size--;
-      for(unsigned int j = i; j< size; j++){
-        sparse[first[j]] = j;
-      }
-      break;
-    }
+template <class Type>
+Type& ArrayKey<Type>::operator[](const unsigned int entityID) {
+  std::vector<unsigned int>& keySparse = getSparceData();
+  if(entityID >= keySparse.size()){
+    TYRA_TRAP("ERROR SEARCHING KEY, KEY IS BIGGER THAN EXPECTED:", entityID,
+                "COMPONENT:", type, getTypeName());
   }
+
+  int pos = keySparse[entityID];
+  if(pos == 0){
+    TYRA_TRAP("ERROR SEARCHING KEY, KEY NOT FOUNDED:", entityID,
+                "COMPONENT:", type, getTypeName());
+  }
+  return second[pos-1];
 }
 
-extern ArrayKey<int, FatherID> fatherIDArray;
-extern ArrayKey<int, Tyra::Vec2> texPosArray;
-extern ArrayKey<int, Tyra::Vec2> posArray;
-extern ArrayKey<int, Tyra::Vec2> finalPosArray;
-extern ArrayKey<int, Tyra::Sprite> spriteArray;
-extern ArrayKey<int, int> spriteRenderIDArray;
-extern ArrayKey<int, Tyra::Vec2> angleArray;
-extern ArrayKey<int, PS2Timer> timerArray;
-extern ArrayKey<int, int> lifeArray;
+template <class Type>
+void ArrayKey<Type>::clear() {
+  entityKeyDense[type].clear();
+  entityKeySparse[type].clear();
+  second.clear();
+}
+
+size_t GetIndexToErase(const unsigned int key, const enumComponents type);
+
+template <class Type>
+void ArrayKey<Type>::erase(const unsigned int key) {
+  size_t eraseIndex = GetIndexToErase(key,type);
+  std::vector<unsigned int>& keyDense = getDenseData();
+  unsigned int size = keyDense.size();
+  // printf("erase size:%d type:%s key: %d\n",size,getTypeName(),key);
+  if(eraseIndex == size){
+    return;
+  }
+  keyDense[eraseIndex] = keyDense[size-1];
+  keyDense.pop_back();
+  second[eraseIndex] = second[size-1];
+  second.pop_back();
+  getSparceData()[keyDense[size-1]] = eraseIndex+1;
+  deleteEntityComponent(key,type);
+  // printf("keyDense[%d] = %d\n",eraseIndex,keyDense[eraseIndex]);
+  // printf("keySparse[%d] = %d\n",keyDense[size-1],getSparceData()[keyDense[size-1]]);
+}
+
+extern ArrayKey<FatherID> fatherIDArray;
+extern ArrayKey<Tyra::Vec2> texPosArray;
+extern ArrayKey<Tyra::Vec2> posArray;
+extern ArrayKey<Tyra::Vec2> finalPosArray;
+extern ArrayKey<Tyra::Sprite> spriteArray;
+extern ArrayKey<int> spriteRenderIDArray;
+extern ArrayKey<Tyra::Vec2> angleArray;
+extern ArrayKey<PS2Timer> timerArray;
+extern ArrayKey<int> lifeArray;

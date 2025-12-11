@@ -114,6 +114,11 @@ class FontManager {
  void update();
 };
 
+class ParticleManager{
+    public:
+    void update();
+};
+
 extern PlayerControl playerControl;
 extern BoxCollisionManager boxColliderManager;
 extern AnimationManager animManager;
@@ -128,3 +133,4 @@ extern CameraManager cameraManager;
 extern FontManager fontManager;
 extern FrameManager frameManager;
 extern LawnMoverManager lawnMoverManager;
+extern ParticleManager particleManager;

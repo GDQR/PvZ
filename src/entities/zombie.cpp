@@ -1,4 +1,5 @@
 #include "PVZ.hpp"
+#include "imageFiles.hpp"
 
 std::vector<ZombieAnimation> zombieAnims;
 int zombiesCreated = 0;
@@ -15,7 +16,7 @@ void Zombie::createSpace() {
 
 void Zombie::newZombie(Zombie_State_enum newType) { 
   type = newType;
-  color.set(5,5,5,0);
+  color.set(10,10,10,0);
 }
 
 int anim_bucket;
@@ -53,10 +54,76 @@ void SetAnimationNamesID(EnumAnimationIndex animation){
     anim_tongue = animComponent[EnumAnimationIndex::ANIM_Zombie].GetAnimationNameID("anim_tongue");;
     Zombie_innerarm_screendoor = animComponent[EnumAnimationIndex::ANIM_Zombie].GetAnimationNameID("Zombie_innerarm_screendoor");;
     Zombie_flaghand = animComponent[EnumAnimationIndex::ANIM_Zombie].GetAnimationNameID("Zombie_flaghand");;
-  } 
+  }
 }
 
-void SetZombieAnimation(const int entityID, const int nameID, const Zombie_State_enum type) {
+void Zombie::setNormalZombieAnimation(){
+  if(lifeArray[father] <= 80){
+    for(ZombieAnimation& anim: zombieAnims){
+      if(anim.id == father){
+        int layerID = animComponent[EnumAnimationIndex::ANIM_Zombie].GetAnimationNameID("anim_head1");
+        setSprite(anim.entity[layerID],noDraw,enumSpriteLayer::zombie_layer);
+        layerID = animComponent[EnumAnimationIndex::ANIM_Zombie].GetAnimationNameID("anim_head2");
+        setSprite(anim.entity[layerID],noDraw,enumSpriteLayer::zombie_layer);
+        layerID = animComponent[EnumAnimationIndex::ANIM_Zombie].GetAnimationNameID("anim_tongue");
+        setSprite(anim.entity[layerID],noDraw,enumSpriteLayer::zombie_layer);
+        layerID = animComponent[EnumAnimationIndex::ANIM_Zombie].GetAnimationNameID("anim_hair");
+        setSprite(anim.entity[layerID],noDraw,enumSpriteLayer::zombie_layer);
+        break;
+      }
+    } 
+  } else if(lifeArray[father] <= 170){
+    for(ZombieAnimation& anim: zombieAnims){
+      if(anim.id == father){
+        int layerID = animComponent[EnumAnimationIndex::ANIM_Zombie].GetAnimationNameID("Zombie_outerarm_lower");
+        setSprite(anim.entity[layerID],noDraw,enumSpriteLayer::zombie_layer);
+        layerID = animComponent[EnumAnimationIndex::ANIM_Zombie].GetAnimationNameID("Zombie_outerarm_hand");
+        setSprite(anim.entity[layerID],noDraw,enumSpriteLayer::zombie_layer);
+        layerID = animComponent[EnumAnimationIndex::ANIM_Zombie].GetAnimationNameID("Zombie_outerarm_upper");
+        createTexture(anim.entity[layerID],"REANIM/Zombie_outerarm_upper2.PNG");
+        break;
+      }
+    }    
+  }
+}
+
+void Zombie::setConeheadAnimation(int entityID){
+  if(lifeArray[father] <= 270){
+    setSprite(entityID,noDraw,enumSpriteLayer::zombie_layer);
+    for(ZombieAnimation& anim: zombieAnims){
+      if(anim.id == father){
+        int layerID = animComponent[EnumAnimationIndex::ANIM_Zombie].GetAnimationNameID("anim_hair");
+        setSprite(anim.entity[layerID],draw,enumSpriteLayer::zombie_layer);
+        break;
+      }
+    }
+    type = normalZombie;
+  }else if (lifeArray[father] <= 380) {
+    createTexture(entityID,IMG_Zombie_cone3);
+  }else if (lifeArray[father] <= 510) {
+    createTexture(entityID,IMG_Zombie_cone2);
+  }
+}
+
+void Zombie::setBucketheadAnimation(int entityID){
+  if(lifeArray[father] <= 270){
+    setSprite(entityID,noDraw,enumSpriteLayer::zombie_layer);
+    for(ZombieAnimation& anim: zombieAnims){
+      if(anim.id == father){
+        int layerID = animComponent[EnumAnimationIndex::ANIM_Zombie].GetAnimationNameID("anim_hair");
+        setSprite(anim.entity[layerID],draw,enumSpriteLayer::zombie_layer);
+        break;
+      }
+    }
+    type = normalZombie;
+  }else if (lifeArray[father] <= 380) {
+    createTexture(entityID,IMG_Zombie_bucket3);
+  }else if (lifeArray[father] <= 510) {
+    createTexture(entityID,IMG_Zombie_bucket2);
+  }
+}
+
+void Zombie::SetZombieAnimation(const int entityID, const int nameID, const Zombie_State_enum type) {
   switch (type) {
     case Zombie_State_enum::normalZombie:
         if(nameID == anim_bucket
@@ -72,6 +139,7 @@ void SetZombieAnimation(const int entityID, const int nameID, const Zombie_State
           || nameID == Zombie_flaghand){
           setSprite(entityID, enumDraw::noDraw, enumSpriteLayer::zombie_layer);
         }
+        setNormalZombieAnimation();
       break;
     case Zombie_State_enum::flagZombie:
       if(nameID == anim_bucket 
@@ -104,6 +172,9 @@ void SetZombieAnimation(const int entityID, const int nameID, const Zombie_State
         || nameID == Zombie_flaghand){
         setSprite(entityID, enumDraw::noDraw, enumSpriteLayer::zombie_layer);
       }
+      if(nameID == anim_cone){
+        setConeheadAnimation(entityID);
+      }
       break;
     case Zombie_State_enum::bucketHeadZombie:
       if(nameID == anim_cone
@@ -119,6 +190,9 @@ void SetZombieAnimation(const int entityID, const int nameID, const Zombie_State
         || nameID == Zombie_flaghand){
         setSprite(entityID, enumDraw::noDraw, enumSpriteLayer::zombie_layer);
       }
+      if(nameID == anim_bucket){
+        setBucketheadAnimation(entityID);
+      }
       break;
     default:
       break;
@@ -128,17 +202,12 @@ void SetZombieAnimation(const int entityID, const int nameID, const Zombie_State
 int Zombie::move() {
   // printf("timer: %llu\n",timerArray[father].counterMS);
   // printf("maxMS: %llu\n",timerArray[father].maxMS);
-  // lifeArray[father] = 0;
-  // erase();
-  if(attack == true){
-   return 1; 
-  }
 
   PS2Timer& timer = timerArray[father];
   // sizeof(ArrayKey<int,PS2Timer>)
   if (timer.counterMS < timer.maxMS) {
     timer.addMSinCounter();
-  } else if (attack == false) {
+  } else {
     timer.resetCounter();
     posArray[father].x -= speedArray[father];
     // boxColliderArray[BOXCOLLIDER_ZOMBIE][boxColliderArrayID[boxColliderID]].x = posArray[father].x;
@@ -155,9 +224,26 @@ int Zombie::move() {
   return 0;
 }
 
-int Zombie::attackPlant() {
+void attackPlant(int entityID){
+  int size = zombieAnims.size();
+  int father = 0;
+  for(int i=0; i < size; i++){
+    if(zombieAnims[i].entity[0] == entityID){
+      father = zombieAnims[i].id;
+      break;
+    }
+  }
+  int boxColliderID = 0;
+  size = zombieAttackState.size();
+  for(int i=0; i < size; i++){
+    if(zombieAttackState[i].father == father){
+      boxColliderID = zombieAttackState[i].boxColliderID;
+      break;
+    }
+  }
+
   int searchIndex = responseCollisionZombiePlant.size();
-  int size = searchIndex;
+  size = searchIndex;
   for(int i=0;i<size;i++){
     if(responseCollisionZombiePlant[i].zombieID == boxColliderID){
       searchIndex = i;
@@ -165,24 +251,55 @@ int Zombie::attackPlant() {
     }
   }
 
-  if(size == searchIndex){
-    if(attack==true){
-      for(unsigned int k=0 ; k < zombieAnims.size(); k++){
-        if(zombieAnims[k].id == father){
-          attack = false;
-          animComponent[EnumAnimationIndex::ANIM_Zombie].ChangeAnimationEntity(zombieAnims[k].entity, "anim_walk", 0, zombie_layer, true);
-        }
-      }
+  for(size_t j=0;j<45;j++){
+    if(plant[j].father == responseCollisionZombiePlant[searchIndex].plantID){
+      plant[j].damage(father);
+      break;
     }
-    return 0;
+  }
+}
+
+bool Zombie::animWalk(){
+  bool col = CollisionStopPlant(boxColliderID);
+
+  if(col == false){
+    return false;
   }
 
-  // Plants that should not be attacked
+  // No plant detected
+  for(unsigned int k=0 ; k < zombieAnims.size(); k++){
+    if(zombieAnims[k].id == father){
+      if(type == Zombie_State_enum::normalZombie || type == Zombie_State_enum::coneheadZombie || type == Zombie_State_enum::bucketHeadZombie){
+        animComponent[EnumAnimationIndex::ANIM_Zombie].ChangeAnimationEntity(zombieAnims[k].entity, "anim_walk", 0, zombie_layer, true);
+        for(size_t i = 0; i < zombieAnims[k].entity.size();i++){
+          SetZombieAnimation(zombieAnims[k].entity[i], animComponent[EnumAnimationIndex::ANIM_Zombie].GetNameID(i),type);
+        }
+      }else if(type == Zombie_State_enum::poleVaulterZombie){
+        animComponent[EnumAnimationIndex::ANIM_Zombie_PoleVaulter].ChangeAnimationEntity(zombieAnims[k].entity, "anim_walk", 0, zombie_layer, true);
+        for(size_t i=0; i< animComponent[EnumAnimationIndex::ANIM_Zombie].GetLayerSize();i++){
+          SetZombieAnimation(zombieAnims[k].entity[i], animComponent[EnumAnimationIndex::ANIM_Zombie].GetNameID(i),type);
+        }
+      }  
+    }
+  }
+
+  zombie.push_back(*this);
+
+  return true;
+}
+
+bool Zombie::animAttackPlant() {
+  size_t searchIndex = responseCollisionZombiePlant.size();
+  bool col = CollisionEnterPlant(boxColliderID);
+
+  if(col == false){
+    return false;
+  }
 
   for(size_t j=0;j<45;j++){
     if(plant[j].father == responseCollisionZombiePlant[searchIndex].plantID){
       if(plant[j].type == WallnutBowling || plant[j].type == WallnutBowlingExplosion){
-        return 0;
+        return false;
       }
     }
   }
@@ -193,32 +310,84 @@ int Zombie::attackPlant() {
     // printf("seaching\n");
     if(zombieAnims[k].id == father){
       // printf("encontre\n");
-      if(attack == false){
-        attack = true;
-        animComponent[EnumAnimationIndex::ANIM_Zombie].ChangeAnimationEntity(zombieAnims[k].entity, "anim_eat", 0, zombie_layer, true);
-      }else {
-        for(size_t m=0;m<frameCounterArray.size();m++){
-          if(frameCounterArray[m].entityID == zombieAnims[k].entity[0]){
-            if(frameCounterArray[m].framesCounter == 0 && (frameCounterArray[m].currentFrame == 144 || frameCounterArray[m].currentFrame == 164)){
-              // printf("currentFrame: %d\n",frameCounterArray[m].currentFrame);
-              for(size_t j=0;j<45;j++){
-                if(plant[j].father == responseCollisionZombiePlant[searchIndex].plantID){
-                  plant[j].damage(father);
-                  break;
-                }
-              }
-              // lifeArray[] -= damageArray[father];
-              // printf("plant life: %d\n",lifeArray[responseCollisionZombiePlant[searchIndex].plantID]);
-            }
-            break;
+        if(type == Zombie_State_enum::normalZombie || type == Zombie_State_enum::coneheadZombie || type == Zombie_State_enum::bucketHeadZombie){
+          animComponent[EnumAnimationIndex::ANIM_Zombie].ChangeAnimationEntity(zombieAnims[k].entity, "anim_eat", 0, zombie_layer, true);
+          for(size_t i=0; i< animComponent[EnumAnimationIndex::ANIM_Zombie].GetLayerSize();i++){
+            SetZombieAnimation(zombieAnims[k].entity[i], animComponent[EnumAnimationIndex::ANIM_Zombie].GetNameID(i),type);
+          }
+        }else if(type == Zombie_State_enum::poleVaulterZombie){
+          animComponent[EnumAnimationIndex::ANIM_Zombie_PoleVaulter].ChangeAnimationEntity(zombieAnims[k].entity, "anim_eat", 0, zombie_layer, true);
+          for(size_t i=0; i< animComponent[EnumAnimationIndex::ANIM_Zombie].GetLayerSize();i++){
+            SetZombieAnimation(zombieAnims[k].entity[i], animComponent[EnumAnimationIndex::ANIM_Zombie].GetNameID(i),type);
           }
         }
-      }
+      // }
       break;
     }
   }
 
-  return 1;
+  zombieAttackState.push_back(*this);
+
+  return true;
+
+  // // No plant detected
+  // if(size == searchIndex){
+  //   if(attack==true){
+  //     for(unsigned int k=0 ; k < zombieAnims.size(); k++){
+  //       if(zombieAnims[k].id == father){
+  //         attack = false;
+  //         if(type == Zombie_State_enum::normalZombie || type == Zombie_State_enum::coneheadZombie || type == Zombie_State_enum::bucketHeadZombie){
+  //           animComponent[EnumAnimationIndex::ANIM_Zombie].ChangeAnimationEntity(zombieAnims[k].entity, "anim_walk", 0, zombie_layer, true);
+  //           for(size_t i = 0; i < zombieAnims[k].entity.size();i++){
+  //             SetZombieAnimation(zombieAnims[k].entity[i], animComponent[EnumAnimationIndex::ANIM_Zombie].GetNameID(i),type);
+  //           }
+  //         }else if(type == Zombie_State_enum::poleVaulterZombie){
+  //           animComponent[EnumAnimationIndex::ANIM_Zombie_PoleVaulter].ChangeAnimationEntity(zombieAnims[k].entity, "anim_walk", 0, zombie_layer, true);
+  //           for(size_t i=0; i< animComponent[EnumAnimationIndex::ANIM_Zombie].GetLayerSize();i++){
+  //             SetZombieAnimation(zombieAnims[k].entity[i], animComponent[EnumAnimationIndex::ANIM_Zombie].GetNameID(i),type);
+  //           }
+  //         }  
+  //       }
+  //     }
+  //   }
+  //   return 0;
+  // }
+
+  // // Plants that should not be attacked
+
+  // for(size_t j=0;j<45;j++){
+  //   if(plant[j].father == responseCollisionZombiePlant[searchIndex].plantID){
+  //     if(plant[j].type == WallnutBowling || plant[j].type == WallnutBowlingExplosion){
+  //       return 0;
+  //     }
+  //   }
+  // }
+
+  // // Plants that should be attacked
+
+  // for(unsigned int k=0 ; k < zombieAnims.size(); k++){
+  //   // printf("seaching\n");
+  //   if(zombieAnims[k].id == father){
+  //     // printf("encontre\n");
+  //     if(attack == false){
+  //       attack = true;
+  //       if(type == Zombie_State_enum::normalZombie || type == Zombie_State_enum::coneheadZombie || type == Zombie_State_enum::bucketHeadZombie){
+  //         animComponent[EnumAnimationIndex::ANIM_Zombie].ChangeAnimationEntity(zombieAnims[k].entity, "anim_eat", 0, zombie_layer, true);
+  //         for(size_t i=0; i< animComponent[EnumAnimationIndex::ANIM_Zombie].GetLayerSize();i++){
+  //           SetZombieAnimation(zombieAnims[k].entity[i], animComponent[EnumAnimationIndex::ANIM_Zombie].GetNameID(i),type);
+  //         }
+  //       }else if(type == Zombie_State_enum::poleVaulterZombie){
+  //         animComponent[EnumAnimationIndex::ANIM_Zombie_PoleVaulter].ChangeAnimationEntity(zombieAnims[k].entity, "anim_eat", 0, zombie_layer, true);
+  //         for(size_t i=0; i< animComponent[EnumAnimationIndex::ANIM_Zombie].GetLayerSize();i++){
+  //           SetZombieAnimation(zombieAnims[k].entity[i], animComponent[EnumAnimationIndex::ANIM_Zombie].GetNameID(i),type);
+  //         }
+  //       }
+  //     }
+  //     break;
+  //   }
+  // }
+
+  // return 1;
 }
 
 bool Zombie::damage(const int entityID, DamageType damageType) {
@@ -226,7 +395,7 @@ bool Zombie::damage(const int entityID, DamageType damageType) {
   int& life = lifeArray[father];
   life -= damageArray[entityID];
   printf("lifeArray: %d\n",lifeArray[father]);
-  // damagedZombie.push_back()
+
   size_t size = zombieAnims.size();
   unsigned int indexAnim = size;
   for(size_t i=0; i < size; i++){
@@ -238,10 +407,10 @@ bool Zombie::damage(const int entityID, DamageType damageType) {
 
   if(indexAnim == size) { return false; }
 
+  //con el salvavidas de pato en la piscina al explotar no muestran nada, solo se destruye
   switch (type){
   case normalZombie:
-    if (lifeArray[father] <= 0) {
-      
+    if (life <= 0) {     
       if(damageType == Bullet){
         for(ZombieAnimation& anim: zombieAnims){
           if(anim.id == father){
@@ -312,44 +481,250 @@ bool Zombie::damage(const int entityID, DamageType damageType) {
           }
         }
       }
-    }else if(life <= 80){
-      for(ZombieAnimation& anim: zombieAnims){
-        if(anim.id == father){
-          int layerID = animComponent[EnumAnimationIndex::ANIM_Zombie].GetAnimationNameID("anim_head1");
-          setSprite(anim.entity[layerID],-1,enumSpriteLayer::zombie_layer);
-          layerID = animComponent[EnumAnimationIndex::ANIM_Zombie].GetAnimationNameID("anim_head2");
-          setSprite(anim.entity[layerID],-1,enumSpriteLayer::zombie_layer);
-          layerID = animComponent[EnumAnimationIndex::ANIM_Zombie].GetAnimationNameID("anim_tongue");
-          setSprite(anim.entity[layerID],-1,enumSpriteLayer::zombie_layer);
-          layerID = animComponent[EnumAnimationIndex::ANIM_Zombie].GetAnimationNameID("anim_hair");
-          setSprite(anim.entity[layerID],-1,enumSpriteLayer::zombie_layer);
-          break;
-        }
-      } 
-    } else if(life <= 170){
-      printf("dano igual a 170\n");
-      for(ZombieAnimation& anim: zombieAnims){
-        if(anim.id == father){
-          int layerID = animComponent[EnumAnimationIndex::ANIM_Zombie].GetAnimationNameID("Zombie_outerarm_lower");
-          printf("layerID 1: %d",layerID);
-          setSprite(anim.entity[layerID],-1,enumSpriteLayer::zombie_layer);
-          layerID = animComponent[EnumAnimationIndex::ANIM_Zombie].GetAnimationNameID("Zombie_outerarm_hand");
-          printf("layerID 2: %d",layerID);
-          setSprite(anim.entity[layerID],-1,enumSpriteLayer::zombie_layer);
-          layerID = animComponent[EnumAnimationIndex::ANIM_Zombie].GetAnimationNameID("Zombie_outerarm_upper");
-          createTexture(anim.entity[layerID],"REANIM/Zombie_outerarm_upper2.PNG");
-          break;
-        }
-      }    
+    }else{
+      setNormalZombieAnimation();
     }
     break;
-  
+  case coneheadZombie:
+    if (life <= 0) {     
+      if(damageType == Bullet){
+        for(ZombieAnimation& anim: zombieAnims){
+          if(anim.id == father){
+            printf("cambie anim zombie\n");
+            animComponent[EnumAnimationIndex::ANIM_Zombie].ChangeAnimationEntity(anim.entity,"anim_death2", 0, enumSpriteLayer::zombie_layer, false);
+            // delete boxcollider
+            for(unsigned int i=0; i<boxColliderZombie.size();i++){
+              if(boxColliderZombie[i].id == boxColliderID){
+                boxColliderZombie.erase(boxColliderZombie.begin()+i);
+                break;
+              }
+            }
+
+            deleteDebugBoxCollider(boxColliderID);
+            deadZombie.push_back(*this);
+            type = NoneZombie;
+            return true;
+            break;
+          }  
+        }
+      }else if(damageType == EXPLOSION){
+        printf("damage explosion zmbie\n");
+        for(ZombieAnimation& anim: zombieAnims){
+          if(anim.id == father){
+            for(unsigned int i=0 ; i < zombieAnims.size(); i++){
+              if(zombieAnims[i].id == father){
+                // printf("zombie father ID: %d\n",zombieAnims[i].id);
+                ZombieAnimation& zomAnim = zombieAnims[i];
+                int animSize = zombieAnims[i].entity.size()-1;
+                while (animSize >= 0)
+                {
+                  // printf("deleting zombie anim ID: %d\n",zombieAnims[i].entity[animSize]);
+                  deletePosArray(zomAnim.entity[animSize]);
+                  deleteFinalPosArray(zomAnim.entity[animSize]);
+                  deleteFatherIDChild(father, &zomAnim.entity[animSize]);
+                  deleteSprite(zomAnim.entity[animSize]);
+                  deleteTexPosArray(zomAnim.entity[animSize]);
+                  for(unsigned int j=0; j< frameCounterArray.size();j++){
+                    if(frameCounterArray[j].entityID == zomAnim.entity[animSize]){
+                      frameCounterArray.erase(frameCounterArray.begin() + j);
+                      break;
+                    }
+                  }
+                  Entities::deleteID(zomAnim.entity[animSize]);
+                  animSize--;
+                }
+                zombieAnims[i].entity.clear();
+                zombieAnims.erase(zombieAnims.begin() + i);
+                break;
+              }
+            }
+            
+            // delete boxcollider
+            for(unsigned int i=0; i<boxColliderZombie.size();i++){
+              if(boxColliderZombie[i].id == boxColliderID){
+                boxColliderZombie.erase(boxColliderZombie.begin()+i);
+                break;
+              }
+            }
+            
+            createNormalCharredZombie(father,posArray[father]);
+
+
+            charredZombie.push_back(*this);
+            type = NoneZombie;
+            return true;
+            break;
+          }
+        }
+      }
+    }else{
+      for(ZombieAnimation& anim: zombieAnims){
+        if(anim.id == father){
+          setConeheadAnimation(anim.entity[anim_cone]);   
+        }
+      }
+    }
+    break;
+  case bucketHeadZombie:
+  if (life <= 0) {     
+      if(damageType == Bullet){
+        for(ZombieAnimation& anim: zombieAnims){
+          if(anim.id == father){
+            animComponent[EnumAnimationIndex::ANIM_Zombie].ChangeAnimationEntity(anim.entity,"anim_death2", 0, enumSpriteLayer::zombie_layer, false);
+            // delete boxcollider
+            for(unsigned int i=0; i<boxColliderZombie.size();i++){
+              if(boxColliderZombie[i].id == boxColliderID){
+                boxColliderZombie.erase(boxColliderZombie.begin()+i);
+                break;
+              }
+            }
+
+            deleteDebugBoxCollider(boxColliderID);
+            deadZombie.push_back(*this);
+            type = NoneZombie;
+            return true;
+            break;
+          }  
+        }
+      }else if(damageType == EXPLOSION){
+        for(ZombieAnimation& anim: zombieAnims){
+          if(anim.id == father){
+            for(unsigned int i=0 ; i < zombieAnims.size(); i++){
+              if(zombieAnims[i].id == father){
+                // printf("zombie father ID: %d\n",zombieAnims[i].id);
+                ZombieAnimation& zomAnim = zombieAnims[i];
+                int animSize = zombieAnims[i].entity.size()-1;
+                while (animSize >= 0)
+                {
+                  // printf("deleting zombie anim ID: %d\n",zombieAnims[i].entity[animSize]);
+                  deletePosArray(zomAnim.entity[animSize]);
+                  deleteFinalPosArray(zomAnim.entity[animSize]);
+                  deleteFatherIDChild(father, &zomAnim.entity[animSize]);
+                  deleteSprite(zomAnim.entity[animSize]);
+                  deleteTexPosArray(zomAnim.entity[animSize]);
+                  for(unsigned int j=0; j< frameCounterArray.size();j++){
+                    if(frameCounterArray[j].entityID == zomAnim.entity[animSize]){
+                      frameCounterArray.erase(frameCounterArray.begin() + j);
+                      break;
+                    }
+                  }
+                  Entities::deleteID(zomAnim.entity[animSize]);
+                  animSize--;
+                }
+                zombieAnims[i].entity.clear();
+                zombieAnims.erase(zombieAnims.begin() + i);
+                break;
+              }
+            }
+            
+            // delete boxcollider
+            for(unsigned int i=0; i<boxColliderZombie.size();i++){
+              if(boxColliderZombie[i].id == boxColliderID){
+                boxColliderZombie.erase(boxColliderZombie.begin()+i);
+                break;
+              }
+            }
+            
+            createNormalCharredZombie(father,posArray[father]);
+
+            charredZombie.push_back(*this);
+            type = NoneZombie;
+            return true;
+            break;
+          }
+        }
+      }
+    }else{
+      for(ZombieAnimation& anim: zombieAnims){
+        if(anim.id == father){
+          setBucketheadAnimation(anim.entity[anim_bucket]);
+        }
+      }
+    }
+    break;
+  case poleVaulterZombie:
+  if (life <= 0) {     
+      if(damageType == Bullet){
+        for(ZombieAnimation& anim: zombieAnims){
+          if(anim.id == father){
+            animComponent[EnumAnimationIndex::ANIM_Zombie_PoleVaulter].ChangeAnimationEntity(anim.entity,"anim_death", 0, enumSpriteLayer::zombie_layer, false);
+            // delete boxcollider
+            for(unsigned int i=0; i<boxColliderZombie.size();i++){
+              if(boxColliderZombie[i].id == boxColliderID){
+                boxColliderZombie.erase(boxColliderZombie.begin()+i);
+                break;
+              }
+            }
+
+            deleteDebugBoxCollider(boxColliderID);
+            deadZombie.push_back(*this);
+            type = NoneZombie;
+            return true;
+            break;
+          }  
+        }
+      }else if(damageType == EXPLOSION){
+        for(ZombieAnimation& anim: zombieAnims){
+          if(anim.id == father){
+            for(unsigned int i=0 ; i < zombieAnims.size(); i++){
+              if(zombieAnims[i].id == father){
+                // printf("zombie father ID: %d\n",zombieAnims[i].id);
+                ZombieAnimation& zomAnim = zombieAnims[i];
+                int animSize = zombieAnims[i].entity.size()-1;
+                while (animSize >= 0)
+                {
+                  // printf("deleting zombie anim ID: %d\n",zombieAnims[i].entity[animSize]);
+                  deletePosArray(zomAnim.entity[animSize]);
+                  deleteFinalPosArray(zomAnim.entity[animSize]);
+                  deleteFatherIDChild(father, &zomAnim.entity[animSize]);
+                  deleteSprite(zomAnim.entity[animSize]);
+                  deleteTexPosArray(zomAnim.entity[animSize]);
+                  for(unsigned int j=0; j< frameCounterArray.size();j++){
+                    if(frameCounterArray[j].entityID == zomAnim.entity[animSize]){
+                      frameCounterArray.erase(frameCounterArray.begin() + j);
+                      break;
+                    }
+                  }
+                  Entities::deleteID(zomAnim.entity[animSize]);
+                  animSize--;
+                }
+                zombieAnims[i].entity.clear();
+                zombieAnims.erase(zombieAnims.begin() + i);
+                break;
+              }
+            }
+            
+            // delete boxcollider
+            for(unsigned int i=0; i<boxColliderZombie.size();i++){
+              if(boxColliderZombie[i].id == boxColliderID){
+                boxColliderZombie.erase(boxColliderZombie.begin()+i);
+                break;
+              }
+            }
+            
+            createNormalCharredZombie(father,posArray[father]); // TODO: CHANGE THIS
+
+            charredZombie.push_back(*this);
+            type = NoneZombie;
+            return true;
+            break;
+          }
+        }
+      }
+    }
+    break;
   default:
     break;
   }
 
   std::vector<int>& animEntity = zombieAnims[indexAnim].entity;
   size = animEntity.size();
+  if(damageType == Bullet){
+    color.set(10,10,10,0);
+  }else if(damageType == SNOW_BULLET){
+    // TODO: include timer to stop slow movement 
+    color.set(10,10,0,0);
+  }
   for(size_t i=0; i < size; i++){
     if(spriteArray.count(animEntity[i]) == 1){
       spriteArray[animEntity[i]].color = Tyra::Color(255, 255, 255, 128);
@@ -571,6 +946,9 @@ void createNormalCharredZombie(int& fatherID, Tyra::Vec2 pos){
 
 void createNormalZombie(const int id, const int fatherID, Tyra::Vec2 pos) {
   printf("zmobie normal id: %d\n",fatherID);
+  // Life
+  lifeArray.insert(zombie[id].father, 270);
+
   ZombieAnimation anim;
   anim.id = fatherID;
   // printf("zombie anim size: %d\n", animComponent[EnumAnimationIndex::ANIM_Zombie].GetLayerSize());
@@ -579,24 +957,12 @@ void createNormalZombie(const int id, const int fatherID, Tyra::Vec2 pos) {
   int size = animComponent[EnumAnimationIndex::ANIM_Zombie].GetLayerSize();
   Zombie_State_enum type = zombie[id].type;
   for(int i=0;i< size;i++){
-    SetZombieAnimation(anim.entity[i], animComponent[EnumAnimationIndex::ANIM_Zombie].GetNameID(i) /*animClipLayers[EnumAnimationIndex::ANIM_Zombie][i].nameID*/, type);
+    zombie[id].SetZombieAnimation(anim.entity[i], animComponent[EnumAnimationIndex::ANIM_Zombie].GetNameID(i) /*animClipLayers[EnumAnimationIndex::ANIM_Zombie][i].nameID*/, type);
   }
   zombieAnims.push_back(anim);
 
-  // unsigned int frameIndex = frameCounterArray.size();
-  // for(size_t i=0;i<frameCounterArray.size();i++){
-  //   if(frameCounterArray[i].entityID == anim.entity[0]){
-  //     frameIndex = i;
-  //     printf("frame index: %d\n",i);
-  //     break;
-  //   }
-  // }
-  // Life
-  lifeArray.insert(zombie[id].father, 270);  // 270 for flagZombie
-  // TODO: change apparence when has 100 of life
-
   // damage
-  damageArray[zombie[id].father] = 50;
+  damageArray[zombie[id].father] = 36;
 
   // speed
   speedArray[zombie[id].father] = 1;
@@ -608,6 +974,9 @@ void createNormalZombie(const int id, const int fatherID, Tyra::Vec2 pos) {
 }
 
 void createFlagZombie(const int id, const int fatherID, Tyra::Vec2 pos) {
+  // Life
+  lifeArray.insert(zombie[id].father, 270);
+
   ZombieAnimation anim;
   anim.id = fatherID;
   // printf("zombie anim size: %d\n", animComponent[EnumAnimationIndex::ANIM_Zombie].GetLayerSize());
@@ -616,14 +985,10 @@ void createFlagZombie(const int id, const int fatherID, Tyra::Vec2 pos) {
   Zombie_State_enum type = zombie[id].type;
 
   for(int i=0;i< size;i++){
-    SetZombieAnimation(anim.entity[i], animComponent[EnumAnimationIndex::ANIM_Zombie].GetNameID(i), type);
+    zombie[id].SetZombieAnimation(anim.entity[i], animComponent[EnumAnimationIndex::ANIM_Zombie].GetNameID(i), type);
   }
 
   zombieAnims.push_back(anim);
-
-  // Life
-  lifeArray.insert(zombie[id].father, 200);  // 270 for flagZombie
-  // TODO: change apparence when has 100 of life
 
   // damage
   damageArray[zombie[id].father] = 50;
@@ -638,24 +1003,26 @@ void createFlagZombie(const int id, const int fatherID, Tyra::Vec2 pos) {
 }
 
 void createConeheadZombie(const int id, const int fatherID, Tyra::Vec2 pos) {
+  // Life
+  lifeArray.insert(fatherID, 640);  // 370 for cone 270 for flagZombie
+
   ZombieAnimation anim;
   anim.id = fatherID;
   // printf("zombie anim size: %d\n", animComponent[EnumAnimationIndex::ANIM_Zombie].GetLayerSize());
   animComponent[EnumAnimationIndex::ANIM_Zombie].SetAnimationToEntity(anim.entity,zombie[id].father, Tyra::Vec2(1, 1), "anim_walk", 0, true, enumSpriteLayer::zombie_layer);
   int size = animComponent[EnumAnimationIndex::ANIM_Zombie].GetLayerSize();
   Zombie_State_enum type = zombie[id].type;
+  printf("aca\n");
   for(int i=0;i< size;i++){
-    SetZombieAnimation(anim.entity[i], animComponent[EnumAnimationIndex::ANIM_Zombie].GetNameID(i), type);
+    zombie[id].SetZombieAnimation(anim.entity[i], animComponent[EnumAnimationIndex::ANIM_Zombie].GetNameID(i), type);
   }
-
+printf("aca2\n");
   zombieAnims.push_back(anim);
 
-  // Life
-  lifeArray.insert(fatherID, 200);  // 270 for flagZombie
   // TODO: change apparence when has 100 of life
 
   // damage
-  damageArray[fatherID] = 50;
+  damageArray[fatherID] = 36;
 
   // speed
   speedArray[fatherID] = 1;
@@ -667,22 +1034,21 @@ void createConeheadZombie(const int id, const int fatherID, Tyra::Vec2 pos) {
 }
 
 void createPoleVaulterZombie(const int id, const int fatherID, Tyra::Vec2 pos) {
+  // Life
+  lifeArray.insert(fatherID, 600);
+  
   ZombieAnimation anim;
   anim.id = fatherID;
-  printf("zombie anim size: %d\n", animComponent[EnumAnimationIndex::ANIM_Zombie].GetLayerSize());
-  animComponent[EnumAnimationIndex::ANIM_Zombie_PoleVaulter].SetAnimationToEntity(anim.entity,zombie[id].father, Tyra::Vec2(1, 1), 14,50, true, enumSpriteLayer::zombie_layer);
+  printf("zombie anim size: %d\n", animComponent[EnumAnimationIndex::ANIM_Zombie_PoleVaulter].GetLayerSize());
+  animComponent[EnumAnimationIndex::ANIM_Zombie_PoleVaulter].SetAnimationToEntity(anim.entity,zombie[id].father, Tyra::Vec2(1, 1), "anim_walk",0, true, enumSpriteLayer::zombie_layer);
 
   zombieAnims.push_back(anim);
 
-  // Life
-  lifeArray.insert(zombie[id].father, 200);  // 270 for flagZombie
-  // TODO: change apparence when has 100 of life
-
   // damage
-  damageArray[zombie[id].father] = 100;
+  damageArray[fatherID] = 100;
 
   // speed
-  speedArray[zombie[id].father] = 1;
+  speedArray[fatherID] = 1;
 
   // HitBox
   createBoxCollider(zombie[id].boxColliderID, BoxColliderEnum::BOXCOLLIDER_ZOMBIE, BoxCollider(zombie[id].boxColliderID, pos.x, pos.y + 10, 28, 50));
@@ -691,6 +1057,9 @@ void createPoleVaulterZombie(const int id, const int fatherID, Tyra::Vec2 pos) {
 }
 
 void createBucketheadZombie(const int id, const int fatherID, Tyra::Vec2 pos) {
+  // Life
+  lifeArray.insert(zombie[id].father, 640);
+
   ZombieAnimation anim;
   anim.id = fatherID;
   animComponent[EnumAnimationIndex::ANIM_Zombie].SetAnimationToEntity(anim.entity,zombie[id].father, Tyra::Vec2(1, 1), "anim_walk", 0, true, enumSpriteLayer::zombie_layer);
@@ -698,17 +1067,13 @@ void createBucketheadZombie(const int id, const int fatherID, Tyra::Vec2 pos) {
   Zombie_State_enum type = zombie[id].type;
   
   for(int i=0;i< size;i++){
-    SetZombieAnimation(anim.entity[i], animComponent[EnumAnimationIndex::ANIM_Zombie].GetNameID(i), type);
+    zombie[id].SetZombieAnimation(anim.entity[i], animComponent[EnumAnimationIndex::ANIM_Zombie].GetNameID(i), type);
   }
 
   zombieAnims.push_back(anim);
 
-  // Life
-  lifeArray.insert(zombie[id].father, 200);  // 270 for flagZombie
-  // TODO: change apparence when has 100 of life
-
   // damage
-  damageArray[zombie[id].father] = 100;
+  damageArray[zombie[id].father] = 36;
 
   // speed
   speedArray[zombie[id].father] = 1;
@@ -805,7 +1170,7 @@ void createZombieMain() {
 
       BoxCollider& boxcollider = boxColliderArray[BOXCOLLIDER_MAP][boxColliderArrayID[map[row][8]]];
       createZombie(Vec2(boxcollider.x, boxcollider.y),
-            Zombie_State_enum::normalZombie);
+            Zombie_State_enum::bucketHeadZombie);
 
       // createZombie(Vec2(mapCollider[row][8].x, mapCollider[row][8].y),
       //              Zombie_State_enum::coneheadZombie);

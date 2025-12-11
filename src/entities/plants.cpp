@@ -353,12 +353,80 @@ bool createPlant(Plant_State_enum typePlant, const int row, const int column, in
 
 void Plant::newPlant(Plant_State_enum newType) { type = newType; }
 
+void Plant::setWallnutAnimation(){
+  //TODO: the system animation reset to the first image
+  if (lifeArray[father] <= 1333) {
+      printf("change animation\n");
+      for(size_t i=0; i<plantAnims.size();i++){
+        if(plantAnims[i].id == father){
+          int layerID = animComponent[ANIM_Wallnut].GetAnimationNameID("anim_face");
+          spriteArray[plantAnims[i].entity[layerID]].textureID = TEX_Wallnut_cracked2->id;
+          originalSize[plantAnims[i].entity[layerID]] =
+                  Vec2(TEX_Wallnut_cracked2->getWidth(), TEX_Wallnut_cracked2->getHeight());  
+        }
+      }
+    } else if (lifeArray[father] <= 2667) {
+      printf("change animation\n");
+      for(size_t i=0; i<plantAnims.size();i++){
+        if(plantAnims[i].id == father){
+          int layerID = animComponent[ANIM_Wallnut].GetAnimationNameID("anim_face");
+          spriteArray[plantAnims[i].entity[layerID]].textureID = TEX_Wallnut_cracked1->id;
+          originalSize[plantAnims[i].entity[layerID]] =
+                  Vec2(TEX_Wallnut_cracked1->getWidth(), TEX_Wallnut_cracked1->getHeight());  
+        }
+      }
+    }
+}
+
+void attackZombie(int entityID) {
+  int father = 0;
+  for(size_t i=0; i< plantAnims.size();i++){
+    if(plantAnims[i].entity[0] == entityID){
+      animComponent[EnumAnimationIndex::ANIM_Chomper].ChangeAnimationEntity(plantAnims[i].entity,"anim_chew",0,enumSpriteLayer::plants,true);
+      father = plantAnims[i].id;
+    }
+  }
+
+  BoxCollider plantBox;
+  for(unsigned int i=0; i<boxColliderPlant.size();i++){
+    if(boxColliderPlant[i].id == father){
+      plantBox = boxColliderPlant[i];
+      break;
+    }
+  }
+
+  int id= 0;
+  std::vector<BoxCollider>& zombieBox = boxColliderZombie;
+  for (BoxCollider& zomBox: zombieBox) {
+    if (zomBox.collision(&plantBox) == true){
+        id = zomBox.id;
+    }
+  }
+
+  if(id == 0){
+    TYRA_TRAP("NO ENCONTRO EL ZOMBIE\n");
+  }
+
+  for(size_t i=0;i<zombie.size();i++){
+    if(id == zombie[i].boxColliderID){
+      zombie[i].deleteData();
+      return;
+    }
+  }
+
+  for(size_t i=0;i<zombieAttackState.size();i++){
+    if(id == zombieAttackState[i].boxColliderID){
+      zombieAttackState[i].deleteData();
+      return;
+    }
+  }
+}
+
 int Plant::attack() {
   if (type == NonePlant) {
     return 1;
   }
   
-  // std::vector<BoxCollider> zombieBox = boxColliderArray[BOXCOLLIDER_ZOMBIE];
   std::vector<BoxCollider>& zombieBox = boxColliderZombie;
   if (type == PeaShotter || type == SnowPea || type == Repeater) {
     for (BoxCollider& zomBox: zombieBox) {
@@ -395,7 +463,13 @@ int Plant::attack() {
       printf("sunflower create sun\n");
       sunTimer.maxMS = 24000;
       sunTimer.resetCounter();
-      // sunManager.create(spriteArray[id[0]].position, sunCost::normalSun, true);
+      size_t size = plantAnims.size();
+      for(size_t i=0;i<size;i++){
+        if(plantAnims[i].id == father){
+            sunManager.create(spriteArray[plantAnims[i].entity[0]].position, sunCost::normalSun, true);
+          break;
+        }
+      }
     }
   } else if (type == CherryBomb) {
     size_t size = plantAnims.size();
@@ -424,42 +498,6 @@ int Plant::attack() {
                    enumProyectile::ExplosionPowie);
       lifeArray[father] = 0;
       // erase();
-    }
-  } else if (type == Wallnut) {
-    if (lifeArray[father] <= 1333) {
-      printf("change animation\n");
-      for(size_t i=0; i<plantAnims.size();i++){
-        if(plantAnims[i].id == father){
-          const int oldTextureID = spriteArray[plantAnims[i].entity[0]].textureID;
-          Tyra::Texture* oldTexture = texRepo->getByTextureId(oldTextureID);
-          if (oldTexture != TEX_Wallnut_cracked2) {
-            // printf("link sprite\n");
-          
-            // Link new Texture to the sprite entitie
-            spriteArray[plantAnims[i].entity[0]].textureID = TEX_Wallnut_cracked2->id;
-            originalSize[plantAnims[i].entity[0]] =
-                Vec2(TEX_Wallnut_cracked2->getWidth(), TEX_Wallnut_cracked2->getHeight());
-          }
-          break;
-        }
-      }
-    } else if (lifeArray[father] <= 2667) {
-      printf("change animation\n");
-      for(size_t i=0; i<plantAnims.size();i++){
-        if(plantAnims[i].id == father){
-          const int oldTextureID = spriteArray[plantAnims[i].entity[0]].textureID;
-          Tyra::Texture* oldTexture = texRepo->getByTextureId(oldTextureID);
-          if (oldTexture != TEX_Wallnut_cracked1) {
-            // printf("link sprite\n");
-          
-            // Link new Texture to the sprite entitie
-            spriteArray[plantAnims[i].entity[0]].textureID = TEX_Wallnut_cracked1->id;
-            originalSize[plantAnims[i].entity[0]] =
-                Vec2(TEX_Wallnut_cracked1->getWidth(), TEX_Wallnut_cracked1->getHeight());
-          }
-          break;
-        }
-      }
     }
   } else if (type == WallnutBowling){
     posArray[father].x++;
@@ -549,13 +587,13 @@ int Plant::attack() {
       if (chomperTimer.maxMS == 0 &&
           zomBox.collision(&plantBox) ==
               true) {
-        // deadZombie.push_back(*it);
+        for(size_t i=0; i< plantAnims.size();i++){
+          if(plantAnims[i].id == father){
+            animComponent[EnumAnimationIndex::ANIM_Chomper].ChangeAnimationEntity(plantAnims[i].entity,"anim_bite",0,enumSpriteLayer::plants,true);
+            break;
+          }
+        }
         chomperTimer.maxMS = 42000;
-        // it->damage(father);
-        // it->erase();
-        // it = zombie.erase(it);
-      } else {
-        // it++;
       }
     }
   }
@@ -565,22 +603,28 @@ int Plant::attack() {
 void Plant::damage(const int entityID){
   damaged = true;
   lifeArray[father] -= damageArray[entityID];
+  printf("plant life: %d\n",lifeArray[father]);
   size_t size = plantAnims.size();
-  unsigned int indexAnim = size;
+  std::vector<unsigned int> indexes;
   for(size_t i=0; i < size; i++){
     if (plantAnims[i].id == father) {
-      indexAnim = i;
-      break;
+      indexes.push_back(i);
     }
   }
 
-  if(indexAnim == size) { return; }
+  if(indexes.size() == 0) { return; }
 
-  std::vector<int>& animEntity = plantAnims[indexAnim].entity;
-  size = animEntity.size();
-  for(size_t i=0; i < size; i++){
-    if (spriteArray.count(animEntity[i]) == 1) {;
-      spriteArray[animEntity[i]].color = Tyra::Color(255, 255, 255, 128);
+  if(type == Wallnut){
+    setWallnutAnimation();
+  }
+
+  for(unsigned int indexAnim : indexes){
+    std::vector<int>& animEntity = plantAnims[indexAnim].entity;
+    size = animEntity.size();
+    for(size_t i=0; i < size; i++){
+      if (spriteArray.count(animEntity[i]) == 1) {;
+        spriteArray[animEntity[i]].color = Tyra::Color(255, 255, 255, 128);
+      }
     }
   }
 }
@@ -591,29 +635,31 @@ int Plant::normalColor(){
   }
 
   size_t size = plantAnims.size();
-  unsigned int indexAnim = size;
+  std::vector<unsigned int> indexes;
+
   for(size_t i=0; i < size; i++){
     if (plantAnims[i].id == father) {
-      indexAnim = i;
-      break;
+      indexes.push_back(i);
     }
   }
 
-  if(indexAnim == size) { return 1; }
+  if(indexes.size() == 0) { return 1; }
 
-  std::vector<int>& ids = plantAnims[indexAnim].entity;
-  size = ids.size();
-  for(size_t i=0; i < size; i++){
-    if (spriteArray.count(ids[i]) == 1) {
-      Tyra::Sprite& animSprite = spriteArray[ids[i]];
-      animSprite.color.r -= 5;
-      animSprite.color.g -= 5;
-      animSprite.color.b -= 5;
-      if(animSprite.color.r < 128.0f){
-        animSprite.color.r = 128.0f;
-        animSprite.color.g = 128.0f;
-        animSprite.color.b = 128.0f;
-        damaged = false;
+  for(unsigned int indexAnim : indexes){
+    std::vector<int>& ids = plantAnims[indexAnim].entity;
+    size = ids.size();
+    for(size_t i=0; i < size; i++){
+      if (spriteArray.count(ids[i]) == 1) {
+        Tyra::Sprite& animSprite = spriteArray[ids[i]];
+        animSprite.color.r -= 5;
+        animSprite.color.g -= 5;
+        animSprite.color.b -= 5;
+        if(animSprite.color.r < 128.0f){
+          animSprite.color.r = 128.0f;
+          animSprite.color.g = 128.0f;
+          animSprite.color.b = 128.0f;
+          damaged = false;
+        }
       }
     }
   }
@@ -662,8 +708,10 @@ void Plant::erase() {
       Entities::deleteID(*it);
       it++;
     }
-
+    // TODO: delete all plantAnims from 1 Plant
     plantAnims[animIndex].entity.clear();
+    plantAnims.erase(plantAnims.begin() + animIndex);
+
     if (type == PeaShotter) {
       timerArray.erase(father);
       deleteDebugPoint(father);

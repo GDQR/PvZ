@@ -280,6 +280,7 @@ struct FrameOut {
 class FrameCounter {
  public:
   int update();
+  void CheckEvent();
   bool IsLastframe();
   
   bool repeat = true;
@@ -288,7 +289,7 @@ class FrameCounter {
   unsigned int layerIndex;
   unsigned int framesCounter = 0;
   unsigned int currentFrame = 1;
-  unsigned int framesSpeed = 20;
+  unsigned int framesSpeed = 24;
   unsigned int firstFrame = 1;
   unsigned int lastFrame = 1;
 };
@@ -305,11 +306,12 @@ extern std::vector<Tyra::Vec2> positionFrame;
 extern std::vector<Tyra::Vec2> scaleFrame;
 extern std::vector<Tyra::Vec2> angleFrame;
 extern std::vector<float> alphaFrame;
-extern std::vector<int> drawFrame;
+extern std::vector<enumDraw> drawFrame;
 
 void initAnimation();
-void setSprite(const int entityID, const int draw, enumSpriteLayer layer);
+void setSprite(const int entityID, const enumDraw draw, enumSpriteLayer layer);
 void loadAnimString();
 void loadAnimation(const EnumAnimationIndex animNameID);
 
 void SetAnimationNamesID(EnumAnimationIndex animation);
+void attackPlant(int father);

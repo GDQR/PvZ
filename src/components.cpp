@@ -6,15 +6,15 @@
 // sparse array
 std::vector<FrameCounter> frameCounterArray;
 std::unordered_map<int, std::vector<char*>> layerAnimNames;
-ArrayKey<int, FatherID> fatherIDArray(enumComponents::fatherID);
-ArrayKey<int, Tyra::Vec2> posArray(enumComponents::pos);
-ArrayKey<int, Tyra::Vec2> texPosArray(enumComponents::texPos);
-ArrayKey<int, Tyra::Vec2> finalPosArray(enumComponents::finalPos);
-ArrayKey<int, Tyra::Sprite> spriteArray(enumComponents::sprite);
-ArrayKey<int, int> spriteRenderIDArray(enumComponents::spriteRender);
+ArrayKey<FatherID> fatherIDArray(enumComponents::fatherID);
+ArrayKey<Tyra::Vec2> posArray(enumComponents::pos);
+ArrayKey<Tyra::Vec2> texPosArray(enumComponents::texPos);
+ArrayKey<Tyra::Vec2> finalPosArray(enumComponents::finalPos);
+ArrayKey<Tyra::Sprite> spriteArray(enumComponents::sprite);
+ArrayKey<int> spriteRenderIDArray(enumComponents::spriteRender);
 // std::vector<int> spriteNormalIdStopRender;
 // std::vector<int> animationIdStopRender;
-ArrayKey<int, Tyra::Vec2> angleArray(enumComponents::angle);
+ArrayKey<Tyra::Vec2> angleArray(enumComponents::angle);
 std::unordered_map<int, Tyra::Vec2> originalSize;
 std::unordered_map<int, Tyra::Vec2> scaleTexture;
 std::unordered_map<int, Tyra::Vec2> pointColliderArray;
@@ -29,16 +29,19 @@ std::vector<BoxCollider> boxColliderSun;
 std::vector<BoxCollider> boxColliderPlayer;
 std::vector<ResponseCollisionProjectile> responseCollisionZombieProjectile;
 std::vector<ResponseCollisionZombiePlant> responseCollisionZombiePlant;
+std::vector<ResponseCollisionZombiePlant> previousResponseCollisionZombiePlant;
 std::vector<ResponseCollisionZombiePlant> stopResponseCollisionZombiePlant;
+std::vector<ResponseCollisionZombiePlant> enterResponseCollisionZombiePlant;
 std::vector<ResponseCollisionSunCursor> responseCollisionSunCursor;
 std::unordered_map<int, TriggerBoxCollider> resultBoxCollider;
-ArrayKey<int, PS2Timer> timerArray(enumComponents::timer);
+ArrayKey<PS2Timer> timerArray(enumComponents::timer);
 std::unordered_map<int, float> speedArray;
 std::unordered_map<int, int> damageArray;
-ArrayKey<int, int> lifeArray(enumComponents::life);
+ArrayKey<int> lifeArray(enumComponents::life);
 std::map<int, Tyra::Vec2> pivot;
 std::vector<Controller> controller;
 std::vector<Zombie> zombie;
+std::vector<Zombie> zombieAttackState;
 std::vector<Zombie> deadZombie;
 std::vector<Zombie> charredZombie;
 std::vector<Zombie> damagedZombie;
@@ -183,7 +186,7 @@ void DeckCursor::moveLeft(int playerID) {
   std::vector<int>& actualAnim = cardsAnimations[pos].entity;
   for(size_t i=0;i<actualAnim.size();i++){
     deleteFatherIDChild(playerID,&actualAnim[i]);
-    setSprite(actualAnim[i],-1,card_layer);
+    setSprite(actualAnim[i],noDraw,card_layer);
   }
   pos--;
   if (pos < 0) {
@@ -194,7 +197,7 @@ void DeckCursor::moveLeft(int playerID) {
   std::vector<int>& newAnim = cardsAnimations[pos].entity;
   for(size_t i=0;i<newAnim.size();i++){
     newFatherID(&playerID,&newAnim[i]);
-    setSprite(newAnim[i],0,card_layer);
+    setSprite(newAnim[i],draw,card_layer);
   }
 }
 
@@ -202,7 +205,7 @@ void DeckCursor::moveRight(int playerID) {
   std::vector<int>& actualAnim = cardsAnimations[pos].entity;
   for(size_t i=0;i<actualAnim.size();i++){
     deleteFatherIDChild(playerID,&actualAnim[i]);
-    setSprite(actualAnim[i],-1,card_layer);
+    setSprite(actualAnim[i],noDraw,card_layer);
   }
   pos++;
   if (pos >= (int)cards.size()) {
@@ -213,7 +216,7 @@ void DeckCursor::moveRight(int playerID) {
   std::vector<int>& newAnim = cardsAnimations[pos].entity;
   for(size_t i=0;i<newAnim.size();i++){
     newFatherID(&playerID,&newAnim[i]);
-    setSprite(newAnim[i],0,card_layer);
+    setSprite(newAnim[i],draw,card_layer);
   }
 }
 
@@ -261,15 +264,16 @@ bool Proyectile::attack(){
   size = zombie.size();
   for(size_t i=0; i < size; i++){
     if(zombie[i].boxColliderID == zombieCollisionID){
-      if(zombie[i].damage(id, Bullet) == true){
-        zombie.erase(zombie.begin()+i);
+      if(type == pea){
+        if(zombie[i].damage(id,Bullet) == true){
+          zombie.erase(zombie.begin()+i);
+        }
+      }else if(type == snowPea){
+        speedArray[zombie[i].father] = 0.5f;
+        if(zombie[i].damage(id,SNOW_BULLET) == true){
+          zombie.erase(zombie.begin()+i);
+        }
       }
-      // if(zombie[i].erase() == true){
-      //   zombie.erase(zombie.begin()+i);
-      // }else if (type == enumProyectile::snowPea) {
-      //   zombie[i].color.b = 0;
-      //   speedArray[zombie[i].father] = 0.5f;
-      // }
       break;
     }
   }

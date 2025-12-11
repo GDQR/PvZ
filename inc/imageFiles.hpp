@@ -18,3 +18,8 @@ extern const char* IMG_ConveyorBelt_backdrop;
 extern const char* IMG_Wallnut_cracked1;
 extern const char* IMG_Wallnut_cracked2;
 extern const char* IMG_SeedChooser_Button;
+extern const char* IMG_Zombie_cone2;
+extern const char* IMG_Zombie_cone3;
+extern const char* IMG_Zombie_bucket2;
+extern const char* IMG_Zombie_bucket3;
+extern const char* IMG_Pea_splats;

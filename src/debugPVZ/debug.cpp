@@ -158,13 +158,13 @@ void DebugMode::spriteModeMenu() {
   debugSpriteMode.menu();
 }
 int DebugMode::drawSpriteModeMenu() {
-  if (spriteArray.first.size() == 0) {
-    // ERROR MENU
-    engine->font.drawText(&myFont, "Sprites not found", 30, 80, 16, black);
-    engine->font.drawText(&myFont, "PRESS O FOR GO BACK", 30, 320, 16, black);
-    return 1;
-  }
-  debugSpriteMode.drawMenu();
+  // if (spriteArray.first.size() == 0) {
+  //   // ERROR MENU
+  //   engine->font.drawText(&myFont, "Sprites not found", 30, 80, 16, black);
+  //   engine->font.drawText(&myFont, "PRESS O FOR GO BACK", 30, 320, 16, black);
+  //   return 1;
+  // }
+  // debugSpriteMode.drawMenu();
   return 0;
 }
 

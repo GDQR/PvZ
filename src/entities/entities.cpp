@@ -290,7 +290,7 @@ void Player::initPlant(){
       }
     }else{
       for(size_t i=0;i<anim.entity.size();i++){
-        setSprite(anim.entity[i],-1,card_layer);
+        setSprite(anim.entity[i],noDraw,card_layer);
       }
     }
   }
@@ -388,7 +388,7 @@ void SunManager::create(Tyra::Vec2 position, sunCost cost,
     newNaturalSun.father = newSun.father;
     naturalSun.push_back(newNaturalSun);
   }
-  
+
   animComponent[EnumAnimationIndex::ANIM_Sun].SetAnimationToEntity(newSun.id,newSun.father,Tyra::Vec2(0.5f, 0.5f), 1, 12, enumSpriteLayer::sun_layer);
 
   // HitBox
@@ -517,6 +517,8 @@ int zombieFlagMeter;
 unsigned int Entities::counter = 1;
 std::vector<unsigned int> Entities::deadEntities;
 std::vector<IndexComponent> entityComponents; // position [0] is not used
+std::vector<unsigned int> entityKeySparse[COMPONENTS_MAX];
+std::vector<unsigned int> entityKeyDense[COMPONENTS_MAX];
 
 unsigned int Entities::newID() {
   // printf("deadEntities.size(): %d\n",deadEntities.size());
