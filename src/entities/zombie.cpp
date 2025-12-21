@@ -354,9 +354,6 @@ bool Zombie::animAttackPlant() {
           SetZombieAnimation(zombieAnims[k].entity[i], animComponent[EnumAnimationIndex::ANIM_Zombie].GetNameID(i),type);
         }
       }else if(type == Zombie_State_enum::poleVaulterZombie){
-        // for(int j=0; j < frameCounterArray.size(); j++){
-        //   if()
-        // }
         // en el frame 75 se cancela la animacion si hay una colision grande
         // no es comido por el chomper al saltar pero hace la animacion de comer
         unsigned int layer = animComponent[EnumAnimationIndex::ANIM_Zombie_PoleVaulter].GetAnimationNameID("anim_run");
@@ -366,7 +363,6 @@ bool Zombie::animAttackPlant() {
         for(size_t k=0; k<animTime.size();k++){
           if(frameCounter.firstFrame == animTime[k].start
             && frameCounter.lastFrame == animTime[k].end){
-            printf("esta corre\n");
             isRunning = true;
             break;
           }
@@ -961,139 +957,22 @@ void createNormalCharredZombie(int& fatherID, Tyra::Vec2 pos){
   zombieAnims.push_back(anim);  
 }
 
-void createNormalZombie(const int id, const int fatherID, Tyra::Vec2 pos) {
-  printf("zmobie normal id: %d\n",fatherID);
+void createZombieData(const int id, const int fatherID, Tyra::Vec2 pos, int life, int damage, int speed, EnumAnimationIndex animIndex, const char* layer){
   // Life
-  lifeArray.insert(zombie[id].father, 270);
-
-  ZombieAnimation anim;
-  anim.id = fatherID;
-  // printf("zombie anim size: %d\n", animComponent[EnumAnimationIndex::ANIM_Zombie].GetLayerSize());
-  animComponent[EnumAnimationIndex::ANIM_Zombie].SetAnimationToEntity(anim.entity,zombie[id].father, Tyra::Vec2(1, 1), "anim_walk", 0, true, enumSpriteLayer::zombie_layer);
-
-  int size = animComponent[EnumAnimationIndex::ANIM_Zombie].GetLayerSize();
-  Zombie_State_enum type = zombie[id].type;
-  for(int i=0;i< size;i++){
-    zombie[id].SetZombieAnimation(anim.entity[i], animComponent[EnumAnimationIndex::ANIM_Zombie].GetNameID(i) /*animClipLayers[EnumAnimationIndex::ANIM_Zombie][i].nameID*/, type);
-  }
-  zombieAnims.push_back(anim);
-
-  // damage
-  damageArray[zombie[id].father] = 36;
-
-  // speed
-  speedArray[zombie[id].father] = 1;
-
-  // HitBox
-  createBoxCollider(zombie[id].boxColliderID, BoxColliderEnum::BOXCOLLIDER_ZOMBIE, BoxCollider(zombie[id].boxColliderID, pos.x, pos.y + 10, 28, 50));
-  //   BoxCollider(pos.x + 100, pos.y + 20, 28, 50);
-  createDebugBoxCollider(zombie[id].boxColliderID, BoxColliderEnum::BOXCOLLIDER_ZOMBIE, Tyra::MODE_STRETCH);
-}
-
-void createFlagZombie(const int id, const int fatherID, Tyra::Vec2 pos) {
-  // Life
-  lifeArray.insert(zombie[id].father, 270);
-
-  ZombieAnimation anim;
-  anim.id = fatherID;
-  // printf("zombie anim size: %d\n", animComponent[EnumAnimationIndex::ANIM_Zombie].GetLayerSize());
-  animComponent[EnumAnimationIndex::ANIM_Zombie].SetAnimationToEntity(anim.entity,zombie[id].father, Tyra::Vec2(1, 1), "anim_walk", 0, true, enumSpriteLayer::zombie_layer);
-  int size = animComponent[EnumAnimationIndex::ANIM_Zombie].GetLayerSize();
-  Zombie_State_enum type = zombie[id].type;
-
-  for(int i=0;i< size;i++){
-    zombie[id].SetZombieAnimation(anim.entity[i], animComponent[EnumAnimationIndex::ANIM_Zombie].GetNameID(i), type);
-  }
-
-  zombieAnims.push_back(anim);
-
-  // damage
-  damageArray[zombie[id].father] = 50;
-
-  // speed
-  speedArray[zombie[id].father] = 1;
-
-  // HitBox
-  createBoxCollider(zombie[id].boxColliderID, BoxColliderEnum::BOXCOLLIDER_ZOMBIE, BoxCollider(zombie[id].boxColliderID, pos.x, pos.y + 10, 28, 50));
-  //   BoxCollider(pos.x + 100, pos.y + 20, 28, 50);
-  createDebugBoxCollider(zombie[id].boxColliderID, BoxColliderEnum::BOXCOLLIDER_ZOMBIE, Tyra::MODE_STRETCH);
-}
-
-void createConeheadZombie(const int id, const int fatherID, Tyra::Vec2 pos) {
-  // Life
-  lifeArray.insert(fatherID, 640);  // 370 for cone 270 for flagZombie
-
-  ZombieAnimation anim;
-  anim.id = fatherID;
-  // printf("zombie anim size: %d\n", animComponent[EnumAnimationIndex::ANIM_Zombie].GetLayerSize());
-  animComponent[EnumAnimationIndex::ANIM_Zombie].SetAnimationToEntity(anim.entity,zombie[id].father, Tyra::Vec2(1, 1), "anim_walk", 0, true, enumSpriteLayer::zombie_layer);
-  int size = animComponent[EnumAnimationIndex::ANIM_Zombie].GetLayerSize();
-  Zombie_State_enum type = zombie[id].type;
-  printf("aca\n");
-  for(int i=0;i< size;i++){
-    zombie[id].SetZombieAnimation(anim.entity[i], animComponent[EnumAnimationIndex::ANIM_Zombie].GetNameID(i), type);
-  }
-printf("aca2\n");
-  zombieAnims.push_back(anim);
-
-  // TODO: change apparence when has 100 of life
-
-  // damage
-  damageArray[fatherID] = 36;
-
-  // speed
-  speedArray[fatherID] = 1;
-
-  // HitBox
-  createBoxCollider(zombie[id].boxColliderID, BoxColliderEnum::BOXCOLLIDER_ZOMBIE, BoxCollider(zombie[id].boxColliderID, pos.x, pos.y + 20, 28, 50));
-  //   BoxCollider(pos.x + 100, pos.y + 20, 28, 50);
-  createDebugBoxCollider(zombie[id].boxColliderID, BoxColliderEnum::BOXCOLLIDER_ZOMBIE, Tyra::MODE_STRETCH);
-}
-
-void createPoleVaulterZombie(const int id, const int fatherID, Tyra::Vec2 pos) {
-  // Life
-  lifeArray.insert(fatherID, 600);
+  lifeArray.insert(fatherID, life);
   
   ZombieAnimation anim;
   anim.id = fatherID;
-  printf("zombie anim size: %d\n", animComponent[EnumAnimationIndex::ANIM_Zombie_PoleVaulter].GetLayerSize());
-  animComponent[EnumAnimationIndex::ANIM_Zombie_PoleVaulter].SetAnimationToEntity(anim.entity,zombie[id].father, Tyra::Vec2(1, 1), "anim_run",0, true, enumSpriteLayer::zombie_layer);
+  // printf("zombie anim size: %d\n", animComponent[animIndex].GetLayerSize());
+  animComponent[animIndex].SetAnimationToEntity(anim.entity,zombie[id].father, Tyra::Vec2(1, 1), layer, 0, true, enumSpriteLayer::zombie_layer);
 
   zombieAnims.push_back(anim);
 
   // damage
-  damageArray[fatherID] = 36;
+  damageArray[fatherID] = damage;
 
   // speed
-  speedArray[fatherID] = 1;
-
-  // HitBox
-  createBoxCollider(zombie[id].boxColliderID, BoxColliderEnum::BOXCOLLIDER_ZOMBIE, BoxCollider(zombie[id].boxColliderID, pos.x, pos.y + 10, 28, 50));
-  //   BoxCollider(pos.x + 100, pos.y + 20, 28, 50);
-  createDebugBoxCollider(zombie[id].boxColliderID, BoxColliderEnum::BOXCOLLIDER_ZOMBIE, Tyra::MODE_STRETCH);
-}
-
-void createBucketheadZombie(const int id, const int fatherID, Tyra::Vec2 pos) {
-  // Life
-  lifeArray.insert(zombie[id].father, 640);
-
-  ZombieAnimation anim;
-  anim.id = fatherID;
-  animComponent[EnumAnimationIndex::ANIM_Zombie].SetAnimationToEntity(anim.entity,zombie[id].father, Tyra::Vec2(1, 1), "anim_walk", 0, true, enumSpriteLayer::zombie_layer);
-  int size = animComponent[EnumAnimationIndex::ANIM_Zombie].GetLayerSize();
-  Zombie_State_enum type = zombie[id].type;
-  
-  for(int i=0;i< size;i++){
-    zombie[id].SetZombieAnimation(anim.entity[i], animComponent[EnumAnimationIndex::ANIM_Zombie].GetNameID(i), type);
-  }
-
-  zombieAnims.push_back(anim);
-
-  // damage
-  damageArray[zombie[id].father] = 36;
-
-  // speed
-  speedArray[zombie[id].father] = 1;
+  speedArray[fatherID] = speed;
 
   // HitBox
   createBoxCollider(zombie[id].boxColliderID, BoxColliderEnum::BOXCOLLIDER_ZOMBIE, BoxCollider(zombie[id].boxColliderID, pos.x, pos.y + 10, 28, 50));
@@ -1119,15 +998,35 @@ void createZombie(Tyra::Vec2 pos, const Zombie_State_enum type) {
   printf("zombie father id: %d\n", zombie[id].father);
 
   if (type == Zombie_State_enum::normalZombie) {
-    createNormalZombie(id, zombie[id].father, pos);
+    createZombieData(id, zombie[id].father, pos, 270, 36, 1, EnumAnimationIndex::ANIM_Zombie, "anim_walk");
+    ZombieAnimation anim = zombieAnims[zombieAnims.size()-1];
+    int size = animComponent[EnumAnimationIndex::ANIM_Zombie].GetLayerSize();
+    for(int i=0;i< size;i++){
+      zombie[id].SetZombieAnimation(anim.entity[i], animComponent[EnumAnimationIndex::ANIM_Zombie].GetNameID(i), type);
+    }
   } else if (type == Zombie_State_enum::flagZombie) {
-    createFlagZombie(id, zombie[id].father, pos);
+    createZombieData(id, zombie[id].father, pos, 270, 36, 1, EnumAnimationIndex::ANIM_Zombie, "anim_walk");
+    ZombieAnimation anim = zombieAnims[zombieAnims.size()-1];
+    int size = animComponent[EnumAnimationIndex::ANIM_Zombie].GetLayerSize();
+    for(int i=0;i< size;i++){
+      zombie[id].SetZombieAnimation(anim.entity[i], animComponent[EnumAnimationIndex::ANIM_Zombie].GetNameID(i), type);
+    }
   } else if (type == Zombie_State_enum::coneheadZombie) {
-    createConeheadZombie(id, zombie[id].father, pos);
+    createZombieData(id, zombie[id].father, pos, 640, 36, 1, EnumAnimationIndex::ANIM_Zombie, "anim_walk");
+    ZombieAnimation anim = zombieAnims[zombieAnims.size()-1];
+    int size = animComponent[EnumAnimationIndex::ANIM_Zombie].GetLayerSize();
+    for(int i=0;i< size;i++){
+      zombie[id].SetZombieAnimation(anim.entity[i], animComponent[EnumAnimationIndex::ANIM_Zombie].GetNameID(i), type);
+    }
   } else if (type == Zombie_State_enum::poleVaulterZombie) {
-    createPoleVaulterZombie(id, zombie[id].father, pos);
+    createZombieData(id,zombie[id].father, pos, 200, 36, 1, EnumAnimationIndex::ANIM_Zombie_PoleVaulter, "anim_run");
   } else if (type == Zombie_State_enum::bucketHeadZombie) {
-    createBucketheadZombie(id, zombie[id].father, pos);
+    createZombieData(id, zombie[id].father, pos, 640, 36, 1, EnumAnimationIndex::ANIM_Zombie, "anim_walk");
+    ZombieAnimation anim = zombieAnims[zombieAnims.size()-1];
+    int size = animComponent[EnumAnimationIndex::ANIM_Zombie].GetLayerSize();
+    for(int i=0;i< size;i++){
+      zombie[id].SetZombieAnimation(anim.entity[i], animComponent[EnumAnimationIndex::ANIM_Zombie].GetNameID(i), type);
+    }
   }
 
   zombiesCreated++;
