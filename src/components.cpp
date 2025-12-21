@@ -4,7 +4,7 @@
 #include <iostream>
 
 // sparse array
-std::vector<FrameCounter> frameCounterArray;
+ArrayKey<FrameCounter> frameCounterArray(enumComponents::FRAMECOUNTER);
 std::unordered_map<int, std::vector<char*>> layerAnimNames;
 ArrayKey<FatherID> fatherIDArray(enumComponents::fatherID);
 ArrayKey<Tyra::Vec2> posArray(enumComponents::pos);
@@ -42,6 +42,7 @@ std::map<int, Tyra::Vec2> pivot;
 std::vector<Controller> controller;
 std::vector<Zombie> zombie;
 std::vector<Zombie> zombieAttackState;
+std::vector<Zombie> zombieJumpState;
 std::vector<Zombie> deadZombie;
 std::vector<Zombie> charredZombie;
 std::vector<Zombie> damagedZombie;

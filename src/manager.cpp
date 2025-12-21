@@ -41,7 +41,9 @@ void ProjectileManager::update(){
     for(size_t i=0; i < size;i++){
       if(deleteID[sizeProyectile] == projectile[i].id){
         printf("se borra el id: %d\n",projectile[i].id);
-        CreateParticle(posArray[projectile[i].id], enumPARTICLETYPE::PEASPLAT);
+        if(projectile[i].type == enumProyectile::pea || projectile[i].type == enumProyectile::snowPea){
+          CreateParticle(posArray[projectile[i].id], enumPARTICLETYPE::PEASPLAT);
+        }
         projectile[i].erase();
         projectile[i] = projectile[size-1];
         projectile.erase(projectile.begin() + size-1);
@@ -59,7 +61,7 @@ void FrameManager::update(){
   std::vector<FrameOut> frameArray;
   FrameOut frameOut;
   
-  for(FrameCounter& frame: frameCounterArray){
+  for(FrameCounter& frame: frameCounterArray.dataType){
     if(frame.update() == 0){
       // printf("Entity id: %d, animID: %d, layer:%d, frame: %d\n",frame.entityID,frame.animIndex,frame.layerIndex,frame.currentFrame);
       frameOut.entityID = frame.entityID;
@@ -216,15 +218,15 @@ void RendererDebugSpritesManager::update() {
 void RendererSprites::resetFinalPos() {
   // std::map<int, Vec2>::iterator it;
   std::vector<unsigned int>& keys = finalPosArray.getDenseData();
-  for (unsigned int i = 0; i < finalPosArray.second.size(); i++) {
-    finalPosArray.second[i] = posArray[keys[i]];
+  for (unsigned int i = 0; i < finalPosArray.dataType.size(); i++) {
+    finalPosArray.dataType[i] = posArray[keys[i]];
   }
 }
 
 void RendererSprites::updateChildPos() {
   std::vector<unsigned int>& keys = fatherIDArray.getDenseData();
   for (unsigned int i = 0; i < keys.size(); i++) {
-    fatherIDArray.second[i].update(keys[i]);
+    fatherIDArray.dataType[i].update(keys[i]);
   }
 }
 
@@ -232,7 +234,7 @@ void RendererSprites::updateTexture() {
   int i = 0;
   std::vector<unsigned int>& keys = texPosArray.getDenseData();
   for (auto it : keys) {
-    finalPosArray[it] += texPosArray.second[i];
+    finalPosArray[it] += texPosArray.dataType[i];
     i++;
   }
 }
@@ -261,8 +263,8 @@ void RendererSprites::updateRender() {
     }
   }
 
-  // printf("zombie layer\n");
-  for (int &it : zombieLayer) {
+  // printf("plantsLayer\n");
+  for (int &it : plantsLayer) {
     Tyra::Sprite& spriteRender = spriteArray[it];
     spriteRender.position = finalPosArray[it];
 
@@ -273,8 +275,8 @@ void RendererSprites::updateRender() {
     }
   }
 
-  // printf("plantsLayer\n");
-  for (int &it : plantsLayer) {
+  // printf("zombie layer\n");
+  for (int &it : zombieLayer) {
     Tyra::Sprite& spriteRender = spriteArray[it];
     spriteRender.position = finalPosArray[it];
 
@@ -723,7 +725,7 @@ void LawnMoverManager::update(){
 }
 
 void CameraManager::update() {
-  for(auto &it: finalPosArray.second){
+  for(auto &it: finalPosArray.dataType){
     it -= cameraPos;
   }
 }

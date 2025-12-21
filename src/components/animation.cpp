@@ -26,7 +26,9 @@ void FrameCounter::CheckEvent() {
         attackPlant(entityID);
       }
     }else if(animIndex == EnumAnimationIndex::ANIM_Zombie_PoleVaulter){
-      if(currentFrame == 172 || currentFrame == 184){
+      if(currentFrame == 93){
+        finishJump(entityID);
+      }else if(currentFrame == 172 || currentFrame == 184){
         attackPlant(entityID);
       }
     }else if(animIndex == EnumAnimationIndex::ANIM_Chomper){

@@ -192,6 +192,7 @@ void deletePosArray(const int entityID) { posArray.erase(entityID); }
 void deleteFinalPosArray(const int entityID) { finalPosArray.erase(entityID); }
 
 void deleteTexPosArray(const int entityID) { texPosArray.erase(entityID); }
+void deleteFrameCounter(const int entityID) {frameCounterArray.erase(entityID);}
 
 void newPlayer(int* player) {
   // static int countPlayer = 0;
@@ -216,6 +217,8 @@ void newProjectile(Vec2 position, const int damage,
       spriteArray[id].textureID = projectilePea->id;
     } else if (projectileType == enumProyectile::snowPea) {
       spriteArray[id].textureID = projectileSnowPea->id;
+    } else if( projectileType == PuffShroom_PUF){
+      spriteArray[id].textureID = projectilePuffshroomPuf_1->id;
     }
 
     // damage

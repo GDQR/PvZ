@@ -143,6 +143,41 @@ void createPlantCard(int& plantID,EnumAnimationIndex plantAnim, const Tyra::Vec2
   cardsAnimations.push_back(cardAnim);
 }
 
+void createPlantCard(int& plantID,EnumAnimationIndex plantAnim, const Tyra::Vec2 pos, const Tyra::Vec2 size, const char* layer) {
+  posArray.insert(plantID, pos);
+  fatherIDArray.insert(plantID, FatherID());
+  PlantAnimation anim;
+  anim.id = plantID;
+
+  int layerID = animComponent[plantAnim].GetAnimationNameID(layer);
+  AnimationTime animTime = animComponent[plantAnim].GetTimeLapseFromLayer(layerID)[0];
+  animComponent[plantAnim].SetOneSpriteAnimationToEntity(anim.entity,plantID, Tyra::Vec2(0.6f,0.6f), animTime.start, card_layer);
+
+  plantAnims.push_back(anim);
+
+  PlantAnimation cardAnim;
+  animComponent[plantAnim].SetOneSpriteAnimationToEntity(cardAnim.entity, Tyra::Vec2(0.6f,0.6f), animTime.start, card_layer);
+    
+  for(size_t i=0; i < cardAnim.entity.size();i++){
+    if(spriteArray.count(cardAnim.entity[i]) == 1){
+      bool hasRender = false;
+      for(size_t j=0; j < cardLayer.size();j++){
+        if(cardLayer[j] == cardAnim.entity[i]){
+          hasRender = true;
+          break;
+        }
+      }
+      if(hasRender == true){
+        spriteArray[cardAnim.entity[i]].color = Tyra::Color(128,128,128,64);
+      }else{
+        spriteArray.erase(cardAnim.entity[i]);
+      }
+    }
+  }
+
+  cardsAnimations.push_back(cardAnim);
+}
+
 void createCard(const Plant_State_enum typePlant, const bool isVersusMode) {
   Card card;
   card.seed = Entities::newID();
@@ -160,22 +195,159 @@ void createCard(const Plant_State_enum typePlant, const bool isVersusMode) {
   spriteArray[card.seed].offset.x = 100;
 
   // printf("plant type: %d\n",typePlant);
-  if (typePlant == Plant_State_enum::PeaShotter) {
+  switch (typePlant){
+  case Plant_State_enum::PeaShotter:
     createPlantCard(card.plantID, EnumAnimationIndex::ANIM_PeaShotter, Vec2(pos.x, pos.y), Vec2(0.6f, 0.6f),80);
-  } else if (typePlant == Plant_State_enum::SunFlower) {
+    break;
+  case Plant_State_enum::SunFlower:
     createPlantCard(card.plantID, EnumAnimationIndex::ANIM_SunFlower, Vec2(pos.x, pos.y+5), Vec2(0.6f, 0.6f),8);
-  } else if (typePlant == Plant_State_enum::CherryBomb) {
+    break;
+  case Plant_State_enum::CherryBomb:
     createPlantCard(card.plantID, EnumAnimationIndex::ANIM_CherryBomb, Vec2(pos.x, pos.y+5), Vec2(0.6f, 0.6f),1);
-  } else if (typePlant == Plant_State_enum::Wallnut || typePlant == Plant_State_enum::WallnutBowling || typePlant == Plant_State_enum::WallnutBowlingExplosion) {
+    break;
+  case Plant_State_enum::Wallnut:
+  case Plant_State_enum::WallnutBowling:
+  case Plant_State_enum::WallnutBowlingExplosion:
     createPlantCard(card.plantID, EnumAnimationIndex::ANIM_Wallnut, Vec2(pos.x, pos.y+5), Vec2(0.6f, 0.6f),1);
-  } else if (typePlant == Plant_State_enum::PotatoMine) {
+    break;
+  case Plant_State_enum::PotatoMine:
     createPlantCard(card.plantID, EnumAnimationIndex::ANIM_PotatoMine, Vec2(pos.x, pos.y+5), Vec2(0.6f, 0.6f),31);
-  } else if (typePlant == Plant_State_enum::SnowPea) {
+    break;
+  case Plant_State_enum::SnowPea:
     createPlantCard(card.plantID, EnumAnimationIndex::ANIM_SnowPea, Vec2(pos.x, pos.y+5), Vec2(0.6f, 0.6f),80);
-  } else if (typePlant == Plant_State_enum::Chomper) {
+    break;
+  case Plant_State_enum::Chomper:
     createPlantCard(card.plantID, EnumAnimationIndex::ANIM_Chomper, Vec2(pos.x, pos.y+5), Vec2(0.6f, 0.6f),1);
-  } else if (typePlant == Plant_State_enum::Repeater) {
+    break;
+  case Plant_State_enum::Repeater:
     createPlantCard(card.plantID, EnumAnimationIndex::ANIM_Repeater, Vec2(pos.x, pos.y+5), Vec2(0.6f, 0.6f),80);
+    break;
+  case Plant_State_enum::PuffShroom:
+    createPlantCard(card.plantID, EnumAnimationIndex::ANIM_PuffShroom, Vec2(pos.x, pos.y+5), Vec2(0.6f, 0.6f),5);
+    break;
+  case Plant_State_enum::SunShroom:
+    createPlantCard(card.plantID, EnumAnimationIndex::ANIM_SunShroom, Vec2(pos.x, pos.y+5), Vec2(0.6f, 0.6f),6);
+    break;
+  case Plant_State_enum::FumeShroom:
+    createPlantCard(card.plantID, EnumAnimationIndex::ANIM_FumeShroom, Vec2(pos.x, pos.y+5), Vec2(0.6f, 0.6f),"anim_idle");
+    break;
+  case Plant_State_enum::GraveBuster:
+    createPlantCard(card.plantID, EnumAnimationIndex::ANIM_GraveBuster, Vec2(pos.x, pos.y+5), Vec2(0.6f, 0.6f),"anim_idle");
+    break;
+  case Plant_State_enum::HypnoShroom:
+    createPlantCard(card.plantID, EnumAnimationIndex::ANIM_HypnoShroom, Vec2(pos.x, pos.y+5), Vec2(0.6f, 0.6f),6);
+    break;
+  case Plant_State_enum::ScaredyShroom:
+    createPlantCard(card.plantID, EnumAnimationIndex::ANIM_ScaredyShroom, Vec2(pos.x, pos.y+5), Vec2(0.6f, 0.6f),6);
+    break;
+  case Plant_State_enum::IceShroom:
+    createPlantCard(card.plantID, EnumAnimationIndex::ANIM_IceShroom, Vec2(pos.x, pos.y+5), Vec2(0.6f, 0.6f),6);
+    break;
+  case Plant_State_enum::DoomShroom:
+    createPlantCard(card.plantID, EnumAnimationIndex::ANIM_DoomShroom, Vec2(pos.x, pos.y+5), Vec2(0.6f, 0.6f),6);
+    break;
+  case Plant_State_enum::LilyPad:
+    createPlantCard(card.plantID, EnumAnimationIndex::ANIM_LilyPad, Vec2(pos.x, pos.y+5), Vec2(0.6f, 0.6f),6);
+    break;
+  case Plant_State_enum::Squash:
+    createPlantCard(card.plantID, EnumAnimationIndex::ANIM_Squash, Vec2(pos.x, pos.y+5), Vec2(0.6f, 0.6f),6);
+    break;
+  case Plant_State_enum::ThreePeater:
+    createPlantCard(card.plantID, EnumAnimationIndex::ANIM_ThreePeater, Vec2(pos.x, pos.y+5), Vec2(0.6f, 0.6f),6);
+    break;
+  case Plant_State_enum::Tanglekelp:
+    createPlantCard(card.plantID, EnumAnimationIndex::ANIM_Tanglekelp, Vec2(pos.x, pos.y+5), Vec2(0.6f, 0.6f),6);
+    break;
+  case Plant_State_enum::Jalapeno:
+    createPlantCard(card.plantID, EnumAnimationIndex::ANIM_Jalapeno, Vec2(pos.x, pos.y+5), Vec2(0.6f, 0.6f),6);
+    break;
+  case Plant_State_enum::Spikeweed:
+    createPlantCard(card.plantID, EnumAnimationIndex::ANIM_Spikeweed, Vec2(pos.x, pos.y+5), Vec2(0.6f, 0.6f),6);
+    break;
+  case Plant_State_enum::Torchwood:
+    createPlantCard(card.plantID, EnumAnimationIndex::ANIM_Torchwood, Vec2(pos.x, pos.y+5), Vec2(0.6f, 0.6f),6);
+    break;
+  case Plant_State_enum::Tallnut:
+    createPlantCard(card.plantID, EnumAnimationIndex::ANIM_Tallnut, Vec2(pos.x, pos.y+5), Vec2(0.6f, 0.6f),6);
+    break;
+  case Plant_State_enum::SeaShroom:
+    createPlantCard(card.plantID, EnumAnimationIndex::ANIM_SeaShroom, Vec2(pos.x, pos.y+5), Vec2(0.6f, 0.6f),6);
+    break;
+  case Plant_State_enum::Plantern:
+    createPlantCard(card.plantID, EnumAnimationIndex::ANIM_Plantern, Vec2(pos.x, pos.y+5), Vec2(0.6f, 0.6f),6);
+    break;
+  case Plant_State_enum::Cactus:
+    createPlantCard(card.plantID, EnumAnimationIndex::ANIM_Cactus, Vec2(pos.x, pos.y+5), Vec2(0.6f, 0.6f),6);
+    break;
+  case Plant_State_enum::Blover:
+    createPlantCard(card.plantID, EnumAnimationIndex::ANIM_Blover, Vec2(pos.x, pos.y+5), Vec2(0.6f, 0.6f),6);
+    break;
+  case Plant_State_enum::SplitPea:
+    createPlantCard(card.plantID, EnumAnimationIndex::ANIM_SplitPea, Vec2(pos.x, pos.y+5), Vec2(0.6f, 0.6f),6);
+    break;
+  case Plant_State_enum::Starfruit:
+    createPlantCard(card.plantID, EnumAnimationIndex::ANIM_Starfruit, Vec2(pos.x, pos.y+5), Vec2(0.6f, 0.6f),6);
+    break;
+  case Plant_State_enum::Pumpkin:
+    createPlantCard(card.plantID, EnumAnimationIndex::ANIM_Pumpkin, Vec2(pos.x, pos.y+5), Vec2(0.6f, 0.6f),6);
+    break;
+  case Plant_State_enum::Magnetshroom:
+    createPlantCard(card.plantID, EnumAnimationIndex::ANIM_Magnetshroom, Vec2(pos.x, pos.y+5), Vec2(0.6f, 0.6f),6);
+    break;
+  case Plant_State_enum::Cabbagepult:
+    createPlantCard(card.plantID, EnumAnimationIndex::ANIM_Cabbagepult, Vec2(pos.x, pos.y+5), Vec2(0.6f, 0.6f),6);
+    break;
+  case Plant_State_enum::FlowerPot:
+    createPlantCard(card.plantID, EnumAnimationIndex::ANIM_FlowerPot, Vec2(pos.x, pos.y+5), Vec2(0.6f, 0.6f),6);
+    break;
+  case Plant_State_enum::Kernelpult:
+    createPlantCard(card.plantID, EnumAnimationIndex::ANIM_Kernelpult, Vec2(pos.x, pos.y+5), Vec2(0.6f, 0.6f),6);
+    break;
+  case Plant_State_enum::CoffeeBean:
+    createPlantCard(card.plantID, EnumAnimationIndex::ANIM_CoffeeBean, Vec2(pos.x, pos.y+5), Vec2(0.6f, 0.6f),6);
+    break;
+  case Plant_State_enum::Garlic:
+    createPlantCard(card.plantID, EnumAnimationIndex::ANIM_Garlic, Vec2(pos.x, pos.y+5), Vec2(0.6f, 0.6f),6);
+    break;
+  case Plant_State_enum::UmbrellaLeaf:
+    createPlantCard(card.plantID, EnumAnimationIndex::ANIM_UmbrellaLeaf, Vec2(pos.x, pos.y+5), Vec2(0.6f, 0.6f),6);
+    break;
+  case Plant_State_enum::Marigold:
+    createPlantCard(card.plantID, EnumAnimationIndex::ANIM_Marigold, Vec2(pos.x, pos.y+5), Vec2(0.6f, 0.6f),6);
+    break;
+  case Plant_State_enum::Melonpult:
+    createPlantCard(card.plantID, EnumAnimationIndex::ANIM_Melonpult, Vec2(pos.x, pos.y+5), Vec2(0.6f, 0.6f),6);
+    break;
+  case Plant_State_enum::GatlingPea:
+    createPlantCard(card.plantID, EnumAnimationIndex::ANIM_GatlingPea, Vec2(pos.x, pos.y+5), Vec2(0.6f, 0.6f),6);
+    break;
+  case Plant_State_enum::TwinSunflower:
+    createPlantCard(card.plantID, EnumAnimationIndex::ANIM_TwinSunflower, Vec2(pos.x, pos.y+5), Vec2(0.6f, 0.6f),6);
+    break;
+  case Plant_State_enum::GloomShroom:
+    createPlantCard(card.plantID, EnumAnimationIndex::ANIM_GloomShroom, Vec2(pos.x, pos.y+5), Vec2(0.6f, 0.6f),6);
+    break;
+  case Plant_State_enum::Cattail:
+    createPlantCard(card.plantID, EnumAnimationIndex::ANIM_Cattail, Vec2(pos.x, pos.y+5), Vec2(0.6f, 0.6f),6);
+    break;
+  case Plant_State_enum::WinterMelon:
+    createPlantCard(card.plantID, EnumAnimationIndex::ANIM_WinterMelon, Vec2(pos.x, pos.y+5), Vec2(0.6f, 0.6f),6);
+    break;
+  case Plant_State_enum::GoldMagnet:
+    createPlantCard(card.plantID, EnumAnimationIndex::ANIM_GoldMagnet, Vec2(pos.x, pos.y+5), Vec2(0.6f, 0.6f),6);
+    break;
+  case Plant_State_enum::Spikerock:
+    createPlantCard(card.plantID, EnumAnimationIndex::ANIM_Spikerock, Vec2(pos.x, pos.y+5), Vec2(0.6f, 0.6f),6);
+    break;
+  case Plant_State_enum::CobCannon:
+    createPlantCard(card.plantID, EnumAnimationIndex::ANIM_CobCannon, Vec2(pos.x, pos.y+5), Vec2(0.6f, 0.6f),6);
+    break;
+  // case Plant_State_enum::Imitator:
+  //   createPlantCard(card.plantID, EnumAnimationIndex::Imitator, Vec2(pos.x, pos.y+5), Vec2(0.6f, 0.6f),6);
+  //   break;
+  default:
+    TYRA_TRAP("CARD IS NOT SET");
+    break;
   }
   
   card.seedShadow = Entities::newID();
@@ -342,13 +514,7 @@ void eraseRewardLevel1() {
     deleteFatherIDChild(reward.father, &reward.id[i]);
 
     deleteSprite(reward.id[i]);
-
-    for(size_t j=0; j<frameCounterArray.size();j++){
-      if(frameCounterArray[j].entityID == reward.id[i]){
-        frameCounterArray.erase(frameCounterArray.begin() + j);
-        break;
-      }
-    }
+    deleteFrameCounter(reward.id[i]);
     deleteTexPosArray(reward.id[i]);
     Entities::deleteID(reward.id[i]);
   }
@@ -432,11 +598,7 @@ void Sun::erase(const int cursorID) {
       deleteFinalPosArray(id[size]);
       deleteTexPosArray(id[size]);
       deleteFatherIDChild(father, &id[size]);
-      for(size_t j=0; j<frameCounterArray.size();j++){
-        if(frameCounterArray[j].entityID == id[size]){
-          frameCounterArray.erase(frameCounterArray.begin() + j);
-        }
-      }
+      deleteFrameCounter(id[size]);
       Entities::deleteID(id[size]);
       id.erase(id.begin()+size);
     }
@@ -512,6 +674,7 @@ int sod3Row;
 int sod3RowAlpha;
 int fullFlagMeter;
 int zombieFlagMeter;
+enumBackGround backgroundType;
 }  // namespace Entity
 
 unsigned int Entities::counter = 1;
@@ -572,8 +735,8 @@ bool hasEntityComponent(const int id, const enumComponents component){
 void deleteEntity(const int id){
   // printf("deleting entity: %d\n",id);
   if(fatherIDArray.count(id) == true){
-    for(size_t i=0; i< fatherIDArray.second[id].id.size();i++){
-      deleteFatherIDChild(id, &fatherIDArray.second[id].id[i]);
+    for(size_t i=0; i< fatherIDArray.dataType[id].id.size();i++){
+      deleteFatherIDChild(id, &fatherIDArray.dataType[id].id[i]);
     }
   } 
   deleteFatherID(id);

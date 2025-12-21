@@ -8,6 +8,8 @@ using Tyra::FileUtils;
 
 Tyra::Texture* projectilePea;
 Tyra::Texture* projectileSnowPea;
+Tyra::Texture* projectilePuffshroomPuf_1;
+Tyra::Texture* projectilePuffshroomPuf_2;
 Tyra::Texture* projectileExplosionPowie;
 Tyra::Texture* projectileExplosionSpudow;
 Tyra::Texture* TEX_Wallnut_cracked1;
@@ -144,6 +146,8 @@ void copyTexture(Sprite* sprite1, Sprite* sprite2) {
 void loadProjectile() {
   projectilePea = loadTexture("images/ProjectilePea.png");
   projectileSnowPea = loadTexture("images/ProjectileSnowPea.png");
+  projectilePuffshroomPuf_1 = loadTexture("particles/PuffShroom_puff1.png");
+  projectilePuffshroomPuf_2 = loadTexture("particles/PuffShroom_puff2.png");
   projectileExplosionPowie = loadTexture("particles/ExplosionPowie.png");
   projectileExplosionSpudow = loadTexture("particles/ExplosionSpudow.png");
   TEX_Wallnut_cracked1 = loadTexture(IMG_Wallnut_cracked1);  

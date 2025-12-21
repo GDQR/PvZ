@@ -233,6 +233,7 @@ struct AnimIndex {
   unsigned int GetNameID(unsigned int layer);
   unsigned int GetLayerID(unsigned int layer);
   unsigned int GetLayerSize();
+  std::vector<AnimationTime> GetTimeLapseFromLayer(unsigned int layer);
   AnimationFrameData& GetFrameProperties(unsigned int layer, unsigned int frame);
   unsigned int GetAnimationNameID(const char* layer);
   FrameProperties GetPropertiesFromOneFrame(unsigned int layerIndex, unsigned int frame);
@@ -314,4 +315,5 @@ void loadAnimString();
 void loadAnimation(const EnumAnimationIndex animNameID);
 
 void SetAnimationNamesID(EnumAnimationIndex animation);
-void attackPlant(int father);
+void attackPlant(const int father);
+void finishJump(const int entityID);

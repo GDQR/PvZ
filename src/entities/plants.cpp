@@ -253,7 +253,7 @@ void createPuffShroom(const int id, const Tyra::Vec2 pos, EnumAnimationIndex ani
   PlantAnimation anim;
   anim.id = father;
   
-  animComponent[animationIndex].SetAnimationToEntity(anim.entity,father,Tyra::Vec2(0.8f, 0.8f), 80, 104, true, enumSpriteLayer::plants);
+  animComponent[animationIndex].SetAnimationToEntity(anim.entity,father,Tyra::Vec2(0.8f, 0.8f), "anim_idle", 0, true, enumSpriteLayer::plants);
   plantAnims.push_back(anim);
 
   // Life
@@ -272,6 +272,55 @@ void createPuffShroom(const int id, const Tyra::Vec2 pos, EnumAnimationIndex ani
   // HitBox
    createBoxCollider(plant[id].father, BoxColliderEnum::BOXCOLLIDER_PLANT, BoxCollider(father,pos.x + 10, pos.y + 20, 28, 38));
   createDebugBoxCollider(plant[id].father, BoxColliderEnum::BOXCOLLIDER_PLANT, Tyra::MODE_STRETCH);
+}
+
+void createPlantData(const int id, const Tyra::Vec2 pos, const int life, const int damage, const int speed, const int timeMaxMS, EnumAnimationIndex animationIndex, const char* layerAnimation){
+printf("size: %d\n", animComponent[animationIndex].GetLayerSize());
+
+  int& father = plant[id].father;
+  PlantAnimation anim;
+  anim.id = father;
+  
+  animComponent[animationIndex].SetAnimationToEntity(anim.entity,father, Tyra::Vec2(0.8f, 0.8f), layerAnimation, 0, true, enumSpriteLayer::plants);
+
+  plantAnims.push_back(anim);
+  
+  // esto es solo para peashotter
+  // int anim_stem = anim.entity[animComponent[animationIndex].GetAnimationNameID("anim_stem")];
+
+  // anim.entity.clear();
+  // fatherIDArray.insert(anim_stem, FatherID());
+  // posArray[anim_stem] = posArray[father];
+
+  // animComponent[animationIndex].SetAnimationToEntity(anim.entity,anim_stem, Tyra::Vec2(0.8f, 0.8f), "anim_head_idle", 0, true, enumSpriteLayer::plants);
+  
+  // for (size_t i = 0; i < anim.entity.size(); i++) {
+  //   posArray[anim.entity[i]] -= texPosArray[anim_stem]; 
+  // }
+
+  plantAnims.push_back(anim);
+
+  // Life
+
+  lifeArray.insert(father, life);
+
+  // time
+  timerArray.insert(father, PS2Timer());
+  timerArray[father].maxMS = timeMaxMS;
+  
+  // Damage
+  damageArray[father] = damage;
+
+  // Speed
+  speedArray[father] = speed;
+
+  // HitBox
+  createBoxCollider(father, BoxColliderEnum::BOXCOLLIDER_PLANT, BoxCollider(father, pos.x + 10, pos.y + 20, 28, 38));
+  createDebugBoxCollider(father, BoxColliderEnum::BOXCOLLIDER_PLANT, Tyra::MODE_STRETCH);
+
+  // proyectile
+  pointColliderArray[father] = Tyra::Vec2(pos.x + 40, pos.y + 25);
+  createDebugPoint(father, Tyra::MODE_STRETCH);
 }
 
 bool createPlant(Plant_State_enum typePlant, const int row, const int column, int cost) {
@@ -331,7 +380,30 @@ bool createPlant(Plant_State_enum typePlant, const int row, const int column, in
         createRepeater(plantPos, pos, EnumAnimationIndex::ANIM_Repeater);
         break;
       case PuffShroom:
-        createPuffShroom(plantPos, pos, EnumAnimationIndex::ANIM_PuffShroom);
+        if(Entity::backgroundType == DAY){
+          createPlantData(plantPos, pos, 300, 0, 0, 1000, EnumAnimationIndex::ANIM_PuffShroom, "anim_sleep");
+        }else if(Entity::backgroundType == NIGHT){
+          createPlantData(plantPos, pos, 300, 0, 0, 0, EnumAnimationIndex::ANIM_PuffShroom, "anim_idle");
+        }
+        break;
+      case SunShroom:
+        if(Entity::backgroundType == DAY){
+          createPlantData(plantPos, pos, 300, 0, 0, 1000, EnumAnimationIndex::ANIM_SunShroom, "anim_sleep");
+        }else if(Entity::backgroundType == NIGHT){
+          createPlantData(plantPos, pos, 300, 0, 0, 0, EnumAnimationIndex::ANIM_SunShroom, "anim_idle");
+        }
+        break;
+      case FumeShroom:
+        if(Entity::backgroundType == DAY){
+          createPlantData(plantPos, pos, 300, 0, 0, 1000, EnumAnimationIndex::ANIM_FumeShroom, "anim_sleep");
+        }else if(Entity::backgroundType == NIGHT){
+          createPlantData(plantPos, pos, 300, 0, 0, 0, EnumAnimationIndex::ANIM_FumeShroom, "anim_idle");
+        }
+        break;
+      case GraveBuster:
+        if(Entity::backgroundType == NIGHT){
+          createPlantData(plantPos, pos, 300, 0, 0, 0, EnumAnimationIndex::ANIM_FumeShroom, "anim_idle");
+        }
         break;
       case WallnutBowling:
         createWallnutBowling(plantPos,pos, EnumAnimationIndex::ANIM_Wallnut);
@@ -428,45 +500,106 @@ int Plant::attack() {
   }
   
   std::vector<BoxCollider>& zombieBox = boxColliderZombie;
-  if (type == PeaShotter || type == SnowPea || type == Repeater) {
+  if (type == PeaShotter || type == SnowPea || type == Repeater
+    || type == PuffShroom || type == FumeShroom) {
     for (BoxCollider& zomBox: zombieBox) {
       if (zomBox.pointCollision(
               &pointColliderArray[father])) {
-        if (timerArray[father].counterMS < timerArray[father].maxMS) {
-          timerArray[father].addMSinCounter();
-        } else if (stopAnimation == false) {
-          timerArray[father].resetCounter();
-          if (type == PeaShotter) {
-            newProjectile(pointColliderArray[father], 20, enumProyectile::pea);
-          } else if (type == SnowPea) {
-            newProjectile(pointColliderArray[father], 20,
-                          enumProyectile::snowPea);
-          } else if (type == Repeater) {
-            newProjectile(pointColliderArray[father], 40, enumProyectile::pea);
-            // timerArray[id[0]].maxMS++;  // is used like a counter
-            // if (timerArray[id[0]].maxMS < 2) {
-            //   timerArray[father].maxMS = 1000;
-            // } else {
-            //   timerArray[father].maxMS = 1500;
-            //   timerArray[id[0]].maxMS = 0;
-            // }
+        PS2Timer& plantTimer = timerArray[father];
+        if (plantTimer.counterMS < plantTimer.maxMS) {
+          plantTimer.addMSinCounter();
+          break;
+        }
+
+        if (stopAnimation == false) {
+          plantTimer.resetCounter();
+          switch (type){
+            case PeaShotter:
+              newProjectile(pointColliderArray[father], 20, enumProyectile::pea);
+              break;
+            case SnowPea:
+              newProjectile(pointColliderArray[father], 20,
+                            enumProyectile::snowPea);
+              break;
+            case Repeater:
+              newProjectile(pointColliderArray[father], 40, enumProyectile::pea);
+              break;
+            case PuffShroom:
+            case FumeShroom: {
+              size_t size = plantAnims.size();
+              for(size_t i=0;i<size;i++){
+                if(plantAnims[i].id == father){
+                  int layer;
+                  if(type == PuffShroom){
+                    layer = animComponent[EnumAnimationIndex::ANIM_PuffShroom].GetAnimationNameID("anim_sleep");
+                  }else if(type == FumeShroom){
+                    layer = animComponent[EnumAnimationIndex::ANIM_FumeShroom].GetAnimationNameID("anim_sleep");
+                  }
+
+                  bool plantSleep = false;
+                  std::vector<AnimationTime> animTime;
+                  if(type == PuffShroom){
+                    animTime = animComponent[EnumAnimationIndex::ANIM_PuffShroom].GetTimeLapseFromLayer(layer);
+                  }else if(type == FumeShroom){
+                    animTime = animComponent[EnumAnimationIndex::ANIM_FumeShroom].GetTimeLapseFromLayer(layer);
+                  }
+                  FrameCounter frameCounter = frameCounterArray[plantAnims[i].entity[0]];
+
+                  for(size_t k=0; k<animTime.size();k++){
+                    if(frameCounter.firstFrame == animTime[k].start
+                      && frameCounter.lastFrame == animTime[k].end){
+                      plantSleep = true;
+                      break;
+                    }
+                  }
+
+                  if(plantSleep == false){
+                    newProjectile(pointColliderArray[father], 40, enumProyectile::PuffShroom_PUF);
+                  }   
+                  break;
+                } 
+              }
+              break;
+            }
+            default:
+              break;
           }
         }
         break;
       }
     }
-  } else if (type == SunFlower) {
+  } else if (type == SunFlower || type == SunShroom) {
     PS2Timer& sunTimer = timerArray[father];
     if (sunTimer.counterMS < sunTimer.maxMS) {
       sunTimer.addMSinCounter();
     } else {
-      printf("sunflower create sun\n");
       sunTimer.maxMS = 24000;
       sunTimer.resetCounter();
       size_t size = plantAnims.size();
       for(size_t i=0;i<size;i++){
         if(plantAnims[i].id == father){
+          if(type == SunFlower){
+            printf("plant create sun\n");
             sunManager.create(spriteArray[plantAnims[i].entity[0]].position, sunCost::normalSun, true);
+          }else if(type == SunShroom){
+            int layer = animComponent[EnumAnimationIndex::ANIM_SunShroom].GetAnimationNameID("anim_sleep");
+   
+            bool plantSleep = false;
+            std::vector<AnimationTime> animTime = animComponent[EnumAnimationIndex::ANIM_SunShroom].GetTimeLapseFromLayer(layer);
+            FrameCounter frameCounter = frameCounterArray[plantAnims[i].entity[0]];
+            for(size_t k=0; k<animTime.size();k++){
+              if(frameCounter.firstFrame == animTime[k].start
+                && frameCounter.lastFrame == animTime[k].end){
+                // printf("plant sleep\n");
+                plantSleep = true;
+                break;
+              }
+            }
+
+            if(plantSleep == false){
+              sunManager.create(spriteArray[plantAnims[i].entity[5]].position, sunCost::smallerSun, true);
+            }
+          }
           break;
         }
       }
@@ -481,18 +614,8 @@ int Plant::attack() {
       }
     }
     if(frameIndex == size){ return 1;}
-
-    size = frameCounterArray.size();
-    for(unsigned int i=0;i<size;i++){
-      if(frameCounterArray[i].entityID == plantAnims[frameIndex].entity[0]){
-        // printf("cherry id: %d\n",plantAnims[frameIndex].entity[0]);
-        frameIndex = i;
-        // printf("animationArray[id[0]].currentFrame:%d\n",frameCounterArray[i].currentFrame);
-        break;
-      }
-    }
    
-    if (frameCounterArray[frameIndex].IsLastframe() == true) {
+    if (frameCounterArray[plantAnims[frameIndex].entity[0]].IsLastframe() == true) {
       printf("explode\n");
       newExplosion(posArray[father], Vec2(256 / 1.6f, 256 / 1.6f), 1800,
                    enumProyectile::ExplosionPowie);
@@ -697,12 +820,7 @@ void Plant::erase() {
       deleteTexPosArray(*it);
       deleteFatherID(*it);
       deleteFatherIDChild(father, &*it);
-      for(unsigned int j=0; j< frameCounterArray.size();j++){
-        if(frameCounterArray[j].entityID == *it){
-          frameCounterArray.erase(frameCounterArray.begin() + j);
-          break;
-        }
-      }
+      deleteFrameCounter(*it);
 
       deleteSprite(*it);
       Entities::deleteID(*it);

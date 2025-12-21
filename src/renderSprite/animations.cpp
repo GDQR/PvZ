@@ -31,6 +31,10 @@ unsigned int AnimIndex::GetLayerSize(){
   return animClips[type].layerCount;
 }
 
+std::vector<AnimationTime> AnimIndex::GetTimeLapseFromLayer(unsigned int layer){
+  return animClipLayers[type][layer].timeLapse;
+}
+
 unsigned int AnimIndex::GetAnimationNameID(const char* layer){
   std::vector<AnimationLayerNameData>& layerNames = animLayerNames[type];
   size_t size = layerNames.size();
@@ -97,7 +101,7 @@ void AnimIndex::createAnimation(const int entityID, const int animlayerID,
   frameCounter.animIndex = type;
   frameCounter.layerIndex = animlayerID;
   frameCounter.repeat = repeat;
-  frameCounterArray.push_back(frameCounter);
+  frameCounterArray.insert(entityID, frameCounter);
   // printf("fisrt frame: %d last: %d\n",frameCounter.firstFrame,frameCounter.lastFrame);
 
   texPosArray.insert(entityID, Tyra::Vec2());
@@ -548,39 +552,25 @@ void AnimIndex::SetAnimationToEntity(std::vector<int>& ids, int& father, Tyra::V
 
 void AnimIndex::ChangeAnimationEntity(std::vector<int>& ids, const char* animState, unsigned int timeIndex, enumSpriteLayer layer, bool repeat){
   
-  // Get the Frame from the entity Animation
-  unsigned int frameIndex = frameCounterArray.size();
-  for(size_t i=0;i<frameCounterArray.size();i++){
-    if(frameCounterArray[i].entityID == ids[0]){
-      frameIndex = i;
-      // printf("frame index: %d\n",i);
-      break;
-    }
-  }
-
-  if(frameIndex == frameCounterArray.size()){
-    TYRA_TRAP("FRAME NOT FOUND");
-    return;
-  }
-
   LayerData fd;
   fd.startFrame = 0;
   fd.endFrame = 0;
   unsigned int layerID = GetAnimationNameID(animState);
   // printf("layerID name: %d\n",layerID);
-  if(timeIndex >= animClipLayers[type][layerID].timeLapse.size()){
+  std::vector<AnimationTime>& animTime = animClipLayers[type][layerID].timeLapse;
+  if(timeIndex >= animTime.size()){
     timeIndex = 0;
   }
-  fd.startFrame = animClipLayers[type][layerID].timeLapse[timeIndex].start;
-  fd.endFrame = animClipLayers[type][layerID].timeLapse[timeIndex].end;
+  fd.startFrame = animTime[timeIndex].start;
+  fd.endFrame = animTime[timeIndex].end;
   // printf("startFrame: %d, endFrame:%d\n",fd.startFrame,fd.endFrame);
 
-  size_t size = frameIndex+ids.size();
-  for(size_t i=frameIndex; i < size; i++){
-    frameCounterArray[i].currentFrame = fd.startFrame;
-    frameCounterArray[i].firstFrame = frameCounterArray[i].currentFrame;
-    frameCounterArray[i].lastFrame = fd.endFrame;
-    frameCounterArray[i].repeat = repeat;
+  for(int& id: ids){
+    FrameCounter& frame = frameCounterArray[id];
+    frame.currentFrame = fd.startFrame;
+    frame.firstFrame = frame.currentFrame;
+    frame.lastFrame = fd.endFrame;
+    frame.repeat = repeat;
   }
 
   for(size_t i=0; i< GetLayerSize();i++){
@@ -753,8 +743,7 @@ void loadAnimString() {
 }
 
 void setSprite(const int entityID, const enumDraw draw, enumSpriteLayer layer) {
-    // printf("set sprite id: %d,draw: %d\n",entityID, draw);
-  if (spriteRenderIDArray.count(entityID) == 1 && draw == -1) {
+  if (spriteRenderIDArray.count(entityID) == 1 && draw == enumDraw::noDraw) {
     // printf("delete render sprite id: %d\n",entityID);
     // spritesNormalRender.erase(entityID);
     spriteRenderIDArray.erase(entityID);
@@ -809,16 +798,8 @@ void setSprite(const int entityID, const enumDraw draw, enumSpriteLayer layer) {
         }
       }
     }
-  } else if (spriteRenderIDArray.count(entityID) == 0 && spriteArray.count(entityID) == 1 && draw == 0) {
+  } else if (spriteRenderIDArray.count(entityID) == 0 && spriteArray.count(entityID) == true && draw == enumDraw::draw) {
     spriteRenderIDArray.insert(entityID, 0);
-    // int renderSize = spriteRenderIDArray.first.size();
-    // for(int j=renderSize-1;j>1;j--){
-    //   if(spriteRenderIDArray.first[j] < spriteRenderIDArray.first[j-1]){         
-    //     int aux= spriteRenderIDArray.first[j];
-    //     spriteRenderIDArray.first[j] = spriteRenderIDArray.first[j-1];
-    //     spriteRenderIDArray.first[j-1] = aux;
-    //   }
-    // }
     if(layer == enumSpriteLayer::background){
       backgroundLayer.push_back(entityID);
     }else if(layer == enumSpriteLayer::card_layer){

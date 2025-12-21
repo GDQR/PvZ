@@ -1,7 +1,44 @@
-// #include "systems.hpp"
 #include "PVZ.hpp"
 #include "text.hpp"
 #include "scenes.hpp"
+
+void ArrayKeyFailCase(const int entityID, const enumComponents type, const int failCase) {
+  std::string text;
+  if(type == enumComponents::angle){
+    text = "ANGLE";
+  }else if(type == enumComponents::animation){
+    text = "ANIMATION";
+  }else if(type == enumComponents::fatherID){
+    text = "fatherID";
+  }else if(type == enumComponents::FRAMECOUNTER){
+    text = "FRAMECOUNTER";
+  }else if(type == enumComponents::finalPos){
+    text = "finalPos";
+  }else if(type == enumComponents::life){
+    text = "life";
+  }else if(type == enumComponents::pos){
+    text = "pos";
+  }else if(type == enumComponents::sprite){
+    text = "sprite";
+  }else if(type == enumComponents::spriteRender){
+    text = "spriteRender";
+  }else if(type == enumComponents::texPos){
+    text = "texPos";
+  }else if(type == enumComponents::timer){
+    text = "timer";
+  }else{
+    text = "TYPE NOT INCLUDED";
+  }
+  
+  if(failCase == 1){
+    TYRA_TRAP("ERROR SEARCHING KEY, KEY IS BIGGER THAN EXPECTED:", entityID,
+                "COMPONENT:", type, text);
+  }else if(failCase == 2){
+
+    TYRA_TRAP("ERROR SEARCHING KEY, KEY NOT FOUNDED:", entityID,
+              "COMPONENT:", type, text);
+  }
+}
 
 size_t GetIndexToErase(const unsigned int key, const enumComponents type){
   std::vector<unsigned int>& keyDense = entityKeyDense[type];
