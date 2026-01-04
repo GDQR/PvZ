@@ -62,34 +62,23 @@ void SelectorScreen::BGCenter() {
   // selectorScreenCenter = Entities::newID();
   // createSprite(selectorScreenCenterAlpha, Tyra::MODE_STRETCH, Vec2(0, 0),
   //              Vec2(512, 256));
-
+  int searchID;
   PngLoaderUnlimited loader;
   Tyra::TextureBuilderData* texDataAlpha = loader.load(PNG_SelectorScreenBGCenter);
   Tyra::Texture* textureAlpha = new Tyra::Texture(texDataAlpha);
   texRepo->add(textureAlpha);
-  // spriteArray[selectorScreenCenterAlpha].textureID = textureAlpha->id;
+  searchID = textureAlpha->id;
 
-  // createTexture(selectorScreenCenterAlpha, PNG_SelectorScreenBGCenter);
-  // createSprite(selectorScreenCenter, Tyra::MODE_STRETCH, Vec2(0, 200),
-  //              Vec2(512, 256));
   Tyra::TextureBuilderData* texData = JPGLoaderUnlimited::load(JPG_SelectorScreenBGCenter);
   Tyra::Texture* texture = new Tyra::Texture(texData);
   texRepo->add(texture);
-  // spriteArray[selectorScreenCenter].textureID = texture->id;
-  // createTexture(selectorScreenCenter, "REANIM/SelectorScreen_BG_Center.jpg");
 
   Shader_SetAlphaToImage(textureAlpha->id,texture->id);
   
-  BigTexture scaleData = JpgImageScale::load(texture,TextureScale::Tex256,TextureScale::Tex256,TEXTURE_COMPONENTS_RGBA);
-  SetBigImage(&as,&scaleData,Tyra::MODE_STRETCH,0,200,720/2,350/2);
+  Tyra::Texture* shaderTexture = renderer->getTextureRepository().getByTextureId(searchID);
 
-  // deleteSprite(selectorScreenCenterAlpha);
-  packet2_update(mypacket,
-                 draw_texture_expand_alpha(mypacket->next, 128, 1, 0));
-  packet2_update(mypacket, draw_finish(mypacket->next));
-  dma_channel_wait(DMA_CHANNEL_GIF, 0);
-  dma_channel_send_packet2(mypacket, DMA_CHANNEL_GIF, true);
-  packet2_reset(mypacket, 0);
+  BigTexture scaleData = PNGImageScale::load(shaderTexture,TextureScale::Tex256,TextureScale::Tex256,TEXTURE_COMPONENTS_RGBA);
+  SetBigImage(&as,&scaleData,Tyra::MODE_STRETCH,0,0,720/2,350/2);
 }
 void SelectorScreen::BGRight() {
   selectorScreenAlpha = Entities::newID();

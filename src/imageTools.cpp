@@ -342,17 +342,10 @@ BigTexture PNGImageScale::load(Tyra::Texture* texture, const TextureScale sWidth
     if(texture == nullptr){
       TYRA_TRAP("ERROR CUTTING TEXTURE");
     }
-    texture->print();
     
     std::vector<Tyra::TextureBuilderData*> textures;
     BigTexture jpgData;
-    JpgPixel3* pixel = (JpgPixel3*) texture->core->data; 
-    int widthBlock = ceil((float)texture->core->height/sHeight);
-    int heightBlock = ceil((float)texture->core->width/sWidth);
-    
-    jpgData.width = heightBlock;
-    jpgData.height = widthBlock;
-    int textureMax = heightBlock * widthBlock;
+    // int textureMax = heightBlock * widthBlock;
     // printf("textureMax: %d\n",textureMax);
     int textureCount = 0;
     int h=0;
@@ -365,7 +358,13 @@ BigTexture PNGImageScale::load(Tyra::Texture* texture, const TextureScale sWidth
       printf("png 8bits\n");
     }else if(texture->core->bpp == Tyra::bpp24){
       printf("png 3\n");
-      // while(test != 1){
+      
+      JpgPixel3* pixel = (JpgPixel3*) texture->core->data; 
+      int widthBlock = ceil((float)texture->core->height/sHeight);
+      int heightBlock = ceil((float)texture->core->width/sWidth);
+      
+      jpgData.width = heightBlock;
+      jpgData.height = widthBlock;
       while(w != heightBlock && h!=widthBlock){
         test++;
         int p=0;
@@ -414,6 +413,63 @@ BigTexture PNGImageScale::load(Tyra::Texture* texture, const TextureScale sWidth
             // l+=;
           }
           // printf("sali\n");
+        }
+        w++;
+        if(w==heightBlock){
+          h++;
+          w=0;
+        }
+        
+        textureCount++;
+        textures.push_back(texData);
+      }
+    }else if(texture->core->bpp == Tyra::bpp32){
+      
+      Tyra::PngPixel4* pixel = (Tyra::PngPixel4*) texture->core->data; 
+      int widthBlock = ceil((float)texture->core->height/sHeight);
+      int heightBlock = ceil((float)texture->core->width/sWidth);
+      
+      jpgData.width = heightBlock;
+      jpgData.height = widthBlock;
+      while(w != heightBlock && h!=widthBlock){
+        test++;
+        int p=0;
+        int i=h*sHeight;
+        int j=w*sWidth;
+        hmax = i + sHeight;
+        wmax = j + sWidth;
+        
+        if(hmax > texture->core->height){
+          hmax = texture->core->height;
+        }
+  
+        if(wmax > texture->core->width){
+          wmax = texture->core->width;
+        }
+        
+        Tyra::TextureBuilderData* texData = new Tyra::TextureBuilderData();
+        texData->width = sWidth;
+        texData->height = sHeight;
+        texData->name = texture->name;
+        texData->gsComponents = TextureComponent;
+        texData->bpp = Tyra::bpp32;
+        int textureSize = getTextureSize(sWidth, sHeight, Tyra::bpp32);
+        texData->data = static_cast<unsigned char*>(memalign(128, textureSize));
+        memset(texData->data, 0, textureSize);
+        
+        Tyra::PngPixel4* jpgData = (Tyra::PngPixel4*) texData->data;
+        int l=0;
+        for(;i < hmax; i++){
+          j = w * sWidth;
+          p = i * texture->core->width + j;
+          for(;j < wmax; j++){
+            jpgData[l] = pixel[p];
+            p++;
+            l++;
+          }
+          if(wmax == texture->core->width){
+            l += (w*sWidth) + sWidth - wmax;
+          }
         }
         w++;
         if(w==heightBlock){
@@ -541,7 +597,7 @@ unsigned char* RotateClut(Tyra::PngPixel4* data){
   return clutData;
 }
 
-
+// now is useless
 void SetAlphaFrom8BppToJPG(Tyra::PngPixel3* jpgData, Tyra::PngPixel4* clutData,
   unsigned char* clutPos, int width, int height){
   float alphaval;
@@ -1097,8 +1153,18 @@ void Shader_SetAlphaToImage(const int textureAlphaID, const int textureImageID){
   TYRA_ASSERT(image!=nullptr,"Image Texture is NUll");
   
   image->core->components = TEXTURE_COMPONENTS_RGBA;
-  // alpha->core->print();
-  // image->core->print();
+
+  // only if alpha is a png of 8 bits
+  Tyra::TextureBuilderData texturePNGData;
+  texturePNGData.name = alpha->name;
+  texturePNGData.width = alpha->core->width;
+  texturePNGData.height = alpha->core->height;
+  texturePNGData.bpp = Tyra::bpp32;
+  texturePNGData.data = static_cast<unsigned char*>(memalign(
+      128, getTextureSize(texturePNGData.width, texturePNGData.height, texturePNGData.bpp)));
+
+  Tyra::PngPixel4* pngData = (Tyra::PngPixel4*)texturePNGData.data;
+
   Tyra::PngPixel4* clutData = (Tyra::PngPixel4*)alpha->clut->data;
   unsigned char* pixelData = alpha->core->data;
 
@@ -1108,6 +1174,25 @@ void Shader_SetAlphaToImage(const int textureAlphaID, const int textureImageID){
   struct Tyra::PngPixel3* backData =
       (struct Tyra::PngPixel3*)image->core->data;
   SetAlphaFrom8BppToJPG(backData,newClutData,pixelData,image->core->width,image->core->height);
+  float alphaval;
+  int v=0;
+
+  const int height = image->core->height;
+  const int width = image->core->width;
+  for (int i = 0; i < height; i++) {
+    for (int j = 0; j < width; j++) {
+      alphaval = ((float)newClutData[pixelData[v]].r / 255);
+      pngData[v].r = backData[v].r;
+      pngData[v].g = backData[v].g;
+      pngData[v].b = backData[v].b;
+      pngData[v].a = alphaval*128;
+      v++;
+    }
+  }
+
+  texRepo->free(alpha);
 
   free(clutDataNormal);
+  newTexture->id = textureAlphaID;
+  texRepo->add(newTexture);
 }
