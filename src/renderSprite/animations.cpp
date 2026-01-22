@@ -156,7 +156,7 @@ int AnimIndex::activeAnimation(const int entityID, const int layerID,
       }else if (animProp[i].type == ANIM_DRAW && drawPropertyFounded == false){
         drawPropertyFounded = true;
         // printf("draw: %d\n",drawFrame[animProp[i].dataIndex]);
-        setSprite(entityID,drawFrame[animProp[i].dataIndex], layer);
+        setSprite(entityID, (enumDraw) animProp[i].dataIndex, layer);
       }
     }
     
@@ -322,7 +322,7 @@ void AnimIndex::SetOneSpriteAnimationToEntity(std::vector<int>& ids, int& father
             if(drawFound == false){
               drawFound = true;
               // printf("draw data: %d, frame:%d\n",drawFrame[animProp[j].dataIndex], counter);
-              setSprite(entityID,drawFrame[animProp[j].dataIndex], layer);
+              setSprite(entityID, (enumDraw) animProp[j].dataIndex, layer);
             }
             break;
           default:
@@ -448,7 +448,7 @@ void AnimIndex::SetOneSpriteAnimationToEntity(std::vector<int>& ids, Tyra::Vec2 
           case ANIM_DRAW:
             if(drawFound == false){
               drawFound = true;
-              setSprite(entityID,drawFrame[animProp[j].dataIndex], layer);
+              setSprite(entityID, (enumDraw) animProp[j].dataIndex, layer);
             }
             break;
           default:
@@ -826,7 +826,6 @@ std::vector<Tyra::Vec2> positionFrame;
 std::vector<Tyra::Vec2> scaleFrame;
 std::vector<Tyra::Vec2> angleFrame;
 std::vector<float> alphaFrame;
-std::vector<enumDraw> drawFrame;
 
 void readTag(char* line, std::string& string, int& indexText) {
   // printf("start\n");
@@ -933,16 +932,15 @@ void readInfo(FILE* MyReadFile, char* textLine, std::string& insideArrow, const 
       AnimationFrameData& frameData = animLayerFrames[layerID][countframes];
       if (beforeDraw != draw) {
         beforeDraw = draw;
-        drawFrame.push_back(draw);
-        property.dataIndex = drawFrame.size()-1;
         property.type = ANIM_DRAW;
-        frameData.push_back(property);
         if(draw == 0){
+          property.dataIndex = enumDraw::draw; // drawFrame.size()-1;
           AnimationTime at;
           at.start = countframes;
           int lastClipLayer = animClipLayers[animIndex].size()-1;
           animClipLayers[animIndex][lastClipLayer].timeLapse.push_back(at);
         }else if(draw == -1){
+          property.dataIndex = enumDraw::noDraw; // drawFrame.size()-1;
           int lastClipLayer = animClipLayers[animIndex].size()-1;
           unsigned int lastPos = animClipLayers[animIndex][lastClipLayer].timeLapse.size();
           if(lastPos > 0){
@@ -950,34 +948,40 @@ void readInfo(FILE* MyReadFile, char* textLine, std::string& insideArrow, const 
             animClipLayers[animIndex][lastClipLayer].timeLapse[lastPos].end = countframes;
           }
         }
+        
+        frameData.push_back(property);
         // printf("frame: %d, data: %d\n",countframes,draw);
       }
 
       if(fileName != ""){
-        std::vector<Tyra::Texture*>& allTex = *texRepo->getAll();
-        for (u32 i = 0; i < texRepo->getTexturesCount(); i++) {
-          if (allTex[i]->name == fileName){
-            textureFounded = true;
+        printf("insera: %s\n",fileName.c_str());
+        if(fileName != "SELECTORSCREEN_BG.png" && fileName != "SELECTORSCREEN_BG_CENTER.png"
+         && fileName != "SELECTORSCREEN_BG_LEFT.png" && fileName != "SELECTORSCREEN_BG_RIGHT.png"){
+          std::vector<Tyra::Texture*>& allTex = *texRepo->getAll();
+          for (u32 i = 0; i < texRepo->getTexturesCount(); i++) {
+            if (allTex[i]->name == fileName){
+              textureFounded = true;
 
-            textureFrame.push_back(allTex[i]->id);
+              textureFrame.push_back(allTex[i]->id);
+              property.dataIndex = textureFrame.size()-1;
+              property.type = EnumAnimationProperty::ANIM_TEXTURE;
+              frameData.push_back(property);
+
+              // printf("texture id: %d, type: %d, data:%d\n",(*texRepo->getAll())[i]->id,property.type,property.dataIndex);
+              break;
+            }
+          }
+          if (textureFounded == false) {
+            fileName = "reanim/" + fileName;
+            // printf("new i: %s\n",fileName.c_str());
+            texture = loadTexture(fileName);
+            
+            textureFrame.push_back(texture->id);
             property.dataIndex = textureFrame.size()-1;
             property.type = EnumAnimationProperty::ANIM_TEXTURE;
             frameData.push_back(property);
-
-            // printf("texture id: %d, type: %d, data:%d\n",(*texRepo->getAll())[i]->id,property.type,property.dataIndex);
-            break;
+            // printf("texture id: %d, type: %d, data:%d\n",texture->id,property.type,property.dataIndex);
           }
-        }
-        if (textureFounded == false) {
-          fileName = "reanim/" + fileName;
-          // printf("new i: %s\n",fileName.c_str());
-          texture = loadTexture(fileName);
-          
-          textureFrame.push_back(texture->id);
-          property.dataIndex = textureFrame.size()-1;
-          property.type = EnumAnimationProperty::ANIM_TEXTURE;
-          frameData.push_back(property);
-          // printf("texture id: %d, type: %d, data:%d\n",texture->id,property.type,property.dataIndex);
         }
         textureFounded = false;
       }

@@ -142,7 +142,7 @@ void FrameManager::update(){
             spriteArray[frameArray[i].entityID].color.a = alphaFrame[animProp[j].dataIndex];
           }
         } else if (animProp[j].type == ANIM_DRAW){
-          setSprite(frameArray[i].entityID, drawFrame[animProp[j].dataIndex],layerID[frameArray[i].entityID]);
+          setSprite(frameArray[i].entityID, (enumDraw) animProp[j].dataIndex,layerID[frameArray[i].entityID]);
         }
       }
     }

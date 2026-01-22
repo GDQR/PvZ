@@ -307,7 +307,6 @@ extern std::vector<Tyra::Vec2> positionFrame;
 extern std::vector<Tyra::Vec2> scaleFrame;
 extern std::vector<Tyra::Vec2> angleFrame;
 extern std::vector<float> alphaFrame;
-extern std::vector<enumDraw> drawFrame;
 
 void initAnimation();
 void setSprite(const int entityID, const enumDraw draw, enumSpriteLayer layer);

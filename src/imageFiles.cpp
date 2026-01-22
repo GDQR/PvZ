@@ -1,7 +1,11 @@
 #include "imageFiles.hpp"
 
-const char* PNG_SelectorScreenBGCenter = "REANIM/SelectorScreen_BG_Center_.png"; 
-const char* JPG_SelectorScreenBGCenter = "REANIM/SelectorScreen_BG_Center.jpg"; 
+const char* PNG_SelectorScreenBGCenter = "REANIM/SelectorScreen_BG_Center_.png";
+const char* JPG_SelectorScreenBGCenter = "REANIM/SelectorScreen_BG_Center.jpg";
+const char* PNG_SelectorScreenBGLeft = "REANIM/SelectorScreen_BG_Left_.png";
+const char* JPG_SelectorScreenBGLeft = "REANIM/SelectorScreen_BG_Left.jpg";
+const char* PNG_SelectorScreenBGRight = "REANIM/SelectorScreen_BG_Right_.png";
+const char* JPG_SelectorScreenBGRight = "REANIM/SelectorScreen_BG_Right.jpg";
 const char* background1 = "IMAGES/background1.jpg";
 const char* background1unsodded =  "IMAGES/background1unsodded.jpg";
 const char* background2 = "IMAGES/background2.jpg";

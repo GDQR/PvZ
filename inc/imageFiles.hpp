@@ -2,6 +2,10 @@
 
 extern const char* PNG_SelectorScreenBGCenter;
 extern const char* JPG_SelectorScreenBGCenter;
+extern const char* PNG_SelectorScreenBGLeft;
+extern const char* JPG_SelectorScreenBGLeft;
+extern const char* PNG_SelectorScreenBGRight;
+extern const char* JPG_SelectorScreenBGRight;
 extern const char* background1;
 extern const char* background1unsodded;
 extern const char* background2;
