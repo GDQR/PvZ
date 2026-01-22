@@ -1148,11 +1148,9 @@ void PngLoaderUnlimited::handle4bppPalletized(Tyra::TextureBuilderData* result,
 void Shader_SetAlphaToImage(const int textureAlphaID, const int textureImageID){
   Tyra::Texture* alpha = renderer->getTextureRepository().getByTextureId(textureAlphaID);
   Tyra::Texture* image = renderer->getTextureRepository().getByTextureId(textureImageID);
-  
+
   TYRA_ASSERT(alpha!=nullptr,"Alpha Texture is NUll");
   TYRA_ASSERT(image!=nullptr,"Image Texture is NUll");
-  
-  image->core->components = TEXTURE_COMPONENTS_RGBA;
 
   // only if alpha is a png of 8 bits
   Tyra::TextureBuilderData texturePNGData;
@@ -1173,7 +1171,7 @@ void Shader_SetAlphaToImage(const int textureAlphaID, const int textureImageID){
 
   struct Tyra::PngPixel3* backData =
       (struct Tyra::PngPixel3*)image->core->data;
-  SetAlphaFrom8BppToJPG(backData,newClutData,pixelData,image->core->width,image->core->height);
+
   float alphaval;
   int v=0;
 
@@ -1193,6 +1191,8 @@ void Shader_SetAlphaToImage(const int textureAlphaID, const int textureImageID){
   texRepo->free(alpha);
 
   free(clutDataNormal);
+
+  Tyra::Texture* newTexture = new Tyra::Texture(&texturePNGData);
   newTexture->id = textureAlphaID;
   texRepo->add(newTexture);
 }
